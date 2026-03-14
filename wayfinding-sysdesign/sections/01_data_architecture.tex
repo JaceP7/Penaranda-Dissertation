@@ -1,0 +1,217 @@
+\section{Data Architecture}
+\label{sec:data-architecture}
+
+\subsection{Design Principle: Separation of Visual and Routing Layers}
+
+The system data model enforces a strict separation between two concerns:
+
+\begin{enumerate}
+  \item \textbf{Visual Layer} --- static image assets (floor plan PNGs or SVGs) used purely for rendering in the browser canvas. These carry no routing logic.
+  \item \textbf{Routing Layer} --- a graph-based data structure of nodes and edges that encodes all navigable paths, independent of the visual representation.
+\end{enumerate}
+
+This decoupling follows the hybrid spatial model principle established by Lorenz et al.\ \cite{Lorenz2006}, who demonstrated that indoor environments benefit from maintaining separate geometric and topological representations. Liu and Zlatanova \cite{Liu2012} further validated this approach with a semantic data model that cleanly isolates navigation networks from spatial geometry.
+
+The advantage for a web application is clear: the floor plan image can be replaced or updated without modifying routing data, and the routing graph can be edited without regenerating visual assets.
+
+\subsection{Floor Schema}
+
+Each floor in the building is represented as a discrete record linking metadata to its visual asset and coordinate calibration:
+
+\begin{lstlisting}[language=json, caption={Floor data structure}]
+{
+  "floors": [
+    {
+      "floor_id": "F1",
+      "label": "Ground Floor",
+      "elevation": 0.0,
+      "image_asset": "assets/floor1.svg",
+      "image_width_px": 1200,
+      "image_height_px": 800,
+      "scale_factor": 0.05
+    },
+    {
+      "floor_id": "F2",
+      "label": "Second Floor",
+      "elevation": 4.0,
+      "image_asset": "assets/floor2.svg",
+      "image_width_px": 1200,
+      "image_height_px": 800,
+      "scale_factor": 0.05
+    },
+    {
+      "floor_id": "F3",
+      "label": "Third Floor",
+      "elevation": 8.0,
+      "image_asset": "assets/floor3.svg",
+      "image_width_px": 1200,
+      "image_height_px": 800,
+      "scale_factor": 0.05
+    }
+  ]
+}
+\end{lstlisting}
+
+\texttt{scale\_factor} is defined as meters-per-pixel and is used by the distance approximation module (Section~\ref{sec:distance-approximation}). \texttt{elevation} records the real-world height in meters above ground datum for each floor, enabling vertical distance cost calculation.
+
+\subsection{Node Schema}
+
+Nodes represent discrete navigable points within the building. Following the topological routing-graph approach described by Willemsen et al.\ \cite{Willemsen2015}, each node carries:
+
+\begin{lstlisting}[language=json, caption={Node data structure}]
+{
+  "nodes": [
+    {
+      "node_id": "N1_ENTRANCE",
+      "floor_id": "F1",
+      "x": 100,
+      "y": 750,
+      "type": "entrance",
+      "label": "Main Entrance"
+    },
+    {
+      "node_id": "N1_HALL_A",
+      "floor_id": "F1",
+      "x": 300,
+      "y": 500,
+      "type": "corridor",
+      "label": null
+    },
+    {
+      "node_id": "N1_ROOM101",
+      "floor_id": "F1",
+      "x": 500,
+      "y": 400,
+      "type": "room",
+      "label": "Room 101 - Registrar"
+    },
+    {
+      "node_id": "N1_STAIR_A",
+      "floor_id": "F1",
+      "x": 600,
+      "y": 500,
+      "type": "vertical",
+      "label": "Stairwell A (F1)"
+    },
+    {
+      "node_id": "N2_STAIR_A",
+      "floor_id": "F2",
+      "x": 600,
+      "y": 500,
+      "type": "vertical",
+      "label": "Stairwell A (F2)"
+    },
+    {
+      "node_id": "N2_ROOM201",
+      "floor_id": "F2",
+      "x": 400,
+      "y": 300,
+      "type": "room",
+      "label": "Room 201 - Library"
+    }
+  ]
+}
+\end{lstlisting}
+
+Node types are enumerated as:
+
+\begin{table}[H]
+\centering
+\caption{Node type classification}
+\begin{tabularx}{0.85\textwidth}{lX}
+\toprule
+\textbf{Type} & \textbf{Description} \\
+\midrule
+\texttt{room} & A navigable destination (selectable by the user) \\
+\texttt{corridor} & An intermediate routing waypoint (not user-selectable) \\
+\texttt{vertical} & A floor-transition point: stairwell, elevator, or ramp \\
+\texttt{entrance} & A building entry/exit point \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The \texttt{x} and \texttt{y} coordinates are pixel positions relative to the top-left origin of the corresponding floor image. This aligns with the Canvas 2D API coordinate system used in the browser rendering layer.
+
+\subsection{Edge Schema}
+
+Edges encode navigable connections between nodes. Zhang and Ye \cite{Zhang2017} demonstrated that graph-based indoor models require explicit encoding of both horizontal and vertical transitions as weighted edges:
+
+\begin{lstlisting}[language=json, caption={Edge data structure}]
+{
+  "edges": [
+    {
+      "edge_id": "E001",
+      "from_node": "N1_ENTRANCE",
+      "to_node": "N1_HALL_A",
+      "weight": 12.5,
+      "is_vertical": false,
+      "is_accessible": true
+    },
+    {
+      "edge_id": "E002",
+      "from_node": "N1_HALL_A",
+      "to_node": "N1_ROOM101",
+      "weight": 8.3,
+      "is_vertical": false,
+      "is_accessible": true
+    },
+    {
+      "edge_id": "E003",
+      "from_node": "N1_HALL_A",
+      "to_node": "N1_STAIR_A",
+      "weight": 15.0,
+      "is_vertical": false,
+      "is_accessible": true
+    },
+    {
+      "edge_id": "E004",
+      "from_node": "N1_STAIR_A",
+      "to_node": "N2_STAIR_A",
+      "weight": 6.0,
+      "is_vertical": true,
+      "is_accessible": false
+    },
+    {
+      "edge_id": "E005",
+      "from_node": "N2_STAIR_A",
+      "to_node": "N2_ROOM201",
+      "weight": 10.2,
+      "is_vertical": false,
+      "is_accessible": true
+    }
+  ]
+}
+\end{lstlisting}
+
+Key design decisions for edges:
+
+\begin{itemize}
+  \item \textbf{Weight}: Pre-computed distance in meters. For horizontal edges, this is derived from the Euclidean pixel distance multiplied by the floor's \texttt{scale\_factor}. For vertical edges, the weight includes an estimated traversal cost (e.g., stair-climbing time equivalent).
+  \item \textbf{Bidirectional}: All edges are treated as bidirectional by default. The routing engine traverses them in both directions unless explicitly restricted.
+  \item \textbf{Vertical flag}: Marks edges that cross floors. The routing engine uses this flag to trigger floor-transition logic in the UI (Section~\ref{sec:routing-engine}).
+  \item \textbf{Accessibility flag}: Enables filtering for wheelchair-accessible routes by excluding stair-only vertical edges.
+\end{itemize}
+
+\subsection{Graph Summary for Target Building}
+
+For the target 3-story, 5-rooms-per-floor building, the expected graph dimensions are:
+
+\begin{table}[H]
+\centering
+\caption{Estimated graph size}
+\begin{tabular}{lrl}
+\toprule
+\textbf{Component} & \textbf{Count} & \textbf{Rationale} \\
+\midrule
+Room nodes     & 15 & 5 rooms $\times$ 3 floors \\
+Corridor nodes & $\sim$20 & Hallway waypoints per floor \\
+Vertical nodes & $\sim$6 & 2 stairwells $\times$ 3 floors \\
+Entrance nodes & 1--2 & Building entry points \\
+\midrule
+Total nodes    & $\sim$43 & \\
+Total edges    & $\sim$60 & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This is a trivially small graph that fits entirely in a static JSON file served to the browser---no database or server-side computation is required. The entire data payload is estimated at under 5\,KB uncompressed.

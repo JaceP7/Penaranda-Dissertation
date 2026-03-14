@@ -1,0 +1,92 @@
+\section{Distance Approximation}
+\label{sec:distance-approximation}
+
+\subsection{Problem Statement}
+
+The routing graph operates in pixel coordinates relative to floor plan images. To present meaningful navigation instructions to the user (e.g., ``Walk 12 meters down the hallway''), the system must convert pixel-space distances to real-world metric units. This conversion relies on a configurable scale factor calibrated per floor, consistent with the coordinate mapping approaches documented in indoor wayfinding literature \cite{Makri2015, Park2020}.
+
+\subsection{Scale Factor Definition}
+
+The scale factor $\sigma$ is defined as:
+
+\begin{equation}
+\sigma = \frac{\text{real-world distance (meters)}}{\text{corresponding pixel distance (pixels)}}
+\end{equation}
+
+Expressed in units of \textbf{meters per pixel} (m/px). Each floor record stores its own $\sigma$ value to accommodate different floor plan image resolutions or zoom levels.
+
+\subsubsection{Calibration Method}
+
+To determine $\sigma$ for a given floor:
+
+\begin{enumerate}
+  \item Identify a known real-world distance on the floor (e.g., a hallway measured at 20\,m).
+  \item Measure the corresponding pixel distance on the floor plan image between the same two endpoints (e.g., 400\,px).
+  \item Compute: $\sigma = \frac{20}{400} = 0.05$ m/px.
+\end{enumerate}
+
+This calibration is performed once per floor during initial system setup and stored in the floor schema's \texttt{scale\_factor} field.
+
+\subsection{Horizontal Edge Distance}
+
+For a horizontal edge connecting node $A = (x_A, y_A)$ to node $B = (x_B, y_B)$ on the same floor, the real-world distance is:
+
+\begin{equation}
+d_{\text{horizontal}} = \sigma \cdot \sqrt{(x_B - x_A)^2 + (y_B - y_A)^2}
+\label{eq:horizontal-distance}
+\end{equation}
+
+This Euclidean distance in pixel space, scaled by $\sigma$, yields the approximate walking distance in meters. This value is stored as the edge \texttt{weight} during graph construction.
+
+\subsection{Vertical Edge Distance}
+
+For vertical edges (floor transitions via stairs or elevator), direct pixel distance is meaningless because the connected nodes exist on different floor plan images. Instead, the vertical traversal cost is computed from floor elevation data:
+
+\begin{equation}
+d_{\text{vertical}} = |e_{\text{dest}} - e_{\text{origin}}| + d_{\text{penalty}}
+\label{eq:vertical-distance}
+\end{equation}
+
+Where:
+\begin{itemize}
+  \item $e_{\text{dest}}$ and $e_{\text{origin}}$ are the \texttt{elevation} values (in meters) of the destination and origin floors.
+  \item $d_{\text{penalty}}$ is a configurable constant representing the additional effort of vertical travel (stair climbing, elevator wait time). A default value of 2.0\,m equivalent is suggested, following the vertical cost modeling in Kasantikul et al.\ \cite{Kasantikul2015}.
+\end{itemize}
+
+For the target building with 4.0\,m between floors:
+\[
+d_{\text{vertical}} = |4.0 - 0.0| + 2.0 = 6.0 \text{ m (equivalent)}
+\]
+
+\subsection{Total Path Distance}
+
+Given a computed path $P = [n_1, n_2, \ldots, n_k]$, the total estimated walking distance is the sum of all edge weights along the path:
+
+\begin{equation}
+D_{\text{total}} = \sum_{i=1}^{k-1} w(n_i, n_{i+1})
+\label{eq:total-distance}
+\end{equation}
+
+Where $w(n_i, n_{i+1})$ is the pre-computed weight of the edge connecting consecutive path nodes. This value is already computed as a byproduct of Dijkstra's algorithm (the \texttt{dist[d]} value in Algorithm~\ref{alg:dijkstra}).
+
+\subsection{Estimated Walking Time}
+
+As an optional UX enhancement, the system can estimate walking time:
+
+\begin{equation}
+T_{\text{walk}} = \frac{D_{\text{total}}}{v_{\text{walk}}}
+\label{eq:walk-time}
+\end{equation}
+
+Where $v_{\text{walk}}$ is the assumed average indoor walking speed. A value of $v_{\text{walk}} = 1.2$ m/s is commonly used for indoor pedestrian modeling. For the target building (maximum path $\approx$ 80\,m), this yields a maximum estimated walk time of approximately 67 seconds.
+
+\subsection{Accuracy Considerations}
+
+The pixel-to-meter conversion introduces approximation error from two sources:
+
+\begin{enumerate}
+  \item \textbf{Floor plan distortion}: If the floor plan image is not drawn to exact scale, $\sigma$ will be locally inaccurate. This is mitigated by calibrating against the longest measurable corridor.
+  \item \textbf{Euclidean vs.\ actual path}: The straight-line pixel distance between nodes may underestimate actual walking distance through curved hallways. This is mitigated by placing corridor nodes at decision points and turns, approximating the path as a polyline.
+\end{enumerate}
+
+For a 3-story building with straight corridors, these errors are expected to be within $\pm 10\%$ of actual distances, which is acceptable for wayfinding guidance \cite{Park2020}.

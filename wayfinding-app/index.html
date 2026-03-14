@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Grid Pathfinder</title>
+  <link rel="stylesheet" href="css/app.css?v=23" />
+</head>
+<body>
+
+  <!-- ═══ HEADER ═══════════════════════════════════════════════════════ -->
+  <header class="app-header">
+    <h1>🗺️ Grid Pathfinder</h1>
+    <div class="header-actions">
+
+      <!-- ── Secondary (map-editing tools) ─────────────────────────
+           Desktop: always visible inline.
+           Mobile:  hidden behind the ⋯ button. -->
+      <div id="headerSecondary" class="header-secondary">
+        <button id="undoBtn"      class="btn btn-ghost btn-undo" disabled title="Undo (Ctrl+Z)">↩ Undo</button>
+        <button id="redoBtn"      class="btn btn-ghost btn-redo" disabled title="Redo (Ctrl+Y)">↪ Redo</button>
+        <button id="wallModeBtn"   class="btn btn-wall"     aria-pressed="false">🧱 Wall Mode</button>
+        <button id="selectModeBtn" class="btn btn-select"   aria-pressed="false">⬚ Select</button>
+        <button id="stampModeBtn"  class="btn btn-stamp"    aria-pressed="false">🔲 Stamp &amp; Places</button>
+        <button id="clearWallsBtn" class="btn btn-ghost">Clear Walls</button>
+        <button id="resetBtn"      class="btn btn-ghost">Reset</button>
+        <button id="newMapBtn"     class="btn btn-ghost btn-new-map" title="Erase all floors and start fresh">🗑 New Map</button>
+      </div>
+
+      <!-- ── Primary (navigation tools) — always visible ──────────── -->
+      <button id="navModeBtn"    class="btn btn-nav-mode" aria-pressed="false">📍 Navigate</button>
+      <button id="syncBtn"       class="btn btn-ghost btn-sync" title="Pull latest map from server (shares across devices)">☁ Sync</button>
+      <div class="floor-selector">
+        <button id="floorDown" class="btn btn-ghost btn-floor-step" title="Go to lower floor">▼</button>
+        <span   id="floorDisplay" class="floor-label">Floor 1</span>
+        <button id="floorUp"   class="btn btn-ghost btn-floor-step" title="Go to upper floor">▲</button>
+      </div>
+
+      <!-- ── Mobile overflow toggle (hidden on desktop) ───────────── -->
+      <button id="mobileMenuBtn" class="btn btn-ghost btn-mobile-menu" title="Map editing tools">⋯</button>
+
+    </div>
+  </header>
+
+  <!-- ═══ MAIN ══════════════════════════════════════════════════════════ -->
+  <main class="app-body">
+
+    <!-- Grid canvas + overlay bars + tools panel -->
+    <div class="canvas-wrap">
+
+      <!-- Overlay bars: absolutely positioned over canvas, never shrink the map -->
+      <div class="overlay-bars">
+
+        <!-- Nav panel (visible only when Navigate mode is active) -->
+        <div id="navPanel" class="nav-panel" style="display:none">
+          <span class="nav-pos-label">📍 You: <strong id="navPosDisplay">12, 12</strong></span>
+          <div class="compass-widget">
+            <div class="compass-dial" id="compassDial">
+              <span class="compass-lbl cn">N</span>
+              <span class="compass-lbl ce">E</span>
+              <span class="compass-lbl cs">S</span>
+              <span class="compass-lbl cw">W</span>
+              <div class="compass-needle" id="compassNeedle"></div>
+              <div class="compass-dot"></div>
+            </div>
+            <span class="compass-hdg-text" id="compassHdgText">—°</span>
+          </div>
+          <span id="driftDisplay" class="nav-drift">Fix: —</span>
+          <button id="scanQRBtn"    class="btn-nav">📷 Scan QR</button>
+          <button id="pdrToggleBtn" class="btn-nav">🚶 PDR: Off</button>
+          <button id="genQRBtn"     class="btn-nav">🏷 Gen QR</button>
+          <button id="recalBtn"     class="btn-nav btn-nav-recal" title="Reset adaptive step threshold to default">⟳ Recal</button>
+        </div>
+
+        <!-- Dynamic hint bar -->
+        <div id="hintBar" class="hint-bar">
+          Tap any cell to route from <strong>(0,0)</strong> &rarr; that cell.
+          Enable <strong>Wall Mode</strong> to place obstacles.
+        </div>
+
+        <!-- Paint type toolbar (shown only when Wall Mode is active) -->
+        <div id="paintTypeBar" class="paint-type-bar" style="display:none">
+          <span class="ptype-label">Paint:</span>
+          <button id="ptWallBtn"  class="btn-ptype active" data-type="wall" >🧱 Wall</button>
+          <button id="ptDoorBtn"  class="btn-ptype"        data-type="door" >🚪 Door</button>
+          <button id="ptStairBtn" class="btn-ptype"        data-type="stair">🪜 Stair</button>
+          <button id="ptEraseBtn" class="btn-ptype"        data-type="erase">✕ Erase</button>
+        </div>
+
+        <!-- Selection action toolbar (shown only when a selection exists) -->
+        <div id="selToolbar" class="sel-toolbar" style="display:none">
+          <span class="sel-toolbar-label">Selection:</span>
+          <button id="selRotCCW"   class="btn-sel btn-sel-rot" title="Rotate 90° counter-clockwise">↺ CCW</button>
+          <button id="selRotCW"    class="btn-sel btn-sel-rot" title="Rotate 90° clockwise">↻ CW</button>
+          <button id="selMove"     class="btn-sel btn-sel-move" title="Lift and move selection">✥ Move</button>
+          <button id="selDelete"   class="btn-sel btn-sel-del"  title="Delete selected cells">🗑 Delete</button>
+          <button id="selDeselect" class="btn-sel btn-sel-desel" title="Clear selection">✕ Deselect</button>
+        </div>
+
+      </div><!-- /overlay-bars -->
+
+      <canvas id="gridCanvas"
+        aria-label="25×25 pathfinding grid. Tap a cell to set destination.">
+      </canvas>
+
+      <!-- Combined tools panel -->
+      <div id="toolsPanel" class="tools-panel" style="display:none">
+
+        <!-- ── Stamp Editor section ── -->
+        <div class="tp-section">
+          <div class="tp-section-title">🔲 Stamp Editor</div>
+
+          <div class="stamp-size-row">
+            <label for="stampSizeInput">Size (n×n):</label>
+            <input id="stampSizeInput" type="number" min="2" max="20" value="5" />
+          </div>
+
+          <!-- Paint type selector for the stamp editor -->
+          <div class="stamp-paint-row">
+            <span class="ptype-label" style="color:#475569">Paint:</span>
+            <button id="spWallBtn"  class="btn-ptype active" data-type="wall" >🧱 Wall</button>
+            <button id="spDoorBtn"  class="btn-ptype"        data-type="door" >🚪 Door</button>
+            <button id="spStairBtn" class="btn-ptype"        data-type="stair">🪜 Stair</button>
+            <button id="spEraseBtn" class="btn-ptype"        data-type="erase">✕ Erase</button>
+          </div>
+
+          <canvas id="stampCanvas"></canvas>
+
+          <div class="stamp-rotate-row">
+            <span class="stamp-rotate-label">Rotate:</span>
+            <button id="rotateCCWBtn" class="btn-stamp-sm btn-stamp-rot" title="Rotate counter-clockwise">↺ CCW</button>
+            <button id="rotateCWBtn"  class="btn-stamp-sm btn-stamp-rot" title="Rotate clockwise">↻ CW</button>
+          </div>
+
+          <input id="stampNameInput" class="stamp-name-input"
+            type="text" placeholder="Label this stamp (optional)…" maxlength="40" />
+
+          <div class="stamp-action-row">
+            <button id="clearStampBtn"     class="btn-stamp-sm">Clear Pattern</button>
+            <button id="savePresetBtn"     class="btn-stamp-sm btn-stamp-save">Save as Preset</button>
+          </div>
+
+          <p class="stamp-hint">
+            Choose a paint type, draw the pattern above, then click the grid to place it.
+            Open (white) cells are transparent when stamping.
+          </p>
+
+          <!-- Saved presets list -->
+          <div class="tp-section-header">
+            <span class="tp-section-title" style="font-size:0.75rem">📦 Saved Presets</span>
+          </div>
+          <div id="presetList" class="preset-list"></div>
+        </div>
+
+        <div class="tp-divider"></div>
+
+        <!-- ── Placed Stamps section ── -->
+        <div class="tp-section">
+          <div class="tp-section-title">🏷️ Placed Stamps</div>
+          <div id="catalogueList" class="cat-list"></div>
+        </div>
+
+      </div><!-- /toolsPanel -->
+    </div>
+
+    <!-- Stair floor-change toast (simple confirmation) -->
+    <div id="stairToast" class="stair-toast"></div>
+
+    <!-- Stair direction prompt (shown when both up+down are possible) -->
+    <div id="stairPrompt" class="stair-prompt" style="display:none">
+      <span class="stair-prompt-icon">🪜</span>
+      <span id="stairPromptLabel" class="stair-prompt-label">Stair detected</span>
+      <div class="stair-prompt-btns">
+        <button id="stairUpBtn"   class="btn-stair-dir">⬆ <span id="stairUpLabel">Floor ?</span></button>
+        <button id="stairDownBtn" class="btn-stair-dir">⬇ <span id="stairDownLabel">Floor ?</span></button>
+        <button id="stairStayBtn" class="btn-stair-stay">Not yet</button>
+      </div>
+    </div>
+
+    <!-- Stair climb confirmation (single-direction stair) -->
+    <div id="stairConfirmPrompt" class="stair-prompt" style="display:none">
+      <span class="stair-prompt-icon">🪜</span>
+      <span id="stairConfirmLabel" class="stair-prompt-label">Climbed to Floor?</span>
+      <div class="stair-prompt-btns">
+        <button id="stairConfirmYesBtn" class="btn-stair-dir">✓ Yes</button>
+        <button id="stairConfirmNoBtn"  class="btn-stair-stay">Not yet</button>
+      </div>
+    </div>
+
+    <!-- Arrival celebration prompt -->
+    <div id="arrivalPrompt" class="arrival-prompt" style="display:none">
+      <span class="arrival-icon">🎉</span>
+      <strong class="arrival-text">You have arrived!</strong>
+      <button id="arrivalCloseBtn" class="btn-arrival-close">✕</button>
+    </div>
+
+    <!-- Info bar -->
+    <div class="info-bar">
+      <span id="infoStart" class="info-chip start">Start (0, 0)</span>
+      <span id="infoEnd"   class="info-chip end">Tap a cell to set destination</span>
+      <span id="infoSteps" class="info-chip steps" style="display:none"></span>
+      <span id="infoMsg"   class="info-chip warn"  style="display:none"></span>
+    </div>
+
+  </main>
+
+  <!-- ═══ QR CAMERA OVERLAY ════════════════════════════════════════════ -->
+  <div id="qrOverlay" class="qr-overlay" style="display:none">
+    <div class="qr-overlay-box">
+      <p class="qr-overlay-title">Scan QR Anchor</p>
+      <div class="qr-viewfinder">
+        <video id="qrVideo" autoplay playsinline muted></video>
+      </div>
+      <p class="qr-overlay-hint">Point camera at a <strong>GRID:</strong> QR code on the wall</p>
+      <button id="qrCloseBtn" class="btn-nav btn-nav-cancel">✕ Cancel</button>
+    </div>
+    <!-- Hidden canvas used for QR decoding — never shown to user -->
+    <canvas id="qrCanvas" style="display:none"></canvas>
+  </div>
+
+  <!-- ═══ QR GENERATOR MODAL ═══════════════════════════════════════════ -->
+  <div id="qrGenModal" class="qr-gen-modal" style="display:none">
+    <div class="qr-gen-box">
+      <p class="qr-gen-title">Generate QR for cell <span id="qrGenLabel"></span></p>
+      <div class="qr-gen-inputs">
+        <label>Floor <input id="qrGenFloorInput" type="number" min="1" max="10" value="1" title="1 = ground floor" /></label>
+        <label>Row <input id="qrGenRowInput" type="number" min="0" max="24" value="0" /></label>
+        <label>Col <input id="qrGenColInput" type="number" min="0" max="24" value="0" /></label>
+        <button id="qrGenGoBtn" class="btn-nav">▶ Generate</button>
+      </div>
+      <div id="qrGenCanvas" style="display:inline-block;"></div>
+      <p class="qr-gen-hint">Print this and stick it at that location in the building. Scanning it moves <strong>ME</strong> to that cell.</p>
+      <div class="qr-gen-actions">
+        <button id="qrSaveBtn"     class="btn-nav">💾 Save PNG</button>
+        <button id="qrGenCloseBtn" class="btn-nav btn-nav-cancel">✕ Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SCRIPTS ═══════════════════════════════════════════════════════ -->
+  <!-- QR scanning (jsQR) and QR generation (qrcodejs) — local, no internet needed -->
+  <script src="js/lib/jsQR.js"></script>
+  <script src="js/lib/qrcode.min.js"></script>
+
+  <script src="js/data.js?v=23"></script>
+  <script src="js/dijkstra.js?v=23"></script>
+  <script src="js/renderer.js?v=23"></script>
+  <script src="js/compass.js?v=23"></script>
+  <script src="js/nav.js?v=23"></script>
+  <script src="js/app.js?v=23"></script>
+
+</body>
+</html>

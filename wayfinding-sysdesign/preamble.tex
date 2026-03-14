@@ -1,0 +1,56 @@
+\documentclass[12pt, a4paper]{article}
+
+% --- Page Layout ---
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+
+% --- Fonts and Encoding ---
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
+% --- Mathematics ---
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% --- Graphics and Figures ---
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc}
+
+% --- Code Listings ---
+\usepackage{listings}
+\usepackage{xcolor}
+\lstdefinelanguage{json}{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  backgroundcolor=\color{gray!5},
+  literate=
+    *{:}{{{\color{black}:}}}{1}
+     {,}{{{\color{black},}}}{1}
+     {\{}{{{\color{black}\{}}}{1}
+     {\}}{{{\color{black}\}}}}{1}
+     {[}{{{\color{black}[}}}{1}
+     {]}{{{\color{black}]}}}{1}
+}
+
+% --- Algorithm Pseudocode ---
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+
+% --- Tables ---
+\usepackage{booktabs}
+\usepackage{tabularx}
+
+% --- Hyperlinks ---
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
+
+% --- Bibliography ---
+\usepackage[numbers,sort&compress]{natbib}
+
+% --- Misc ---
+\usepackage{enumitem}
+\usepackage{float}

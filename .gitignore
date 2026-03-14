@@ -1,0 +1,38 @@
+# ── SSL certificates & keys (NEVER commit private keys) ──────────────────────
+*.pem
+*.key
+*.crt
+*.csr
+
+# ── mkcert binary ─────────────────────────────────────────────────────────────
+*.exe
+
+# ── Runtime server state (generated at runtime, not source) ───────────────────
+wayfinding-app/app-state.json
+
+# ── PDF files (binary blobs — dissertation drafts, compiled reports) ──────────
+*.pdf
+
+# ── Compiled LaTeX artefacts ──────────────────────────────────────────────────
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+
+# ── Claude Code internal files ────────────────────────────────────────────────
+.claude/
+
+# ── OS noise ──────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Node (if added later) ─────────────────────────────────────────────────────
+node_modules/

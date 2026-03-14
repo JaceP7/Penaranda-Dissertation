@@ -1,0 +1,118 @@
+\section{Routing Engine}
+\label{sec:routing-engine}
+
+\subsection{Algorithm Selection: Dijkstra's Algorithm}
+
+For a graph of approximately 43 nodes and 60 edges (Section~\ref{sec:data-architecture}), Dijkstra's algorithm is the optimal choice. It guarantees the shortest path in graphs with non-negative edge weights, runs in $O((V + E) \log V)$ time with a binary heap, and is well-studied in the indoor navigation literature \cite{Lee2007, Wu2007, Alqahtani2018}.
+
+More advanced algorithms such as A* offer no practical benefit at this graph scale---the entire computation completes in sub-millisecond time on any modern smartphone browser. Dijkstra's simplicity and correctness make it the most appropriate choice, consistent with the findings of Hammadi et al.\ \cite{Hammadi2012} who applied it successfully to smartphone-based indoor guidance.
+
+\subsection{Multi-Floor Graph Unification}
+
+Before the algorithm executes, the routing engine must construct a unified graph that spans all floors. The key insight, established by Lee \cite{Lee2007} in the context of 3D navigable environments, is that vertical transition nodes serve as bridges between per-floor subgraphs.
+
+The unified graph $G = (V, E)$ is assembled as follows:
+
+\begin{enumerate}
+  \item Load all nodes from all floors into a single node set $V$.
+  \item Load all intra-floor edges (horizontal connections within each floor) into $E$.
+  \item Load all inter-floor edges (vertical connections between \texttt{vertical} nodes on adjacent floors) into $E$.
+  \item The resulting $G$ is a single connected graph where Dijkstra's algorithm can find paths that naturally traverse floor boundaries.
+\end{enumerate}
+
+Jamali et al.\ \cite{Jamali2017} validated this approach for automated 3D topological indoor navigation networks, confirming that treating the multi-floor structure as a single weighted graph produces correct shortest paths across floors.
+
+\subsection{Algorithm Pseudocode}
+
+\begin{algorithm}[H]
+\caption{Dijkstra's Shortest Path for Multi-Floor Indoor Graph}
+\label{alg:dijkstra}
+\SetAlgoLined
+\KwIn{Graph $G = (V, E)$, source node $s$, destination node $d$}
+\KwOut{Shortest path $P$ as ordered list of node IDs, total cost $C$}
+
+\BlankLine
+Initialize distance map: $\text{dist}[v] \leftarrow \infty$ for all $v \in V$\;
+Initialize predecessor map: $\text{prev}[v] \leftarrow \text{null}$ for all $v \in V$\;
+$\text{dist}[s] \leftarrow 0$\;
+Initialize min-priority queue $Q$ with $(0, s)$\;
+
+\BlankLine
+\While{$Q$ is not empty}{
+  $(d_u, u) \leftarrow Q.\text{extractMin}()$\;
+
+  \If{$u = d$}{
+    \textbf{break} \tcp*{Destination reached}
+  }
+
+  \If{$d_u > \text{dist}[u]$}{
+    \textbf{continue} \tcp*{Stale entry, skip}
+  }
+
+  \ForEach{edge $(u, v, w)$ in adjacency list of $u$}{
+    $\text{alt} \leftarrow \text{dist}[u] + w$\;
+    \If{$\text{alt} < \text{dist}[v]$}{
+      $\text{dist}[v] \leftarrow \text{alt}$\;
+      $\text{prev}[v] \leftarrow u$\;
+      $Q.\text{insert}((\text{alt}, v))$\;
+    }
+  }
+}
+
+\BlankLine
+\tcp{Reconstruct path from predecessor map}
+$P \leftarrow$ empty list\;
+$\text{current} \leftarrow d$\;
+\While{$\text{current} \neq \text{null}$}{
+  Prepend $\text{current}$ to $P$\;
+  $\text{current} \leftarrow \text{prev}[\text{current}]$\;
+}
+
+\BlankLine
+$C \leftarrow \text{dist}[d]$\;
+\Return{$(P, C)$}\;
+\end{algorithm}
+
+\subsection{Floor Transition Handling}
+
+When the computed path $P$ is returned, the rendering layer must detect floor transitions to update the displayed floor plan. The logic is:
+
+\begin{algorithm}[H]
+\caption{Floor Transition Detection in Path}
+\label{alg:floor-transition}
+\SetAlgoLined
+\KwIn{Path $P = [n_1, n_2, \ldots, n_k]$, node lookup table}
+\KwOut{Segmented path with floor-change markers}
+
+\BlankLine
+$\text{segments} \leftarrow$ empty list\;
+$\text{currentSegment} \leftarrow$ new segment with floor = $\text{floor}(n_1)$\;
+
+\BlankLine
+\For{$i \leftarrow 1$ \KwTo $k$}{
+  \If{$\text{floor}(n_i) \neq \text{currentSegment.floor}$}{
+    Append $\text{currentSegment}$ to $\text{segments}$\;
+    $\text{currentSegment} \leftarrow$ new segment with floor = $\text{floor}(n_i)$\;
+    Mark transition type (stair / elevator) from edge metadata\;
+  }
+  Append $n_i$ to $\text{currentSegment.nodes}$\;
+}
+Append $\text{currentSegment}$ to $\text{segments}$\;
+
+\BlankLine
+\Return{segments}\;
+\end{algorithm}
+
+Each segment corresponds to a contiguous portion of the path on a single floor. The UI renders one segment at a time and provides navigation instructions such as ``Take Stairwell A to Floor 2'' at transition boundaries. This segmented approach was shown to reduce cognitive load during multi-floor navigation \cite{DeCock2021}.
+
+\subsection{Accessibility Filtering}
+
+For accessible routing (wheelchair users), the engine applies a pre-filter before running Dijkstra:
+
+\begin{enumerate}
+  \item Remove all edges where \texttt{is\_accessible = false} from $E$.
+  \item Run Algorithm~\ref{alg:dijkstra} on the filtered graph.
+  \item If no path exists (disconnected graph after filtering), report ``No accessible route available.''
+\end{enumerate}
+
+This ensures that stair-only vertical connections are excluded, and only elevator or ramp edges are considered for floor transitions. The pre-filter approach avoids modifying the core algorithm and keeps the accessibility concern isolated \cite{Xiong2020}.

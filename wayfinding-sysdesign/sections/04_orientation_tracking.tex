@@ -1,0 +1,146 @@
+\section{Orientation Tracking}
+\label{sec:orientation-tracking}
+
+\subsection{Purpose}
+
+The orientation tracking module reads the device's compass heading via browser APIs to provide a directional indicator on the map canvas. This helps the user understand which direction they are facing relative to the floor plan, reducing the cognitive effort of self-localization during navigation \cite{DeCock2021}.
+
+\subsection{Browser API: DeviceOrientation Event}
+
+The W3C DeviceOrientation Event specification \cite{W3CDeviceOrientation2024} defines three Euler angles reported by device motion sensors:
+
+\begin{table}[H]
+\centering
+\caption{DeviceOrientationEvent properties}
+\begin{tabularx}{0.9\textwidth}{llX}
+\toprule
+\textbf{Property} & \textbf{Range} & \textbf{Description} \\
+\midrule
+\texttt{alpha} & $[0, 360)$ & Rotation around the z-axis (compass heading). 0 = North. \\
+\texttt{beta}  & $[-180, 180)$ & Front-to-back tilt. \\
+\texttt{gamma} & $[-90, 90)$ & Left-to-right tilt. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+For compass heading, only the \texttt{alpha} value is used. The \texttt{beta} and \texttt{gamma} values may optionally be used to detect whether the device is held in a usable orientation (roughly flat, screen facing up).
+
+\subsection{Permission Request Flow}
+
+Modern browsers enforce strict permission requirements for sensor access, particularly on iOS Safari since version 13. Mehrnezhad et al.\ \cite{Mehrnezhad2016, Mehrnezhad2018} documented how mobile browsers restrict access to motion and orientation sensors via JavaScript to prevent unauthorized data harvesting.
+
+The permission flow for the web application is:
+
+\begin{algorithm}[H]
+\caption{DeviceOrientation Permission Request Flow}
+\label{alg:orientation-permission}
+\SetAlgoLined
+
+\BlankLine
+\tcp{Step 1: Feature detection}
+\If{\texttt{DeviceOrientationEvent} is not defined in \texttt{window}}{
+  Display: ``Compass not supported on this device.''\;
+  \Return\;
+}
+
+\BlankLine
+\tcp{Step 2: iOS permission gate (iOS 13+)}
+\If{\texttt{DeviceOrientationEvent.requestPermission} is a function}{
+  \tcp{Must be called from a user-initiated event (tap/click)}
+  Show ``Enable Compass'' button to user\;
+  On button tap: call \texttt{DeviceOrientationEvent.requestPermission()}\;
+  \If{permission result = ``granted''}{
+    Attach \texttt{deviceorientation} event listener\;
+  }
+  \Else{
+    Display: ``Compass permission denied. Enable in Settings.''\;
+  }
+}
+\Else{
+  \tcp{Android / non-iOS: no explicit permission required}
+  Attach \texttt{deviceorientation} event listener directly\;
+}
+\end{algorithm}
+
+Critical constraints:
+\begin{itemize}
+  \item The \texttt{requestPermission()} call \textbf{must} originate from a user gesture (click or tap). Calling it on page load will be silently ignored by iOS Safari.
+  \item The page \textbf{must} be served over HTTPS. The DeviceOrientation API is blocked on insecure origins in all modern browsers.
+  \item Permission is granted per-origin and persists until the user clears site data.
+\end{itemize}
+
+\subsection{Cross-Platform Heading Normalization}
+
+A significant implementation challenge is that iOS and Android report the compass heading differently \cite{Mansour2021}:
+
+\begin{table}[H]
+\centering
+\caption{Platform differences in compass heading reporting}
+\begin{tabularx}{0.9\textwidth}{lXX}
+\toprule
+\textbf{Platform} & \textbf{alpha behavior} & \textbf{Absolute reference} \\
+\midrule
+Android Chrome & \texttt{alpha} = degrees from North, \textbf{but} may be relative to an arbitrary initial orientation unless \texttt{absolute: true} & Use \texttt{webkitCompassHeading} if available, else \texttt{alpha} \\
+iOS Safari & \texttt{alpha} = degrees relative to initial device orientation (NOT North) & \texttt{webkitCompassHeading} gives true compass heading in degrees from North \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The normalization logic produces a consistent heading $H \in [0, 360)$ where $0 = \text{North}$:
+
+\begin{algorithm}[H]
+\caption{Compass Heading Normalization}
+\label{alg:heading-normalize}
+\SetAlgoLined
+\KwIn{DeviceOrientationEvent $e$}
+\KwOut{Normalized heading $H$ in degrees from North, $[0, 360)$}
+
+\BlankLine
+\If{$e.\texttt{webkitCompassHeading}$ is defined and is a number}{
+  \tcp{iOS Safari: webkitCompassHeading is degrees from North}
+  $H \leftarrow e.\texttt{webkitCompassHeading}$\;
+}
+\ElseIf{$e.\texttt{absolute}$ is true and $e.\texttt{alpha}$ is a number}{
+  \tcp{Android with absolute orientation: alpha is inverse compass}
+  $H \leftarrow (360 - e.\texttt{alpha}) \mod 360$\;
+}
+\Else{
+  \tcp{Fallback: relative alpha, less reliable}
+  $H \leftarrow (360 - e.\texttt{alpha}) \mod 360$\;
+}
+
+\BlankLine
+\Return{$H$}\;
+\end{algorithm}
+
+\subsection{Output: Directional Vector}
+
+The normalized heading $H$ is converted to a unit directional vector for rendering on the map canvas:
+
+\begin{equation}
+\vec{d} = \begin{pmatrix} \sin(H \cdot \frac{\pi}{180}) \\ -\cos(H \cdot \frac{\pi}{180}) \end{pmatrix}
+\label{eq:heading-vector}
+\end{equation}
+
+The negative cosine for the $y$-component accounts for the canvas coordinate system where $y$ increases downward. This vector is used to draw a directional indicator (arrow or cone) at the user's assumed position on the map.
+
+\subsection{Smoothing and Noise Reduction}
+
+Raw compass data from smartphone magnetometers is noisy. Ando et al.\ \cite{Ando2016} documented the effect of magnetic interference on compass heading accuracy. The system applies a simple exponential moving average (EMA) filter:
+
+\begin{equation}
+H_{\text{smooth}}(t) = \alpha_{\text{ema}} \cdot H_{\text{raw}}(t) + (1 - \alpha_{\text{ema}}) \cdot H_{\text{smooth}}(t-1)
+\label{eq:heading-ema}
+\end{equation}
+
+Where $\alpha_{\text{ema}} = 0.3$ provides a balance between responsiveness and stability. Special care must be taken when averaging near the 0/360 boundary (North crossing) by computing the circular mean rather than arithmetic mean.
+
+\subsection{Limitations}
+
+\begin{itemize}
+  \item \textbf{Indoor magnetic interference}: Steel-frame buildings, electrical wiring, and nearby electronics distort the magnetometer, reducing compass accuracy indoors. Accuracy of $\pm 15$--$30\degree$ is typical.
+  \item \textbf{No absolute position}: The compass provides heading only, not position. The system cannot track where on the floor plan the user is standing.
+  \item \textbf{Device variability}: Sensor quality varies significantly across smartphone models and manufacturers.
+\end{itemize}
+
+These limitations are acknowledged as inherent to the magnetometer-only approach. The compass feature is positioned as a supplementary orientation aid, not a positioning system.

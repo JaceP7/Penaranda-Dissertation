@@ -1,0 +1,181 @@
+\section{Mobile-First UX Architecture}
+\label{sec:mobile-ux}
+
+\subsection{Design Philosophy}
+
+The application is designed mobile-first for use on smartphone browsers. This means the primary interface is optimized for small viewports (360--414\,px width), touch input, and portrait orientation. Desktop access is supported but not the primary target. This aligns with the web-based indoor navigation approach validated by Ludwig et al.\ \cite{Ludwig2023} in their URWalking system, and the campus navigation web application by Chitra et al.\ \cite{Chitra2023}.
+
+\subsection{Touch Target Sizing}
+
+All interactive elements (buttons, dropdown selectors, list items) must meet minimum touch target dimensions to ensure reliable tap accuracy on mobile devices:
+
+\begin{table}[H]
+\centering
+\caption{Touch target requirements}
+\begin{tabularx}{0.85\textwidth}{lX}
+\toprule
+\textbf{Requirement} & \textbf{Specification} \\
+\midrule
+Minimum target size & $44 \times 44$ CSS pixels (WCAG 2.1 SC 2.5.5 \cite{WCAG21}) \\
+Minimum spacing & 8\,px between adjacent targets \\
+Primary action buttons & $48 \times 48$ CSS pixels minimum \\
+Font size for controls & 16\,px minimum (prevents iOS auto-zoom on input focus) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Liu et al.\ \cite{Liu2009} demonstrated that wayfinding interfaces for mobile users require simplified interaction patterns, particularly at decision points where cognitive load is high.
+
+\subsection{Viewport Management}
+
+\subsubsection{Meta Viewport Configuration}
+
+The HTML document must include:
+\begin{lstlisting}[basicstyle=\ttfamily\small, frame=single, breaklines=true]
+<meta name="viewport"
+  content="width=device-width, initial-scale=1.0,
+           maximum-scale=5.0, user-scalable=yes">
+\end{lstlisting}
+
+Key decisions:
+\begin{itemize}
+  \item \texttt{user-scalable=yes}: The map canvas requires pinch-to-zoom. Disabling user scaling would break this.
+  \item \texttt{maximum-scale=5.0}: Allows sufficient zoom for detailed floor plan inspection.
+  \item \texttt{initial-scale=1.0}: Prevents unexpected zoom on page load.
+\end{itemize}
+
+\subsubsection{Visual Viewport API for Keyboard Handling}
+
+When the on-screen keyboard opens (e.g., for room search input), the visible viewport shrinks. The Visual Viewport API \cite{W3CVisualViewport2023} provides the actual visible area:
+
+\begin{lstlisting}[basicstyle=\ttfamily\small, frame=single, breaklines=true, language=json]
+// Functional requirement: listen for viewport changes
+window.visualViewport.addEventListener('resize', () => {
+  const visibleHeight = window.visualViewport.height;
+  // Adjust UI overlay position to stay within visible area
+});
+\end{lstlisting}
+
+The navigation instruction overlay must reposition itself above the keyboard boundary using the \texttt{visualViewport.height} value, rather than relying on \texttt{window.innerHeight} which may not update correctly on all mobile browsers.
+
+\subsubsection{CSS Viewport Units}
+
+The layout uses dynamic viewport units for mobile-safe sizing:
+\begin{itemize}
+  \item \texttt{dvh} (dynamic viewport height): Accounts for mobile browser chrome (address bar, toolbar) that appears/disappears during scrolling.
+  \item \texttt{dvw} (dynamic viewport width): Consistent width excluding scrollbar.
+\end{itemize}
+
+\subsection{Map Canvas Architecture}
+
+The 2D floor plan is rendered in an HTML Canvas element (or SVG for simpler implementations). The canvas must support:
+
+\subsubsection{Pan and Zoom}
+
+\begin{table}[H]
+\centering
+\caption{Map interaction model}
+\begin{tabularx}{0.9\textwidth}{llX}
+\toprule
+\textbf{Gesture} & \textbf{API} & \textbf{Behavior} \\
+\midrule
+Single-finger drag & Pointer Events \cite{W3CPointerEvents2019} & Pan the map canvas \\
+Two-finger pinch & Pointer Events (multi-touch) & Zoom in/out around pinch center \\
+Double-tap & Pointer Events & Zoom in one step at tap location \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The Pointer Events API \cite{W3CPointerEvents2019} is used instead of Touch Events because it provides a unified input model for touch, mouse, and pen, reducing code duplication across device types.
+
+Implementation requirements:
+\begin{itemize}
+  \item Maintain a transform matrix $\mathbf{T}$ (translate + scale) applied to the canvas context.
+  \item Clamp zoom level to $[\text{0.5x}, \text{5.0x}]$ to prevent over-zoom.
+  \item Apply \texttt{touch-action: none} CSS on the canvas element to prevent browser-level gestures (scroll, back-navigation) from interfering with map interaction.
+  \item Translate screen-space tap coordinates back to map-space using $\mathbf{T}^{-1}$ for node selection.
+\end{itemize}
+
+\subsubsection{Route Overlay Rendering}
+
+The computed route path (from Section~\ref{sec:routing-engine}) is drawn on the canvas as a polyline connecting path nodes. Requirements:
+
+\begin{itemize}
+  \item Line width: 4--6\,px, with high-contrast color (e.g., \#2196F3 blue) against the floor plan.
+  \item Start marker: Filled circle at origin node.
+  \item End marker: Pin or flag icon at destination node.
+  \item Animated dash pattern (optional): Moving dashes along the route to indicate direction of travel.
+\end{itemize}
+
+\subsection{UI Overlay Architecture}
+
+The interface is organized in a z-index layered architecture:
+
+\begin{table}[H]
+\centering
+\caption{UI layer stack (bottom to top)}
+\begin{tabular}{clp{6cm}}
+\toprule
+\textbf{z-index} & \textbf{Layer} & \textbf{Content} \\
+\midrule
+0 & Map canvas & Floor plan image + route overlay \\
+10 & Floor selector & Tab bar or segmented control for switching floors \\
+20 & Search bar & Origin/destination input with autocomplete \\
+30 & Navigation panel & Step-by-step directions, slide-up bottom sheet \\
+40 & Modal overlay & Compass permission dialog, error messages \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Bottom Sheet Pattern}
+
+The navigation instruction panel uses a bottom-sheet UI pattern (slide-up from bottom of screen), which is the standard mobile pattern for contextual information overlays. Requirements:
+
+\begin{itemize}
+  \item Collapsed state: Shows summary (``Floor 1 $\rightarrow$ Floor 2, 35\,m, ~30\,sec'')
+  \item Expanded state: Shows full step-by-step directions
+  \item Drag handle: 44\,px tall touch target for expanding/collapsing
+  \item Maximum height: 50\% of \texttt{dvh} to keep map visible
+\end{itemize}
+
+\subsection{Responsive Behavior}
+
+\begin{table}[H]
+\centering
+\caption{Responsive breakpoints}
+\begin{tabularx}{0.9\textwidth}{llX}
+\toprule
+\textbf{Breakpoint} & \textbf{Width} & \textbf{Layout Adjustment} \\
+\midrule
+Mobile (primary) & $<$ 768\,px & Full-width map, bottom sheet, stacked controls \\
+Tablet & 768--1024\,px & Map with side panel for directions \\
+Desktop & $>$ 1024\,px & Split view: map left, controls/directions right \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Orientation Change Handling}
+
+When the device rotates between portrait and landscape:
+
+\begin{enumerate}
+  \item Listen for the \texttt{orientationchange} event (or \texttt{resize} as fallback).
+  \item Recalculate canvas dimensions to fill the new viewport.
+  \item Adjust the transform matrix $\mathbf{T}$ to maintain the current center point and zoom level.
+  \item Reposition UI overlays based on new \texttt{dvh}/\texttt{dvw} values.
+\end{enumerate}
+
+The floor plan aspect ratio is preserved during orientation changes by fitting the image within the available canvas area while maintaining the current zoom center.
+
+\subsection{Performance Considerations}
+
+For the target building size (3 floors, $\sim$43 nodes):
+
+\begin{itemize}
+  \item Total JSON data payload: $<$ 5\,KB. No lazy loading required.
+  \item Floor plan SVGs: $<$ 200\,KB per floor (estimated). All three can be preloaded.
+  \item Dijkstra computation: $<$ 1\,ms on any modern smartphone.
+  \item Canvas redraw: 60\,fps achievable for a graph of this size with basic 2D rendering.
+\end{itemize}
+
+The application can function entirely as a static site (no server-side computation), served from any hosting platform with HTTPS support. This is aligned with the lightweight web architecture approach used by Sawaby et al.\ \cite{Sawaby2019} and Wang et al.\ \cite{Wang2014} for browser-based indoor navigation.
