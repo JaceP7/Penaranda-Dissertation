@@ -105,11 +105,14 @@ const CHAT = (() => {
         body: JSON.stringify({ query })
       });
 
-      if (!res.ok) throw new Error(`Server error ${res.status}`);
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`${res.status}: ${errText.slice(0, 120)}`);
+      }
       const data = await res.json();
       _addMessage('bot', data.answer, data.department, data.subservice);
     } catch (err) {
-      _addMessage('bot', 'Sorry, I could not reach the assistant. Please try again.');
+      _addMessage('bot', `Error: ${err.message}`);
     } finally {
       _loading = false;
       _sendBtn.disabled = false;
