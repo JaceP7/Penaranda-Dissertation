@@ -175,11 +175,44 @@ const DOM = {
 // ── Init ──────────────────────────────────────────────────────────────────────
 let renderer;
 
+// ── Department navigation (called by CHAT "Take me there") ────────────────────
+let _departments = null;
+
+async function _loadDepartments() {
+  if (_departments) return _departments;
+  try {
+    const res = await fetch('data/departments.json');
+    _departments = await res.json();
+  } catch (e) {
+    _departments = {};
+  }
+  return _departments;
+}
+
+async function navigateToDepartment(deptName) {
+  const deps = await _loadDepartments();
+  const loc  = deps[deptName];
+  if (!loc || loc.floor === null) {
+    alert(`Location for "${deptName}" has not been mapped yet.\nPlease ask staff for directions.`);
+    return;
+  }
+  if (loc.floor !== STATE.currentFloor) switchFloor(loc.floor);
+  const id = nodeId(loc.row, loc.col);
+  STATE.endId       = id;
+  renderer.endId    = id;
+  recompute();
+  renderer._draw();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   loadStampPlacements();
   loadStampPresets();
   navInit();       // initialise NAV.position to grid center
   loadGridState(); // restore saved floor plan (after navInit so NODES exist)
+
+  // Init chat widget
+  CHAT.init();
+  CHAT.onNavigate(navigateToDepartment);
 
   renderer = new GridRenderer(DOM.canvas);
   renderer.currentFloor = STATE.currentFloor;
