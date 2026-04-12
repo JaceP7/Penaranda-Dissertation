@@ -10,18 +10,16 @@ const CHAT = (() => {
   // ── State ────────────────────────────────────────────────────────────
   let _open      = false;
   let _loading   = false;
-  const _messages = [];   // { role: 'user'|'bot', text, department?, subservice? }
+  const _messages = [];   // { role, text, department?, subservice?, options? }
 
-  // ── DOM refs (populated on init) ────────────────────────────────────
+  // ── DOM refs ─────────────────────────────────────────────────────────
   let _panel, _msgList, _input, _sendBtn, _toggleBtn, _badge;
 
-  // ── Navigate callback — wired by app.js ─────────────────────────────
-  let _onNavigate = null;   // function(department)
-
-  // ── Public: wire the navigate callback ──────────────────────────────
+  // ── Navigate callback — wired by app.js ──────────────────────────────
+  let _onNavigate = null;
   function onNavigate(fn) { _onNavigate = fn; }
 
-  // ── Toggle panel open / closed ───────────────────────────────────────
+  // ── Toggle panel ──────────────────────────────────────────────────────
   function toggle() {
     _open = !_open;
     _panel.classList.toggle('chat-open', _open);
@@ -33,18 +31,36 @@ const CHAT = (() => {
     }
   }
 
-  // ── Add a message to history and render ──────────────────────────────
-  function _addMessage(role, text, department, subservice) {
-    _messages.push({ role, text, department: department || null, subservice: subservice || null });
+  // ── Parse numbered/bulleted list items from text ──────────────────────
+  function _extractOptions(text) {
+    const lines = text.split('\n');
+    const opts  = [];
+    for (const line of lines) {
+      const m = line.match(/^[\s]*(?:\d+[.)]\s*|-\s*|\*\s*)(.+)/);
+      if (m) opts.push(m[1].trim());
+    }
+    return opts.length >= 2 ? opts : [];
+  }
+
+  // ── Add message ───────────────────────────────────────────────────────
+  function _addMessage(role, text, department, subservice, options) {
+    _messages.push({
+      role,
+      text,
+      department:  department  || null,
+      subservice:  subservice  || null,
+      options:     options     || []
+    });
     _renderMessages();
     _scrollBottom();
   }
 
-  // ── Render message list ───────────────────────────────────────────────
+  // ── Render ────────────────────────────────────────────────────────────
   function _renderMessages() {
     _msgList.innerHTML = '';
 
-    _messages.forEach(msg => {
+    _messages.forEach((msg, idx) => {
+      // Bubble
       const bubble = document.createElement('div');
       bubble.className = `chat-bubble chat-bubble-${msg.role}`;
       if (msg.role === 'bot') {
@@ -57,7 +73,26 @@ const CHAT = (() => {
       }
       _msgList.appendChild(bubble);
 
-      // "Take me there" button for bot messages that have a department
+      // Clickable option chips (only on last bot message that needs context)
+      const isLastMsg = idx === _messages.length - 1;
+      if (msg.role === 'bot' && msg.options && msg.options.length && isLastMsg) {
+        const chips = document.createElement('div');
+        chips.className = 'chat-chips';
+        msg.options.forEach(opt => {
+          const chip = document.createElement('button');
+          chip.className = 'chat-chip';
+          chip.textContent = opt;
+          chip.addEventListener('click', () => {
+            if (_loading) return;
+            _input.value = opt;
+            send();
+          });
+          chips.appendChild(chip);
+        });
+        _msgList.appendChild(chips);
+      }
+
+      // "Take me there" button
       if (msg.role === 'bot' && msg.department) {
         const loc = document.createElement('div');
         loc.className = 'chat-location';
@@ -72,7 +107,7 @@ const CHAT = (() => {
         navBtn.textContent = 'Take me there';
         navBtn.addEventListener('click', () => {
           if (_onNavigate) _onNavigate(msg.department);
-          if (_open) toggle();   // close chat panel so map is visible
+          if (_open) toggle();
         });
         loc.appendChild(navBtn);
 
@@ -80,7 +115,7 @@ const CHAT = (() => {
       }
     });
 
-    // Loading indicator
+    // Loading dots
     if (_loading) {
       const dots = document.createElement('div');
       dots.className = 'chat-bubble chat-bubble-bot chat-loading';
@@ -93,7 +128,7 @@ const CHAT = (() => {
     _msgList.scrollTop = _msgList.scrollHeight;
   }
 
-  // ── Send a query to /api/chat ─────────────────────────────────────────
+  // ── Send ──────────────────────────────────────────────────────────────
   async function send() {
     const query = _input.value.trim();
     if (!query || _loading) return;
@@ -123,7 +158,13 @@ const CHAT = (() => {
         throw new Error(`${res.status}: ${errText.slice(0, 120)}`);
       }
       const data = await res.json();
-      _addMessage('bot', data.answer, data.department, data.subservice);
+
+      // Use server-provided options, or auto-extract from answer text
+      const opts = (data.options && data.options.length)
+        ? data.options
+        : (data.needsContext ? _extractOptions(data.answer) : []);
+
+      _addMessage('bot', data.answer, data.department, data.subservice, opts);
     } catch (err) {
       _addMessage('bot', `Error: ${err.message}`);
     } finally {
@@ -136,7 +177,6 @@ const CHAT = (() => {
 
   // ── Build DOM ─────────────────────────────────────────────────────────
   function _buildDOM() {
-    // Toggle button (floating)
     _toggleBtn = document.createElement('button');
     _toggleBtn.id = 'chatToggleBtn';
     _toggleBtn.className = 'chat-toggle-btn';
@@ -148,10 +188,8 @@ const CHAT = (() => {
     _badge.className = 'chat-badge';
     _badge.style.display = 'none';
     _toggleBtn.appendChild(_badge);
-
     _toggleBtn.addEventListener('click', toggle);
 
-    // Panel
     _panel = document.createElement('div');
     _panel.id = 'chatPanel';
     _panel.className = 'chat-panel';
@@ -174,19 +212,16 @@ const CHAT = (() => {
     document.body.appendChild(_toggleBtn);
     document.body.appendChild(_panel);
 
-    _msgList  = document.getElementById('chatMessages');
-    _input    = document.getElementById('chatInput');
-    _sendBtn  = document.getElementById('chatSendBtn');
+    _msgList = document.getElementById('chatMessages');
+    _input   = document.getElementById('chatInput');
+    _sendBtn = document.getElementById('chatSendBtn');
 
     _panel.querySelector('.chat-close-btn').addEventListener('click', toggle);
     _sendBtn.addEventListener('click', send);
     _input.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
   }
 
-  // ── Init ──────────────────────────────────────────────────────────────
-  function init() {
-    _buildDOM();
-  }
+  function init() { _buildDOM(); }
 
   return { init, onNavigate, toggle };
 })();

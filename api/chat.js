@@ -117,8 +117,9 @@ Rules:
 
   return res.status(200).json({
     answer,
-    department:  topMatch?.department  ?? null,
-    subservice:  topMatch?.subservice  ?? null,
-    needsContext: isAskingForContext
+    department:   topMatch?.department ?? null,
+    subservice:   topMatch?.subservice ?? null,
+    needsContext: isAskingForContext,
+    options:      isAskingForContext ? options : []
   });
 };

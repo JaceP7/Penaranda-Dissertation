@@ -9,7 +9,11 @@ To get zero browser warnings:
   2. Restart this server — it will auto-detect the mkcert cert.
 """
 
-import http.server, ssl, subprocess, os, sys, socket, shutil, json
+import http.server, ssl, subprocess, os, sys, socket, shutil, json, re
+try:
+    import urllib.request as _urlreq
+except ImportError:
+    pass
 
 PORT     = 3001
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -105,7 +109,95 @@ print('=' * 55)
 
 os.chdir(BASE_DIR)
 
-STATE_FILE = os.path.join(BASE_DIR, 'app-state.json')
+STATE_FILE    = os.path.join(BASE_DIR, 'app-state.json')
+SERVICES_FILE = os.path.join(BASE_DIR, 'data', 'services.json')
+OLLAMA_URL    = 'http://localhost:11434/api/chat'
+OLLAMA_MODEL  = 'qwen2.5:3b'   # change if you pulled a different tag
+
+# ── Local RAG helpers ─────────────────────────────────────────────────────────
+
+def _load_services():
+    try:
+        with open(SERVICES_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return []
+
+def _rag_search(services, query, top_n=5):
+    tokens = [t for t in re.split(r'\s+', query.lower()) if len(t) > 2]
+    if not tokens:
+        return services[:top_n], False, []
+    def score(entry):
+        blob = ' '.join([entry.get('service',''), entry.get('subservice',''),
+                         entry.get('department','')] + entry.get('steps',[])).lower()
+        return sum(1 for t in tokens if t in blob)
+    scored = sorted(services, key=score, reverse=True)
+    top    = scored[:top_n]
+    top_score = score(top[0]) if top else 0
+    tied  = [e for e in top if score(e) >= max(top_score - 1, 1)]
+    unique_sub = list(dict.fromkeys(e['subservice'] for e in tied))
+    ambiguous  = len(unique_sub) > 2
+    return top, ambiguous, unique_sub[:6] if ambiguous else []
+
+def _build_context(results):
+    parts = []
+    for r in results:
+        parts.append(
+            f"Service: {r.get('service','')}\n"
+            f"Sub-service: {r.get('subservice','')}\n"
+            f"Department: {r.get('department','')}\n"
+            f"Steps:\n" + '\n'.join(r.get('steps', []))
+        )
+    return '\n\n---\n\n'.join(parts)
+
+SYSTEM_PROMPT = """You are a helpful assistant for Calamba City Hall.
+Answer questions about city government services using ONLY the provided context.
+
+Rules:
+1. If the query matches MULTIPLE different sub-services, list the options clearly and ask which one they need.
+2. Only provide detailed steps once the specific sub-service is clear.
+3. When giving steps, always end with "Go to: [EXACT DEPARTMENT NAME]".
+4. If unrelated to city services, say you can only help with Calamba City Hall services.
+5. Keep answers concise."""
+
+def _call_ollama(messages):
+    payload = json.dumps({
+        'model': OLLAMA_MODEL,
+        'messages': messages,
+        'stream': False,
+        'options': {'temperature': 0.3}
+    }).encode('utf-8')
+    req = _urlreq.Request(OLLAMA_URL, data=payload,
+                          headers={'Content-Type': 'application/json'},
+                          method='POST')
+    try:
+        with _urlreq.urlopen(req, timeout=60) as resp:
+            data = json.loads(resp.read())
+            return data.get('message', {}).get('content', 'No answer returned.')
+    except Exception as e:
+        return f'Ollama error: {e}'
+
+def _handle_rag(query, history):
+    services = _load_services()
+    results, ambiguous, options = _rag_search(services, query)
+    context  = _build_context(results)
+    messages = [{'role': 'system', 'content': SYSTEM_PROMPT}]
+    messages += (history or [])[-6:]
+    messages.append({'role': 'user',
+                     'content': f'Context:\n{context}\n\nUser question: {query}'})
+    raw    = _call_ollama(messages)
+    answer = re.sub(r'<think>[\s\S]*?</think>', '', raw, flags=re.IGNORECASE).strip()
+    is_asking = ambiguous or bool(re.search(
+        r'which.*service|which.*permit|could you specify|please clarify|which one',
+        answer, re.IGNORECASE))
+    top = results[0] if results and not is_asking else {}
+    return {
+        'answer':      answer,
+        'department':  top.get('department') if not is_asking else None,
+        'subservice':  top.get('subservice') if not is_asking else None,
+        'needsContext': is_asking,
+        'options':     options
+    }
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     """Static file server + /api/state GET/POST for cross-device grid sync."""
@@ -127,11 +219,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             super().do_GET()
 
     def do_POST(self):
+        length = int(self.headers.get('Content-Length', 0))
+        body   = self.rfile.read(length)
+
         if self.path == '/api/state':
-            length = int(self.headers.get('Content-Length', 0))
-            body   = self.rfile.read(length)
             try:
-                json.loads(body)          # validate before writing
+                json.loads(body)
                 with open(STATE_FILE, 'wb') as f:
                     f.write(body)
                 resp = b'{"ok":true}'
@@ -143,6 +236,27 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             except Exception:
                 self.send_response(400)
                 self.end_headers()
+
+        elif self.path == '/api/chat':
+            try:
+                payload = json.loads(body)
+                result  = _handle_rag(payload.get('query',''),
+                                      payload.get('history', []))
+                resp = json.dumps(result).encode('utf-8')
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.send_header('Content-Length', str(len(resp)))
+                self.end_headers()
+                self.wfile.write(resp)
+            except Exception as e:
+                err = json.dumps({'error': str(e)}).encode('utf-8')
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Content-Length', str(len(err)))
+                self.end_headers()
+                self.wfile.write(err)
+
         else:
             self.send_response(404)
             self.end_headers()
