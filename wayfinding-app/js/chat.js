@@ -47,7 +47,14 @@ const CHAT = (() => {
     _messages.forEach(msg => {
       const bubble = document.createElement('div');
       bubble.className = `chat-bubble chat-bubble-${msg.role}`;
-      bubble.textContent = msg.text;
+      if (msg.role === 'bot') {
+        bubble.innerHTML = msg.text
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\n/g, '<br>');
+      } else {
+        bubble.textContent = msg.text;
+      }
       _msgList.appendChild(bubble);
 
       // "Take me there" button for bot messages that have a department
