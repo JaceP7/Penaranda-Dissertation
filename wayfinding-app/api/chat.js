@@ -66,7 +66,7 @@ If the query is not about city services, politely say you can only assist with C
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'qwen-qwen3-32b',
+        model: 'qwen/qwen3-32b',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Context:\n${context}\n\nUser question: ${query}` }
@@ -85,7 +85,9 @@ If the query is not about city services, politely say you can only assist with C
   }
 
   const data = await groqRes.json();
-  const answer = data.choices?.[0]?.message?.content ?? 'No answer returned.';
+  // Strip Qwen3 reasoning blocks (<think>…</think>) before returning
+  const raw    = data.choices?.[0]?.message?.content ?? 'No answer returned.';
+  const answer = raw.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
 
   // Surface top match metadata so the frontend can offer a "Take me there" button
   const topMatch = results[0] ?? null;
