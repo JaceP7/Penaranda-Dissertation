@@ -109,7 +109,13 @@ const CHAT = (() => {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query })
+        body: JSON.stringify({
+          query,
+          history: _messages.slice(-6).map(m => ({
+            role:    m.role === 'user' ? 'user' : 'assistant',
+            content: m.text
+          }))
+        })
       });
 
       if (!res.ok) {

@@ -1,14 +1,15 @@
 /**
  * api/chat.js — Vercel serverless function
- * Receives { query } → keyword-retrieves top-3 services → calls Groq Qwen3-32B → returns { answer, department, subservice }
+ * Receives { query, history? } → keyword-retrieves top-5 services → calls Groq Qwen3-32B
+ * Returns { answer, department, subservice, needsContext }
  */
 
 const services = require('../wayfinding-app/data/services.json');
 
-// Simple keyword scorer: counts how many query tokens appear in the entry text
-function search(query, topN = 3) {
+// Keyword scorer — returns entries with their scores
+function search(query, topN = 5) {
   const tokens = query.toLowerCase().split(/\s+/).filter(t => t.length > 2);
-  if (!tokens.length) return services.slice(0, topN);
+  if (!tokens.length) return { results: services.slice(0, topN), ambiguous: false };
 
   const scored = services.map(entry => {
     const blob = [
@@ -22,10 +23,23 @@ function search(query, topN = 3) {
     return { entry, score };
   });
 
-  return scored
-    .sort((a, b) => b.score - a.score)
-    .slice(0, topN)
-    .map(x => x.entry);
+  const sorted = scored.sort((a, b) => b.score - a.score);
+  const top    = sorted.slice(0, topN);
+
+  // Ambiguous: multiple results share the same top score AND belong to same service category
+  const topScore = top[0]?.score ?? 0;
+  const tiedEntries = topScore > 0
+    ? top.filter(x => x.score >= topScore - 1 && x.score > 0)
+    : [];
+
+  const uniqueSubservices = new Set(tiedEntries.map(x => x.entry.subservice));
+  const ambiguous = uniqueSubservices.size > 2;
+
+  return {
+    results: top.map(x => x.entry),
+    ambiguous,
+    options: ambiguous ? [...uniqueSubservices].slice(0, 6) : []
+  };
 }
 
 function buildContext(results) {
@@ -35,7 +49,6 @@ function buildContext(results) {
 }
 
 module.exports = async function handler(req, res) {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -43,19 +56,30 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { query } = req.body || {};
+  const { query, history = [] } = req.body || {};
   if (!query || typeof query !== 'string') {
     return res.status(400).json({ error: 'query is required' });
   }
 
-  const results = search(query);
+  const { results, ambiguous, options } = search(query);
   const context = buildContext(results);
 
   const systemPrompt = `You are a helpful assistant for Calamba City Hall.
-Answer the user's question about city government services using the provided context only.
-Be concise and direct. Always state the exact department name where the service is processed.
-Format your answer clearly: first explain the process briefly, then state "Go to: [DEPARTMENT NAME]".
-If the query is not about city services, politely say you can only assist with Calamba City Hall services.`;
+Answer questions about city government services using ONLY the provided context.
+
+Rules:
+1. If the user's query matches MULTIPLE different sub-services (e.g. "business permit" could mean new application, renewal, amendment, retirement, etc.), DO NOT guess. Instead, list the available options clearly and ask which one they need.
+2. Only provide detailed step-by-step instructions once the specific sub-service is clear from the conversation.
+3. When giving steps, always end with "Go to: [EXACT DEPARTMENT NAME]".
+4. If the query is unrelated to city services, say you can only help with Calamba City Hall services.
+5. Keep answers concise.`;
+
+  // Build conversation messages including history
+  const messages = [
+    { role: 'system', content: systemPrompt },
+    ...history.slice(-6),  // keep last 3 exchanges for context
+    { role: 'user', content: `Context:\n${context}\n\nUser question: ${query}` }
+  ];
 
   let groqRes;
   try {
@@ -67,12 +91,9 @@ If the query is not about city services, politely say you can only assist with C
       },
       body: JSON.stringify({
         model: 'qwen/qwen3-32b',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Context:\n${context}\n\nUser question: ${query}` }
-        ],
+        messages,
         temperature: 0.3,
-        max_tokens: 400
+        max_tokens: 500
       })
     });
   } catch (err) {
@@ -85,16 +106,19 @@ If the query is not about city services, politely say you can only assist with C
   }
 
   const data = await groqRes.json();
-  // Strip Qwen3 reasoning blocks (<think>…</think>) before returning
   const raw    = data.choices?.[0]?.message?.content ?? 'No answer returned.';
   const answer = raw.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
 
-  // Surface top match metadata so the frontend can offer a "Take me there" button
-  const topMatch = results[0] ?? null;
+  // Only surface department/Take me there when answer is specific (not a clarification prompt)
+  const isAskingForContext = ambiguous ||
+    /which.*service|which.*permit|could you specify|please clarify|which one/i.test(answer);
+
+  const topMatch = isAskingForContext ? null : (results[0] ?? null);
 
   return res.status(200).json({
     answer,
-    department: topMatch?.department ?? null,
-    subservice: topMatch?.subservice ?? null
+    department:  topMatch?.department  ?? null,
+    subservice:  topMatch?.subservice  ?? null,
+    needsContext: isAskingForContext
   });
 };
