@@ -3,7 +3,7 @@
  * Receives { query } → keyword-retrieves top-3 services → calls Groq Qwen3-32B → returns { answer, department, subservice }
  */
 
-const services = require('../data/services.json');
+const services = require('./wayfinding-app/data/services.json');
 
 // Simple keyword scorer: counts how many query tokens appear in the entry text
 function search(query, topN = 3) {
