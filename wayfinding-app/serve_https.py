@@ -15,6 +15,25 @@ try:
 except ImportError:
     pass
 
+# ── Try to load the full FAISS pipeline; fall back to keyword search ──────────
+_PIPELINE = None
+def _init_pipeline():
+    global _PIPELINE
+    if _PIPELINE is not None:
+        return True
+    try:
+        # Add repo root to path so rag_engine is importable
+        _repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if _repo_root not in sys.path:
+            sys.path.insert(0, _repo_root)
+        from rag_engine.pipeline import CityPipeline
+        _PIPELINE = CityPipeline()
+        print('[RAG] Full pipeline loaded (FAISS + e5-large + bge-reranker + Ollama)')
+        return True
+    except Exception as e:
+        print(f'[RAG] Full pipeline unavailable ({e}); using keyword fallback')
+        return False
+
 PORT     = 3001
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -178,6 +197,23 @@ def _call_ollama(messages):
         return f'Ollama error: {e}'
 
 def _handle_rag(query, history):
+    # ── Full pipeline (FAISS + embeddings + reranker + Ollama) ───────────────
+    if _init_pipeline() and _PIPELINE is not None:
+        try:
+            result = _PIPELINE.answer(query, top_k=5, use_reranker=True)
+            return {
+                'answer':      result['answer'],
+                'department':  result['department'],
+                'subservice':  result['subservice'],
+                'needsContext': result['needsContext'],
+                'options':     result['options'],
+                'rewritten':   result['rewritten_query'],
+                'latency_ms':  result['latency_ms'],
+            }
+        except Exception as e:
+            print(f'[RAG] Pipeline error: {e}; falling back to keyword search')
+
+    # ── Keyword fallback (no FAISS index / Ollama not running) ───────────────
     services = _load_services()
     results, ambiguous, options = _rag_search(services, query)
     context  = _build_context(results)

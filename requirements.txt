@@ -1,0 +1,13 @@
+# Geo-Agentic RAG — dissertation dependencies
+# Install PyTorch first (CPU is fine for 74 vectors):
+#   pip install torch>=2.2.0
+# Then:
+#   pip install -r requirements.txt
+
+torch>=2.2.0
+sentence-transformers>=2.7.0   # multilingual-e5-large + bge-reranker
+faiss-cpu>=1.8.0               # FAISS vector index
+ollama>=0.3.0                  # local LLM via Ollama
+numpy>=1.26.0
+tqdm>=4.66.0
+python-dotenv>=1.0.0
