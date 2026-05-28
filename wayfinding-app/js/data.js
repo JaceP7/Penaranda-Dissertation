@@ -1,14 +1,17 @@
 /**
- * data.js — 100×100 grid graph for pathfinding
+ * data.js — 75×75 grid graph for pathfinding
  *
- * Node IDs: "row,col"  e.g. "0,0" = top-left, "99,99" = bottom-right.
+ * Node IDs: "row,col"  e.g. "0,0" = top-left, "74,74" = bottom-right.
  * All edges are 4-directional (up/down/left/right), weight = 1.
+ *
+ * The 75×75 size is calibrated to the actual Calamba City Hall building
+ * footprint: ~0.6 m per cell over an octagonal floor ~45 m wide.
  */
 
 "use strict";
 
-const GRID_ROWS = 25;
-const GRID_COLS = 25;
+const GRID_ROWS = 75;
+const GRID_COLS = 75;
 
 // ── Generate nodes ────────────────────────────────────────────────────────────
 const NODES = [];

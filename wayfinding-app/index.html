@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Grid Pathfinder</title>
-  <link rel="stylesheet" href="css/app.css?v=24" />
+  <title>Calamba City Hall — Wayfinding System</title>
+  <link rel="stylesheet" href="css/app.css?v=29" />
 </head>
 <body>
 
   <!-- ═══ HEADER ═══════════════════════════════════════════════════════ -->
   <header class="app-header">
-    <h1>🗺️ Grid Pathfinder</h1>
+    <h1>🗺️ Calamba City Hall Wayfinding</h1>
     <div class="header-actions">
 
       <!-- ── Secondary (map-editing tools) ─────────────────────────
@@ -29,7 +29,9 @@
 
       <!-- ── Primary (navigation tools) — always visible ──────────── -->
       <button id="navModeBtn"    class="btn btn-nav-mode" aria-pressed="false">📍 Navigate</button>
+      <button id="captureModeBtn" class="btn btn-capture" aria-pressed="false" title="Fieldwork: capture office coordinates">🎯 Capture</button>
       <button id="syncBtn"       class="btn btn-ghost btn-sync" title="Pull latest map from server (shares across devices)">☁ Sync</button>
+      <a href="admin.html" class="btn btn-ghost btn-admin" title="Service Inquiry Analytics Dashboard" target="_blank">📊</a>
       <div class="floor-selector">
         <button id="floorDown" class="btn btn-ghost btn-floor-step" title="Go to lower floor">▼</button>
         <span   id="floorDisplay" class="floor-label">Floor 1</span>
@@ -87,6 +89,18 @@
           <button id="ptEraseBtn" class="btn-ptype"        data-type="erase">✕ Erase</button>
         </div>
 
+        <!-- Capture toolbar (shown only when Capture Mode is active) -->
+        <div id="captureBar" class="capture-bar" style="display:none">
+          <span class="capture-label">🎯 At office:</span>
+          <select id="captureDeptSelect" class="capture-select">
+            <option value="">— select office —</option>
+          </select>
+          <button id="captureHereBtn" class="btn-capture-act" title="Capture using my live PDR position">📍 My position</button>
+          <span id="captureCount" class="capture-count">0 / 21</span>
+          <button id="captureExportBtn" class="btn-capture-act btn-capture-export" title="Download coordinates as JSON">💾 Export</button>
+          <button id="captureClearBtn" class="btn-capture-act btn-capture-clear" title="Clear all captured points">🗑</button>
+        </div>
+
         <!-- Selection action toolbar (shown only when a selection exists) -->
         <div id="selToolbar" class="sel-toolbar" style="display:none">
           <span class="sel-toolbar-label">Selection:</span>
@@ -100,7 +114,7 @@
       </div><!-- /overlay-bars -->
 
       <canvas id="gridCanvas"
-        aria-label="25×25 pathfinding grid. Tap a cell to set destination.">
+        aria-label="75×75 pathfinding grid. Tap a cell to set destination.">
       </canvas>
 
       <!-- Combined tools panel -->
@@ -224,8 +238,8 @@
       <p class="qr-gen-title">Generate QR for cell <span id="qrGenLabel"></span></p>
       <div class="qr-gen-inputs">
         <label>Floor <input id="qrGenFloorInput" type="number" min="1" max="10" value="1" title="1 = ground floor" /></label>
-        <label>Row <input id="qrGenRowInput" type="number" min="0" max="24" value="0" /></label>
-        <label>Col <input id="qrGenColInput" type="number" min="0" max="24" value="0" /></label>
+        <label>Row <input id="qrGenRowInput" type="number" min="0" max="74" value="0" /></label>
+        <label>Col <input id="qrGenColInput" type="number" min="0" max="74" value="0" /></label>
         <button id="qrGenGoBtn" class="btn-nav">▶ Generate</button>
       </div>
       <div id="qrGenCanvas" style="display:inline-block;"></div>
@@ -242,13 +256,14 @@
   <script src="js/lib/jsQR.js"></script>
   <script src="js/lib/qrcode.min.js"></script>
 
-  <script src="js/data.js?v=24"></script>
-  <script src="js/dijkstra.js?v=24"></script>
-  <script src="js/renderer.js?v=24"></script>
-  <script src="js/compass.js?v=24"></script>
-  <script src="js/nav.js?v=24"></script>
-  <script src="js/app.js?v=24"></script>
-  <script src="js/chat.js?v=24"></script>
+  <script src="js/data.js?v=29"></script>
+  <script src="js/floor_presets.js?v=29"></script>
+  <script src="js/dijkstra.js?v=29"></script>
+  <script src="js/renderer.js?v=29"></script>
+  <script src="js/compass.js?v=29"></script>
+  <script src="js/nav.js?v=29"></script>
+  <script src="js/app.js?v=29"></script>
+  <script src="js/chat.js?v=29"></script>
 
 </body>
 </html>

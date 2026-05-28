@@ -1,0 +1,2 @@
+id,category,difficulty,language,passed,latency_s,query,expected_departments,returned_dept,needs_context,rewritten,answer_preview,verdict_reason
+Q22,ambiguous,hard,filipino,FAIL,62.058,Saan ako pupunta?,,,False,,,ambiguous: passes if needsContext=True

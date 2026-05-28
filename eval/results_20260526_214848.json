@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "total_queries": 3,
+    "api_ok": 3,
+    "api_errors": 0,
+    "passed": 1,
+    "failed": 2,
+    "pass_rate": 33.3,
+    "latency_mean_s": 10.94,
+    "latency_median_s": 9.15,
+    "latency_p95_s": null,
+    "latency_max_s": 14.93,
+    "by_category": {
+      "ambiguous": {
+        "total": 1,
+        "passed": 0,
+        "rate": 0.0
+      },
+      "direct-department": {
+        "total": 1,
+        "passed": 0,
+        "rate": 0.0
+      },
+      "direct-service": {
+        "total": 1,
+        "passed": 1,
+        "rate": 100.0
+      }
+    },
+    "by_difficulty": {
+      "easy": {
+        "total": 2,
+        "passed": 1,
+        "rate": 50.0
+      },
+      "hard": {
+        "total": 1,
+        "passed": 0,
+        "rate": 0.0
+      }
+    },
+    "by_language": {
+      "filipino": {
+        "total": 3,
+        "passed": 1,
+        "rate": 33.3
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "Q01",
+      "query": "Saan po pwedeng mag-apply ng business permit?",
+      "expected_department": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "language": "filipino",
+      "category": "direct-service",
+      "difficulty": "easy",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 14.933,
+      "error": null,
+      "passed": true,
+      "verdict_reason": "dept_match=True, text_match=False",
+      "returned_dept": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+      "needs_context": false,
+      "answer_preview": "May dalawang uri po ng application para sa business permit:\n\n1.  **Application",
+      "rewritten": "Saan po pwedeng mag-apply ng business permit?"
+    },
+    {
+      "id": "Q07",
+      "query": "Saan ang office ng mayor?",
+      "expected_department": [
+        "OFFICE OF THE CITY MAYOR"
+      ],
+      "language": "filipino",
+      "category": "direct-department",
+      "difficulty": "easy",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 8.738,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+      "needs_context": false,
+      "answer_preview": "I could not find that service in the Calamba City Hall directory.",
+      "rewritten": "Saan ang office ng mayor?"
+    },
+    {
+      "id": "Q22",
+      "query": "Saan ako pupunta?",
+      "expected_department": [],
+      "language": "filipino",
+      "category": "ambiguous",
+      "difficulty": "hard",
+      "expected_behavior": "should ask clarifying question",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 9.154,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "ambiguous: passes if needsContext=True",
+      "returned_dept": "BUILDING REGULATORY SERVICES OFFICE",
+      "needs_context": false,
+      "answer_preview": "Ollama error: HTTP Error 500: Internal Server Error",
+      "rewritten": null
+    }
+  ]
+}

@@ -25,9 +25,47 @@ const STATE = {
   selectMode:   false,   // drag to select; toolbar shows CW/CCW/Move/Delete
   panelOpen:    false,   // tools panel visible
   navMode:      false,   // navigate mode: position tracks PDR/QR, path from ME → tapped cell
+  captureMode:  false,   // fieldwork: tap a cell (or use PDR pos) to record an office coordinate
   currentFloor: 0,       // active floor index (0 = ground)
   paintType:    'wall',  // active paint type: 'wall' | 'door' | 'stair' | 'erase'
 };
+
+// ── Capture points (fieldwork coordinate capture) ──────────────────────────────
+// Each entry: { floor, row, col, name }  keyed by office name (one coord per office).
+const CAPTURED_POINTS = {};
+const CAPTURE_LS_KEY  = 'wayfinding-captures-v1';
+const CUSTOM_OFFICES_LS_KEY = 'wayfinding-custom-offices-v1';
+
+// Offices added on-site that aren't in departments.json (persisted).
+let CUSTOM_OFFICES = [];
+
+// Hardcoded fallback so the capture dropdown ALWAYS has the 21 canonical offices,
+// even if data/departments.json fails to load over the network.
+const OFFICE_FALLBACK = [
+  'BUILDING REGULATORY SERVICES OFFICE',
+  'CITY ACCOUNTING AND INTERNAL CONTROL OFFICE',
+  'CITY ADMINISTRATION OFFICE',
+  'CITY ASSESSMENT OFFICE',
+  'OFFICE FOR THE SENIOR CITIZENS AFFAIRS',
+  'PERSONS WITH DISABILITY AFFAIRS OFFICE',
+  'CITY SOCIAL SERVICES DEPARTMENT',
+  'BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE',
+  'CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO',
+  'CITY PLANNING AND DEVELOPMENT OFFICE',
+  'CITY HUMAN RESOURCE AND MANAGEMENT OFFICE',
+  'CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT',
+  'CITY COLLEGE OF CALAMBA',
+  'CITY POPULATION MANAGEMENT OFFICE',
+  'INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE',
+  'CITY HEALTH SERVICES DEPARTMENT',
+  'VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE',
+  'OFFICE OF THE CITY VICE-MAYOR',
+  'OFFICE OF THE CITY MAYOR',
+  'COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT',
+  'CITY LEGAL SERVICES OFFICE',
+];
+
+const ADD_NEW_SENTINEL = '__ADD_NEW__';
 
 // ── Selection state ───────────────────────────────────────────────────────────
 let selectionData = null;  // { r1, c1, r2, c2, pattern } — captured selection
@@ -127,6 +165,14 @@ const DOM = {
   // Mode buttons
   selectBtn:       $('selectModeBtn'),
   navBtn:          $('navModeBtn'),
+  captureBtn:      $('captureModeBtn'),
+  // Capture bar
+  captureBar:        $('captureBar'),
+  captureDeptSelect: $('captureDeptSelect'),
+  captureHereBtn:    $('captureHereBtn'),
+  captureCount:      $('captureCount'),
+  captureExportBtn:  $('captureExportBtn'),
+  captureClearBtn:   $('captureClearBtn'),
   // Nav panel
   navPanel:        $('navPanel'),
   navPosDisplay:   $('navPosDisplay'),
@@ -198,15 +244,16 @@ async function navigateToDepartment(deptName) {
   }
   if (loc.floor !== STATE.currentFloor) switchFloor(loc.floor);
   const id = nodeId(loc.row, loc.col);
-  STATE.endId       = id;
-  renderer.endId    = id;
+  STATE.endId = id;
+  renderer.setEnd(id);   // setEnd() sets _endId + redraws; direct .endId was wrong
   recompute();
-  renderer._draw();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   loadStampPlacements();
   loadStampPresets();
+  loadCaptures();         // restore any fieldwork coordinate captures
+  _loadCustomOffices();   // restore any on-site custom offices
   navInit();       // initialise NAV.position to grid center
   loadGridState(); // restore saved floor plan (after navInit so NODES exist)
 
@@ -301,7 +348,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   DOM.selectBtn.addEventListener('click',() => setSelectMode(!STATE.selectMode));
   DOM.navBtn.addEventListener('click',   () => setNavMode(!STATE.navMode));
+  DOM.captureBtn.addEventListener('click', () => setCaptureMode(!STATE.captureMode));
   DOM.stampBtn.addEventListener('click', () => setToolsPanel(!STATE.panelOpen));
+
+  // Capture bar buttons
+  DOM.captureDeptSelect.addEventListener('change', _onCaptureDeptChange);
+  DOM.captureHereBtn.addEventListener('click', captureAtPosition);
+  DOM.captureExportBtn.addEventListener('click', exportCaptures);
+  DOM.captureClearBtn.addEventListener('click', clearCaptures);
   DOM.clearBtn.addEventListener('click', clearWalls);
   DOM.resetBtn.addEventListener('click', reset);
   DOM.newMapBtn.addEventListener('click', clearGridState);
@@ -471,6 +525,18 @@ function handleCellTap(row, col) {
   const id   = nodeId(row, col);
   const node = NODE_MAP[id];
 
+  // ── Capture mode: tap-to-place a coordinate for the selected office ───────
+  if (STATE.captureMode) {
+    const name = DOM.captureDeptSelect.value;
+    if (!name) {
+      _flashCaptureFeedback('Pick an office from the dropdown, then tap its location.');
+      return;
+    }
+    captureOfficeAt(name, STATE.currentFloor, row, col);
+    _flashCaptureFeedback(`Captured ${_shortName(name)} @ F${STATE.currentFloor} (${row},${col})`);
+    return;
+  }
+
   if (id === STATE.startId) return;
 
   // ── Drop floating selection ──────────────────────────────────────────────
@@ -569,8 +635,9 @@ function recompute() {
 
 // ── Wall controls ─────────────────────────────────────────────────────────────
 function setWallMode(active) {
-  if (active && STATE.panelOpen)   setToolsPanel(false);
-  if (active && STATE.selectMode)  setSelectMode(false);
+  if (active && STATE.panelOpen)    setToolsPanel(false);
+  if (active && STATE.selectMode)   setSelectMode(false);
+  if (active && STATE.captureMode)  setCaptureMode(false);
   STATE.wallMode    = active;
   renderer.wallMode = active;
   DOM.wallBtn.classList.toggle('active', active);
@@ -613,7 +680,8 @@ function reset() {
 
 // ── Tools panel ───────────────────────────────────────────────────────────────
 function setToolsPanel(open) {
-  if (open && STATE.wallMode) setWallMode(false);
+  if (open && STATE.wallMode)    setWallMode(false);
+  if (open && STATE.captureMode) setCaptureMode(false);
   STATE.panelOpen    = open;
   STATE.stampMode    = open;
   renderer.stampMode = open;
@@ -628,9 +696,10 @@ function setToolsPanel(open) {
 // ── Navigate mode ─────────────────────────────────────────────────────────────
 function setNavMode(active) {
   if (active) {
-    if (STATE.wallMode)   setWallMode(false);
-    if (STATE.panelOpen)  setToolsPanel(false);
-    if (STATE.selectMode) setSelectMode(false);
+    if (STATE.wallMode)    setWallMode(false);
+    if (STATE.panelOpen)   setToolsPanel(false);
+    if (STATE.selectMode)  setSelectMode(false);
+    if (STATE.captureMode) setCaptureMode(false);
   } else {
     navStopPDR();
     navStopQRScan();
@@ -670,11 +739,195 @@ function setNavMode(active) {
   updateCursorAndHint();
 }
 
+// ── Capture mode (fieldwork coordinate capture) ───────────────────────────────
+function setCaptureMode(active) {
+  if (active) {
+    if (STATE.wallMode)   setWallMode(false);
+    if (STATE.panelOpen)  setToolsPanel(false);
+    if (STATE.selectMode) setSelectMode(false);
+    _populateCaptureDropdown();
+    _updateCaptureCount();
+  }
+  STATE.captureMode      = active;
+  renderer.captureActive = active;
+  DOM.captureBtn.classList.toggle('active', active);
+  DOM.captureBtn.setAttribute('aria-pressed', active);
+  DOM.captureBar.style.display = active ? 'flex' : 'none';
+  renderer._draw();
+  updateCursorAndHint();
+}
+
+/**
+ * Fill the office dropdown. Runs in two phases:
+ *  1. SYNCHRONOUS — populate immediately from the hardcoded fallback + custom
+ *     offices so the list is NEVER empty (even if the network fetch fails).
+ *  2. ASYNC enrich — try to load departments.json to pick up any extra offices.
+ */
+function _populateCaptureDropdown(preserveValue) {
+  const sel = DOM.captureDeptSelect;
+  const keep = preserveValue !== undefined ? preserveValue : sel.value;
+
+  // Merge: fallback offices + any loaded departments + custom-added offices
+  const loaded = _departments ? Object.keys(_departments) : [];
+  const names = Array.from(new Set([...OFFICE_FALLBACK, ...loaded, ...CUSTOM_OFFICES]))
+    .sort((a, b) => a.localeCompare(b));
+
+  sel.innerHTML = '<option value="">— select office —</option>';
+  names.forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    const isCustom = CUSTOM_OFFICES.includes(name) && !OFFICE_FALLBACK.includes(name);
+    const tick = CAPTURED_POINTS[name] ? '✓ ' : '';
+    opt.textContent = `${tick}${name}${isCustom ? ' (custom)' : ''}`;
+    sel.appendChild(opt);
+  });
+
+  // "Add new office" option at the very bottom
+  const addOpt = document.createElement('option');
+  addOpt.value = ADD_NEW_SENTINEL;
+  addOpt.textContent = '➕ Add new office…';
+  sel.appendChild(addOpt);
+
+  // Restore prior selection if still valid
+  if (keep && names.includes(keep)) sel.value = keep;
+
+  // Async enrich from departments.json (non-blocking; refreshes if it adds names)
+  _loadDepartments().then(deps => {
+    const extra = Object.keys(deps).filter(n => !names.includes(n));
+    if (extra.length) _populateCaptureDropdown(sel.value);
+  }).catch(() => {});
+}
+
+/** Handle the dropdown's "Add new office" option. */
+function _onCaptureDeptChange() {
+  const sel = DOM.captureDeptSelect;
+  if (sel.value !== ADD_NEW_SENTINEL) return;
+  const name = (prompt('Enter the new office name (as it appears on the door sign):') || '').trim();
+  if (!name) { sel.value = ''; return; }
+  const upper = name.toUpperCase();
+  if (!CUSTOM_OFFICES.includes(upper) && !OFFICE_FALLBACK.includes(upper)) {
+    CUSTOM_OFFICES.push(upper);
+    _saveCustomOffices();
+  }
+  _populateCaptureDropdown(upper);   // re-populate and select the new office
+}
+
+function _saveCustomOffices() {
+  try { localStorage.setItem(CUSTOM_OFFICES_LS_KEY, JSON.stringify(CUSTOM_OFFICES)); } catch (_) {}
+}
+function _loadCustomOffices() {
+  try {
+    const raw = localStorage.getItem(CUSTOM_OFFICES_LS_KEY);
+    if (raw) CUSTOM_OFFICES = JSON.parse(raw);
+  } catch (_) { CUSTOM_OFFICES = []; }
+}
+
+/** Record a capture: office name -> (floor, row, col). */
+function captureOfficeAt(name, floor, row, col) {
+  if (!name || name === ADD_NEW_SENTINEL) {
+    alert('Select an office from the dropdown first.');
+    return false;
+  }
+  CAPTURED_POINTS[name] = { floor, row, col, name };
+  _saveCaptures();
+  _updateCaptureCount();
+  _populateCaptureDropdown();   // refresh the ✓ marks
+  renderer._draw();
+  return true;
+}
+
+/** Capture the currently-selected office at the live PDR/nav position. */
+function captureAtPosition() {
+  const name = DOM.captureDeptSelect.value;
+  const { row, col } = NAV.position;
+  if (captureOfficeAt(name, STATE.currentFloor, row, col)) {
+    _flashCaptureFeedback(`Captured ${_shortName(name)} @ F${STATE.currentFloor} (${row},${col})`);
+  }
+}
+
+function clearCaptures() {
+  if (!Object.keys(CAPTURED_POINTS).length) return;
+  if (!confirm('Clear ALL captured coordinates? This cannot be undone.')) return;
+  for (const k of Object.keys(CAPTURED_POINTS)) delete CAPTURED_POINTS[k];
+  _saveCaptures();
+  _updateCaptureCount();
+  _populateCaptureDropdown();
+  renderer._draw();
+}
+
+/** Export captures as a departments.json-ready file. */
+async function exportCaptures() {
+  const deps = await _loadDepartments().catch(() => ({}));
+  // Union of: fallback 21 + loaded departments + custom offices + anything captured
+  const allNames = Array.from(new Set([
+    ...OFFICE_FALLBACK,
+    ...Object.keys(deps || {}),
+    ...CUSTOM_OFFICES,
+    ...Object.keys(CAPTURED_POINTS),
+  ])).sort((a, b) => a.localeCompare(b));
+
+  const out = {};
+  allNames.forEach(name => {
+    const cap = CAPTURED_POINTS[name];
+    out[name] = cap
+      ? { floor: cap.floor, row: cap.row, col: cap.col }
+      : { floor: null, row: null, col: null };
+  });
+  const blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'departments.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  const n = Object.keys(CAPTURED_POINTS).length;
+  _flashCaptureFeedback(`Exported departments.json (${n} mapped)`);
+}
+
+function _updateCaptureCount() {
+  const loaded = _departments ? Object.keys(_departments) : [];
+  const total  = new Set([...OFFICE_FALLBACK, ...loaded, ...CUSTOM_OFFICES]).size;
+  const done   = Object.keys(CAPTURED_POINTS).length;
+  if (DOM.captureCount) DOM.captureCount.textContent = `${done} / ${total}`;
+}
+
+function _shortName(name) {
+  return name.length > 22 ? name.slice(0, 20) + '…' : name;
+}
+
+/** Build a short acronym code from a department name for compact map labels. */
+function DEPT_CODE(name) {
+  const stop = new Set(['and', 'the', 'of', 'for', 'a', 'an', '-']);
+  const words = name.split(/\s+/).filter(w => w && !stop.has(w.toLowerCase()));
+  const acr = words.map(w => w[0]).join('').toUpperCase();
+  return acr.length >= 2 ? acr.slice(0, 6) : name.slice(0, 6).toUpperCase();
+}
+
+function _flashCaptureFeedback(msg) {
+  DOM.hintBar.textContent = '✓ ' + msg;
+  DOM.hintBar.classList.add('hint-success');
+  setTimeout(() => { DOM.hintBar.classList.remove('hint-success'); updateCursorAndHint(); }, 2500);
+}
+
+function _saveCaptures() {
+  try { localStorage.setItem(CAPTURE_LS_KEY, JSON.stringify(CAPTURED_POINTS)); } catch (_) {}
+}
+
+function loadCaptures() {
+  try {
+    const raw = localStorage.getItem(CAPTURE_LS_KEY);
+    if (raw) Object.assign(CAPTURED_POINTS, JSON.parse(raw));
+  } catch (_) {}
+}
+
 // ── Select mode ───────────────────────────────────────────────────────────────
 function setSelectMode(active) {
   if (active) {
-    if (STATE.wallMode)  setWallMode(false);
-    if (STATE.panelOpen) setToolsPanel(false);
+    if (STATE.wallMode)    setWallMode(false);
+    if (STATE.panelOpen)   setToolsPanel(false);
+    if (STATE.captureMode) setCaptureMode(false);
   }
   STATE.selectMode        = active;
   renderer.selectMode     = active;
@@ -1017,23 +1270,74 @@ function saveGridState() {
 
 function loadGridState() {
   let hasLocal = false;
+  const expectedLen = GRID_ROWS * GRID_COLS;
+
+  // ── Preset version migration ──────────────────────────────────────────────
+  // If the bundled presets are NEWER than what was last applied on this device,
+  // discard the cached grid so the new layout (e.g. flat-top octagon) loads.
+  // Captures (separate localStorage key) are NOT touched.
+  try {
+    if (typeof FLOOR_PRESETS_VERSION !== 'undefined') {
+      const storedVer = parseInt(localStorage.getItem('wayfinding-preset-version') || '0', 10);
+      if (storedVer < FLOOR_PRESETS_VERSION) {
+        localStorage.removeItem('wayfinding-grid-v1');
+        localStorage.setItem('wayfinding-preset-version', String(FLOOR_PRESETS_VERSION));
+        console.info(`[wayfinding] preset v${storedVer} -> v${FLOOR_PRESETS_VERSION}; loading new layout`);
+      }
+    }
+  } catch (_) {}
+
   try {
     const raw = localStorage.getItem('wayfinding-grid-v1');
     if (raw) {
-      hasLocal = true;
       const { floorWalls, currentFloor } = JSON.parse(raw);
-      if (floorWalls) Object.assign(FLOOR_WALLS, floorWalls);
-      const floor = (typeof currentFloor === 'number') ? currentFloor : 0;
-      STATE.currentFloor = floor;
-      NAV._currentFloor  = floor;
-      const walls = FLOOR_WALLS[floor];
-      if (walls) NODES.forEach((n, i) => {
-        const v = walls[i];
-        if (typeof v === 'boolean') { n.wall = v; n.cellType = v ? 'wall' : 'open'; }
-        else { n.cellType = v || 'open'; n.wall = n.cellType === 'wall'; }
-      });
+      // ── Grid-size migration ───────────────────────────────────────────────
+      // If saved floors don't match current GRID_ROWS×GRID_COLS, the layout
+      // is from a previous size — discard and fall through to preset load.
+      const sizeOk = floorWalls && Object.values(floorWalls).every(
+        arr => Array.isArray(arr) && arr.length === expectedLen
+      );
+      if (sizeOk) {
+        hasLocal = true;
+        if (floorWalls) Object.assign(FLOOR_WALLS, floorWalls);
+        const floor = (typeof currentFloor === 'number') ? currentFloor : 0;
+        STATE.currentFloor = floor;
+        NAV._currentFloor  = floor;
+        const walls = FLOOR_WALLS[floor];
+        if (walls) NODES.forEach((n, i) => {
+          const v = walls[i];
+          if (typeof v === 'boolean') { n.wall = v; n.cellType = v ? 'wall' : 'open'; }
+          else { n.cellType = v || 'open'; n.wall = n.cellType === 'wall'; }
+        });
+      } else {
+        // Wipe stale data so the preset path runs cleanly
+        localStorage.removeItem('wayfinding-grid-v1');
+        console.info('[wayfinding] cleared stale localStorage — grid size changed');
+      }
     }
   } catch (_) {}
+
+  // ── First-run preset load ──────────────────────────────────────────────────
+  // When this device has no local map yet (or it was just wiped above),
+  // try to populate from the bundled FLOOR_PRESETS — gives the user a
+  // ready-to-use Calamba City Hall layout instead of an empty grid.
+  if (!hasLocal && typeof applyFloorPresets === 'function') {
+    try {
+      const n = applyFloorPresets();
+      if (n > 0) {
+        const floor = STATE.currentFloor || 0;
+        const walls = FLOOR_WALLS[floor];
+        if (walls) NODES.forEach((nd, i) => {
+          nd.cellType = walls[i] || 'open';
+          nd.wall     = nd.cellType === 'wall';
+        });
+        saveGridState();
+        console.info(`[wayfinding] loaded ${n} floors from bundled presets`);
+        return;   // skip server pull — we already have a map
+      }
+    } catch (e) { console.warn('[wayfinding] preset load failed:', e); }
+  }
+
   // Auto-pull from server ONLY when this device has no local state yet
   // (i.e. first time on this device / phone).
   // On devices that already have a map, use the Sync button to pull manually —
@@ -1214,13 +1518,16 @@ function escHtml(str) {
 
 // ── Cursor + hint ─────────────────────────────────────────────────────────────
 function updateCursorAndHint() {
-  if (STATE.stampMode)       DOM.canvas.style.cursor = 'copy';
-  else if (STATE.wallMode)   DOM.canvas.style.cursor = 'cell';
-  else if (STATE.selectMode) DOM.canvas.style.cursor = floatingData ? 'copy' : 'crosshair';
-  else                       DOM.canvas.style.cursor = 'crosshair';
+  if (STATE.stampMode)        DOM.canvas.style.cursor = 'copy';
+  else if (STATE.wallMode)    DOM.canvas.style.cursor = 'cell';
+  else if (STATE.captureMode) DOM.canvas.style.cursor = 'crosshair';
+  else if (STATE.selectMode)  DOM.canvas.style.cursor = floatingData ? 'copy' : 'crosshair';
+  else                        DOM.canvas.style.cursor = 'crosshair';
 
   if (STATE.stampMode) {
     DOM.hintBar.innerHTML = 'Click the grid to <strong>place the stamp</strong>. Name it in the panel to save it to the catalogue.';
+  } else if (STATE.captureMode) {
+    DOM.hintBar.innerHTML = '🎯 <strong>Capture:</strong> pick an office, then <strong>tap its location</strong> on the grid (or use <strong>📍 My position</strong>). Re-anchor at the atrium/stairs to reset drift.';
   } else if (STATE.wallMode) {
     DOM.hintBar.innerHTML = 'Click or <strong>drag</strong> to paint walls. Click a wall again to erase it.';
   } else if (STATE.selectMode && floatingData) {

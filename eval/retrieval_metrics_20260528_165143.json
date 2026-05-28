@@ -1,0 +1,923 @@
+{
+  "config": {
+    "rewrite": false,
+    "topk": 5,
+    "relevance": "department-level"
+  },
+  "summary": {
+    "recall@1": 0.265,
+    "recall@3": 0.462,
+    "recall@5": 0.5617,
+    "precision@1": 0.75,
+    "precision@3": 0.5833,
+    "precision@5": 0.4786,
+    "ndcg@1": 0.75,
+    "ndcg@3": 0.7088,
+    "ndcg@5": 0.6774,
+    "mrr": 0.8107
+  },
+  "per_query": [
+    {
+      "id": "Q01",
+      "query": "Saan po pwedeng mag-apply ng business permit?",
+      "expected": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "top_depts": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "BUILDING REGULATORY SERVICES OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "rels": [
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      "R": 6,
+      "mrr": 1.0,
+      "recall@1": 0.167,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 0.5,
+      "precision@3": 1.0,
+      "ndcg@3": 1.0,
+      "recall@5": 0.667,
+      "precision@5": 0.8,
+      "ndcg@5": 0.854
+    },
+    {
+      "id": "Q02",
+      "query": "Pano kumuha ng building permit?",
+      "expected": [
+        "BUILDING REGULATORY SERVICES OFFICE"
+      ],
+      "top_depts": [
+        "BUILDING REGULATORY SERVICES OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "BUILDING REGULATORY SERVICES OFFICE",
+        "BUILDING REGULATORY SERVICES OFFICE",
+        "CITY ADMINISTRATION OFFICE"
+      ],
+      "rels": [
+        1,
+        0,
+        1,
+        1,
+        0
+      ],
+      "R": 5,
+      "mrr": 1.0,
+      "recall@1": 0.2,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 0.4,
+      "precision@3": 0.667,
+      "ndcg@3": 0.704,
+      "recall@5": 0.6,
+      "precision@5": 0.6,
+      "ndcg@5": 0.655
+    },
+    {
+      "id": "Q03",
+      "query": "Saan po nagbabayad ng real property tax?",
+      "expected": [
+        "CITY ASSESSMENT OFFICE",
+        "CITY ACCOUNTING AND INTERNAL CONTROL OFFICE"
+      ],
+      "top_depts": [
+        "BUILDING REGULATORY SERVICES OFFICE",
+        "CITY ASSESSMENT OFFICE",
+        "CITY ASSESSMENT OFFICE",
+        "CITY ASSESSMENT OFFICE",
+        "CITY ASSESSMENT OFFICE"
+      ],
+      "rels": [
+        0,
+        1,
+        1,
+        1,
+        1
+      ],
+      "R": 9,
+      "mrr": 0.5,
+      "recall@1": 0.0,
+      "precision@1": 0.0,
+      "ndcg@1": 0.0,
+      "recall@3": 0.222,
+      "precision@3": 0.667,
+      "ndcg@3": 0.531,
+      "recall@5": 0.444,
+      "precision@5": 0.8,
+      "ndcg@5": 0.661
+    },
+    {
+      "id": "Q04",
+      "query": "Pano mag-apply ng senior citizen ID?",
+      "expected": [
+        "OFFICE FOR THE SENIOR CITIZENS AFFAIRS"
+      ],
+      "top_depts": [
+        "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+        "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+        "CITY ADMINISTRATION OFFICE",
+        "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+        "CITY SOCIAL SERVICES DEPARTMENT"
+      ],
+      "rels": [
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "R": 2,
+      "mrr": 1.0,
+      "recall@1": 0.5,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 1.0,
+      "precision@3": 0.667,
+      "ndcg@3": 1.0,
+      "recall@5": 1.0,
+      "precision@5": 0.4,
+      "ndcg@5": 1.0
+    },
+    {
+      "id": "Q05",
+      "query": "Saan kukuha ng PWD ID?",
+      "expected": [
+        "PERSONS WITH DISABILITY AFFAIRS OFFICE"
+      ],
+      "top_depts": [
+        "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+        "CITY SOCIAL SERVICES DEPARTMENT",
+        "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "CITY ADMINISTRATION OFFICE"
+      ],
+      "rels": [
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "R": 1,
+      "mrr": 1.0,
+      "recall@1": 1.0,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 1.0,
+      "precision@3": 0.333,
+      "ndcg@3": 1.0,
+      "recall@5": 1.0,
+      "precision@5": 0.2,
+      "ndcg@5": 1.0
+    },
+    {
+      "id": "Q06",
+      "query": "Where to get marriage license?",
+      "expected": [
+        "CITY POPULATION MANAGEMENT OFFICE",
+        "CITY SOCIAL SERVICES DEPARTMENT"
+      ],
+      "top_depts": [
+        "CITY LEGAL SERVICES OFFICE",
+        "CITY POPULATION MANAGEMENT OFFICE",
+        "CITY LEGAL SERVICES OFFICE",
+        "CITY POPULATION MANAGEMENT OFFICE",
+        "OFFICE FOR THE SENIOR CITIZENS AFFAIRS"
+      ],
+      "rels": [
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      "R": 8,
+      "mrr": 0.5,
+      "recall@1": 0.0,
+      "precision@1": 0.0,
+      "ndcg@1": 0.0,
+      "recall@3": 0.125,
+      "precision@3": 0.333,
+      "ndcg@3": 0.296,
+      "recall@5": 0.25,
+      "precision@5": 0.4,
+      "ndcg@5": 0.36
+    },
+    {
+      "id": "Q07",
+      "query": "Saan ang office ng mayor?",
+      "expected": [
+        "OFFICE OF THE CITY MAYOR"
+      ],
+      "top_depts": [
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+        "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+        "CITY LEGAL SERVICES OFFICE",
+        "OFFICE OF THE CITY VICE-MAYOR",
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE"
+      ],
+      "rels": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "R": 2,
+      "mrr": 0.0,
+      "recall@1": 0.0,
+      "precision@1": 0.0,
+      "ndcg@1": 0.0,
+      "recall@3": 0.0,
+      "precision@3": 0.0,
+      "ndcg@3": 0.0,
+      "recall@5": 0.0,
+      "precision@5": 0.0,
+      "ndcg@5": 0.0
+    },
+    {
+      "id": "Q08",
+      "query": "Saan magpa-check ng aso at pusa?",
+      "expected": [
+        "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+      ],
+      "top_depts": [
+        "CITY ASSESSMENT OFFICE",
+        "CITY SOCIAL SERVICES DEPARTMENT",
+        "CITY HEALTH SERVICES DEPARTMENT",
+        "CITY ACCOUNTING AND INTERNAL CONTROL OFFICE",
+        "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+      ],
+      "rels": [
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "R": 6,
+      "mrr": 0.2,
+      "recall@1": 0.0,
+      "precision@1": 0.0,
+      "ndcg@1": 0.0,
+      "recall@3": 0.0,
+      "precision@3": 0.0,
+      "ndcg@3": 0.0,
+      "recall@5": 0.167,
+      "precision@5": 0.2,
+      "ndcg@5": 0.131
+    },
+    {
+      "id": "Q09",
+      "query": "Pano mag-renew ng business permit?",
+      "expected": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "top_depts": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "BUILDING REGULATORY SERVICES OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "rels": [
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      "R": 6,
+      "mrr": 1.0,
+      "recall@1": 0.167,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 0.5,
+      "precision@3": 1.0,
+      "ndcg@3": 1.0,
+      "recall@5": 0.667,
+      "precision@5": 0.8,
+      "ndcg@5": 0.854
+    },
+    {
+      "id": "Q10",
+      "query": "Saan ang health office?",
+      "expected": [
+        "CITY HEALTH SERVICES DEPARTMENT"
+      ],
+      "top_depts": [
+        "CITY HEALTH SERVICES DEPARTMENT",
+        "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+        "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+        "CITY HEALTH SERVICES DEPARTMENT",
+        "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+      ],
+      "rels": [
+        1,
+        0,
+        0,
+        1,
+        0
+      ],
+      "R": 6,
+      "mrr": 1.0,
+      "recall@1": 0.167,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 0.167,
+      "precision@3": 0.333,
+      "ndcg@3": 0.469,
+      "recall@5": 0.333,
+      "precision@5": 0.4,
+      "ndcg@5": 0.485
+    },
+    {
+      "id": "Q11",
+      "query": "Saan mag-apply ng tricycle franchise?",
+      "expected": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "top_depts": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "rels": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "R": 6,
+      "mrr": 1.0,
+      "recall@1": 0.167,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 0.5,
+      "precision@3": 1.0,
+      "ndcg@3": 1.0,
+      "recall@5": 0.833,
+      "precision@5": 1.0,
+      "ndcg@5": 1.0
+    },
+    {
+      "id": "Q12",
+      "query": "Pano mag-register ng cooperative?",
+      "expected": [
+        "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT"
+      ],
+      "top_depts": [
+        "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT",
+        "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT",
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "rels": [
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "R": 3,
+      "mrr": 1.0,
+      "recall@1": 0.333,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 0.667,
+      "precision@3": 0.667,
+      "ndcg@3": 0.765,
+      "recall@5": 0.667,
+      "precision@5": 0.4,
+      "ndcg@5": 0.765
+    },
+    {
+      "id": "Q13",
+      "query": "Saan ang job placement office?",
+      "expected": [
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE"
+      ],
+      "top_depts": [
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+        "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+        "CITY ADMINISTRATION OFFICE",
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE"
+      ],
+      "rels": [
+        1,
+        0,
+        1,
+        0,
+        1
+      ],
+      "R": 4,
+      "mrr": 1.0,
+      "recall@1": 0.25,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 0.5,
+      "precision@3": 0.667,
+      "ndcg@3": 0.704,
+      "recall@5": 0.75,
+      "precision@5": 0.6,
+      "ndcg@5": 0.737
+    },
+    {
+      "id": "Q14",
+      "query": "Saan magtanong tungkol sa baha at disaster?",
+      "expected": [
+        "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO"
+      ],
+      "top_depts": [
+        "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+        "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+        "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+        "CITY HEALTH SERVICES DEPARTMENT",
+        "CITY PLANNING AND DEVELOPMENT OFFICE"
+      ],
+      "rels": [
+        1,
+        1,
+        1,
+        0,
+        0
+      ],
+      "R": 5,
+      "mrr": 1.0,
+      "recall@1": 0.2,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 0.6,
+      "precision@3": 1.0,
+      "ndcg@3": 1.0,
+      "recall@5": 0.6,
+      "precision@5": 0.6,
+      "ndcg@5": 0.723
+    },
+    {
+      "id": "Q15",
+      "query": "Saan po para sa burial assistance?",
+      "expected": [
+        "CITY SOCIAL SERVICES DEPARTMENT"
+      ],
+      "top_depts": [
+        "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+        "CITY SOCIAL SERVICES DEPARTMENT",
+        "CITY HEALTH SERVICES DEPARTMENT",
+        "CITY SOCIAL SERVICES DEPARTMENT",
+        "CITY SOCIAL SERVICES DEPARTMENT"
+      ],
+      "rels": [
+        0,
+        1,
+        0,
+        1,
+        1
+      ],
+      "R": 6,
+      "mrr": 0.5,
+      "recall@1": 0.0,
+      "precision@1": 0.0,
+      "ndcg@1": 0.0,
+      "recall@3": 0.167,
+      "precision@3": 0.333,
+      "ndcg@3": 0.296,
+      "recall@5": 0.5,
+      "precision@5": 0.6,
+      "ndcg@5": 0.491
+    },
+    {
+      "id": "Q16",
+      "query": "Where can I get a barangay clearance?",
+      "expected": [
+        "CITY ADMINISTRATION OFFICE",
+        "CITY POPULATION MANAGEMENT OFFICE"
+      ],
+      "top_depts": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "CITY LEGAL SERVICES OFFICE",
+        "CITY ASSESSMENT OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE"
+      ],
+      "rels": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "R": 6,
+      "mrr": 0.0,
+      "recall@1": 0.0,
+      "precision@1": 0.0,
+      "ndcg@1": 0.0,
+      "recall@3": 0.0,
+      "precision@3": 0.0,
+      "ndcg@3": 0.0,
+      "recall@5": 0.0,
+      "precision@5": 0.0,
+      "ndcg@5": 0.0
+    },
+    {
+      "id": "Q17",
+      "query": "How do I apply for a business permit?",
+      "expected": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "top_depts": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "BUILDING REGULATORY SERVICES OFFICE"
+      ],
+      "rels": [
+        1,
+        1,
+        1,
+        1,
+        0
+      ],
+      "R": 6,
+      "mrr": 1.0,
+      "recall@1": 0.167,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 0.5,
+      "precision@3": 1.0,
+      "ndcg@3": 1.0,
+      "recall@5": 0.667,
+      "precision@5": 0.8,
+      "ndcg@5": 0.869
+    },
+    {
+      "id": "Q18",
+      "query": "Saan office ng vice mayor?",
+      "expected": [
+        "OFFICE OF THE CITY VICE-MAYOR"
+      ],
+      "top_depts": [
+        "OFFICE OF THE CITY VICE-MAYOR",
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+        "CITY SOCIAL SERVICES DEPARTMENT",
+        "OFFICE OF THE CITY MAYOR",
+        "CITY LEGAL SERVICES OFFICE"
+      ],
+      "rels": [
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "R": 1,
+      "mrr": 1.0,
+      "recall@1": 1.0,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 1.0,
+      "precision@3": 0.333,
+      "ndcg@3": 1.0,
+      "recall@5": 1.0,
+      "precision@5": 0.2,
+      "ndcg@5": 1.0
+    },
+    {
+      "id": "Q19",
+      "query": "Saan mag-pa-assess ng property?",
+      "expected": [
+        "CITY ASSESSMENT OFFICE"
+      ],
+      "top_depts": [
+        "CITY ASSESSMENT OFFICE",
+        "CITY ASSESSMENT OFFICE",
+        "CITY ASSESSMENT OFFICE",
+        "CITY PLANNING AND DEVELOPMENT OFFICE",
+        "CITY ASSESSMENT OFFICE"
+      ],
+      "rels": [
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      "R": 7,
+      "mrr": 1.0,
+      "recall@1": 0.143,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 0.429,
+      "precision@3": 1.0,
+      "ndcg@3": 1.0,
+      "recall@5": 0.571,
+      "precision@5": 0.8,
+      "ndcg@5": 0.854
+    },
+    {
+      "id": "Q20",
+      "query": "Pano mag-apply ng work sa city hall?",
+      "expected": [
+        "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE"
+      ],
+      "top_depts": [
+        "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+        "CITY SOCIAL SERVICES DEPARTMENT",
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+        "OFFICE OF THE CITY MAYOR",
+        "CITY SOCIAL SERVICES DEPARTMENT"
+      ],
+      "rels": [
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "R": 1,
+      "mrr": 1.0,
+      "recall@1": 1.0,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 1.0,
+      "precision@3": 0.333,
+      "ndcg@3": 1.0,
+      "recall@5": 1.0,
+      "precision@5": 0.2,
+      "ndcg@5": 1.0
+    },
+    {
+      "id": "Q21",
+      "query": "Saan po ang office para sa environmental concerns?",
+      "expected": [
+        "CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT"
+      ],
+      "top_depts": [
+        "CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT",
+        "CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT",
+        "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+        "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+        "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE"
+      ],
+      "rels": [
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "R": 2,
+      "mrr": 1.0,
+      "recall@1": 0.5,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 1.0,
+      "precision@3": 0.667,
+      "ndcg@3": 1.0,
+      "recall@5": 1.0,
+      "precision@5": 0.4,
+      "ndcg@5": 1.0
+    },
+    {
+      "id": "Q23",
+      "query": "Where office ng business permits and saan ako mag-fa-file ng requirements?",
+      "expected": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "top_depts": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+        "BUILDING REGULATORY SERVICES OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "rels": [
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      "R": 6,
+      "mrr": 1.0,
+      "recall@1": 0.167,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 0.5,
+      "precision@3": 1.0,
+      "ndcg@3": 1.0,
+      "recall@5": 0.667,
+      "precision@5": 0.8,
+      "ndcg@5": 0.854
+    },
+    {
+      "id": "Q25",
+      "query": "treasry??",
+      "expected": [
+        "CITY ACCOUNTING AND INTERNAL CONTROL OFFICE",
+        "CITY ASSESSMENT OFFICE"
+      ],
+      "top_depts": [
+        "CITY ASSESSMENT OFFICE",
+        "CITY SOCIAL SERVICES DEPARTMENT",
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+        "CITY ADMINISTRATION OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "rels": [
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "R": 9,
+      "mrr": 1.0,
+      "recall@1": 0.111,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 0.111,
+      "precision@3": 0.333,
+      "ndcg@3": 0.469,
+      "recall@5": 0.111,
+      "precision@5": 0.2,
+      "ndcg@5": 0.339
+    },
+    {
+      "id": "Q26",
+      "query": "Saan ang opisina para sa pagpaplano ng siyudad?",
+      "expected": [
+        "CITY PLANNING AND DEVELOPMENT OFFICE"
+      ],
+      "top_depts": [
+        "CITY SOCIAL SERVICES DEPARTMENT",
+        "CITY ACCOUNTING AND INTERNAL CONTROL OFFICE",
+        "CITY LEGAL SERVICES OFFICE",
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+        "CITY ASSESSMENT OFFICE"
+      ],
+      "rels": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "R": 5,
+      "mrr": 0.0,
+      "recall@1": 0.0,
+      "precision@1": 0.0,
+      "ndcg@1": 0.0,
+      "recall@3": 0.0,
+      "precision@3": 0.0,
+      "ndcg@3": 0.0,
+      "recall@5": 0.0,
+      "precision@5": 0.0,
+      "ndcg@5": 0.0
+    },
+    {
+      "id": "Q27",
+      "query": "Pano mag-enroll sa City College of Calamba?",
+      "expected": [
+        "CITY COLLEGE OF CALAMBA"
+      ],
+      "top_depts": [
+        "CITY COLLEGE OF CALAMBA",
+        "CITY COLLEGE OF CALAMBA",
+        "CITY SOCIAL SERVICES DEPARTMENT",
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "rels": [
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "R": 2,
+      "mrr": 1.0,
+      "recall@1": 0.5,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 1.0,
+      "precision@3": 0.667,
+      "ndcg@3": 1.0,
+      "recall@5": 1.0,
+      "precision@5": 0.4,
+      "ndcg@5": 1.0
+    },
+    {
+      "id": "Q28",
+      "query": "Saan magpa-konsulta tungkol sa legal na bagay?",
+      "expected": [
+        "CITY LEGAL SERVICES OFFICE"
+      ],
+      "top_depts": [
+        "CITY LEGAL SERVICES OFFICE",
+        "BUILDING REGULATORY SERVICES OFFICE",
+        "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+        "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+        "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+      ],
+      "rels": [
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "R": 2,
+      "mrr": 1.0,
+      "recall@1": 0.5,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 0.5,
+      "precision@3": 0.333,
+      "ndcg@3": 0.613,
+      "recall@5": 0.5,
+      "precision@5": 0.2,
+      "ndcg@5": 0.613
+    },
+    {
+      "id": "Q29",
+      "query": "Mayroon ba kayong vaccination services?",
+      "expected": [
+        "CITY HEALTH SERVICES DEPARTMENT",
+        "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+      ],
+      "top_depts": [
+        "CITY HEALTH SERVICES DEPARTMENT",
+        "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+        "CITY HEALTH SERVICES DEPARTMENT",
+        "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+        "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+      ],
+      "rels": [
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      "R": 12,
+      "mrr": 1.0,
+      "recall@1": 0.083,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 0.25,
+      "precision@3": 1.0,
+      "ndcg@3": 1.0,
+      "recall@5": 0.333,
+      "precision@5": 0.8,
+      "ndcg@5": 0.854
+    },
+    {
+      "id": "Q30",
+      "query": "I need help finding the office that handles construction permits and zoning",
+      "expected": [
+        "BUILDING REGULATORY SERVICES OFFICE",
+        "CITY PLANNING AND DEVELOPMENT OFFICE"
+      ],
+      "top_depts": [
+        "BUILDING REGULATORY SERVICES OFFICE",
+        "BUILDING REGULATORY SERVICES OFFICE",
+        "CITY PLANNING AND DEVELOPMENT OFFICE",
+        "BUILDING REGULATORY SERVICES OFFICE",
+        "CITY ADMINISTRATION OFFICE"
+      ],
+      "rels": [
+        1,
+        1,
+        1,
+        1,
+        0
+      ],
+      "R": 10,
+      "mrr": 1.0,
+      "recall@1": 0.1,
+      "precision@1": 1.0,
+      "ndcg@1": 1.0,
+      "recall@3": 0.3,
+      "precision@3": 1.0,
+      "ndcg@3": 1.0,
+      "recall@5": 0.4,
+      "precision@5": 0.8,
+      "ndcg@5": 0.869
+    }
+  ]
+}

@@ -34,5 +34,27 @@ wayfinding-app/app-state.json
 Thumbs.db
 desktop.ini
 
-# ── Node (if added later) ─────────────────────────────────────────────────────
+# ── Node ──────────────────────────────────────────────────────────────────────
 node_modules/
+
+# ── Environment / secrets (NEVER commit — use .env.example as template) ───────
+.env
+
+# ── Query log (generated at runtime) ──────────────────────────────────────────
+wayfinding-app/query_log.jsonl
+
+# ── Git credential / auth artefacts (NEVER commit) ────────────────────────────
+tmp_cred.txt
+*.credentials
+
+# ── Real (non-anonymized) floor plan — sensitive, not publicly available ──────
+City Hall Floor Plan.pptx
+City Hall Floor Plan/
+
+# ── Extracted dissertation draft text (keep drafts out of git, like *.pdf) ────
+_dissertation_ch1_2.txt
+_instruments.txt
+
+# ── Compiled Python ───────────────────────────────────────────────────────────
+__pycache__/
+*.pyc

@@ -1,0 +1,268 @@
+{
+  "LOWER GROUND FLOOR": {
+    "City Social Services": {
+      "floor": 0,
+      "row": 13,
+      "col": 32,
+      "code": "CSSYDO"
+    },
+    "Veterinary Services": {
+      "floor": 0,
+      "row": 13,
+      "col": 42,
+      "code": "VET"
+    },
+    "Agriculture Office": {
+      "floor": 0,
+      "row": 21,
+      "col": 53,
+      "code": "AGRI"
+    },
+    "PWD Affairs Office": {
+      "floor": 0,
+      "row": 37,
+      "col": 60,
+      "code": "PDAO"
+    },
+    "City Legal / Prosecutor": {
+      "floor": 0,
+      "row": 50,
+      "col": 57,
+      "code": "LEGAL"
+    },
+    "Cooperatives & Livelihood": {
+      "floor": 0,
+      "row": 57,
+      "col": 50,
+      "code": "COOP"
+    },
+    "COMELEC (partner)": {
+      "floor": 0,
+      "row": 61,
+      "col": 42,
+      "code": "COMELEC"
+    },
+    "Housing Office": {
+      "floor": 0,
+      "row": 61,
+      "col": 32,
+      "code": "HOUSE"
+    },
+    "Landbank (partner)": {
+      "floor": 0,
+      "row": 53,
+      "col": 21,
+      "code": "BANK"
+    },
+    "City Health Services": {
+      "floor": 0,
+      "row": 37,
+      "col": 14,
+      "code": "HEALTH"
+    },
+    "Investment & Employment": {
+      "floor": 0,
+      "row": 24,
+      "col": 17,
+      "code": "IIPESO"
+    },
+    "City Treasury Annex": {
+      "floor": 0,
+      "row": 17,
+      "col": 24,
+      "code": "TREAS-A"
+    }
+  },
+  "GROUND FLOOR": {
+    "MOPAC": {
+      "floor": 1,
+      "row": 37,
+      "col": 60,
+      "code": "MOPAC"
+    },
+    "Business Permits": {
+      "floor": 1,
+      "row": 53,
+      "col": 53,
+      "code": "BPLO"
+    },
+    "Lobby / Information": {
+      "floor": 1,
+      "row": 60,
+      "col": 37,
+      "code": "LOBBY"
+    },
+    "Tourism Office": {
+      "floor": 1,
+      "row": 53,
+      "col": 21,
+      "code": "TOUR"
+    },
+    "Local Civil Registry": {
+      "floor": 1,
+      "row": 37,
+      "col": 14,
+      "code": "LCR"
+    },
+    "General Services Office": {
+      "floor": 1,
+      "row": 21,
+      "col": 21,
+      "code": "GSO"
+    },
+    "City Treasury Office (Main)": {
+      "floor": 1,
+      "row": 14,
+      "col": 37,
+      "code": "TREAS"
+    },
+    "City Assessment Office": {
+      "floor": 1,
+      "row": 21,
+      "col": 53,
+      "code": "ASSESS"
+    }
+  },
+  "SECOND FLOOR": {
+    "Environment / CENRO": {
+      "floor": 2,
+      "row": 13,
+      "col": 32,
+      "code": "CENRO"
+    },
+    "Building Regulatory": {
+      "floor": 2,
+      "row": 13,
+      "col": 42,
+      "code": "BREG"
+    },
+    "VMO Extension": {
+      "floor": 2,
+      "row": 21,
+      "col": 53,
+      "code": "VMOX"
+    },
+    "Engineering Services": {
+      "floor": 2,
+      "row": 32,
+      "col": 61,
+      "code": "ENGR"
+    },
+    "MOEA": {
+      "floor": 2,
+      "row": 42,
+      "col": 61,
+      "code": "MOEA"
+    },
+    "City Population Office": {
+      "floor": 2,
+      "row": 50,
+      "col": 57,
+      "code": "POP"
+    },
+    "City Planning & Dev't": {
+      "floor": 2,
+      "row": 57,
+      "col": 50,
+      "code": "CPDO"
+    },
+    "City Budget Office": {
+      "floor": 2,
+      "row": 60,
+      "col": 37,
+      "code": "BUDGET"
+    },
+    "City Accounting": {
+      "floor": 2,
+      "row": 53,
+      "col": 21,
+      "code": "ACCT"
+    },
+    "Human Resources": {
+      "floor": 2,
+      "row": 37,
+      "col": 14,
+      "code": "HR"
+    },
+    "DILG (partner)": {
+      "floor": 2,
+      "row": 24,
+      "col": 17,
+      "code": "DILG"
+    },
+    "Sectoral Affairs": {
+      "floor": 2,
+      "row": 17,
+      "col": 24,
+      "code": "SECT"
+    }
+  },
+  "THIRD FLOOR": {
+    "Sangguniang Bayan Secretariat": {
+      "floor": 3,
+      "row": 13,
+      "col": 32,
+      "code": "SB-SEC"
+    },
+    "Office of the City Mayor": {
+      "floor": 3,
+      "row": 13,
+      "col": 42,
+      "code": "MAYOR"
+    },
+    "City Administration": {
+      "floor": 3,
+      "row": 21,
+      "col": 53,
+      "code": "ADMIN"
+    },
+    "Councillors' Offices (E)": {
+      "floor": 3,
+      "row": 37,
+      "col": 60,
+      "code": "COUN-E"
+    },
+    "Councillors' Offices (SE)": {
+      "floor": 3,
+      "row": 53,
+      "col": 53,
+      "code": "COUN-SE"
+    },
+    "Councillors' Offices (S)": {
+      "floor": 3,
+      "row": 61,
+      "col": 42,
+      "code": "COUN-S"
+    },
+    "Population (Annex)": {
+      "floor": 3,
+      "row": 61,
+      "col": 32,
+      "code": "POP-A"
+    },
+    "CCEMPC": {
+      "floor": 3,
+      "row": 53,
+      "col": 21,
+      "code": "CCEMPC"
+    },
+    "Councillors' Offices (W)": {
+      "floor": 3,
+      "row": 37,
+      "col": 14,
+      "code": "COUN-W"
+    },
+    "Office of the Vice Mayor": {
+      "floor": 3,
+      "row": 24,
+      "col": 17,
+      "code": "VMAYOR"
+    },
+    "Councillors' Offices (NW)": {
+      "floor": 3,
+      "row": 17,
+      "col": 24,
+      "code": "COUN-NW"
+    }
+  }
+}

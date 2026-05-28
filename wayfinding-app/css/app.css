@@ -205,6 +205,99 @@ body {
   .btn-ptype { min-height: 36px; padding: 5px 9px; }
 }
 
+/* ── Capture toolbar (Capture Mode sub-bar) ─────────────────────── */
+.capture-bar {
+  display: none;   /* toggled to flex by JS when Capture Mode is active */
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(253, 242, 248, 0.97);   /* pink-50 */
+  border-bottom: 1px solid #FBCFE8;
+  flex-wrap: wrap;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.capture-label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #9D174D;
+  white-space: nowrap;
+}
+.capture-select {
+  flex: 1 1 180px;
+  min-width: 140px;
+  max-width: 320px;
+  padding: 5px 8px;
+  border-radius: 5px;
+  border: 1px solid #F472B6;
+  background: #FFFFFF;
+  color: #374151;
+  font-size: 0.74rem;
+  font-weight: 500;
+  min-height: 32px;
+}
+.capture-count {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #9D174D;
+  background: #FCE7F3;
+  border-radius: 999px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+.btn-capture-act {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 11px;
+  border-radius: 5px;
+  border: 1px solid #F9A8D4;
+  background: #FFFFFF;
+  color: #9D174D;
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: 32px;
+  transition: background 0.1s, border-color 0.1s;
+}
+.btn-capture-act:hover { background: #FCE7F3; border-color: #EC4899; }
+.btn-capture-export {
+  background: #DB2777;
+  color: #FFFFFF;
+  border-color: #DB2777;
+}
+.btn-capture-export:hover { background: #BE185D; border-color: #BE185D; }
+.btn-capture-clear { color: #B91C1C; border-color: #FCA5A5; }
+.btn-capture-clear:hover { background: #FEE2E2; border-color: #EF4444; }
+
+/* Capture mode header button */
+.btn-capture {
+  background: rgba(255,255,255,0.10);
+  color: #F8FAFC;
+  border-color: rgba(255,255,255,0.22);
+}
+.btn-capture:hover { background: rgba(255,255,255,0.18); }
+.btn-capture.active {
+  background: #DB2777;
+  color: #FFFFFF;
+  border-color: #DB2777;
+}
+
+/* Success flash on the hint bar after a capture/export */
+.hint-bar.hint-success {
+  background: rgba(220, 252, 231, 0.97);
+  color: #166534;
+  border-bottom-color: #86EFAC;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .capture-bar { padding: 5px 10px; gap: 6px; }
+  .btn-capture-act { min-height: 36px; }
+  .capture-select { min-height: 36px; }
+}
+
 /* ── Selection toolbar ──────────────────────────────────────────── */
 .sel-toolbar {
   display: flex;
@@ -970,6 +1063,8 @@ body {
 }
 .btn-sync:hover         { background: rgba(99,179,237,0.22); color: #BEE3F8; }
 .btn-sync:disabled      { opacity: 0.55; cursor: wait; }
+.btn-admin              { text-decoration: none; }
+.btn-admin:hover        { background: rgba(6,182,212,0.15); color: #67E8F9; }
 
 /* ── Drift indicator (nav panel) ─────────────────────────────── */
 .nav-drift {
@@ -1264,6 +1359,17 @@ body {
   background: #F1F5F9;
   color: #1E293B;
   border-bottom-left-radius: 4px;
+}
+.chat-bubble-busy {
+  align-self: flex-start;
+  background: #FEF9C3;
+  color: #854D0E;
+  border: 1px solid #FDE047;
+  border-bottom-left-radius: 4px;
+  font-size: 0.82rem;
+  border-radius: 12px;
+  padding: 8px 12px;
+  max-width: 85%;
 }
 
 /* Loading dots */

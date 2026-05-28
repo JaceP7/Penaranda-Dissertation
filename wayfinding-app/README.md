@@ -1,6 +1,6 @@
 # Indoor Wayfinding App
 
-A mobile-friendly, browser-based indoor wayfinding system built on a **25×25 multi-floor grid**.
+A mobile-friendly, browser-based indoor wayfinding system built on a **75×75 multi-floor grid**.
 Features real-time Pedestrian Dead Reckoning (PDR), QR-code anchor localisation, Dijkstra shortest-path routing, and a full map editor — no frameworks, no native app install required.
 
 ---
@@ -32,20 +32,26 @@ Accept the self-signed certificate warning on first load
 
 ```
 wayfinding-app/
-├── index.html              ← entry point (v=22)
+├── index.html              ← entry point (v=29)
 ├── serve_https.py          ← local HTTPS server (port 3001)
 ├── css/
 │   └── app.css             ← all styles, mobile-first
 ├── js/
-│   ├── app.js              ← state machine, UI, floor switching, prompts
+│   ├── app.js              ← state machine, UI, floor switching, capture mode
 │   ├── nav.js              ← PDR, compass EMA, QR scan/generate
-│   ├── renderer.js         ← canvas: grid, path, trail, ghost previews
+│   ├── renderer.js         ← canvas: grid, path, trail, capture pins
 │   ├── data.js             ← node graph, stamps, presets, localStorage
+│   ├── floor_presets.js    ← bundled 75×75 layouts for all 4 floors (auto-load)
 │   ├── dijkstra.js         ← shortest-path (MinHeap Dijkstra)
 │   ├── compass.js          ← Compass class (DeviceOrientation wrapper)
+│   ├── chat.js             ← RAG chat widget
 │   └── lib/
 │       ├── jsQR.js         ← QR code decoder (bundled, no CDN)
 │       └── qrcode.min.js   ← QR code generator (bundled, no CDN)
+├── data/
+│   ├── departments.json    ← 21 offices with grid coordinates
+│   └── services.json       ← service catalogue (RAG corpus)
+├── admin.html              ← analytics dashboard
 └── wifi_survey/
     └── survey.py           ← Wi-Fi RSSI survey script (fieldwork utility)
 ```

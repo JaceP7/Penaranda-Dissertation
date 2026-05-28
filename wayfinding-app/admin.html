@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics — Calamba City Hall Wayfinding</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg:      #0f172a;
+      --surface: #1e293b;
+      --surf2:   #334155;
+      --border:  #475569;
+      --accent:  #06b6d4;
+      --blue:    #3b82f6;
+      --text:    #f1f5f9;
+      --muted:   #94a3b8;
+      --green:   #22c55e;
+      --amber:   #f59e0b;
+      --red:     #ef4444;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Nav ── */
+    .nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      gap: 12px;
+    }
+    .nav-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .nav-title span { color: var(--muted); font-weight: 400; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .refresh-pill {
+      font-size: 0.72rem;
+      color: var(--muted);
+      background: var(--surf2);
+      padding: 3px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .btn-back {
+      text-decoration: none;
+      font-size: 0.82rem;
+      color: var(--blue);
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.3);
+      padding: 5px 12px;
+      border-radius: 6px;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .btn-back:hover { background: rgba(59,130,246,0.2); }
+
+    /* ── Layout ── */
+    .main { padding: 24px; max-width: 1400px; margin: 0 auto; }
+
+    /* ── Stat cards ── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 900px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .stats { grid-template-columns: 1fr 1fr; } }
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .stat-val {
+      font-size: 2.1rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .stat-sub { font-size: 0.72rem; color: var(--muted); margin-top: 6px; }
+    .stat:nth-child(1) .stat-val { color: var(--accent); }
+    .stat:nth-child(2) .stat-val { color: var(--blue); }
+    .stat:nth-child(3) .stat-val { color: var(--amber); }
+    .stat:nth-child(4) .stat-val { color: var(--green); }
+
+    /* ── Charts ── */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 820px) { .charts-row { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .card-wide { margin-bottom: 24px; }
+    .card-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .chart-box { position: relative; height: 240px; }
+    .chart-box-tall { position: relative; height: 320px; }
+
+    /* ── Table ── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    th {
+      padding: 8px 12px;
+      text-align: left;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    td {
+      padding: 9px 12px;
+      border-bottom: 1px solid rgba(71,85,105,0.25);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge-dept  { background: rgba(6,182,212,0.15);   color: var(--accent); }
+    .badge-yes   { background: rgba(239,68,68,0.15);   color: #fca5a5; }
+    .badge-no    { background: rgba(34,197,94,0.15);   color: #86efac; }
+    .muted { color: var(--muted); }
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 48px 20px;
+      font-size: 0.875rem;
+    }
+
+    /* ── Error banner ── */
+    .error-banner {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: #fca5a5;
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-title">
+    Calamba City Hall&nbsp;<span>/ Service Inquiry Analytics</span>
+  </div>
+  <div class="nav-right">
+    <span class="refresh-pill" id="pill">Refresh in 30s</span>
+    <a class="btn-back" href="/">← Back to App</a>
+  </div>
+</nav>
+
+<main class="main">
+
+  <div class="error-banner" id="err-banner"></div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">Total Queries</div>
+      <div class="stat-val" id="s-total">—</div>
+      <div class="stat-sub">all time</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Today</div>
+      <div class="stat-val" id="s-today">—</div>
+      <div class="stat-sub">queries (UTC)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Avg Response</div>
+      <div class="stat-val" id="s-lat">—</div>
+      <div class="stat-sub">ms (pipeline only)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Ambiguity Rate</div>
+      <div class="stat-val" id="s-ambig">—</div>
+      <div class="stat-sub">needed clarification</div>
+    </div>
+  </div>
+
+  <!-- Charts row -->
+  <div class="charts-row">
+    <div class="card">
+      <div class="card-title">Queries — Last 7 Days</div>
+      <div class="chart-box"><canvas id="c-daily"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Top 10 Departments</div>
+      <div class="chart-box"><canvas id="c-depts"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Top sub-services (full width) -->
+  <div class="card card-wide">
+    <div class="card-title">Top 10 Sub-Services</div>
+    <div class="chart-box-tall"><canvas id="c-subs"></canvas></div>
+  </div>
+
+  <!-- Recent queries table -->
+  <div class="card">
+    <div class="card-title">Recent Queries (last 20)</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Timestamp (UTC)</th>
+            <th>Query</th>
+            <th>Department</th>
+            <th>Sub-Service</th>
+            <th>Clarify?</th>
+            <th>Latency</th>
+          </tr>
+        </thead>
+        <tbody id="t-body">
+          <tr><td colspan="6" class="empty">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<script>
+/* ── Palette ── */
+const P = [
+  '#06b6d4','#3b82f6','#8b5cf6','#ec4899',
+  '#f59e0b','#22c55e','#ef4444','#14b8a6',
+  '#6366f1','#f97316',
+];
+
+const GRID_COLOR = 'rgba(71,85,105,0.3)';
+const TICK_COLOR = '#94a3b8';
+
+const chartDefaults = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      backgroundColor: '#1e293b',
+      borderColor: '#475569',
+      borderWidth: 1,
+      titleColor: '#f1f5f9',
+      bodyColor: '#94a3b8',
+    },
+  },
+};
+
+function axisOpts(horizontal) {
+  const shared = { grid: { color: GRID_COLOR }, ticks: { color: TICK_COLOR, font: { size: 11 } } };
+  if (horizontal) {
+    return {
+      x: { ...shared, beginAtZero: true },
+      y: { ...shared, ticks: { ...shared.ticks, autoSkip: false } },
+    };
+  }
+  return {
+    x: { ...shared },
+    y: { ...shared, beginAtZero: true },
+  };
+}
+
+function makeChart(id, type, labels, data, horizontal) {
+  const ctx = document.getElementById(id).getContext('2d');
+  const isLine = type === 'line';
+  const bgColors = horizontal
+    ? P.slice(0, data.length)
+    : isLine ? P[0] + '25' : P[0];
+  const bdColors = horizontal
+    ? P.slice(0, data.length)
+    : P[0];
+  return new Chart(ctx, {
+    type,
+    data: {
+      labels,
+      datasets: [{
+        data,
+        backgroundColor: bgColors,
+        borderColor:      bdColors,
+        borderWidth:      isLine ? 2 : 1,
+        borderRadius:     horizontal ? 4 : 4,
+        fill:             isLine,
+        tension:          isLine ? 0.35 : 0,
+        pointRadius:      isLine ? 4 : 0,
+        pointBackgroundColor: P[0],
+      }],
+    },
+    options: {
+      ...chartDefaults,
+      indexAxis: horizontal ? 'y' : 'x',
+      scales: axisOpts(horizontal),
+    },
+  });
+}
+
+function patchChart(chart, labels, data, horizontal) {
+  chart.data.labels = labels;
+  chart.data.datasets[0].data = data;
+  if (horizontal) {
+    chart.data.datasets[0].backgroundColor = P.slice(0, data.length);
+    chart.data.datasets[0].borderColor      = P.slice(0, data.length);
+  }
+  chart.update('none');
+}
+
+/* ── Helpers ── */
+function esc(s) {
+  return String(s ?? '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtTs(ts) {
+  if (!ts) return '—';
+  try { return new Date(ts).toISOString().replace('T',' ').slice(0,19); }
+  catch { return ts; }
+}
+
+/* ── Render ── */
+let _daily = null, _depts = null, _subs = null;
+
+function render(d) {
+  document.getElementById('s-total').textContent = d.total ?? '—';
+  document.getElementById('s-today').textContent = d.today ?? '—';
+  document.getElementById('s-lat').textContent   = d.avgLatency != null ? d.avgLatency + ' ms' : '—';
+  document.getElementById('s-ambig').textContent = d.ambiguityRate != null ? d.ambiguityRate + '%' : '—';
+
+  const dayL  = (d.queriesPerDay || []).map(x => x.date.slice(5));
+  const dayC  = (d.queriesPerDay || []).map(x => x.count);
+  const deptL = (d.topDepartments || []).map(x => x.name);
+  const deptC = (d.topDepartments || []).map(x => x.count);
+  const subL  = (d.topSubservices || []).map(x => x.name);
+  const subC  = (d.topSubservices || []).map(x => x.count);
+
+  if (!_daily) { _daily = makeChart('c-daily','line',  dayL,  dayC,  false); }
+  else          { patchChart(_daily, dayL, dayC, false); }
+
+  if (!_depts) { _depts = makeChart('c-depts','bar',   deptL, deptC, true); }
+  else          { patchChart(_depts, deptL, deptC, true); }
+
+  if (!_subs)  { _subs  = makeChart('c-subs', 'bar',   subL,  subC,  true); }
+  else          { patchChart(_subs,  subL,  subC,  true); }
+
+  const rows = d.recentQueries || [];
+  const tbody = document.getElementById('t-body');
+  if (rows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty">No queries logged yet. Start chatting to see data here.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td class="muted" style="white-space:nowrap">${fmtTs(r.timestamp)}</td>
+      <td style="max-width:300px">${esc(r.query)}</td>
+      <td>${r.department
+        ? `<span class="badge badge-dept">${esc(r.department)}</span>`
+        : '<span class="muted">—</span>'}</td>
+      <td style="max-width:220px">${esc(r.subservice || '—')}</td>
+      <td><span class="badge ${r.needsContext ? 'badge-yes':'badge-no'}">${r.needsContext ? 'Yes':'No'}</span></td>
+      <td class="muted" style="white-space:nowrap">${r.latency_ms != null ? r.latency_ms+' ms' : '—'}</td>
+    </tr>`).join('');
+}
+
+/* ── Fetch ── */
+async function load() {
+  const banner = document.getElementById('err-banner');
+  try {
+    const resp = await fetch('/api/analytics');
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    if (data._note) {
+      banner.style.display = 'block';
+      banner.textContent = data._note;
+    } else {
+      banner.style.display = 'none';
+    }
+    render(data);
+  } catch (err) {
+    banner.style.display = 'block';
+    banner.textContent = `Could not load analytics: ${err.message}. Make sure serve_https.py is running.`;
+    console.error(err);
+  }
+}
+
+/* ── Auto-refresh (30 s) ── */
+let countdown = 30;
+const pill = document.getElementById('pill');
+setInterval(() => {
+  countdown--;
+  if (countdown <= 0) { countdown = 30; load(); }
+  pill.textContent = `Refresh in ${countdown}s`;
+}, 1000);
+
+load();
+</script>
+</body>
+</html>

@@ -23,6 +23,7 @@ const CHAT = (() => {
   function toggle() {
     _open = !_open;
     _panel.classList.toggle('chat-open', _open);
+    _panel.setAttribute('aria-hidden', String(!_open));
     _toggleBtn.setAttribute('aria-expanded', String(_open));
     if (_open) {
       _badge.style.display = 'none';
@@ -43,13 +44,14 @@ const CHAT = (() => {
   }
 
   // ── Add message ───────────────────────────────────────────────────────
-  function _addMessage(role, text, department, subservice, options) {
+  function _addMessage(role, text, department, subservice, options, rateLimited) {
     _messages.push({
       role,
       text,
-      department:  department  || null,
-      subservice:  subservice  || null,
-      options:     options     || []
+      department:   department   || null,
+      subservice:   subservice   || null,
+      options:      options      || [],
+      rateLimited:  !!rateLimited,
     });
     _renderMessages();
     _scrollBottom();
@@ -62,7 +64,9 @@ const CHAT = (() => {
     _messages.forEach((msg, idx) => {
       // Bubble
       const bubble = document.createElement('div');
-      bubble.className = `chat-bubble chat-bubble-${msg.role}`;
+      bubble.className = msg.rateLimited
+        ? 'chat-bubble chat-bubble-busy'
+        : `chat-bubble chat-bubble-${msg.role}`;
       if (msg.role === 'bot') {
         bubble.innerHTML = msg.text
           .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -133,6 +137,13 @@ const CHAT = (() => {
     const query = _input.value.trim();
     if (!query || _loading) return;
 
+    // Snapshot BEFORE adding the current message — prevents the user query
+    // from appearing in both `history` and `query` (would be sent twice).
+    const history = _messages.slice(-6).map(m => ({
+      role:    m.role === 'user' ? 'user' : 'assistant',
+      content: m.text
+    }));
+
     _input.value = '';
     _addMessage('user', query);
     _loading = true;
@@ -144,13 +155,7 @@ const CHAT = (() => {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query,
-          history: _messages.slice(-6).map(m => ({
-            role:    m.role === 'user' ? 'user' : 'assistant',
-            content: m.text
-          }))
-        })
+        body: JSON.stringify({ query, history })
       });
 
       if (!res.ok) {
@@ -159,14 +164,17 @@ const CHAT = (() => {
       }
       const data = await res.json();
 
-      // Use server-provided options, or auto-extract from answer text
-      const opts = (data.options && data.options.length)
-        ? data.options
-        : (data.needsContext ? _extractOptions(data.answer) : []);
-
-      _addMessage('bot', data.answer, data.department, data.subservice, opts);
+      if (data.rate_limited) {
+        // Show a retryable "busy" notice — not a hard error
+        _addMessage('bot', data.answer, null, null, [], true);
+      } else {
+        const opts = (data.options && data.options.length)
+          ? data.options
+          : (data.needsContext ? _extractOptions(data.answer) : []);
+        _addMessage('bot', data.answer, data.department, data.subservice, opts);
+      }
     } catch (err) {
-      _addMessage('bot', `Error: ${err.message}`);
+      _addMessage('bot', `Could not reach the assistant. Check your connection and try again.`);
     } finally {
       _loading = false;
       _sendBtn.disabled = false;

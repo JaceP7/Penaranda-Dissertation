@@ -1,0 +1,56 @@
+{
+  "summary": {
+    "total_queries": 1,
+    "api_ok": 0,
+    "api_errors": 1,
+    "passed": 0,
+    "failed": 1,
+    "pass_rate": 0.0,
+    "latency_mean_s": null,
+    "latency_median_s": null,
+    "latency_p95_s": null,
+    "latency_max_s": null,
+    "by_category": {
+      "ambiguous": {
+        "total": 1,
+        "passed": 0,
+        "rate": 0.0
+      }
+    },
+    "by_difficulty": {
+      "hard": {
+        "total": 1,
+        "passed": 0,
+        "rate": 0.0
+      }
+    },
+    "by_language": {
+      "filipino": {
+        "total": 1,
+        "passed": 0,
+        "rate": 0.0
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "Q22",
+      "query": "Saan ako pupunta?",
+      "expected_department": [],
+      "language": "filipino",
+      "category": "ambiguous",
+      "difficulty": "hard",
+      "expected_behavior": "should ask clarifying question",
+      "api_ok": false,
+      "api_status": -1,
+      "latency_s": 62.058,
+      "error": "The read operation timed out",
+      "passed": false,
+      "verdict_reason": "ambiguous: passes if needsContext=True",
+      "returned_dept": null,
+      "needs_context": false,
+      "answer_preview": "",
+      "rewritten": null
+    }
+  ]
+}

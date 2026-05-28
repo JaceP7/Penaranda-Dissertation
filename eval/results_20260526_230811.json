@@ -1,0 +1,693 @@
+{
+  "summary": {
+    "total_queries": 30,
+    "api_ok": 30,
+    "api_errors": 0,
+    "passed": 7,
+    "failed": 23,
+    "pass_rate": 23.3,
+    "latency_mean_s": 3.96,
+    "latency_median_s": 3.82,
+    "latency_p95_s": 5.44,
+    "latency_max_s": 5.68,
+    "by_category": {
+      "ambiguous": {
+        "total": 1,
+        "passed": 0,
+        "rate": 0.0
+      },
+      "code-switch": {
+        "total": 1,
+        "passed": 0,
+        "rate": 0.0
+      },
+      "descriptive": {
+        "total": 9,
+        "passed": 4,
+        "rate": 44.4
+      },
+      "direct-department": {
+        "total": 3,
+        "passed": 0,
+        "rate": 0.0
+      },
+      "direct-service": {
+        "total": 14,
+        "passed": 3,
+        "rate": 21.4
+      },
+      "out-of-scope": {
+        "total": 1,
+        "passed": 0,
+        "rate": 0.0
+      },
+      "typo": {
+        "total": 1,
+        "passed": 0,
+        "rate": 0.0
+      }
+    },
+    "by_difficulty": {
+      "easy": {
+        "total": 12,
+        "passed": 2,
+        "rate": 16.7
+      },
+      "hard": {
+        "total": 4,
+        "passed": 0,
+        "rate": 0.0
+      },
+      "medium": {
+        "total": 14,
+        "passed": 5,
+        "rate": 35.7
+      }
+    },
+    "by_language": {
+      "code-switch": {
+        "total": 1,
+        "passed": 0,
+        "rate": 0.0
+      },
+      "english": {
+        "total": 4,
+        "passed": 2,
+        "rate": 50.0
+      },
+      "filipino": {
+        "total": 25,
+        "passed": 5,
+        "rate": 20.0
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "Q01",
+      "query": "Saan po pwedeng mag-apply ng business permit?",
+      "expected_department": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "language": "filipino",
+      "category": "direct-service",
+      "difficulty": "easy",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.905,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q02",
+      "query": "Pano kumuha ng building permit?",
+      "expected_department": [
+        "BUILDING REGULATORY SERVICES OFFICE"
+      ],
+      "language": "filipino",
+      "category": "direct-service",
+      "difficulty": "easy",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 4.63,
+      "error": null,
+      "passed": true,
+      "verdict_reason": "dept_match=True, text_match=False",
+      "returned_dept": "BUILDING REGULATORY SERVICES OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "Pano kumuha ng building permit?"
+    },
+    {
+      "id": "Q03",
+      "query": "Saan po nagbabayad ng real property tax?",
+      "expected_department": [
+        "CITY ASSESSMENT OFFICE",
+        "CITY ACCOUNTING AND INTERNAL CONTROL OFFICE"
+      ],
+      "language": "filipino",
+      "category": "direct-service",
+      "difficulty": "easy",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.928,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q04",
+      "query": "Pano mag-apply ng senior citizen ID?",
+      "expected_department": [
+        "OFFICE FOR THE SENIOR CITIZENS AFFAIRS"
+      ],
+      "language": "filipino",
+      "category": "direct-service",
+      "difficulty": "easy",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.865,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q05",
+      "query": "Saan kukuha ng PWD ID?",
+      "expected_department": [
+        "PERSONS WITH DISABILITY AFFAIRS OFFICE"
+      ],
+      "language": "filipino",
+      "category": "direct-service",
+      "difficulty": "easy",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 4.004,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q06",
+      "query": "Where to get marriage license?",
+      "expected_department": [
+        "CITY POPULATION MANAGEMENT OFFICE",
+        "CITY SOCIAL SERVICES DEPARTMENT"
+      ],
+      "language": "english",
+      "category": "direct-service",
+      "difficulty": "medium",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.065,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "CITY LEGAL SERVICES OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "Where to get marriage license?"
+    },
+    {
+      "id": "Q07",
+      "query": "Saan ang office ng mayor?",
+      "expected_department": [
+        "OFFICE OF THE CITY MAYOR"
+      ],
+      "language": "filipino",
+      "category": "direct-department",
+      "difficulty": "easy",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.876,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q08",
+      "query": "Saan magpa-check ng aso at pusa?",
+      "expected_department": [
+        "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+      ],
+      "language": "filipino",
+      "category": "descriptive",
+      "difficulty": "medium",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.771,
+      "error": null,
+      "passed": true,
+      "verdict_reason": "dept_match=True, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q09",
+      "query": "Pano mag-renew ng business permit?",
+      "expected_department": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "language": "filipino",
+      "category": "direct-service",
+      "difficulty": "easy",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.825,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q10",
+      "query": "Saan ang health office?",
+      "expected_department": [
+        "CITY HEALTH SERVICES DEPARTMENT"
+      ],
+      "language": "filipino",
+      "category": "direct-department",
+      "difficulty": "easy",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.773,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q11",
+      "query": "Saan mag-apply ng tricycle franchise?",
+      "expected_department": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "language": "filipino",
+      "category": "direct-service",
+      "difficulty": "easy",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.802,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q12",
+      "query": "Pano mag-register ng cooperative?",
+      "expected_department": [
+        "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT"
+      ],
+      "language": "filipino",
+      "category": "direct-service",
+      "difficulty": "medium",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 4.023,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q13",
+      "query": "Saan ang job placement office?",
+      "expected_department": [
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE"
+      ],
+      "language": "filipino",
+      "category": "descriptive",
+      "difficulty": "medium",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 5.24,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I could not find that service in the Calamba City Hall directory.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q14",
+      "query": "Saan magtanong tungkol sa baha at disaster?",
+      "expected_department": [
+        "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO"
+      ],
+      "language": "filipino",
+      "category": "descriptive",
+      "difficulty": "medium",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 5.677,
+      "error": null,
+      "passed": true,
+      "verdict_reason": "dept_match=True, text_match=False",
+      "returned_dept": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "Saan magtanong tungkol sa baha at disaster?"
+    },
+    {
+      "id": "Q15",
+      "query": "Saan po para sa burial assistance?",
+      "expected_department": [
+        "CITY SOCIAL SERVICES DEPARTMENT"
+      ],
+      "language": "filipino",
+      "category": "direct-service",
+      "difficulty": "medium",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.872,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q16",
+      "query": "Where can I get a barangay clearance?",
+      "expected_department": [
+        "CITY ADMINISTRATION OFFICE",
+        "CITY POPULATION MANAGEMENT OFFICE"
+      ],
+      "language": "english",
+      "category": "direct-service",
+      "difficulty": "medium",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.187,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "Where can I get a barangay clearance?"
+    },
+    {
+      "id": "Q17",
+      "query": "How do I apply for a business permit?",
+      "expected_department": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "language": "english",
+      "category": "direct-service",
+      "difficulty": "easy",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.239,
+      "error": null,
+      "passed": true,
+      "verdict_reason": "dept_match=True, text_match=False",
+      "returned_dept": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "How do I apply for a business permit?"
+    },
+    {
+      "id": "Q18",
+      "query": "Saan office ng vice mayor?",
+      "expected_department": [
+        "OFFICE OF THE CITY VICE-MAYOR"
+      ],
+      "language": "filipino",
+      "category": "direct-department",
+      "difficulty": "easy",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.804,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q19",
+      "query": "Saan mag-pa-assess ng property?",
+      "expected_department": [
+        "CITY ASSESSMENT OFFICE"
+      ],
+      "language": "filipino",
+      "category": "direct-service",
+      "difficulty": "medium",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 4.667,
+      "error": null,
+      "passed": true,
+      "verdict_reason": "dept_match=True, text_match=False",
+      "returned_dept": "CITY ASSESSMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "Saan mag-pa-assess ng property?"
+    },
+    {
+      "id": "Q20",
+      "query": "Pano mag-apply ng work sa city hall?",
+      "expected_department": [
+        "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE"
+      ],
+      "language": "filipino",
+      "category": "descriptive",
+      "difficulty": "hard",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.761,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q21",
+      "query": "Saan po ang office para sa environmental concerns?",
+      "expected_department": [
+        "CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT"
+      ],
+      "language": "filipino",
+      "category": "descriptive",
+      "difficulty": "medium",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.779,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q22",
+      "query": "Saan ako pupunta?",
+      "expected_department": [],
+      "language": "filipino",
+      "category": "ambiguous",
+      "difficulty": "hard",
+      "expected_behavior": "should ask clarifying question",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.81,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "ambiguous: passes if needsContext=True",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q23",
+      "query": "Where office ng business permits and saan ako mag-fa-file ng requirements?",
+      "expected_department": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "language": "code-switch",
+      "category": "code-switch",
+      "difficulty": "medium",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.767,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q24",
+      "query": "Saan ang grocery?",
+      "expected_department": [],
+      "language": "filipino",
+      "category": "out-of-scope",
+      "difficulty": "hard",
+      "expected_behavior": "should NOT confidently return a department",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.996,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "oos: passes if no confident dept OR clarification asked",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q25",
+      "query": "treasry??",
+      "expected_department": [
+        "CITY ACCOUNTING AND INTERNAL CONTROL OFFICE",
+        "CITY ASSESSMENT OFFICE"
+      ],
+      "language": "filipino",
+      "category": "typo",
+      "difficulty": "hard",
+      "notes": "misspelled 'treasury' — tests robustness",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 5.24,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I could not find that service in the Calamba City Hall directory.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q26",
+      "query": "Saan ang opisina para sa pagpaplano ng siyudad?",
+      "expected_department": [
+        "CITY PLANNING AND DEVELOPMENT OFFICE"
+      ],
+      "language": "filipino",
+      "category": "descriptive",
+      "difficulty": "medium",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.777,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q27",
+      "query": "Pano mag-enroll sa City College of Calamba?",
+      "expected_department": [
+        "CITY COLLEGE OF CALAMBA"
+      ],
+      "language": "filipino",
+      "category": "direct-service",
+      "difficulty": "easy",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.816,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q28",
+      "query": "Saan magpa-konsulta tungkol sa legal na bagay?",
+      "expected_department": [
+        "CITY LEGAL SERVICES OFFICE"
+      ],
+      "language": "filipino",
+      "category": "descriptive",
+      "difficulty": "medium",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.843,
+      "error": null,
+      "passed": false,
+      "verdict_reason": "dept_match=False, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q29",
+      "query": "Mayroon ba kayong vaccination services?",
+      "expected_department": [
+        "CITY HEALTH SERVICES DEPARTMENT",
+        "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+      ],
+      "language": "filipino",
+      "category": "descriptive",
+      "difficulty": "medium",
+      "notes": "both human and animal vaccination plausible",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.711,
+      "error": null,
+      "passed": true,
+      "verdict_reason": "dept_match=True, text_match=False",
+      "returned_dept": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I'm a bit busy right now — please try again in a moment."
+    },
+    {
+      "id": "Q30",
+      "query": "I need help finding the office that handles construction permits and zoning",
+      "expected_department": [
+        "BUILDING REGULATORY SERVICES OFFICE",
+        "CITY PLANNING AND DEVELOPMENT OFFICE"
+      ],
+      "language": "english",
+      "category": "descriptive",
+      "difficulty": "medium",
+      "api_ok": true,
+      "api_status": 200,
+      "latency_s": 3.143,
+      "error": null,
+      "passed": true,
+      "verdict_reason": "dept_match=True, text_match=False",
+      "returned_dept": "BUILDING REGULATORY SERVICES OFFICE",
+      "needs_context": false,
+      "answer_preview": "I'm a bit busy right now — please try again in a moment.",
+      "rewritten": "I need help finding the office that handles construction permits and zoning"
+    }
+  ]
+}

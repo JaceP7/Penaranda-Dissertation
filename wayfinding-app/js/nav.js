@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * nav.js — Navigation module: PDR + QR anchor localisation
@@ -28,45 +28,45 @@
  */
 
 const NAV = {
-  active:         false,
-  position:       null,    // { row, col } — set by navInit()
-  pdrActive:      false,
-  heading:        0,       // degrees from North (0=N, 90=E, 180=S, 270=W)
+  active: false,
+  position: null, // { row, col } — set by navInit()
+  pdrActive: false,
+  heading: 0, // degrees from North (0=N, 90=E, 180=S, 270=W)
 
   // ── Compass ──────────────────────────────────────────────────────────────
-  _compass:       null,    // Compass instance (compass.js)
-  _compassReady:  false,   // true once first heading reading arrives (A3)
+  _compass: null, // Compass instance (compass.js)
+  _compassReady: false, // true once first heading reading arrives (A3)
 
   // ── Step detection (zero-crossing, Jiménez et al. 2010) ──────────────────
-  _threshold:     1.2,     // m/s² above mean — initial value; adapts after 20 steps
-  _debounce:      400,     // ms — minimum time between detected steps
-  _adaptBuf:      [],      // half-cycle amplitudes of last 20 steps (recalibration)
-  _lastStepTime:  0,
-  _stepBuffer:    [],      // sliding window of raw magnitudes (~300 ms @ 50 Hz)
-  _prevSign:      0,       // sign of (mag − mean) from previous sample: +1 or -1
-  _cyclePeak:     0,       // peak (mag − mean) of the current positive half-cycle
+  _threshold: 1.2, // m/s² above mean — initial value; adapts after 20 steps
+  _debounce: 400, // ms — minimum time between detected steps
+  _adaptBuf: [], // half-cycle amplitudes of last 20 steps (recalibration)
+  _lastStepTime: 0,
+  _stepBuffer: [], // sliding window of raw magnitudes (~300 ms @ 50 Hz)
+  _prevSign: 0, // sign of (mag − mean) from previous sample: +1 or -1
+  _cyclePeak: 0, // peak (mag − mean) of the current positive half-cycle
 
   // ── Drift / fix tracking ──────────────────────────────────────────────────
-  _stepsSinceQR:  0,       // steps taken since last QR fix
-  _hasQRFix:      false,   // stays false until the first QR scan (A2)
+  _stepsSinceQR: 0, // steps taken since last QR fix
+  _hasQRFix: false, // stays false until the first QR scan (A2)
 
   // ── Floor ─────────────────────────────────────────────────────────────────
-  _currentFloor:  0,       // kept in sync with STATE.currentFloor by app.js
+  _currentFloor: 0, // kept in sync with STATE.currentFloor by app.js
 
   // ── Miscellaneous ─────────────────────────────────────────────────────────
-  metresPerCell:  1.0,     // set once via physical measurement before evaluation (B3)
-  _trail:         [],      // breadcrumb history of recent positions (last 10)
-  _stream:        null,    // camera MediaStream
-  _scanLoop:      null,    // rAF handle for QR decode loop
+  metresPerCell: 1.0, // set once via physical measurement before evaluation (B3)
+  _trail: [], // breadcrumb history of recent positions (last 10)
+  _stream: null, // camera MediaStream
+  _scanLoop: null, // rAF handle for QR decode loop
 
   /** Called whenever position changes: (row, col) => void */
   onPositionChange: null,
   /** Called when a scanned QR specifies a different floor: (floor) => void */
-  onFloorChange:    null,
+  onFloorChange: null,
   /** Called whenever the heading updates: (degrees) => void */
-  onHeadingChange:  null,
+  onHeadingChange: null,
   /** Called when position lands on a stair cell: (row, col) => void */
-  onStairCell:      null,
+  onStairCell: null,
 };
 
 // ── Init ──────────────────────────────────────────────────────────────────────
@@ -101,7 +101,8 @@ function navSetPosition(row, col) {
 
   // Stair detection: fire callback when user lands on a stair cell
   const nd = NODE_MAP[nodeId(row, col)];
-  if (nd && nd.cellType === 'stair' && NAV.onStairCell) NAV.onStairCell(row, col);
+  if (nd && nd.cellType === "stair" && NAV.onStairCell)
+    NAV.onStairCell(row, col);
 }
 
 // ── PDR ───────────────────────────────────────────────────────────────────────
@@ -114,46 +115,51 @@ function navSetPosition(row, col) {
  */
 function navStartPDR() {
   if (NAV.pdrActive) return true;
-  if (typeof DeviceMotionEvent === 'undefined') {
-    alert('DeviceMotionEvent is not supported in this browser.\nUse arrow keys or D-pad to move instead.');
+  if (typeof DeviceMotionEvent === "undefined") {
+    alert(
+      "DeviceMotionEvent is not supported in this browser.\nUse arrow keys or D-pad to move instead.",
+    );
     return false;
   }
 
   // Start compass — α = 0.4 for faster turn response (Harle, 2013)
-  if (typeof Compass !== 'undefined') {
+  if (typeof Compass !== "undefined") {
     if (NAV._compass) NAV._compass.stop();
     NAV._compass = new Compass({
-      onHeading: h => {
-        NAV.heading       = h;
-        NAV._compassReady = true;   // A3: unblock step detection on first reading
+      onHeading: (h) => {
+        NAV.heading = h;
+        NAV._compassReady = true; // A3: unblock step detection on first reading
         if (NAV.onHeadingChange) NAV.onHeadingChange(h);
       },
-      onError: msg => console.warn('[NAV Compass]', msg),
-      alphaEMA: 0.4,               // B1: faster turn response vs default 0.25
+      onError: (msg) => console.warn("[NAV Compass]", msg),
+      alphaEMA: 0.4, // B1: faster turn response vs default 0.25
     });
     NAV._compass.requestAndStart().catch(() => {});
   }
 
   const _bindMotion = () => {
     NAV._lastStepTime = 0;
-    NAV._stepBuffer   = [];
-    NAV._prevSign     = 0;
-    NAV._cyclePeak    = 0;
-    NAV.pdrActive     = true;
-    window.addEventListener('devicemotion', _navOnMotion);
+    NAV._stepBuffer = [];
+    NAV._prevSign = 0;
+    NAV._cyclePeak = 0;
+    NAV.pdrActive = true;
+    window.addEventListener("devicemotion", _navOnMotion);
   };
 
-  if (typeof DeviceMotionEvent.requestPermission === 'function') {
+  if (typeof DeviceMotionEvent.requestPermission === "function") {
     DeviceMotionEvent.requestPermission()
-      .then(state => {
-        if (state === 'granted') {
+      .then((state) => {
+        if (state === "granted") {
           _bindMotion();
-          if (NAV.onPositionChange) NAV.onPositionChange(NAV.position.row, NAV.position.col);
+          if (NAV.onPositionChange)
+            NAV.onPositionChange(NAV.position.row, NAV.position.col);
         } else {
-          alert('Motion access denied.\n\nTo fix on iOS: Settings → Safari → Motion & Orientation Access → ON.\n\nUse the D-pad or arrow keys to move instead.');
+          alert(
+            "Motion access denied.\n\nTo fix on iOS: Settings → Safari → Motion & Orientation Access → ON.\n\nUse the D-pad or arrow keys to move instead.",
+          );
         }
       })
-      .catch(() => alert('Could not request motion permission.'));
+      .catch(() => alert("Could not request motion permission."));
     return false;
   }
 
@@ -163,10 +169,13 @@ function navStartPDR() {
 
 function navStopPDR() {
   if (!NAV.pdrActive) return;
-  NAV.pdrActive     = false;
+  NAV.pdrActive = false;
   NAV._compassReady = false;
-  if (NAV._compass) { NAV._compass.stop(); NAV._compass = null; }
-  window.removeEventListener('devicemotion', _navOnMotion);
+  if (NAV._compass) {
+    NAV._compass.stop();
+    NAV._compass = null;
+  }
+  window.removeEventListener("devicemotion", _navOnMotion);
 }
 
 /**
@@ -174,10 +183,10 @@ function navStopPDR() {
  * No calibration walk required — one tap from the ⟳ Recal button.
  */
 function navRecalibrate() {
-  NAV._adaptBuf  = [];
-  NAV._threshold = 1.2;   // initial zero-crossing amplitude threshold
-  NAV._debounce  = 400;
-  NAV._prevSign  = 0;
+  NAV._adaptBuf = [];
+  NAV._threshold = 1.2; // initial zero-crossing amplitude threshold
+  NAV._debounce = 400;
+  NAV._prevSign = 0;
   NAV._cyclePeak = 0;
 }
 
@@ -206,20 +215,23 @@ function _navOnMotion(e) {
   // Sliding window — mean of ~300 ms of samples at ~50 Hz
   NAV._stepBuffer.push(mag);
   if (NAV._stepBuffer.length > 15) NAV._stepBuffer.shift();
-  const mean = NAV._stepBuffer.reduce((a, b) => a + b, 0) / NAV._stepBuffer.length;
+  const mean =
+    NAV._stepBuffer.reduce((a, b) => a + b, 0) / NAV._stepBuffer.length;
 
   const centered = mag - mean;
-  const sign     = centered >= 0 ? 1 : -1;
+  const sign = centered >= 0 ? 1 : -1;
 
   // Track peak of the current positive half-cycle
   if (sign === 1) NAV._cyclePeak = Math.max(NAV._cyclePeak, centered);
 
   // Step fires at negative zero crossing (positive → negative),
   // gated by amplitude of the just-completed positive half-cycle
-  if (NAV._prevSign === 1 && sign === -1
-      && NAV._cyclePeak > NAV._threshold
-      && now - NAV._lastStepTime > NAV._debounce) {
-
+  if (
+    NAV._prevSign === 1 &&
+    sign === -1 &&
+    NAV._cyclePeak > NAV._threshold &&
+    now - NAV._lastStepTime > NAV._debounce
+  ) {
     NAV._lastStepTime = now;
 
     // Silent re-calibration: threshold = 85 % of mean cycle amplitude
@@ -227,7 +239,7 @@ function _navOnMotion(e) {
     if (NAV._adaptBuf.length > 20) NAV._adaptBuf.shift();
     if (NAV._adaptBuf.length === 20) {
       const adaptMean = NAV._adaptBuf.reduce((a, b) => a + b, 0) / 20;
-      NAV._threshold  = Math.max(0.5, adaptMean * 0.85);
+      NAV._threshold = Math.max(0.5, adaptMean * 0.85);
     }
 
     NAV._cyclePeak = 0;
@@ -248,11 +260,15 @@ function _navStep() {
   const h = NAV.heading;
 
   // Map heading to cardinal direction (each quadrant = 90°)
-  let dr = 0, dc = 0;
-  if      (h <  45 || h >= 315) dr = -1;   // N → row up
-  else if (h <  135)             dc =  1;   // E → col right
-  else if (h <  225)             dr =  1;   // S → row down
-  else                           dc = -1;   // W → col left
+  let dr = 0,
+    dc = 0;
+  if (h < 45 || h >= 315)
+    dr = -1; // N → row up
+  else if (h < 135)
+    dc = 1; // E → col right
+  else if (h < 225)
+    dr = 1; // S → row down
+  else dc = -1; // W → col left
 
   NAV._stepsSinceQR++;
   navSetPosition(row + dr, col + dc);
@@ -267,33 +283,41 @@ function _navStep() {
 async function navStartQRScan(videoEl, canvasEl, onFound) {
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     const input = prompt(
-      'Camera needs HTTPS.\nEnter cell as  row,col  (e.g. 5,10) to jump manually:'
+      "Camera needs HTTPS.\nEnter cell as  row,col  (e.g. 5,10) to jump manually:",
     );
     if (input) {
-      const parts = input.replace(/^GRID:\d+:/, '').replace(/^GRID:/, '')
-        .split(',').map(s => parseInt(s.trim(), 10));
+      const parts = input
+        .replace(/^GRID:\d+:/, "")
+        .replace(/^GRID:/, "")
+        .split(",")
+        .map((s) => parseInt(s.trim(), 10));
       if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
         onFound(parts[0], parts[1]);
       } else {
-        alert('Invalid format. Use  row,col  e.g. 5,10');
+        alert("Invalid format. Use  row,col  e.g. 5,10");
       }
     }
     return;
   }
   try {
     NAV._stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: 'environment' }, width: { ideal: 640 } },
+      video: { facingMode: { ideal: "environment" }, width: { ideal: 640 } },
     });
     videoEl.srcObject = NAV._stream;
-    await new Promise(res => { videoEl.onloadedmetadata = res; setTimeout(res, 2000); });
+    await new Promise((res) => {
+      videoEl.onloadedmetadata = res;
+      setTimeout(res, 2000);
+    });
     await videoEl.play().catch(() => {});
     _navQRLoop(videoEl, canvasEl, onFound);
   } catch (err) {
     const input = prompt(
-      'Camera unavailable (' + err.message + ').\nEnter cell as  row,col  to jump manually:'
+      "Camera unavailable (" +
+        err.message +
+        ").\nEnter cell as  row,col  to jump manually:",
     );
     if (input) {
-      const parts = input.split(',').map(s => parseInt(s.trim(), 10));
+      const parts = input.split(",").map((s) => parseInt(s.trim(), 10));
       if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
         onFound(parts[0], parts[1]);
       }
@@ -305,38 +329,43 @@ function _navQRLoop(videoEl, canvasEl, onFound) {
   if (!NAV._stream) return;
 
   if (videoEl.readyState >= 2 && videoEl.videoWidth > 0) {
-    canvasEl.width  = videoEl.videoWidth;
+    canvasEl.width = videoEl.videoWidth;
     canvasEl.height = videoEl.videoHeight;
-    const ctx = canvasEl.getContext('2d');
+    const ctx = canvasEl.getContext("2d");
     ctx.drawImage(videoEl, 0, 0);
 
-    if (typeof jsQR !== 'undefined') {
-      const img  = ctx.getImageData(0, 0, canvasEl.width, canvasEl.height);
-      const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'dontInvert' });
+    if (typeof jsQR !== "undefined") {
+      const img = ctx.getImageData(0, 0, canvasEl.width, canvasEl.height);
+      const code = jsQR(img.data, img.width, img.height, {
+        inversionAttempts: "dontInvert",
+      });
 
-      if (code && code.data.startsWith('GRID:')) {
+      if (code && code.data.startsWith("GRID:")) {
         const payload = code.data.slice(5);
-        let floor = 0, r, c;
+        let floor = 0,
+          r,
+          c;
 
-        if (payload.includes(':')) {
+        if (payload.includes(":")) {
           // New format: GRID:floor:row,col
-          const colonIdx = payload.indexOf(':');
+          const colonIdx = payload.indexOf(":");
           floor = parseInt(payload.slice(0, colonIdx));
-          const parts = payload.slice(colonIdx + 1).split(',');
+          const parts = payload.slice(colonIdx + 1).split(",");
           r = parseInt(parts[0]);
           c = parseInt(parts[1]);
         } else {
           // Legacy format: GRID:row,col
-          const parts = payload.split(',');
+          const parts = payload.split(",");
           r = parseInt(parts[0]);
           c = parseInt(parts[1]);
         }
 
         if (!isNaN(r) && !isNaN(c) && !isNaN(floor)) {
           navStopQRScan();
-          if (floor !== NAV._currentFloor && NAV.onFloorChange) NAV.onFloorChange(floor);
+          if (floor !== NAV._currentFloor && NAV.onFloorChange)
+            NAV.onFloorChange(floor);
           navSetPosition(r, c);
-          NAV._hasQRFix = true;    // A2: first real fix recorded
+          NAV._hasQRFix = true; // A2: first real fix recorded
           if (onFound) onFound(r, c);
           return;
         }
@@ -344,12 +373,20 @@ function _navQRLoop(videoEl, canvasEl, onFound) {
     }
   }
 
-  NAV._scanLoop = requestAnimationFrame(() => _navQRLoop(videoEl, canvasEl, onFound));
+  NAV._scanLoop = requestAnimationFrame(() =>
+    _navQRLoop(videoEl, canvasEl, onFound),
+  );
 }
 
 function navStopQRScan() {
-  if (NAV._scanLoop) { cancelAnimationFrame(NAV._scanLoop); NAV._scanLoop = null; }
-  if (NAV._stream)   { NAV._stream.getTracks().forEach(t => t.stop()); NAV._stream = null; }
+  if (NAV._scanLoop) {
+    cancelAnimationFrame(NAV._scanLoop);
+    NAV._scanLoop = null;
+  }
+  if (NAV._stream) {
+    NAV._stream.getTracks().forEach((t) => t.stop());
+    NAV._stream = null;
+  }
 }
 
 // ── QR generation ─────────────────────────────────────────────────────────────
@@ -360,15 +397,17 @@ function navStopQRScan() {
  */
 function navGenerateQR(floor, row, col, targetDiv) {
   const text = `GRID:${floor}:${row},${col}`;
-  targetDiv.innerHTML = '';
-  if (typeof QRCode !== 'undefined') {
+  targetDiv.innerHTML = "";
+  if (typeof QRCode !== "undefined") {
     new QRCode(targetDiv, {
       text,
-      width: 200, height: 200,
-      colorDark: '#000000', colorLight: '#ffffff',
+      width: 200,
+      height: 200,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
       correctLevel: QRCode.CorrectLevel.M,
     });
   } else {
-    targetDiv.textContent = 'QR library not loaded';
+    targetDiv.textContent = "QR library not loaded";
   }
 }

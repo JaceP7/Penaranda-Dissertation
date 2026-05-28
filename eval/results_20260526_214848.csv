@@ -1,0 +1,6 @@
+id,category,difficulty,language,passed,latency_s,query,expected_departments,returned_dept,needs_context,rewritten,answer_preview,verdict_reason
+Q01,direct-service,easy,filipino,PASS,14.933,Saan po pwedeng mag-apply ng business permit?,BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE,BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE,False,Saan po pwedeng mag-apply ng business permit?,"May dalawang uri po ng application para sa business permit:
+
+1.  **Application","dept_match=True, text_match=False"
+Q07,direct-department,easy,filipino,FAIL,8.738,Saan ang office ng mayor?,OFFICE OF THE CITY MAYOR,"INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",False,Saan ang office ng mayor?,I could not find that service in the Calamba City Hall directory.,"dept_match=False, text_match=False"
+Q22,ambiguous,hard,filipino,FAIL,9.154,Saan ako pupunta?,,BUILDING REGULATORY SERVICES OFFICE,False,,Ollama error: HTTP Error 500: Internal Server Error,ambiguous: passes if needsContext=True

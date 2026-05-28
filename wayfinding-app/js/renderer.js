@@ -64,6 +64,8 @@ class GridRenderer {
     this.startId   = '0,0';
     /** When true, draws "ME" label + pulse ring on the start cell. */
     this.navActive = false;
+    /** When true, draws captured-coordinate pins on the current floor. */
+    this.captureActive = false;
     /** Current floor index — shown as a watermark on the canvas. */
     this.currentFloor = 0;
 
@@ -265,6 +267,42 @@ class GridRenderer {
         ctx.fill();
         ctx.restore();
       });
+    }
+
+    // ── Capture pins (captured office coordinates on this floor) ─────────────
+    if (this.captureActive && typeof CAPTURED_POINTS !== 'undefined') {
+      for (const name in CAPTURED_POINTS) {
+        const p = CAPTURED_POINTS[name];
+        if (!p || p.floor !== this.currentFloor) continue;
+        const px = this._tx + p.col * cs + cs / 2;
+        const py = this._ty + p.row * cs + cs / 2;
+        const r  = Math.max(4, cs * 0.34);
+        ctx.save();
+        // Pin circle
+        ctx.fillStyle   = '#DB2777';      // pink-600
+        ctx.globalAlpha = 0.9;
+        ctx.beginPath();
+        ctx.arc(px, py, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth   = Math.max(1, cs * 0.05);
+        ctx.stroke();
+        // Short code label above the pin (if cells big enough)
+        if (cs >= 10) {
+          const code = (typeof DEPT_CODE === 'function') ? DEPT_CODE(name) : name.slice(0, 6);
+          ctx.fillStyle    = '#831843';
+          ctx.font         = `bold ${Math.max(8, Math.floor(cs * 0.3))}px system-ui, sans-serif`;
+          ctx.textAlign    = 'center';
+          ctx.textBaseline = 'bottom';
+          // white halo for readability
+          ctx.strokeStyle = '#FFFFFF';
+          ctx.lineWidth   = 3;
+          ctx.strokeText(code, px, py - r - 1);
+          ctx.fillText(code, px, py - r - 1);
+        }
+        ctx.restore();
+      }
     }
 
     // ── Nav "ME" pulse ring (drawn on top of the start cell) ─────────────────
