@@ -143,10 +143,16 @@ else:
     print('    Then restart this server.')
 print('=' * 55)
 
-# Show which LLM backend will be used (resolved after .env is loaded)
-_llm_label = f'Groq ({GROQ_MODEL})' if (
-    os.getenv('USE_GROQ', 'false').lower() == 'true' and os.getenv('GROQ_API_KEY')
-) else f'Ollama ({os.getenv("OLLAMA_MODEL", "qwen2.5:3b")})'
+# Show which LLM backend will be used (resolved after .env is loaded).
+# Mirrors the pipeline priority: Groq > Gemini > Ollama.
+_use_groq_banner   = os.getenv('USE_GROQ', 'false').lower() == 'true' and bool(os.getenv('GROQ_API_KEY'))
+_use_gemini_banner = os.getenv('USE_GEMINI', 'false').lower() == 'true' and bool(os.getenv('GEMINI_API_KEY'))
+if _use_groq_banner:
+    _llm_label = f'Groq ({os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")})'
+elif _use_gemini_banner:
+    _llm_label = f'Gemini ({os.getenv("GEMINI_MODEL", "gemini-2.5-flash")})'
+else:
+    _llm_label = f'Ollama ({os.getenv("OLLAMA_MODEL", "qwen2.5:3b")})'
 print(f'  LLM backend  : {_llm_label}')
 print(f'  Analytics    : https://localhost:{PORT}/admin.html')
 print('=' * 55)
@@ -209,11 +215,15 @@ SYSTEM_PROMPT = """You are a helpful assistant for Calamba City Hall.
 Answer questions about city government services using ONLY the provided context.
 
 Rules:
-1. If the query matches MULTIPLE different sub-services, list the options clearly and ask which one they need.
-2. Only provide detailed steps once the specific sub-service is clear.
-3. When giving steps, always end with "Go to: [EXACT DEPARTMENT NAME]".
-4. If unrelated to city services, say you can only help with Calamba City Hall services.
-5. Keep answers concise."""
+1. LANGUAGE: Reply in the SAME language as the user's question. If they ask in Filipino or
+   Taglish (mixed Tagalog-English), answer in natural conversational Taglish like a friendly
+   City Hall staff. If they ask in English, answer in English. Keep office names, form names,
+   and "(secure at: ...)" notes exactly as in the context.
+2. If the query matches MULTIPLE different sub-services, list the options clearly and ask which one they need.
+3. Only provide detailed steps once the specific sub-service is clear.
+4. When giving steps, always end with "Go to: [EXACT DEPARTMENT NAME]".
+5. If unrelated to city services, say you can only help with Calamba City Hall services.
+6. Keep answers concise and scannable: a one-line intro, then a numbered list, one item per line."""
 
 def _call_ollama(messages):
     payload = json.dumps({
@@ -267,7 +277,7 @@ def _handle_rag(query, history):
     # ── Full pipeline (FAISS + embeddings + reranker + Ollama) ───────────────
     if _init_pipeline() and _PIPELINE is not None:
         try:
-            result = _PIPELINE.answer(query, top_k=5, use_reranker=True)
+            result = _PIPELINE.answer(query, top_k=5, use_reranker=True, history=history)
             out = {
                 'answer':       result['answer'],
                 'department':   result['department'],

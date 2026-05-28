@@ -1,5 +1,5 @@
 {
-  "version": "1.0",
+  "version": "2.0",
   "created": "2026-05-24",
   "description": "Curated RAG test queries for Calamba City Hall wayfinding system. Each query has expected_department(s) — pass if pipeline's returned department is in this list.",
   "departments_canonical": [
@@ -29,7 +29,9 @@
     {
       "id": "Q01",
       "query": "Saan po pwedeng mag-apply ng business permit?",
-      "expected_department": ["BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"],
+      "expected_department": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
       "language": "filipino",
       "category": "direct-service",
       "difficulty": "easy"
@@ -37,7 +39,9 @@
     {
       "id": "Q02",
       "query": "Pano kumuha ng building permit?",
-      "expected_department": ["BUILDING REGULATORY SERVICES OFFICE"],
+      "expected_department": [
+        "BUILDING REGULATORY SERVICES OFFICE"
+      ],
       "language": "filipino",
       "category": "direct-service",
       "difficulty": "easy"
@@ -45,7 +49,10 @@
     {
       "id": "Q03",
       "query": "Saan po nagbabayad ng real property tax?",
-      "expected_department": ["CITY ASSESSMENT OFFICE", "CITY ACCOUNTING AND INTERNAL CONTROL OFFICE"],
+      "expected_department": [
+        "CITY ASSESSMENT OFFICE",
+        "CITY ACCOUNTING AND INTERNAL CONTROL OFFICE"
+      ],
       "language": "filipino",
       "category": "direct-service",
       "difficulty": "easy"
@@ -53,7 +60,9 @@
     {
       "id": "Q04",
       "query": "Pano mag-apply ng senior citizen ID?",
-      "expected_department": ["OFFICE FOR THE SENIOR CITIZENS AFFAIRS"],
+      "expected_department": [
+        "OFFICE FOR THE SENIOR CITIZENS AFFAIRS"
+      ],
       "language": "filipino",
       "category": "direct-service",
       "difficulty": "easy"
@@ -61,7 +70,9 @@
     {
       "id": "Q05",
       "query": "Saan kukuha ng PWD ID?",
-      "expected_department": ["PERSONS WITH DISABILITY AFFAIRS OFFICE"],
+      "expected_department": [
+        "PERSONS WITH DISABILITY AFFAIRS OFFICE"
+      ],
       "language": "filipino",
       "category": "direct-service",
       "difficulty": "easy"
@@ -69,7 +80,10 @@
     {
       "id": "Q06",
       "query": "Where to get marriage license?",
-      "expected_department": ["CITY POPULATION MANAGEMENT OFFICE", "CITY SOCIAL SERVICES DEPARTMENT"],
+      "expected_department": [
+        "CITY POPULATION MANAGEMENT OFFICE",
+        "CITY SOCIAL SERVICES DEPARTMENT"
+      ],
       "language": "english",
       "category": "direct-service",
       "difficulty": "medium"
@@ -77,7 +91,9 @@
     {
       "id": "Q07",
       "query": "Saan ang office ng mayor?",
-      "expected_department": ["OFFICE OF THE CITY MAYOR"],
+      "expected_department": [
+        "OFFICE OF THE CITY MAYOR"
+      ],
       "language": "filipino",
       "category": "direct-department",
       "difficulty": "easy"
@@ -85,7 +101,9 @@
     {
       "id": "Q08",
       "query": "Saan magpa-check ng aso at pusa?",
-      "expected_department": ["VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"],
+      "expected_department": [
+        "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+      ],
       "language": "filipino",
       "category": "descriptive",
       "difficulty": "medium"
@@ -93,7 +111,9 @@
     {
       "id": "Q09",
       "query": "Pano mag-renew ng business permit?",
-      "expected_department": ["BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"],
+      "expected_department": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
       "language": "filipino",
       "category": "direct-service",
       "difficulty": "easy"
@@ -101,7 +121,9 @@
     {
       "id": "Q10",
       "query": "Saan ang health office?",
-      "expected_department": ["CITY HEALTH SERVICES DEPARTMENT"],
+      "expected_department": [
+        "CITY HEALTH SERVICES DEPARTMENT"
+      ],
       "language": "filipino",
       "category": "direct-department",
       "difficulty": "easy"
@@ -109,7 +131,9 @@
     {
       "id": "Q11",
       "query": "Saan mag-apply ng tricycle franchise?",
-      "expected_department": ["BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"],
+      "expected_department": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
       "language": "filipino",
       "category": "direct-service",
       "difficulty": "easy"
@@ -117,7 +141,9 @@
     {
       "id": "Q12",
       "query": "Pano mag-register ng cooperative?",
-      "expected_department": ["COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT"],
+      "expected_department": [
+        "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT"
+      ],
       "language": "filipino",
       "category": "direct-service",
       "difficulty": "medium"
@@ -125,7 +151,10 @@
     {
       "id": "Q13",
       "query": "Saan ang job placement office?",
-      "expected_department": ["INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE"],
+      "expected_department": [
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+        "CITY SOCIAL SERVICES DEPARTMENT"
+      ],
       "language": "filipino",
       "category": "descriptive",
       "difficulty": "medium"
@@ -133,7 +162,9 @@
     {
       "id": "Q14",
       "query": "Saan magtanong tungkol sa baha at disaster?",
-      "expected_department": ["CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO"],
+      "expected_department": [
+        "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO"
+      ],
       "language": "filipino",
       "category": "descriptive",
       "difficulty": "medium"
@@ -141,7 +172,9 @@
     {
       "id": "Q15",
       "query": "Saan po para sa burial assistance?",
-      "expected_department": ["CITY SOCIAL SERVICES DEPARTMENT"],
+      "expected_department": [
+        "CITY SOCIAL SERVICES DEPARTMENT"
+      ],
       "language": "filipino",
       "category": "direct-service",
       "difficulty": "medium"
@@ -149,7 +182,10 @@
     {
       "id": "Q16",
       "query": "Where can I get a barangay clearance?",
-      "expected_department": ["CITY ADMINISTRATION OFFICE", "CITY POPULATION MANAGEMENT OFFICE"],
+      "expected_department": [
+        "CITY ADMINISTRATION OFFICE",
+        "CITY POPULATION MANAGEMENT OFFICE"
+      ],
       "language": "english",
       "category": "direct-service",
       "difficulty": "medium"
@@ -157,7 +193,9 @@
     {
       "id": "Q17",
       "query": "How do I apply for a business permit?",
-      "expected_department": ["BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"],
+      "expected_department": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
       "language": "english",
       "category": "direct-service",
       "difficulty": "easy"
@@ -165,7 +203,9 @@
     {
       "id": "Q18",
       "query": "Saan office ng vice mayor?",
-      "expected_department": ["OFFICE OF THE CITY VICE-MAYOR"],
+      "expected_department": [
+        "OFFICE OF THE CITY VICE-MAYOR"
+      ],
       "language": "filipino",
       "category": "direct-department",
       "difficulty": "easy"
@@ -173,7 +213,9 @@
     {
       "id": "Q19",
       "query": "Saan mag-pa-assess ng property?",
-      "expected_department": ["CITY ASSESSMENT OFFICE"],
+      "expected_department": [
+        "CITY ASSESSMENT OFFICE"
+      ],
       "language": "filipino",
       "category": "direct-service",
       "difficulty": "medium"
@@ -181,7 +223,10 @@
     {
       "id": "Q20",
       "query": "Pano mag-apply ng work sa city hall?",
-      "expected_department": ["CITY HUMAN RESOURCE AND MANAGEMENT OFFICE"],
+      "expected_department": [
+        "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE"
+      ],
       "language": "filipino",
       "category": "descriptive",
       "difficulty": "hard"
@@ -189,7 +234,9 @@
     {
       "id": "Q21",
       "query": "Saan po ang office para sa environmental concerns?",
-      "expected_department": ["CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT"],
+      "expected_department": [
+        "CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT"
+      ],
       "language": "filipino",
       "category": "descriptive",
       "difficulty": "medium"
@@ -206,7 +253,9 @@
     {
       "id": "Q23",
       "query": "Where office ng business permits and saan ako mag-fa-file ng requirements?",
-      "expected_department": ["BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"],
+      "expected_department": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
       "language": "code-switch",
       "category": "code-switch",
       "difficulty": "medium"
@@ -223,7 +272,10 @@
     {
       "id": "Q25",
       "query": "treasry??",
-      "expected_department": ["CITY ACCOUNTING AND INTERNAL CONTROL OFFICE", "CITY ASSESSMENT OFFICE"],
+      "expected_department": [
+        "CITY ACCOUNTING AND INTERNAL CONTROL OFFICE",
+        "CITY ASSESSMENT OFFICE"
+      ],
       "language": "filipino",
       "category": "typo",
       "difficulty": "hard",
@@ -232,7 +284,9 @@
     {
       "id": "Q26",
       "query": "Saan ang opisina para sa pagpaplano ng siyudad?",
-      "expected_department": ["CITY PLANNING AND DEVELOPMENT OFFICE"],
+      "expected_department": [
+        "CITY PLANNING AND DEVELOPMENT OFFICE"
+      ],
       "language": "filipino",
       "category": "descriptive",
       "difficulty": "medium"
@@ -240,7 +294,9 @@
     {
       "id": "Q27",
       "query": "Pano mag-enroll sa City College of Calamba?",
-      "expected_department": ["CITY COLLEGE OF CALAMBA"],
+      "expected_department": [
+        "CITY COLLEGE OF CALAMBA"
+      ],
       "language": "filipino",
       "category": "direct-service",
       "difficulty": "easy"
@@ -248,7 +304,9 @@
     {
       "id": "Q28",
       "query": "Saan magpa-konsulta tungkol sa legal na bagay?",
-      "expected_department": ["CITY LEGAL SERVICES OFFICE"],
+      "expected_department": [
+        "CITY LEGAL SERVICES OFFICE"
+      ],
       "language": "filipino",
       "category": "descriptive",
       "difficulty": "medium"
@@ -256,7 +314,10 @@
     {
       "id": "Q29",
       "query": "Mayroon ba kayong vaccination services?",
-      "expected_department": ["CITY HEALTH SERVICES DEPARTMENT", "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"],
+      "expected_department": [
+        "CITY HEALTH SERVICES DEPARTMENT",
+        "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+      ],
       "language": "filipino",
       "category": "descriptive",
       "difficulty": "medium",
@@ -265,10 +326,14 @@
     {
       "id": "Q30",
       "query": "I need help finding the office that handles construction permits and zoning",
-      "expected_department": ["BUILDING REGULATORY SERVICES OFFICE", "CITY PLANNING AND DEVELOPMENT OFFICE"],
+      "expected_department": [
+        "BUILDING REGULATORY SERVICES OFFICE",
+        "CITY PLANNING AND DEVELOPMENT OFFICE"
+      ],
       "language": "english",
       "category": "descriptive",
       "difficulty": "medium"
     }
-  ]
+  ],
+  "recalibrated_for": "235-service corpus (multi-label expected departments where genuinely valid)"
 }

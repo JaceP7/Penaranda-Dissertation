@@ -30,22 +30,54 @@ PASSAGE_PFX  = "passage: "
 BATCH_SIZE   = 16
 
 
+def _format_requirements(reqs: list) -> str:
+    """Render a requirements list (dicts or strings) into searchable text."""
+    lines = []
+    for r in reqs:
+        if isinstance(r, dict):
+            req = r.get("requirement", "")
+            where = r.get("where_to_secure", "")
+            lines.append(req + (f" (secure at: {where})" if where else ""))
+        else:
+            lines.append(str(r))
+    return "\n".join(lines)
+
+
 def build_chunk(entry: dict, idx: int) -> dict:
-    """Convert a services.json entry into a flat chunk dict."""
-    steps_text = "\n".join(entry.get("steps", []))
-    text = (
-        f"Service: {entry['service']}\n"
-        f"Sub-service: {entry['subservice']}\n"
-        f"Department: {entry['department']}\n"
-        f"Steps:\n{steps_text}"
-    )
+    """
+    Convert a services.json entry into a flat chunk dict.
+
+    IMPORTANT — two separate concerns:
+      * `embed_text`  : CONCISE service identity that gets vectorised for FAISS.
+                        Leading with the service name + department maximises
+                        retrieval precision. The full requirements boilerplate is
+                        deliberately EXCLUDED here (many services share the same
+                        requirement phrases, which dilutes identity and hurt P@1).
+      * metadata      : full `requirements` + `steps` carried alongside (NOT
+                        embedded) so the pipeline can still cite them in answers.
+    """
+    who = (entry.get("who_may_avail") or "").strip()
+    who_short = who[:200]
+
+    embed_parts = [
+        entry["subservice"],                          # service name — strongest signal
+        f"Department: {entry['department']}",
+        f"Category: {entry['service']}",
+    ]
+    if who_short:
+        embed_parts.append(f"Who may avail: {who_short}")
+    embed_text = "\n".join(embed_parts)
+
     return {
-        "id":         f"svc-{idx}",
-        "type":       "service",
-        "service":    entry["service"],
-        "subservice": entry["subservice"],
-        "department": entry["department"],
-        "text":       text,
+        "id":            f"svc-{idx}",
+        "type":          "service",
+        "service":       entry["service"],
+        "subservice":    entry["subservice"],
+        "department":    entry["department"],
+        "requirements":  entry.get("requirements", []),   # metadata (for the LLM)
+        "steps":         entry.get("steps", []),           # metadata (for the LLM)
+        "who_may_avail": who,
+        "text":          embed_text,                        # concise — this is embedded
     }
 
 

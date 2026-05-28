@@ -163,7 +163,7 @@ City Hall's actual stack (confirmed May 2026):
 
 These items MUST be done before the 120-respondent evaluation can run.
 
-- [~] **A1** — Corpus verified, but **needs revision** with real offices/services from fieldwork. **4 known gaps found via RAG test** (real property tax, marriage license, mayor's office, veterinary). Corpus question guide: `dissertation\CORPUS_FIELDWORK_QUESTIONS.md`.
+- [x] **A1** — **DONE (Session 4): corpus rebuilt from the official Citizen's Charter.** `services.json` now 235 services (was 74), all with itemized `requirements` + where-to-secure + process flow, scraped via `build_corpus_from_charter.py` from `calambacity.gov.ph`. The 4 known gaps (incl. business permit online renewal) are fixed; cedula confirmed not a standalone Charter service. Old corpus → `services.json.bak74`.
 - [~] **A2** — Field-survey to establish coordinates. **TOOL BUILT: Capture Mode** in the app (🎯 button → tap/PDR → export departments.json). Plan: `FIELDWORK_A2_PLAN.md`. Kit: `fieldwork_kit/*.pdf`. Fieldwork goal = coordinates only (no deployment needed; laptop on same WiFi as phone).
 - [ ] **A3** — **Oracle Cloud Always Free** chosen. Package in `deploy/` (`README_WINDOWS.md`, `setup.sh`). NOT yet deployed. Not needed for coordinate fieldwork.
 - [⏸] **A4** — Deploy survey instruments. **ON HOLD**.
@@ -190,12 +190,17 @@ Fieldwork coordinate-capture feature. Walk City Hall with phone, capture each of
 - [ ] **B3** — Generation quality benchmark (ROUGE-L, METEOR, BERTScore, SBERT). Needs gold answers + working LLM (rate-limited). Script not yet built.
 - [ ] **B4** — Reconcile hybrid-LLM disclosure in Chapter 3 methodology
 
-### Retrieval gaps surfaced by B2 (no relevant chunk in top-5)
-- Q07 "office ng mayor" — MRR 0.00 (Mayor office never surfaced)
-- Q16 "barangay clearance" — MRR 0.00
-- Q26 "pagpaplano ng siyudad" (city planning) — MRR 0.00
+### Retrieval gaps surfaced by B2 (no relevant chunk in top-5) — original 74-corpus
+- Q07 "office ng mayor", Q16 "barangay clearance", Q26 "city planning" — MRR 0.00
 - Q03 real property tax, Q06 marriage license — first relevant at rank 2
-→ All fixable via corpus alias enrichment (the deprioritized Charter/desk task).
+
+### B2 update (Session 4) — after Charter corpus rebuild + embedding tuning
+- Corpus 74 → **235 services, all with requirements**.
+- Embedding tuned (concise identity, not full requirements) to recover precision.
+- Test set v2.0 (Q13/Q20/Q29 multi-label).
+- **Metrics:** 74-corpus 0.811 MRR / 0.75 P@1  →  235 untuned 0.611 / 0.43  →  **235 tuned+recalibrated 0.714 MRR / 0.607 P@1.**
+- Live chat now answers "what are the requirements for X?" with itemized checklists (was "could not find").
+- Latest results: `eval/retrieval_metrics_20260528_225008.*`
 
 ## 🟨 GROUP C — Analytics completeness (paper specifies these)
 

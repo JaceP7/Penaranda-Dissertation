@@ -58,6 +58,71 @@ const CHAT = (() => {
   }
 
   // ── Render ────────────────────────────────────────────────────────────
+  /**
+   * Render a bot answer as readable HTML:
+   *  - numbered / bulleted lines become real <ol>/<ul> lists
+   *  - "(secure at: X)" becomes a muted sub-note under the item
+   *  - **bold** is honoured
+   *  - the closing "Go to: OFFICE" line is styled as a distinct chip-line
+   */
+  function _formatBotText(raw) {
+    const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    // "Kliyente / Applicant / Aplikante / Client" all mean the citizen provides it
+    // themselves — render that clearly instead of the confusing "secure at: Kliyente".
+    const SELF = /^(kliyente|aplikante|applicant|client|self|requestor)$/i;
+    const inline = s => esc(s)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\s*\(secure at:\s*([^)]+)\)/gi, (m, where) => {
+        const w = where.trim();
+        if (/^(n\/?a|none|wala)$/i.test(w)) return '';                 // drop empty/N/A
+        if (SELF.test(w))
+          return '<span class="chat-secure">↳ ikaw ang maghahanda nito (provided by you)</span>';
+        return `<span class="chat-secure">↳ secure at: ${w}</span>`;
+      });
+
+    const lines = raw.split('\n');
+    let html = '';
+    let topList = null;   // 'ol' | 'ul' | null
+    let liOpen  = false;  // a top-level <li> is open
+    let subOpen = false;  // a nested <ul> is open inside the current <li>
+
+    const closeSub = () => { if (subOpen) { html += '</ul>'; subOpen = false; } };
+    const closeLi  = () => { closeSub(); if (liOpen) { html += '</li>'; liOpen = false; } };
+    const closeTop = () => { closeLi(); if (topList) { html += `</${topList}>`; topList = null; } };
+
+    for (const line of lines) {
+      const num = line.match(/^(\s*)\d+[.)]\s+(.*)$/);
+      const bul = line.match(/^(\s*)[-•*]\s+(.*)$/);
+      const trimmed = line.trim();
+
+      if (num) {                                   // top-level numbered item
+        closeLi();
+        if (topList !== 'ol') { closeTop(); html += '<ol class="chat-list">'; topList = 'ol'; }
+        html += `<li>${inline(num[2])}`; liOpen = true;
+      } else if (bul) {
+        const indent = bul[1].length;
+        if (liOpen && indent >= 2) {               // nested sub-bullet inside current item
+          if (!subOpen) { html += '<ul class="chat-sublist">'; subOpen = true; }
+          html += `<li>${inline(bul[2])}</li>`;
+        } else {                                    // top-level bullet
+          closeLi();
+          if (topList !== 'ul') { closeTop(); html += '<ul class="chat-list">'; topList = 'ul'; }
+          html += `<li>${inline(bul[2])}`; liOpen = true;
+        }
+      } else if (trimmed === '') {
+        // keep any open list intact (blank line = spacing only)
+      } else if (/^go to:/i.test(trimmed)) {
+        closeTop();
+        html += `<div class="chat-goto">📍 ${inline(trimmed.replace(/^go to:\s*/i, ''))}</div>`;
+      } else {
+        closeTop();
+        html += `<p class="chat-para">${inline(trimmed)}</p>`;
+      }
+    }
+    closeTop();
+    return html;
+  }
+
   function _renderMessages() {
     _msgList.innerHTML = '';
 
@@ -68,10 +133,7 @@ const CHAT = (() => {
         ? 'chat-bubble chat-bubble-busy'
         : `chat-bubble chat-bubble-${msg.role}`;
       if (msg.role === 'bot') {
-        bubble.innerHTML = msg.text
-          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-          .replace(/\n/g, '<br>');
+        bubble.innerHTML = _formatBotText(msg.text);
       } else {
         bubble.textContent = msg.text;
       }

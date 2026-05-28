@@ -6,6 +6,23 @@
 
 ## 0. SESSION LOG (read this first to resume)
 
+### Session 4 (2026-05-28 PM) — corpus rebuild + chat fixes
+- **CORPUS REBUILT from the official Citizen's Charter**: `wayfinding-app/data/services.json` now has **235 services** (was 74), **all with `requirements`** (was 0). Built by `build_corpus_from_charter.py` which: parses `services raw/*.js` (10 category listing files = 235 services) → fetches each `https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=N` (cached to `services_html/`) → extracts requirements checklist + process flow + who-may-avail. Old 74 corpus backed up to `services.json.bak74`.
+- **New enriched schema** per service: `service` (category), `subservice` (name), `department`, `source_id`, `source_url`, `classification`, `type_of_transaction`, `who_may_avail`, `requirements` [{requirement, where_to_secure}], `steps`.
+- **LLM backend = Groq** (`llama-3.3-70b-versatile`), `.env` `USE_GROQ=true`. Gemini abandoned (free tier 503s + 10 RPM too unreliable). Groq: ~2-6s warm, reliable. ⚠️ Groq key was pasted in chat — rotate it.
+- **Chat fixes (Session 4)**: (A) contextual query rewrite — `query_rewrite(query, history)` resolves follow-ups like "what are those requirements?"; (C) honest no-data message + null department on no-match (no misleading "Take me there"); (D) department extracted from the LLM's "Go to:" line, not chunks[0]; requirements now shown from corpus.
+- **Embedding tuned**: `build_index.py build_chunk` embeds CONCISE identity (subservice + department + category + who-may-avail), NOT the full requirements (which diluted precision). Requirements/steps carried in metadata for the LLM. `_format_context` reads them from metadata.
+- **Test set v2.0**: `eval/rag_test_set.json` recalibrated — Q13/Q20/Q29 multi-label for the 235-corpus.
+- **Metrics**: 74-corpus MRR 0.811/P@1 0.75 → 235 untuned 0.611/0.43 → **235 tuned+recalibrated 0.714/0.607**. Coverage 3.2× + requirements grounding. Latency ~4-6s warm (Groq).
+- **serve_https.py bug fixed**: startup banner referenced GROQ_MODEL before definition (crashed on USE_GROQ=true).
+- **Committed + (attempted) push** under JCEPenaranda — push needs JaceP7 auth (403). Sensitive files gitignored: real floor plan, tmp_cred.txt, dissertation text, *.pyc.
+
+### Key new files (Session 4)
+- `build_corpus_from_charter.py` — the corpus scraper (resumable, caches to services_html/)
+- `eval/run_retrieval_metrics.py` — Recall@K/Precision@K/MRR/NDCG (run with `RAG_RERANKER_CPU=1` if server is up, else GPU; stop server to avoid OOM/segfault)
+- `services raw/*.js` — 10 Charter listing files (source of the 235 services)
+- `CODE_STUDY_GUIDE.md` — file-by-file study guide for defense
+
 ### Session 3 (2026-05-28) — current state
 - **Cloud LLM added**: `rag_engine/pipeline.py` now routes Stage 1 + 5 to Groq OR Gemini OR Ollama (priority: Groq > Gemini > Ollama). Selected via `.env` flags `USE_GROQ` / `USE_GEMINI`. Embedding/FAISS/reranker still local.
 - **Active config**: `.env` has `USE_GEMINI=true`, `gemini-2.5-flash`. (⚠️ Gemini API key was pasted in chat — user advised to rotate it.)

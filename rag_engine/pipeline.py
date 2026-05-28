@@ -107,6 +107,12 @@ def _needs_rewrite(query: str) -> bool:
     return False
 
 
+def _looks_filipino(query: str) -> bool:
+    """True if the query contains Filipino/Taglish markers (decides answer language)."""
+    words = [w.lower().strip("?.,!;:()\"'") for w in query.split()]
+    return any(w in _FILIPINO_WORDS for w in words)
+
+
 # ── Prompt templates ──────────────────────────────────────────────────────────
 
 _REWRITE_PROMPT = (
@@ -121,19 +127,57 @@ _REWRITE_PROMPT = (
     "Query: {query}\n\nRewritten query:"
 )
 
+# Fix A — contextual reformulation: resolve follow-ups using conversation history.
+_REWRITE_WITH_HISTORY_PROMPT = (
+    "You are an assistant for a Philippine city government office. "
+    "Using the recent conversation, rewrite the user's LATEST message into a single, "
+    "complete, SELF-CONTAINED question for searching city hall services.\n\n"
+    "Rules:\n"
+    "- Resolve references like 'those', 'that', 'it', 'the requirements', 'the steps' "
+    "into the specific service/topic from the conversation.\n"
+    "- The result must stand alone with NO pronouns referring to earlier turns.\n"
+    "- Translate Filipino/Taglish to English. Output a full question ending with '?'.\n"
+    "- Return ONLY the rewritten question, nothing else.\n\n"
+    "Conversation so far:\n{history}\n\n"
+    "Latest message: {query}\n\nRewritten standalone question:"
+)
+
 _RAG_PROMPT = (
     "You are a helpful assistant for Calamba City Hall.\n"
     "Answer the citizen's question using ONLY the service information provided below.\n\n"
     "STRICT RULES:\n"
-    "1. Use ONLY the information in the Context. Do not add steps or requirements from memory.\n"
-    "2. If multiple sub-services match, list the options and ask which one the user needs.\n"
-    "3. When giving steps, be concise and end your answer with exactly:\n"
-    "   Go to: [DEPARTMENT NAME]\n"
-    "   (use the exact department name from the context)\n"
-    "4. If the context does not contain enough information, say: "
-    "'I could not find that service in the Calamba City Hall directory.'\n\n"
+    "1. LANGUAGE (critical): Your FRAMING/connective sentences must match the Original "
+    "question's language, EVEN IF the Context is written in another language. "
+    "  - Original in Filipino/Taglish -> answer in natural conversational Taglish "
+    "(e.g., 'Para makakuha ng business permit, kailangan mo ng mga sumusunod...').\n"
+    "  - Original in English -> answer in English (e.g., 'To get a business permit, you need "
+    "the following...'). Do NOT let the Context's Filipino wording switch your framing to Filipino.\n"
+    "  - Either way, keep proper nouns, office names, form names, and '(secure at: ...)' notes "
+    "VERBATIM from the Context (do not translate them).\n"
+    "2. Use ONLY the information in the Context. Do not add steps or requirements from memory.\n"
+    "3. If multiple sub-services match, list the options and ask which one the user needs.\n"
+    "4. End your answer with exactly:\n"
+    "   Go to: [DEPARTMENT NAME]   (use the exact department name from the context)\n"
+    "5. If the user asks for REQUIREMENTS and the Context includes a Requirements list, "
+    "present those requirements clearly as a numbered list (include where to secure each, if "
+    "given). If the Context has NO requirements (only steps), say honestly that the itemized "
+    "checklist isn't in the directory yet and advise confirming with the office. End with 'Go to:'.\n"
+    "6. If the Context is unrelated to the question (no matching service at all), say "
+    "(in the citizen's language): 'Wala pa po sa direktoryo ko ang serbisyong iyon. "
+    "Paki-check po sa City Hall information desk o sa kaukulang opisina.' / (English) "
+    "'I don't have that specific service in my directory yet. Please check with the City Hall "
+    "information desk or the relevant office.' Do NOT end with 'Go to:' in this case.\n"
+    "7. FORMATTING (keep it scannable):\n"
+    "   - Start with ONE short sentence answering the question.\n"
+    "   - Put requirements/steps as a numbered list, ONE item per line.\n"
+    "   - Keep each '(secure at: ...)' right after its item.\n"
+    "   - Do NOT deeply nest. If an item has sub-options, keep them brief on the same item.\n"
+    "   - Keep the whole answer tight — no long preambles or repetition.\n\n"
     "Context:\n{context}\n\n"
-    "Question: {question}\n\nAnswer:"
+    "Original question: {original}\n"
+    "Search-normalized version (for reference only): {question}\n\n"
+    ">>> Write your ENTIRE answer in {lang}. Keep office/form names and "
+    "'(secure at: ...)' notes verbatim from the Context. <<<\n\nAnswer:"
 )
 
 _NORAG_PROMPT = (
@@ -147,11 +191,33 @@ _NORAG_PROMPT = (
 def _format_context(chunks: list[dict]) -> str:
     parts = []
     for i, c in enumerate(chunks, 1):
-        parts.append(
-            f"[{i}] Sub-service: {c['subservice']}\n"
-            f"    Department:  {c['department']}\n"
-            f"    {c['text'].split('Steps:')[-1].strip()}"
-        )
+        block = [f"[{i}] Sub-service: {c['subservice']}",
+                 f"    Department:  {c['department']}"]
+
+        # Requirements (from enriched corpus metadata)
+        reqs = c.get("requirements", [])
+        if reqs:
+            block.append("    Requirements:")
+            for r in reqs:
+                if isinstance(r, dict):
+                    req = r.get("requirement", "")
+                    where = r.get("where_to_secure", "")
+                    block.append(f"      - {req}" + (f" (secure at: {where})" if where else ""))
+                else:
+                    block.append(f"      - {r}")
+
+        # Steps (from metadata; embed_text no longer carries them)
+        steps = c.get("steps", [])
+        if steps:
+            block.append("    Steps:")
+            for s in steps:
+                block.append(f"      {s}")
+        elif "Steps:" in c.get("text", ""):   # backward-compat with old index
+            tail = c["text"].split("Steps:", 1)[-1].strip()
+            if tail:
+                block.append("    Steps:\n    " + tail.replace("\n", "\n    "))
+
+        parts.append("\n".join(block))
     return "\n\n".join(parts)
 
 
@@ -275,21 +341,37 @@ class CityPipeline:
         except Exception as e:
             raise RuntimeError(f"{provider_name} call failed: {e}") from e
 
-    def query_rewrite(self, query: str) -> str:
-        """Stage 1: normalise informal/Taglish queries to formal English."""
+    def query_rewrite(self, query: str, history: list[dict] | None = None) -> str:
+        """
+        Stage 1: normalise informal/Taglish queries to formal English.
+
+        If `history` is provided, resolve context-dependent follow-ups
+        ("what are those requirements?") into a standalone question using the
+        conversation — so the retriever gets a query with real signal.
+        """
+        def _bad(text: str) -> bool:
+            low = text.lower()
+            return ("busy right now" in low or "call failed" in low
+                    or "error" in low or len(text.split()) < 3)
+
+        # ── Contextual reformulation (follow-ups need the conversation) ───────
+        if history:
+            hist_text = "\n".join(
+                f"{m.get('role', 'user')}: {m.get('content', '')}"
+                for m in history[-6:] if m.get('content')
+            )
+            if hist_text.strip():
+                rewritten = self._generate(
+                    _REWRITE_WITH_HISTORY_PROMPT.format(history=hist_text, query=query),
+                    num_predict=80,
+                )
+                return query if _bad(rewritten) else rewritten.strip()
+
+        # ── No history: heuristic-based rewrite (original behaviour) ──────────
         if not _needs_rewrite(query):
             return query
         rewritten = self._generate(_REWRITE_PROMPT.format(query=query), num_predict=64)
-        # Guard: if the LLM call failed (rate-limit fallback message, error text,
-        # or too-short output), fall back to the ORIGINAL query so retrieval is
-        # never polluted by an error string.
-        low = rewritten.lower()
-        if ("busy right now" in low
-                or "call failed" in low
-                or "error" in low
-                or len(rewritten.split()) <= 4):
-            return query
-        return rewritten
+        return query if _bad(rewritten) else rewritten
 
     def answer(
         self,
@@ -320,8 +402,8 @@ class CityPipeline:
         rewritten = None
 
         if use_rag:
-            # Stage 1 — Query rewriting
-            rewritten = self.query_rewrite(query)
+            # Stage 1 — Query rewriting (history-aware: resolves follow-ups)
+            rewritten = self.query_rewrite(query, history=history)
 
             # Stage 2 — Embedding
             q_vec = encode_query(rewritten)
@@ -330,9 +412,12 @@ class CityPipeline:
             chunks = retrieve(rewritten, top_k=top_k,
                               use_reranker=use_reranker, q_vec=q_vec)
 
-            # Stage 5 — Answer generation
+            # Stage 5 — Answer generation (answer in the user's ORIGINAL language)
             context = _format_context(chunks)
-            prompt  = _RAG_PROMPT.format(context=context, question=rewritten)
+            lang    = "natural conversational Taglish (mixed Tagalog-English)" \
+                      if _looks_filipino(query) else "English"
+            prompt  = _RAG_PROMPT.format(context=context, question=rewritten,
+                                         original=query, lang=lang)
             answer  = self._generate(prompt)
 
             # Hallucination filter
@@ -350,9 +435,42 @@ class CityPipeline:
             answer, re.IGNORECASE
         ))
 
-        top_dept    = chunks[0]["department"] if chunks and not is_clarifying else None
-        top_sub     = chunks[0]["subservice"] if chunks and not is_clarifying else None
+        # Fix C — a "no matching service" answer must NOT carry a department,
+        # otherwise the UI shows a misleading "Take me there" to a wrong office.
+        is_no_data = bool(re.search(
+            r"don't have that specific service|do not have that specific service|"
+            r"could not find that service|information desk",
+            answer, re.IGNORECASE
+        ))
+
         depts       = _load_departments()
+        usable      = not is_clarifying and not is_no_data
+
+        # Prefer the department the LLM explicitly chose in its "Go to:" line —
+        # it reflects the grounded answer. chunks[0] can rank a different office
+        # than the one the answer actually recommends (mismatch bug).
+        goto_dept = None
+        m = re.search(r"Go to:\s*(.+)", answer)
+        if m:
+            cand = m.group(1).strip().rstrip('.').upper()
+            for name in depts:
+                nu = name.upper()
+                if nu == cand or nu in cand or cand in nu:
+                    goto_dept = name
+                    break
+
+        if usable and goto_dept:
+            top_dept = goto_dept
+            top_sub  = next((c["subservice"] for c in chunks
+                             if c["department"] == goto_dept),
+                            chunks[0]["subservice"] if chunks else None)
+        elif usable and chunks:
+            top_dept = chunks[0]["department"]
+            top_sub  = chunks[0]["subservice"]
+        else:
+            top_dept = None
+            top_sub  = None
+
         location    = depts.get(top_dept) if top_dept else None
         # Null location means fieldwork mapping not yet done
         if location and location.get("floor") is None:
