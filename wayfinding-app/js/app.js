@@ -30,6 +30,10 @@ const STATE = {
   paintType:    'wall',  // active paint type: 'wall' | 'door' | 'stair' | 'erase'
 };
 
+// Tracks whether Shift is currently held — used for Shift+click "teleport" in Capture Mode
+// (sets NAV.position to the clicked cell instead of capturing the selected office).
+let _shiftHeld = false;
+
 // ── Capture points (fieldwork coordinate capture) ──────────────────────────────
 // Each entry: { floor, row, col, name }  keyed by office name (one coord per office).
 const CAPTURED_POINTS = {};
@@ -506,10 +510,33 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.key === 'ArrowRight') { e.preventDefault(); navSetPosition(row, col + 1); return; }
     }
 
+    // WASD: walk the position cursor while Capture Mode is on (laptop simulation
+    // of on-site PDR — drives the same NAV.position that captureAtPosition reads,
+    // so the "Capture here" button works identically to walking on-site).
+    // navSetPosition already clamps to grid bounds and silently stops at walls.
+    if (STATE.captureMode && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      const tag = e.target && e.target.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      const { row, col } = NAV.position || { row: 0, col: 0 };
+      const k = e.key.toLowerCase();
+      if (k === 'w') { e.preventDefault(); navSetPosition(row - 1, col); return; }
+      if (k === 's') { e.preventDefault(); navSetPosition(row + 1, col); return; }
+      if (k === 'a') { e.preventDefault(); navSetPosition(row, col - 1); return; }
+      if (k === 'd') { e.preventDefault(); navSetPosition(row, col + 1); return; }
+    }
+
     if (!e.ctrlKey && !e.metaKey) return;
     if (e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); }
     if (e.key === 'y' || (e.key === 'z' && e.shiftKey)) { e.preventDefault(); redo(); }
   });
+
+  // Track Shift state for Shift+click "teleport" in Capture Mode.
+  // (e.shiftKey is true whenever Shift is currently held, regardless of which
+  // key fired the event, so this stays in sync without a dedicated keyup match.)
+  const _trackShift = e => { _shiftHeld = e.shiftKey; };
+  document.addEventListener('keydown', _trackShift);
+  document.addEventListener('keyup',   _trackShift);
+  window.addEventListener('blur',      () => { _shiftHeld = false; });
 
   window.addEventListener('resize', () => renderer.resize());
 
@@ -525,8 +552,16 @@ function handleCellTap(row, col) {
   const id   = nodeId(row, col);
   const node = NODE_MAP[id];
 
-  // ── Capture mode: tap-to-place a coordinate for the selected office ───────
+  // ── Capture mode ──────────────────────────────────────────────────────────
+  // - Shift+click teleports NAV.position here (no capture). Useful on laptop
+  //   to jump the cursor to a starting cell before walking with WASD.
+  // - Plain click captures the selected office at this cell.
   if (STATE.captureMode) {
+    if (_shiftHeld) {
+      navSetPosition(row, col);
+      _flashCaptureFeedback(`Position set to F${STATE.currentFloor} (${row},${col})`);
+      return;
+    }
     const name = DOM.captureDeptSelect.value;
     if (!name) {
       _flashCaptureFeedback('Pick an office from the dropdown, then tap its location.');

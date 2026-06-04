@@ -50,6 +50,11 @@ tmp_cred.txt
 # ── Real (non-anonymized) floor plan — sensitive, not publicly available ──────
 City Hall Floor Plan.pptx
 City Hall Floor Plan/
+# Annotated .drawio files that embed the real floor plan as base64 background
+wayfinding-app/data/Floor_Slide*_Annotated*.drawio
+dissertation/figures/Floor_Slide*_Annotated*.drawio
+figures/Floor_Slide*_Annotated*.drawio
+**/Floor_Slide*_Annotated*.drawio
 
 # ── Extracted dissertation draft text (keep drafts out of git, like *.pdf) ────
 _dissertation_ch1_2.txt
