@@ -26,6 +26,7 @@ const STATE = {
   panelOpen:    false,   // tools panel visible
   navMode:      false,   // navigate mode: position tracks PDR/QR, path from ME → tapped cell
   captureMode:  false,   // fieldwork: tap a cell (or use PDR pos) to record an office coordinate
+  setPosMode:   false,   // sub-mode within capture: taps SET position instead of capturing
   currentFloor: 0,       // active floor index (0 = ground)
   paintType:    'wall',  // active paint type: 'wall' | 'door' | 'stair' | 'erase'
 };
@@ -173,6 +174,7 @@ const DOM = {
   // Capture bar
   captureBar:        $('captureBar'),
   captureDeptSelect: $('captureDeptSelect'),
+  captureSetPosBtn:  $('captureSetPosBtn'),
   captureHereBtn:    $('captureHereBtn'),
   captureCount:      $('captureCount'),
   captureExportBtn:  $('captureExportBtn'),
@@ -358,6 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Capture bar buttons
   DOM.captureDeptSelect.addEventListener('change', _onCaptureDeptChange);
   DOM.captureHereBtn.addEventListener('click', captureAtPosition);
+  DOM.captureSetPosBtn.addEventListener('click', () => setSetPosMode(!STATE.setPosMode));
   DOM.captureExportBtn.addEventListener('click', exportCaptures);
   DOM.captureClearBtn.addEventListener('click', clearCaptures);
   DOM.clearBtn.addEventListener('click', clearWalls);
@@ -553,11 +556,12 @@ function handleCellTap(row, col) {
   const node = NODE_MAP[id];
 
   // ── Capture mode ──────────────────────────────────────────────────────────
-  // - Shift+click teleports NAV.position here (no capture). Useful on laptop
-  //   to jump the cursor to a starting cell before walking with WASD.
-  // - Plain click captures the selected office at this cell.
+  // - "Set position" sub-mode (toggle button, mobile-friendly) OR Shift+click
+  //   (laptop shortcut) teleports NAV.position here without recording an office.
+  //   Useful for jumping to a starting cell before walking with PDR / WASD.
+  // - Plain tap (sub-mode off, no Shift) captures the selected office at this cell.
   if (STATE.captureMode) {
-    if (_shiftHeld) {
+    if (STATE.setPosMode || _shiftHeld) {
       navSetPosition(row, col);
       _flashCaptureFeedback(`Position set to F${STATE.currentFloor} (${row},${col})`);
       return;
@@ -782,6 +786,9 @@ function setCaptureMode(active) {
     if (STATE.selectMode) setSelectMode(false);
     _populateCaptureDropdown();
     _updateCaptureCount();
+  } else {
+    // Exiting Capture Mode also exits the "Set position" sub-mode.
+    if (STATE.setPosMode) setSetPosMode(false);
   }
   STATE.captureMode      = active;
   renderer.captureActive = active;
@@ -790,6 +797,18 @@ function setCaptureMode(active) {
   DOM.captureBar.style.display = active ? 'flex' : 'none';
   renderer._draw();
   updateCursorAndHint();
+}
+
+/**
+ * Toggle "Set position" sub-mode (only meaningful while Capture Mode is on).
+ * When ON, plain taps move NAV.position instead of recording an office.
+ * Mobile-friendly equivalent of Shift+click teleport.
+ */
+function setSetPosMode(active) {
+  STATE.setPosMode = !!active;
+  DOM.captureSetPosBtn.classList.toggle('active', !!active);
+  DOM.captureSetPosBtn.setAttribute('aria-pressed', !!active);
+  if (active) _flashCaptureFeedback('Set-position mode: tap a cell to put yourself there.');
 }
 
 /**
