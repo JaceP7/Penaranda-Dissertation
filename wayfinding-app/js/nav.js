@@ -31,7 +31,16 @@ const NAV = {
   active: false,
   position: null, // { row, col } — set by navInit()
   pdrActive: false,
-  heading: 0, // degrees from North (0=N, 90=E, 180=S, 270=W)
+  heading: 0, // degrees from North (raw smoothed compass output)
+
+  // ── Heading alignment (F3-lite) ──────────────────────────────────────────
+  // The compass is unreliable indoors — magnetic interference from steel /
+  // wiring makes "North" point at arbitrary directions. Instead of trusting
+  // it absolutely, we ANCHOR forward to whatever direction the phone is
+  // pointing when PDR starts (or when the user taps the 🧭 Align button).
+  // Step direction is then computed from (heading - headingOffset).
+  headingOffset: 0,        // degrees subtracted from raw heading before step mapping
+  _autoAlignPending: false, // true between navStartPDR() and first compass reading
 
   // ── Compass ──────────────────────────────────────────────────────────────
   _compass: null, // Compass instance (compass.js)
@@ -122,6 +131,12 @@ function navStartPDR() {
     return false;
   }
 
+  // F3-lite: arm auto-alignment — the very next compass reading captures
+  // "forward" as the direction the phone is currently pointing, so the
+  // user's walking direction matches their facing direction regardless of
+  // what the magnetometer thinks True North is.
+  NAV._autoAlignPending = true;
+
   // Start compass — Fix 1 (Adaptive EMA, replaces fixed α=0.4 from B1).
   //   Per Shi et al. (2025, IEEE TIM) — α now varies per sample with the
   //   turn rate: heavy smoothing when the user is still (kills magnetometer
@@ -134,6 +149,14 @@ function navStartPDR() {
       onHeading: (h) => {
         NAV.heading = h;
         NAV._compassReady = true; // A3: unblock step detection on first reading
+        // F3-lite: lock "forward" to the very first compass reading after
+        // PDR was started (the direction the user was pointing). All
+        // subsequent step directions are computed relative to this anchor.
+        if (NAV._autoAlignPending) {
+          NAV.headingOffset = h;
+          NAV._autoAlignPending = false;
+          if (NAV.onAlignChange) NAV.onAlignChange(h);
+        }
         if (NAV.onHeadingChange) NAV.onHeadingChange(h);
       },
       onError: (msg) => console.warn("[NAV Compass]", msg),
@@ -265,21 +288,43 @@ function _navStep() {
   if (!NAV._compassReady) return;
 
   const { row, col } = NAV.position;
-  const h = NAV.heading;
+  // F3-lite: use heading RELATIVE to the alignment anchor, so step direction
+  // tracks the user's facing direction rather than absolute compass "North".
+  const h = (NAV.heading - NAV.headingOffset + 360) % 360;
 
-  // Map heading to cardinal direction (each quadrant = 90°)
+  // Map relative heading to grid direction (each quadrant = 90°).
+  // 0°    = forward = up on the grid (matches what user was facing at alignment)
+  // 90°   = right
+  // 180°  = back
+  // 270°  = left
   let dr = 0,
     dc = 0;
   if (h < 45 || h >= 315)
-    dr = -1; // N → row up
+    dr = -1; // forward → row up
   else if (h < 135)
-    dc = 1; // E → col right
+    dc = 1; // right → col right
   else if (h < 225)
-    dr = 1; // S → row down
-  else dc = -1; // W → col left
+    dr = 1; // back → row down
+  else dc = -1; // left → col left
 
   NAV._stepsSinceQR++;
   navSetPosition(row + dr, col + dc);
+}
+
+/**
+ * Re-align "forward" to the direction the phone is currently pointing.
+ * Returns true if the alignment was captured immediately (compass ready),
+ * or false if it's deferred until the next compass reading.
+ */
+function navAlignForward() {
+  if (NAV._compassReady) {
+    NAV.headingOffset = NAV.heading;
+    if (NAV.onAlignChange) NAV.onAlignChange(NAV.heading);
+    return true;
+  }
+  // No compass reading yet — arm auto-align for the next one.
+  NAV._autoAlignPending = true;
+  return false;
 }
 
 // ── QR scanning ───────────────────────────────────────────────────────────────

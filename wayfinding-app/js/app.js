@@ -214,6 +214,7 @@ const DOM = {
   captureBar:        $('captureBar'),
   captureDeptSelect: $('captureDeptSelect'),
   captureSetPosBtn:  $('captureSetPosBtn'),
+  captureAlignBtn:   $('captureAlignBtn'),
   captureHereBtn:    $('captureHereBtn'),
   captureRecBtn:        $('captureRecBtn'),
   captureExportWalksBtn:$('captureExportWalksBtn'),
@@ -403,6 +404,13 @@ document.addEventListener('DOMContentLoaded', () => {
   DOM.captureDeptSelect.addEventListener('change', _onCaptureDeptChange);
   DOM.captureHereBtn.addEventListener('click', captureAtPosition);
   DOM.captureSetPosBtn.addEventListener('click', () => setSetPosMode(!STATE.setPosMode));
+  DOM.captureAlignBtn.addEventListener('click', () => {
+    if (typeof navAlignForward !== 'function') return;
+    const ok = navAlignForward();
+    _flashCaptureFeedback(ok
+      ? `Aligned. Forward = phone's current direction (raw compass ${Math.round(NAV.heading)}°).`
+      : 'Aligning… will lock on the next compass reading.');
+  });
   DOM.captureExportBtn.addEventListener('click', exportCaptures);
   DOM.captureClearBtn.addEventListener('click', clearCaptures);
   DOM.captureRecBtn.addEventListener('click', () => {
