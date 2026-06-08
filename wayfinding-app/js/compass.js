@@ -10,12 +10,41 @@
 'use strict';
 
 class Compass {
-  constructor({ onHeading, onError, onUnsupported, alphaEMA = 0.25 } = {}) {
+  /**
+   * @param {object}  opts
+   * @param {Function} opts.onHeading        - (degrees) => void  (smoothed heading callback)
+   * @param {Function} opts.onError          - (msg) => void
+   * @param {Function} opts.onUnsupported    - () => void
+   * @param {number}   opts.alphaEMA         - Fixed EMA factor (legacy / fallback when adaptive is disabled).
+   *
+   * Adaptive EMA (Fix 1 — PDR heading improvement, layered with Madgwick fusion later).
+   *   Backed by Shi et al. (2025) "Adaptive Heading Estimation Method for Pedestrian Dead
+   *   Reckoning With Magnetic Interference" (IEEE TIM) and Cheng et al. (2025) — alpha
+   *   varies per sample with the magnitude of the heading delta:
+   *     - Large delta (user actively turning) → high alpha → responsive (less lag)
+   *     - Small delta (user stationary / walking straight) → low alpha → smooth (less wobble)
+   *   When `alphaMin` and `alphaMax` are both provided, adaptive mode is enabled and
+   *   `alphaEMA` is used only as a fallback if either bound is missing.
+   *
+   * @param {number}   opts.alphaMin         - EMA factor at zero angular velocity (heavy smoothing). Typical: 0.05.
+   * @param {number}   opts.alphaMax         - EMA factor once |delta| >= turnThreshold (responsive). Typical: 0.80.
+   * @param {number}   opts.turnThreshold    - Degrees of |delta| at which alpha saturates to alphaMax. Typical: 20.
+   */
+  constructor({
+    onHeading, onError, onUnsupported,
+    alphaEMA = 0.25,
+    alphaMin = null, alphaMax = null, turnThreshold = 20,
+  } = {}) {
     this._onHeading     = onHeading     || (() => {});
     this._onError       = onError       || (() => {});
     this._onUnsupported = onUnsupported || (() => {});
     this._alphaEMA      = alphaEMA;
+    this._alphaMin      = alphaMin;        // null → adaptive disabled
+    this._alphaMax      = alphaMax;        // null → adaptive disabled
+    this._turnThreshold = turnThreshold;
+    this._adaptive      = (alphaMin !== null) && (alphaMax !== null);
     this._smoothed      = null;   // smoothed heading (degrees)
+    this._lastAlpha     = null;   // last alpha used (exposed for diagnostics)
     this._active        = false;
     this._handler       = null;
   }
@@ -78,11 +107,24 @@ class Compass {
     // EMA smoothing with circular-mean fix near 0°/360° boundary
     if (this._smoothed === null) {
       this._smoothed = raw;
+      this._lastAlpha = this._adaptive ? this._alphaMin : this._alphaEMA;
     } else {
       let diff = raw - this._smoothed;
       if (diff >  180) diff -= 360;
       if (diff < -180) diff += 360;
-      this._smoothed = (this._smoothed + this._alphaEMA * diff + 360) % 360;
+
+      // Fix 1 — Adaptive EMA: scale alpha by the turn rate so smoothing is heavy
+      //   at rest (kills wobble) and light during active turns (kills lag).
+      let alpha;
+      if (this._adaptive) {
+        const t = Math.min(1, Math.abs(diff) / this._turnThreshold);
+        alpha = this._alphaMin + t * (this._alphaMax - this._alphaMin);
+      } else {
+        alpha = this._alphaEMA;   // legacy fixed-alpha path
+      }
+      this._lastAlpha = alpha;
+
+      this._smoothed = (this._smoothed + alpha * diff + 360) % 360;
     }
 
     this._onHeading(this._smoothed);

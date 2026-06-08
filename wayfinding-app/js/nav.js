@@ -122,7 +122,12 @@ function navStartPDR() {
     return false;
   }
 
-  // Start compass — α = 0.4 for faster turn response (Harle, 2013)
+  // Start compass — Fix 1 (Adaptive EMA, replaces fixed α=0.4 from B1).
+  //   Per Shi et al. (2025, IEEE TIM) — α now varies per sample with the
+  //   turn rate: heavy smoothing when the user is still (kills magnetometer
+  //   wobble indoors), responsive smoothing during active turns (kills lag).
+  //   The legacy fixed `alphaEMA: 0.4` is retained as the fallback when
+  //   adaptive bounds aren't provided.
   if (typeof Compass !== "undefined") {
     if (NAV._compass) NAV._compass.stop();
     NAV._compass = new Compass({
@@ -132,7 +137,10 @@ function navStartPDR() {
         if (NAV.onHeadingChange) NAV.onHeadingChange(h);
       },
       onError: (msg) => console.warn("[NAV Compass]", msg),
-      alphaEMA: 0.4, // B1: faster turn response vs default 0.25
+      alphaEMA:      0.4,   // fallback if adaptive disabled
+      alphaMin:      0.05,  // heavy smoothing when stationary (suppress wobble)
+      alphaMax:      0.80,  // responsive during active turns (reduce lag)
+      turnThreshold: 20,    // degrees — |delta| at which alpha saturates
     });
     NAV._compass.requestAndStart().catch(() => {});
   }

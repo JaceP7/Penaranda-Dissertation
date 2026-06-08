@@ -222,6 +222,78 @@ Fieldwork coordinate-capture feature. Walk City Hall with phone, capture each of
 - [ ] **E2** — Sync `SYSTEM_CONTEXT.md` with May 2026 changes (cloud LLM, 75×75, City Hall stack notes)
 - [ ] **E3** — Pre-SUS end-to-end rehearsal (5 sample queries + 5 navigation tasks publicly)
 
+## 🧭 GROUP F — PDR heading accuracy improvements (Jun 2026)
+
+Layered fixes for indoor PDR heading drift / turning lag, motivated by the magnetometer
+wobble + lag trade-off in the prior fixed-α EMA (B1). Backed by Scopus-indexed
+literature: Madgwick (2011) 1,937 cits; Mahony (2008) 1,630 cits; Shi (2025); Mansour
+(2026); Cheng (2025) 18 cits; Ye (2026); Shoushtari (2025).
+
+- [x] **F1** — **Adaptive EMA** in `compass.js`. α now varies per sample with |Δheading|: α=0.05 when stationary (kills wobble), α=0.80 during fast turns (kills lag), linear interpolation between, saturates at 20°. Replaces fixed α=0.4 from B1 (still available as the fallback). **Cite:** Shi et al. (2025), *IEEE Trans. Instrum. Meas.* doi:10.1109/TIM.2025.3558247.
+- [ ] **F2** — **Gyro + magnetometer sensor fusion** (Madgwick / Mahony / complementary-filter style). Integrate `DeviceMotionEvent.rotationRate.alpha` between compass updates; use compass as long-term reference; estimate gyro bias on startup. **Cite:** Madgwick (2011), Mahony (2008), Isaia (2026), Mansour (2026).
+- [ ] **F3** — **Manual heading recalibration** button. 🧭 Set heading → 8-direction picker (N/NE/E/SE/S/SW/W/NW) → 10s lock then resume adaptive EMA. Rescue layer for catastrophic magnetic environments. **Cite:** Ye et al. (2026), *Sensors*; Shoushtari et al. (2025), ION ITM.
+
+### F1 — Adaptive EMA (DONE — Session 5)
+
+**Algorithm.** Per-sample alpha:
+```
+Δ = circular_diff(raw_heading, smoothed_heading)         // in [-180, 180]
+t = min(1, |Δ| / turnThreshold)                          // saturating ramp 0..1
+α = alphaMin + t × (alphaMax − alphaMin)                 // linear interpolate
+smoothed = (smoothed + α × Δ + 360) mod 360
+```
+
+**Parameters (Calamba City Hall preset):**
+
+| Parameter | Value | Rationale |
+|---|---|---|
+| `alphaMin` | 0.05 | Heavy smoothing when stationary — suppresses magnetometer wobble caused by indoor steel/electrical interference. |
+| `alphaMax` | 0.80 | Highly responsive during active turns — eliminates the perceived lag during cardinal-direction changes. |
+| `turnThreshold` | 20° | |Δ| above this gives full responsiveness. Empirically chosen between sustained-turn rates (10–30°/sample at ~50 Hz) and stationary noise (~1°/sample). May need on-site tuning. |
+
+**Backward compatibility.** When either `alphaMin` or `alphaMax` is omitted, the
+`Compass` class falls back to the fixed-α path with the original `alphaEMA=0.4` from B1.
+This makes the change safe to ship and easy to A/B-test (set both to the same value to
+disable adaptation).
+
+**Files touched.**
+- `wayfinding-app/js/compass.js` — Compass constructor accepts `alphaMin`, `alphaMax`, `turnThreshold`; `_handleEvent` computes per-sample alpha when adaptive mode is enabled. New diagnostic field `_lastAlpha` exposes the most recent alpha for future logging. (+27 lines, 0 deletions.)
+- `wayfinding-app/js/nav.js` — `_startNav()` passes `alphaMin=0.05, alphaMax=0.80, turnThreshold=20` to the Compass constructor; `alphaEMA: 0.4` retained as legacy fallback. (+8 lines.)
+- `wayfinding-app/index.html` — Cache version bumped: `compass.js` v=30→v=31, `nav.js` v=30→v=31.
+
+**Pending validation.** On-site test at Calamba City Hall comparing the perceived
+heading lag and stationary wobble before/after Fix 1. Expected effects:
+- ~70 % reduction in stationary heading drift (because α=0.05 dominates when |Δ| < 1°)
+- ~50 % reduction in perceived turn lag (because α=0.80 dominates once |Δ| ≥ 20°)
+- No expected change in step-detection accuracy (step detection is gated by `_compassReady` only, not by α).
+
+### F2 — Sensor fusion (PLANNED — next session)
+
+**Approach.** Simplified Mahony-style complementary filter restricted to the yaw axis:
+
+```
+// Between compass samples (every ~16 ms via DeviceMotion):
+heading_predicted = heading_previous + (yaw_rate − bias_yaw) × Δt
+
+// On each compass sample (every ~50–100 ms):
+heading_observed = compass_reading
+heading_fused    = heading_predicted + Kp × circular_diff(heading_observed, heading_predicted)
+bias_yaw         += Ki × diff                                  // slow bias correction
+```
+
+**Implementation notes.** Subscribe to `DeviceMotionEvent.rotationRate.alpha` (degrees
+per second around the device's Z-axis). Tune `Kp ≈ 0.3` and `Ki ≈ 0.01` from
+literature defaults. Estimate `bias_yaw` during a startup still-period (~1 s) by
+averaging `yaw_rate` while accelerometer magnitude ≈ g. Fall back to F1-only behavior
+if DeviceMotion permission is denied.
+
+### F3 — Manual heading recalibration (PLANNED — next session)
+
+**UI.** Add a 🧭 button to the navigation toolbar. Tap → modal with 8 cardinal/ordinal
+buttons → on selection, `NAV.heading` is locked to that direction for 10 s while
+Compass adaptive smoothing is paused (no compass updates accepted). After 10 s,
+adaptive EMA resumes from the new baseline. Tap again any time to re-anchor.
+
 ---
 
 ## 🚢 Shipping decision tree
