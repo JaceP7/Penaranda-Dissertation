@@ -963,12 +963,34 @@ function _walkSampleNow() {
 
 function startWalkRecording() {
   if (_walkRecorder) return;  // already recording
+
+  // Auto-start PDR if it isn't running yet — the recorder is meaningless
+  // without position updates flowing. navStartPDR() is idempotent and on
+  // iOS will trigger the motion-permission prompt asynchronously; we still
+  // start the recording immediately so the user doesn't have to coordinate
+  // two taps. If permission is later denied, the user just sees a static
+  // position in the recording (which itself is useful diagnostic info).
+  const pdrAlreadyOn = !!(typeof NAV !== 'undefined' && NAV.pdrActive);
+  let pdrAttempted   = false;
+  if (!pdrAlreadyOn && typeof navStartPDR === 'function') {
+    try {
+      navStartPDR();
+      pdrAttempted = true;
+      // Sync the PDR toggle button label if present so the UI is consistent
+      if (DOM.pdrToggleBtn) {
+        DOM.pdrToggleBtn.textContent = '🚶 PDR: On';
+        DOM.pdrToggleBtn.classList.add('active');
+      }
+    } catch (e) { /* fall through — record anyway */ }
+  }
+
   _walkRecorder = {
     startedAt:    Date.now(),
     floor:        STATE.currentFloor,
     startCell:    NAV.position ? { ...NAV.position } : null,
     samples:      [],
-    app:          'app.js?v=36',
+    pdrAtStart:   pdrAlreadyOn,    // diagnostics: was PDR already on?
+    app:          'app.js?v=37',
     ua:           (navigator.userAgent || '').slice(0, 140),
   };
   _walkSampleNow();   // initial sample at t=0
@@ -976,7 +998,15 @@ function startWalkRecording() {
   DOM.captureRecBtn.classList.add('active');
   DOM.captureRecBtn.setAttribute('aria-pressed', 'true');
   DOM.captureRecBtn.textContent = '⏹ Stop';
-  _flashCaptureFeedback('Recording walk… tap ⏹ Stop when done.');
+
+  // Tell the user what just happened so they understand if iOS prompts them.
+  if (pdrAlreadyOn) {
+    _flashCaptureFeedback('Recording walk… tap ⏹ Stop when done.');
+  } else if (pdrAttempted) {
+    _flashCaptureFeedback('Recording + auto-starting PDR. If prompted, ALLOW motion access.');
+  } else {
+    _flashCaptureFeedback('Recording walk (PDR unavailable — only Set-Position taps will move you).');
+  }
 }
 
 function stopWalkRecording() {
