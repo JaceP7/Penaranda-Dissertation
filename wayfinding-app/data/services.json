@@ -94,7 +94,7 @@
   {
     "service": "Certificates, Permits, and IDs",
     "subservice": "Pag-iisyu ng Permiso sa Pagtatayo ng Gusali (Building Permit)",
-    "department": "BUILDING REGULATORY SERVICES OFFICE",
+    "department": "BUILDINGS REGULATORY SERVICES DEPARTMENT",
     "source_id": "14",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=14",
     "classification": "Complex",
@@ -301,7 +301,7 @@
   {
     "service": "Certificates, Permits, and IDs",
     "subservice": "Certificate Authentication and Verification (CAV)",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "103",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=103",
     "classification": "Simple",
@@ -385,7 +385,7 @@
   {
     "service": "Certificates, Permits, and IDs",
     "subservice": "Pag-iisyu ng Sertipiko ng Panghuling Inspeksiyon sa Kuryente (Certificate of Final Electrical Inspection)",
-    "department": "BUILDING REGULATORY SERVICES OFFICE",
+    "department": "BUILDINGS REGULATORY SERVICES DEPARTMENT",
     "source_id": "12",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=12",
     "classification": "Simple",
@@ -575,7 +575,7 @@
   {
     "service": "Certificates, Permits, and IDs",
     "subservice": "Pag-iisyu ng Sertipiko ng Pagsakop (Certificate of Occupancy)",
-    "department": "BUILDING REGULATORY SERVICES OFFICE",
+    "department": "BUILDINGS REGULATORY SERVICES DEPARTMENT",
     "source_id": "11",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=11",
     "classification": "Simple",
@@ -800,7 +800,7 @@
   {
     "service": "Certificates, Permits, and IDs",
     "subservice": "Issuance of Transcript of Competencies",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "107",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=107",
     "classification": "Simple",
@@ -1124,7 +1124,7 @@
   {
     "service": "Certificates, Permits, and IDs",
     "subservice": "Issuance of Transcript of Competencies",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "105",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=105",
     "classification": "Simple",
@@ -1169,7 +1169,7 @@
   {
     "service": "Certificates, Permits, and IDs",
     "subservice": "Kahilingan para sa Paggawa ng Certificate of Indigence",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "46",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=46",
     "classification": "Complex",
@@ -1369,7 +1369,7 @@
   {
     "service": "Certificates, Permits, and IDs",
     "subservice": "Processing and Issuance of Solo Parent ID",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "58",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=58",
     "classification": "Complex",
@@ -1512,7 +1512,7 @@
   {
     "service": "Certificates, Permits, and IDs",
     "subservice": "Request for Parenting Capability Assessment Report (PCAR)",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "98",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=98",
     "classification": "Highly Technical",
@@ -1534,7 +1534,7 @@
   {
     "service": "Certificates, Permits, and IDs",
     "subservice": "Request for the Conduct of a Social Case Study Report",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "48",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=48",
     "classification": "Simple",
@@ -1592,7 +1592,7 @@
   {
     "service": "Certificates, Permits, and IDs",
     "subservice": "Request for the Issuance of a Certificate of Financial Incapability for the Universal Health Card of PhilHealth",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "53",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=53",
     "classification": "Simple",
@@ -1634,7 +1634,7 @@
   {
     "service": "Certificates, Permits, and IDs",
     "subservice": "Request for the Issuance of a Certificate of Financial Incapability for the Universal Health Card of PhilHealth",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "57",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=57",
     "classification": "Simple",
@@ -1676,7 +1676,7 @@
   {
     "service": "Certificates, Permits, and IDs",
     "subservice": "Request for the Preparation of a Comprehensive Social Case Study Report",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "51",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=51",
     "classification": "Complex",
@@ -1873,7 +1873,7 @@
   {
     "service": "Certificates, Permits, and IDs",
     "subservice": "Serbisyong One Stop Shop (Simpleng Transaksyon)",
-    "department": "BUILDING REGULATORY SERVICES OFFICE",
+    "department": "BUILDINGS REGULATORY SERVICES DEPARTMENT",
     "source_id": "15",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=15",
     "classification": "Complex",
@@ -2470,7 +2470,7 @@
   {
     "service": "Business and Trade",
     "subservice": "Pag-isyu ng Pahintulot upang magbukas (Permit to Operate) at Sertipiko ng Taunang Inspeksyon (Annual Inspection)",
-    "department": "BUILDING REGULATORY SERVICES OFFICE",
+    "department": "BUILDINGS REGULATORY SERVICES DEPARTMENT",
     "source_id": "8",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=8",
     "classification": "Simple",
@@ -2638,7 +2638,7 @@
   {
     "service": "Disaster and Weather",
     "subservice": "Emergency Response to Accidents and Disasters",
-    "department": "CITY DISASTER RISK REDUCTION AND MANAGMENT DIVISION - MO",
+    "department": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
     "source_id": "165",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=165",
     "classification": "Simple",
@@ -2657,7 +2657,7 @@
   {
     "service": "Disaster and Weather",
     "subservice": "Request for the Maintenance of Dangling Electrical Cables (Non-Live Wires) Posing a Safety Hazard",
-    "department": "CITY DISASTER RISK REDUCTION AND MANAGMENT DIVISION - MO",
+    "department": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
     "source_id": "171",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=171",
     "classification": "Simple",
@@ -2676,7 +2676,7 @@
   {
     "service": "Disaster and Weather",
     "subservice": "Request for the Removal of Trees or Branches Posing a Safety Hazard to the Community",
-    "department": "CITY DISASTER RISK REDUCTION AND MANAGMENT DIVISION - MO",
+    "department": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
     "source_id": "169",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=169",
     "classification": "Simple",
@@ -2699,7 +2699,7 @@
   {
     "service": "Disaster and Weather",
     "subservice": "Request for the Transfer of a Patient from One Hospital to Another Hospital",
-    "department": "CITY DISASTER RISK REDUCTION AND MANAGMENT DIVISION - MO",
+    "department": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
     "source_id": "174",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=174",
     "classification": "Simple",
@@ -2719,7 +2719,7 @@
   {
     "service": "Disaster and Weather",
     "subservice": "Request for Food Assistance or Transportation for a Patient from Home to Hospital or from Hospital to Home",
-    "department": "CITY DISASTER RISK REDUCTION AND MANAGMENT DIVISION - MO",
+    "department": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
     "source_id": "173",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=173",
     "classification": "Simple",
@@ -2819,7 +2819,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Application for Veterinary Health Certificate and Shipping Permit in Connection with Animal Transportation",
-    "department": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
     "source_id": "217",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=217",
     "classification": "Simple",
@@ -2945,7 +2945,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Approval of Request for Blood Collection for Farm Accreditation",
-    "department": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
     "source_id": "213",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=213",
     "classification": "Simple",
@@ -3072,7 +3072,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Authorization and Signing of Shipping Permits and Veterinary Health Certificates for Transported Animals",
-    "department": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
     "source_id": "215",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=215",
     "classification": "Simple",
@@ -3097,7 +3097,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Burial Assistance",
-    "department": "OFFICE OF THE CITY MAYOR",
+    "department": "OFFICE OF THE MAYOR",
     "source_id": "184",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=184",
     "classification": "Highly Technical",
@@ -3206,7 +3206,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Educational Assistance",
-    "department": "OFFICE OF THE CITY MAYOR",
+    "department": "OFFICE OF THE MAYOR",
     "source_id": "185",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=185",
     "classification": "Highly Technical",
@@ -3246,7 +3246,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Educational Assistance (Pagbibigay Tulong Pang-Edukasyon)",
-    "department": "OFFICE OF THE CITY VICE-MAYOR",
+    "department": "OFFICE OF THE VICE MAYOR",
     "source_id": "223",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=223",
     "classification": "Simple",
@@ -3276,7 +3276,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Financial Aid for Individuals (Pagbibigay Tulong Pinansyal sa mga Indibidwal)",
-    "department": "OFFICE OF THE CITY VICE-MAYOR",
+    "department": "OFFICE OF THE VICE MAYOR",
     "source_id": "222",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=222",
     "classification": "Simple",
@@ -3330,7 +3330,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Guarantee Letter",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "67",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=67",
     "classification": "Simple",
@@ -3360,7 +3360,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Guarantee Letter (Anti-Rabies) – Pagbibigay ng Guarantee Letter para sa mga nakagat ng aso/pusa",
-    "department": "OFFICE OF THE CITY VICE-MAYOR",
+    "department": "OFFICE OF THE VICE MAYOR",
     "source_id": "225",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=225",
     "classification": "Simple",
@@ -3390,7 +3390,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Guarantee Letter (Blood) – Pagbibigay ng Guarantee Letter para sa mga nangangailangan ng Dugo",
-    "department": "OFFICE OF THE CITY VICE-MAYOR",
+    "department": "OFFICE OF THE VICE MAYOR",
     "source_id": "226",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=226",
     "classification": "Simple",
@@ -3416,7 +3416,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Guarantee Letter (Hospital) – Pagbibigay ng Guarantee Letter para sa Hospital",
-    "department": "OFFICE OF THE CITY VICE-MAYOR",
+    "department": "OFFICE OF THE VICE MAYOR",
     "source_id": "229",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=229",
     "classification": "Simple",
@@ -3442,7 +3442,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Guarantee Letter (Medicines) – Pagbibigay ng Guarantee Letter para sa gamot ng pasyente",
-    "department": "OFFICE OF THE CITY VICE-MAYOR",
+    "department": "OFFICE OF THE VICE MAYOR",
     "source_id": "227",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=227",
     "classification": "Simple",
@@ -3468,7 +3468,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Request for Guarantee Letter for the Coverage of Hospital Expenses, Medications, Laboratory Procedures, Rehabilitation Therapy, Blood Transfusions, and Selected Dialysis Sessions",
-    "department": "OFFICE OF THE CITY MAYOR",
+    "department": "OFFICE OF THE MAYOR",
     "source_id": "182",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=182",
     "classification": "Simple",
@@ -3536,7 +3536,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Request for Hospitalization and Medical Assistance",
-    "department": "OFFICE OF THE CITY MAYOR",
+    "department": "OFFICE OF THE MAYOR",
     "source_id": "183",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=183",
     "classification": "Highly Technical",
@@ -3666,7 +3666,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Medical Assistance (Pagbibigay Tulong Medikal)",
-    "department": "OFFICE OF THE CITY VICE-MAYOR",
+    "department": "OFFICE OF THE VICE MAYOR",
     "source_id": "224",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=224",
     "classification": "Simple",
@@ -3822,7 +3822,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Registration for Cat Spaying or Neutering",
-    "department": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
     "source_id": "219",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=219",
     "classification": "Simple",
@@ -3842,7 +3842,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Registration for Spay and Neuter (Special Scheduled Activity)",
-    "department": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
     "source_id": "221",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=221",
     "classification": "Simple",
@@ -3997,7 +3997,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Request for the Conduct of a Comprehensive Social Case Study Report for the Rehabilitation of Individuals Using Illegal Drugs",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "65",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=65",
     "classification": "Complex",
@@ -4067,7 +4067,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Request for the Conduct of a Social Case Study Report",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "49",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=49",
     "classification": "Simple",
@@ -4125,7 +4125,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Request for the Maintenance of Dangling Electrical Cables (Non-Live Wires) Posing a Safety Hazard",
-    "department": "CITY DISASTER RISK REDUCTION AND MANAGMENT DIVISION - MO",
+    "department": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
     "source_id": "172",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=172",
     "classification": "Simple",
@@ -4144,7 +4144,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Request for the Preparation of a Comprehensive Social Case Study Report",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "52",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=52",
     "classification": "Complex",
@@ -4194,7 +4194,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Request for the Removal of Trees or Branches Posing a Safety Hazard to the Community",
-    "department": "CITY DISASTER RISK REDUCTION AND MANAGMENT DIVISION - MO",
+    "department": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
     "source_id": "170",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=170",
     "classification": "Simple",
@@ -4250,7 +4250,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Response to Complaints from Senior Citizens",
-    "department": "OFFICE OF THE CITY MAYOR",
+    "department": "OFFICE OF THE MAYOR",
     "source_id": "186",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=186",
     "classification": "Simple",
@@ -4273,7 +4273,7 @@
   {
     "service": "Registrations, Applications, Ordinances, and Others",
     "subservice": "Solicitation Letter",
-    "department": "OFFICE OF THE CITY MAYOR",
+    "department": "OFFICE OF THE MAYOR",
     "source_id": "181",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=181",
     "classification": "Simple",
@@ -4348,7 +4348,7 @@
   {
     "service": "Education, Training, Seminars, and Competencies",
     "subservice": "Approval of Request for Training and/or Capture of Stray Dogs",
-    "department": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
     "source_id": "209",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=209",
     "classification": "Simple",
@@ -4418,7 +4418,7 @@
   {
     "service": "Education, Training, Seminars, and Competencies",
     "subservice": "Competency Assessment",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "109",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=109",
     "classification": "Simple",
@@ -4527,7 +4527,7 @@
   {
     "service": "Education, Training, Seminars, and Competencies",
     "subservice": "Enrollment in Technical-Vocational Education and Training (TVET) Programs",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "99",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=99",
     "classification": "Simple",
@@ -4603,7 +4603,7 @@
   {
     "service": "Education, Training, Seminars, and Competencies",
     "subservice": "Guarantee Letter (Laboratory) – Pagbibigay ng Guarantee Letter para sa pagpapa-laboratoryo",
-    "department": "OFFICE OF THE CITY VICE-MAYOR",
+    "department": "OFFICE OF THE VICE MAYOR",
     "source_id": "228",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=228",
     "classification": "Simple",
@@ -4749,7 +4749,7 @@
   {
     "service": "Education, Training, Seminars, and Competencies",
     "subservice": "Providing Various Knowledge and Skills for Disaster Preparedness",
-    "department": "CITY DISASTER RISK REDUCTION AND MANAGMENT DIVISION - MO",
+    "department": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
     "source_id": "164",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=164",
     "classification": "Simple",
@@ -4940,7 +4940,7 @@
   {
     "service": "Education, Training, Seminars, and Competencies",
     "subservice": "Supervised Industry Training (SIT) / Supervised Industry Learning (SIL) / On-the-Job Training (OJT)",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "111",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=111",
     "classification": "Simple",
@@ -5008,7 +5008,7 @@
   {
     "service": "Employment",
     "subservice": "Employment Assistance Request",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "101",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=101",
     "classification": "Simple",
@@ -5679,7 +5679,7 @@
   {
     "service": "Veterinary Services",
     "subservice": "Application for Veterinary Health Certificate and Shipping Permit in Connection with Animal Transportation",
-    "department": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
     "source_id": "216",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=216",
     "classification": "Simple",
@@ -5706,7 +5706,7 @@
   {
     "service": "Veterinary Services",
     "subservice": "Approval for External Consultation for the Treatment of Livestock Used in Production",
-    "department": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
     "source_id": "207",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=207",
     "classification": "Simple",
@@ -5728,7 +5728,7 @@
   {
     "service": "Veterinary Services",
     "subservice": "Approval of Request for Blood Collection for Farm Accreditation",
-    "department": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
     "source_id": "212",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=212",
     "classification": "Simple",
@@ -5748,7 +5748,7 @@
   {
     "service": "Veterinary Services",
     "subservice": "Approval of Request for Mass Rabies Vaccination (Homeowners / Companies, etc.)",
-    "department": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
     "source_id": "206",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=206",
     "classification": "Simple",
@@ -5768,7 +5768,7 @@
   {
     "service": "Veterinary Services",
     "subservice": "Approval of Request for Training and/or Capture of Stray Dogs",
-    "department": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
     "source_id": "210",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=210",
     "classification": "Simple",
@@ -5788,7 +5788,7 @@
   {
     "service": "Veterinary Services",
     "subservice": "Approval of Request for Veterinary Medical Supplies",
-    "department": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
     "source_id": "208",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=208",
     "classification": "Simple",
@@ -5808,7 +5808,7 @@
   {
     "service": "Veterinary Services",
     "subservice": "Authorization and Signing of Shipping Permits and Veterinary Health Certificates for Transported Animals",
-    "department": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
     "source_id": "214",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=214",
     "classification": "Simple",
@@ -5833,7 +5833,7 @@
   {
     "service": "Veterinary Services",
     "subservice": "Individual/Personal Walk-in Approach for Vaccination Services",
-    "department": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
     "source_id": "204",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=204",
     "classification": "Simple",
@@ -5855,7 +5855,7 @@
   {
     "service": "Veterinary Services",
     "subservice": "Provision of Consultation Services to Walk-In Clients",
-    "department": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
     "source_id": "205",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=205",
     "classification": "Simple",
@@ -5877,7 +5877,7 @@
   {
     "service": "Veterinary Services",
     "subservice": "Redemption of Captured Stray Dogs (City Pound)",
-    "department": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
     "source_id": "211",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=211",
     "classification": "Simple",
@@ -5902,7 +5902,7 @@
   {
     "service": "Veterinary Services",
     "subservice": "Registration for Cat Spaying or Neutering",
-    "department": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
     "source_id": "218",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=218",
     "classification": "Simple",
@@ -5922,7 +5922,7 @@
   {
     "service": "Veterinary Services",
     "subservice": "Registration for Spay and Neuter (Special Scheduled Activity)",
-    "department": "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
     "source_id": "220",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=220",
     "classification": "Simple",
@@ -5944,7 +5944,7 @@
   {
     "service": "Social Services",
     "subservice": "Adoption Application for Step-Parent, Relative, and Adult Cases",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "95",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=95",
     "classification": "Highly Technical",
@@ -6028,7 +6028,7 @@
   {
     "service": "Social Services",
     "subservice": "Application for Adoption (Regular Case)",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "94",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=94",
     "classification": "Highly Technical",
@@ -6100,7 +6100,7 @@
   {
     "service": "Social Services",
     "subservice": "Assistance in Handling Cases of Children at Risk (CAR) and Children in Conflict with the Law (CICL)",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "91",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=91",
     "classification": "Highly Technical",
@@ -6148,7 +6148,7 @@
   {
     "service": "Social Services",
     "subservice": "Case Management for Women and Their Children Who Are Victims of Abuse Under Republic Act 9262",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "77",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=77",
     "classification": "Highly Technical",
@@ -6196,7 +6196,7 @@
   {
     "service": "Social Services",
     "subservice": "Certificate Authentication and Verification (CAV)",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "104",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=104",
     "classification": "Simple",
@@ -6237,7 +6237,7 @@
   {
     "service": "Social Services",
     "subservice": "Competency Assessment",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "110",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=110",
     "classification": "Simple",
@@ -6262,7 +6262,7 @@
   {
     "service": "Social Services",
     "subservice": "Conducting Immediate Reach-Out Operation",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "92",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=92",
     "classification": "Highly Technical",
@@ -6304,7 +6304,7 @@
   {
     "service": "Social Services",
     "subservice": "Employment Assistance Request",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "102",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=102",
     "classification": "Simple",
@@ -6372,7 +6372,7 @@
   {
     "service": "Social Services",
     "subservice": "Enrollment in Technical-Vocational Education and Training (TVET) Programs",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "100",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=100",
     "classification": "Simple",
@@ -6403,7 +6403,7 @@
   {
     "service": "Social Services",
     "subservice": "Financial Assistance for Funeral Services",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "38",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=38",
     "classification": "Simple",
@@ -6441,7 +6441,7 @@
   {
     "service": "Social Services",
     "subservice": "Financial Assistance for Hospitalization Services",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "39",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=39",
     "classification": "Simple",
@@ -6478,7 +6478,7 @@
   {
     "service": "Social Services",
     "subservice": "Financial Assistance for Individuals Affected by Fire or Natural Disasters",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "43",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=43",
     "classification": "Simple",
@@ -6516,7 +6516,7 @@
   {
     "service": "Social Services",
     "subservice": "Financial Assistance for Medical Services",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "40",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=40",
     "classification": "Simple",
@@ -6553,7 +6553,7 @@
   {
     "service": "Social Services",
     "subservice": "Financial Assistance for Returning to the Province",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "36",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=36",
     "classification": "Simple",
@@ -6587,7 +6587,7 @@
   {
     "service": "Social Services",
     "subservice": "Guarantee Letter",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "66",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=66",
     "classification": "Simple",
@@ -6617,7 +6617,7 @@
   {
     "service": "Social Services",
     "subservice": "Implementation of the Aftercare Program",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "96",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=96",
     "classification": "Highly Technical",
@@ -6666,7 +6666,7 @@
   {
     "service": "Social Services",
     "subservice": "Issuance of Transcript of Competencies",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "108",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=108",
     "classification": "Simple",
@@ -6692,7 +6692,7 @@
   {
     "service": "Social Services",
     "subservice": "Issuance of Transcript of Competencies",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "106",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=106",
     "classification": "Simple",
@@ -6714,7 +6714,7 @@
   {
     "service": "Social Services",
     "subservice": "Kahilingan para sa Paggawa ng Certificate of Indigence",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "45",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=45",
     "classification": "Complex",
@@ -6776,7 +6776,7 @@
   {
     "service": "Social Services",
     "subservice": "Management of cases involving children who are victims of different types of abuse",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "68",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=68",
     "classification": "Highly Technical",
@@ -6817,7 +6817,7 @@
   {
     "service": "Social Services",
     "subservice": "Pag-aasikaso sa Batang Napulot (Foundling), Pinabayaan (Abandoned), Boluntaryo / Hindi Boluntaryong Ipinaubayang Bata (Voluntary / Involuntary Committed)",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "89",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=89",
     "classification": "Highly Technical",
@@ -6862,7 +6862,7 @@
   {
     "service": "Social Services",
     "subservice": "Processing and Issuance of Solo Parent ID",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "60",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=60",
     "classification": "Complex",
@@ -6952,7 +6952,7 @@
   {
     "service": "Social Services",
     "subservice": "Processing and Issuance of Solo Parent ID",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "63",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=63",
     "classification": "Complex",
@@ -7042,7 +7042,7 @@
   {
     "service": "Social Services",
     "subservice": "Processing of Foster Care Application",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "93",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=93",
     "classification": "Highly Technical",
@@ -7118,7 +7118,7 @@
   {
     "service": "Social Services",
     "subservice": "Request for Assistance for Psychosocial Support",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "90",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=90",
     "classification": "Highly Technical",
@@ -7156,7 +7156,7 @@
   {
     "service": "Social Services",
     "subservice": "Request for Assistance in Discussions Related to Issues on Financial Support or Custody of Children (Mediation Dialogue) or Discussions Concerning Family Disputes (Family Conference)",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "71",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=71",
     "classification": "Highly Technical",
@@ -7230,7 +7230,7 @@
   {
     "service": "Social Services",
     "subservice": "Request for Parenting Capability Assessment Report (PCAR)",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "97",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=97",
     "classification": "Highly Technical",
@@ -7252,7 +7252,7 @@
   {
     "service": "Social Services",
     "subservice": "Admission to Rehabilitation Center",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "61",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=61",
     "classification": "Complex",
@@ -7322,7 +7322,7 @@
   {
     "service": "Social Services",
     "subservice": "Request for the Conduct of a Comprehensive Social Case Study Report for the Rehabilitation of Individuals Using Illegal Drugs",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "64",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=64",
     "classification": "Complex",
@@ -7392,7 +7392,7 @@
   {
     "service": "Social Services",
     "subservice": "Request for the Conduct of a Social Case Study Report",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "47",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=47",
     "classification": "Simple",
@@ -7450,7 +7450,7 @@
   {
     "service": "Social Services",
     "subservice": "Request for the Issuance of a Certificate of Financial Incapability for the Universal Health Card of PhilHealth",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "54",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=54",
     "classification": "Simple",
@@ -7492,7 +7492,7 @@
   {
     "service": "Social Services",
     "subservice": "Processing and Issuance of Solo Parent ID",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "56",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=56",
     "classification": "Complex",
@@ -7558,7 +7558,7 @@
   {
     "service": "Social Services",
     "subservice": "Request for the Preparation of a Comprehensive Social Case Study Report",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "50",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=50",
     "classification": "Complex",
@@ -7608,7 +7608,7 @@
   {
     "service": "Social Services",
     "subservice": "Special Assistance: Financial Aid for Distressed/Repatriated OFWs and Others in Need of Livelihood Support",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "41",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=41",
     "classification": "Simple",
@@ -7638,7 +7638,7 @@
   {
     "service": "Social Services",
     "subservice": "Supervised Industry Training (SIT) / Supervised Industry Learning (SIL) / On-the-Job Training (OJT)",
-    "department": "CITY SOCIAL SERVICES DEPARTMENT",
+    "department": "CITY SOCIAL SERVICES OFFICE",
     "source_id": "112",
     "source_url": "https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=112",
     "classification": "Simple",
