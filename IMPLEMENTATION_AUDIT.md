@@ -229,9 +229,51 @@ wobble + lag trade-off in the prior fixed-α EMA (B1). Backed by Scopus-indexed
 literature: Madgwick (2011) 1,937 cits; Mahony (2008) 1,630 cits; Shi (2025); Mansour
 (2026); Cheng (2025) 18 cits; Ye (2026); Shoushtari (2025).
 
+- [x] **F0** — **Walk recorder** (testing instrumentation). Two new buttons in the Capture toolbar: **🔴 Rec** toggle + **📥 Walks** export. While recording, samples `{t, row, col, heading, alpha}` at 5 Hz, persists per-walk to localStorage, exports as JSON. Used to validate F1/F2/F3 against real-hardware traces. See "F0 — Walk recorder" below for the data schema.
 - [x] **F1** — **Adaptive EMA** in `compass.js`. α now varies per sample with |Δheading|: α=0.05 when stationary (kills wobble), α=0.80 during fast turns (kills lag), linear interpolation between, saturates at 20°. Replaces fixed α=0.4 from B1 (still available as the fallback). **Cite:** Shi et al. (2025), *IEEE Trans. Instrum. Meas.* doi:10.1109/TIM.2025.3558247.
 - [ ] **F2** — **Gyro + magnetometer sensor fusion** (Madgwick / Mahony / complementary-filter style). Integrate `DeviceMotionEvent.rotationRate.alpha` between compass updates; use compass as long-term reference; estimate gyro bias on startup. **Cite:** Madgwick (2011), Mahony (2008), Isaia (2026), Mansour (2026).
 - [ ] **F3** — **Manual heading recalibration** button. 🧭 Set heading → 8-direction picker (N/NE/E/SE/S/SW/W/NW) → 10s lock then resume adaptive EMA. Rescue layer for catastrophic magnetic environments. **Cite:** Ye et al. (2026), *Sensors*; Shoushtari et al. (2025), ION ITM.
+
+### F0 — Walk recorder (DONE — Session 5)
+
+Lightweight on-device instrumentation for measuring PDR heading quality without
+needing a separate logger app. Inside Capture Mode, two new toolbar buttons:
+
+| Button | Action |
+|---|---|
+| **🔴 Rec** | Toggle recording. While on, samples `NAV.position`, `NAV.heading`, and the compass's current EMA `α` at 5 Hz into a buffer. On Stop, the walk is committed to `localStorage` (key `wayfinding-walks-v1`). The button shows `⏹ Stop` while active. |
+| **📥 Walks** | Downloads all recorded walks as a single JSON file. |
+
+**Data schema (one walk):**
+```jsonc
+{
+  "startedAt":    1717000000000,
+  "endedAt":      1717000060000,
+  "duration_ms":  60000,
+  "floor":        5,
+  "startCell":    { "row": 30, "col": 30 },
+  "endCell":      { "row": 40, "col": 50 },
+  "sample_count": 300,
+  "samples": [
+    { "t": 0,    "row": 30, "col": 30, "heading": 0.0,  "alpha": 0.05 },
+    { "t": 200,  "row": 30, "col": 31, "heading": 5.2,  "alpha": 0.12 },
+    // ...
+  ],
+  "app": "app.js?v=36",
+  "ua":  "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5)…"
+}
+```
+
+**Use cases for validation:**
+- **Stationary wobble** — record a 30 s walk while standing still; the std-dev of `heading` is the stationary noise floor. Compare F1-on (α=0.05) vs F1-off (α=0.4).
+- **Turn lag** — record a known-pattern walk (e.g., walk straight 5 m, turn 90°, walk 5 m). Plot heading vs time; the delay between physical turn and sensor turn is the lag.
+- **EMA-α timeline** — the `alpha` field records what the adaptive filter chose per sample, so you can see when the controller was in smoothing-mode vs responsive-mode.
+- **Drift between QR scans** — record an entire route between two scans; difference between final-PDR-cell and final-true-cell is the cumulative drift.
+
+**Files touched.**
+- `wayfinding-app/index.html` — 2 new buttons + 1 counter span in the capture toolbar; cache bump `app.js v=35 → v=36`.
+- `wayfinding-app/js/app.js` — `RECORDED_WALKS` array + `WALK_SAMPLE_MS` constant (~150 ms ≈ 5 Hz), `startWalkRecording`, `stopWalkRecording`, `_walkSampleNow`, `_loadRecordedWalks`, `_saveRecordedWalks`, `_updateWalkCount`, `exportRecordedWalks` (~115 lines).
+- Cleanup: exiting Capture Mode automatically stops an active recording.
 
 ### F1 — Adaptive EMA (DONE — Session 5)
 

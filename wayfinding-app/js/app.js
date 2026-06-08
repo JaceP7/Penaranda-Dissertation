@@ -41,6 +41,30 @@ const CAPTURED_POINTS = {};
 const CAPTURE_LS_KEY  = 'wayfinding-captures-v1';
 const CUSTOM_OFFICES_LS_KEY = 'wayfinding-custom-offices-v1';
 
+// ── Walk recorder (PDR testing instrumentation, supports F1/F2/F3 validation) ──
+//
+// While recording, samples NAV.position + NAV.heading + the compass's current
+// EMA alpha at 5 Hz. Walks persist in localStorage and can be exported as JSON
+// for offline analysis (e.g. comparing F1-on vs F1-off heading stability).
+//
+//   Schema (one walk):
+//     {
+//       startedAt:  <epoch ms>,
+//       endedAt:    <epoch ms>,
+//       duration_ms,
+//       floor:      <floor number at recording start>,
+//       startCell:  { row, col },  endCell: { row, col },
+//       sample_count,
+//       samples:    [ { t, row, col, heading, alpha }, ... ],
+//       app:        <build version string>,
+//       ua:         <truncated user agent>
+//     }
+const WALKS_LS_KEY  = 'wayfinding-walks-v1';
+const WALK_SAMPLE_MS = 200;   // 5 Hz sampling
+let   RECORDED_WALKS = [];    // loaded from localStorage on init
+let   _walkRecorder  = null;  // active walk being recorded, or null
+let   _walkTimer     = null;  // setInterval handle
+
 // Offices added on-site that aren't in departments.json (persisted).
 let CUSTOM_OFFICES = [];
 
@@ -191,6 +215,9 @@ const DOM = {
   captureDeptSelect: $('captureDeptSelect'),
   captureSetPosBtn:  $('captureSetPosBtn'),
   captureHereBtn:    $('captureHereBtn'),
+  captureRecBtn:        $('captureRecBtn'),
+  captureExportWalksBtn:$('captureExportWalksBtn'),
+  walkCount:            $('walkCount'),
   captureCount:      $('captureCount'),
   captureExportBtn:  $('captureExportBtn'),
   captureClearBtn:   $('captureClearBtn'),
@@ -378,6 +405,13 @@ document.addEventListener('DOMContentLoaded', () => {
   DOM.captureSetPosBtn.addEventListener('click', () => setSetPosMode(!STATE.setPosMode));
   DOM.captureExportBtn.addEventListener('click', exportCaptures);
   DOM.captureClearBtn.addEventListener('click', clearCaptures);
+  DOM.captureRecBtn.addEventListener('click', () => {
+    if (_walkRecorder) stopWalkRecording();
+    else                startWalkRecording();
+  });
+  DOM.captureExportWalksBtn.addEventListener('click', exportRecordedWalks);
+  _loadRecordedWalks();
+  _updateWalkCount();
   DOM.clearBtn.addEventListener('click', clearWalls);
   DOM.resetBtn.addEventListener('click', reset);
   DOM.newMapBtn.addEventListener('click', clearGridState);
@@ -804,6 +838,8 @@ function setCaptureMode(active) {
   } else {
     // Exiting Capture Mode also exits the "Set position" sub-mode.
     if (STATE.setPosMode) setSetPosMode(false);
+    // Also stop any active walk recording so the timer doesn't keep firing.
+    if (_walkRecorder)   stopWalkRecording();
   }
   STATE.captureMode      = active;
   renderer.captureActive = active;
@@ -879,6 +915,111 @@ function _onCaptureDeptChange() {
     _saveCustomOffices();
   }
   _populateCaptureDropdown(upper);   // re-populate and select the new office
+}
+
+// ── Walk recorder (PDR testing instrumentation) ─────────────────────────────
+//
+// Records timestamped position + heading + EMA-alpha samples at 5 Hz while the
+// user walks. Used to validate F1 (adaptive EMA), F2 (sensor fusion), F3
+// (manual reset) on real hardware. Walks persist in localStorage and can be
+// exported as JSON for offline analysis.
+
+function _loadRecordedWalks() {
+  try {
+    const raw = localStorage.getItem(WALKS_LS_KEY);
+    RECORDED_WALKS = raw ? JSON.parse(raw) : [];
+  } catch (_) { RECORDED_WALKS = []; }
+}
+
+function _saveRecordedWalks() {
+  try { localStorage.setItem(WALKS_LS_KEY, JSON.stringify(RECORDED_WALKS)); } catch (_) {}
+}
+
+function _updateWalkCount() {
+  if (!DOM.walkCount) return;
+  const n = RECORDED_WALKS.length;
+  DOM.walkCount.textContent = `${n} walk${n === 1 ? '' : 's'}`;
+  if (DOM.captureExportWalksBtn) {
+    DOM.captureExportWalksBtn.title = n
+      ? `Download all ${n} recorded walk${n === 1 ? '' : 's'} as JSON`
+      : 'No walks recorded yet';
+    DOM.captureExportWalksBtn.disabled = (n === 0);
+  }
+}
+
+function _walkSampleNow() {
+  if (!_walkRecorder) return;
+  if (!NAV.position) return;
+  const { row, col } = NAV.position;
+  _walkRecorder.samples.push({
+    t:       Date.now() - _walkRecorder.startedAt,
+    row, col,
+    heading: Math.round((NAV.heading || 0) * 10) / 10,
+    alpha:   (NAV._compass && NAV._compass._lastAlpha != null)
+                ? Math.round(NAV._compass._lastAlpha * 1000) / 1000
+                : null,
+  });
+}
+
+function startWalkRecording() {
+  if (_walkRecorder) return;  // already recording
+  _walkRecorder = {
+    startedAt:    Date.now(),
+    floor:        STATE.currentFloor,
+    startCell:    NAV.position ? { ...NAV.position } : null,
+    samples:      [],
+    app:          'app.js?v=36',
+    ua:           (navigator.userAgent || '').slice(0, 140),
+  };
+  _walkSampleNow();   // initial sample at t=0
+  _walkTimer = setInterval(_walkSampleNow, WALK_SAMPLE_MS);
+  DOM.captureRecBtn.classList.add('active');
+  DOM.captureRecBtn.setAttribute('aria-pressed', 'true');
+  DOM.captureRecBtn.textContent = '⏹ Stop';
+  _flashCaptureFeedback('Recording walk… tap ⏹ Stop when done.');
+}
+
+function stopWalkRecording() {
+  if (!_walkRecorder) return;
+  if (_walkTimer) { clearInterval(_walkTimer); _walkTimer = null; }
+  _walkSampleNow();   // final sample
+  _walkRecorder.endedAt     = Date.now();
+  _walkRecorder.duration_ms = _walkRecorder.endedAt - _walkRecorder.startedAt;
+  _walkRecorder.endCell     = NAV.position ? { ...NAV.position } : null;
+  _walkRecorder.sample_count = _walkRecorder.samples.length;
+  RECORDED_WALKS.push(_walkRecorder);
+  _saveRecordedWalks();
+  const n = _walkRecorder.sample_count;
+  const s = (_walkRecorder.duration_ms / 1000).toFixed(1);
+  _flashCaptureFeedback(`Walk saved: ${n} samples / ${s}s.`);
+  _walkRecorder = null;
+  DOM.captureRecBtn.classList.remove('active');
+  DOM.captureRecBtn.setAttribute('aria-pressed', 'false');
+  DOM.captureRecBtn.textContent = '🔴 Rec';
+  _updateWalkCount();
+}
+
+function exportRecordedWalks() {
+  if (!RECORDED_WALKS.length) {
+    _flashCaptureFeedback('No walks recorded yet.');
+    return;
+  }
+  const payload = {
+    exported_at:  new Date().toISOString(),
+    walk_count:   RECORDED_WALKS.length,
+    sample_hz:    Math.round(1000 / WALK_SAMPLE_MS),
+    walks:        RECORDED_WALKS,
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `pdr_walks_${new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  _flashCaptureFeedback(`Exported ${RECORDED_WALKS.length} walk(s).`);
 }
 
 function _saveCustomOffices() {
