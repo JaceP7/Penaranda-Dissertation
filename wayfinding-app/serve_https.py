@@ -446,6 +446,59 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(400)
                 self.end_headers()
 
+        elif self.path == '/api/deploy-floors':
+            # Receives a new floor_presets.js content from the running app and
+            # commits + pushes it to origin/main. Only available on the local
+            # dev server (this file). Not exposed on Vercel.
+            import subprocess
+            from pathlib import Path as _P
+            steps = []
+            def _run(*cmd):
+                r = subprocess.run(cmd, cwd=str(_repo_root), capture_output=True,
+                                   text=True, timeout=120)
+                steps.append({
+                    'cmd':    ' '.join(cmd),
+                    'rc':     r.returncode,
+                    'stdout': (r.stdout or '')[:600],
+                    'stderr': (r.stderr or '')[:600],
+                })
+                if r.returncode != 0:
+                    raise RuntimeError(
+                        f"git step failed: {' '.join(cmd)}\n{r.stderr[:400]}")
+                return r
+            try:
+                payload = json.loads(body)
+                content = payload.get('content', '') or ''
+                message = (payload.get('message') or 'Update floor plans').strip()
+                if 'FLOOR_PRESETS_VERSION' not in content or 'FLOOR_PRESETS' not in content:
+                    raise ValueError("Payload doesn't look like floor_presets.js")
+                script_dir = _P(__file__).resolve().parent      # .../wayfinding-app
+                target     = script_dir / 'js' / 'floor_presets.js'
+                _repo_root = script_dir.parent                  # .../dissertation
+                # Back up before overwriting (in case anything goes wrong)
+                if target.exists():
+                    bak = target.with_suffix('.js.bak_predeploy')
+                    bak.write_bytes(target.read_bytes())
+                target.write_text(content, encoding='utf-8', newline='\n')
+                _run('git', 'add', 'wayfinding-app/js/floor_presets.js')
+                _run('git', 'commit', '-m', message)
+                _run('git', 'push', 'origin', 'main')
+                resp = json.dumps({'ok': True, 'message': message, 'steps': steps}).encode('utf-8')
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.send_header('Content-Length', str(len(resp)))
+                self.end_headers()
+                self.wfile.write(resp)
+            except Exception as e:
+                err = json.dumps({'ok': False, 'error': str(e), 'steps': steps}).encode('utf-8')
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.send_header('Content-Length', str(len(err)))
+                self.end_headers()
+                self.wfile.write(err)
+
         elif self.path == '/api/chat':
             try:
                 payload = json.loads(body)

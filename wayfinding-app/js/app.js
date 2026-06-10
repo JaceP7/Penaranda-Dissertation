@@ -197,6 +197,7 @@ const DOM = {
   newMapBtn:       $('newMapBtn'),
   syncBtn:         $('syncBtn'),
   exportFloorsBtn: $('exportFloorsBtn'),
+  deployFloorsBtn: $('deployFloorsBtn'),
   mobileMenuBtn:   $('mobileMenuBtn'),
   headerSecondary: $('headerSecondary'),
   floorDown:       $('floorDown'),
@@ -434,22 +435,27 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   DOM.exportFloorsBtn.addEventListener('click', exportFloorPresetsFile);
+  DOM.deployFloorsBtn.addEventListener('click', deployFloorPresetsToGit);
 
-  // Probe /api/state on init — the sync feature only works against the local
-  // dev server (serve_https.py). Vercel doesn't expose this endpoint, so the
-  // button is meaningless there. Hide it if the probe fails so users don't
-  // tap a button that will only ever fail.
+  // Probe /api/state on init — the sync feature and the one-click Deploy
+  // Floors feature only work against the local dev server (serve_https.py).
+  // Vercel doesn't expose these endpoints, so hide the buttons if the probe
+  // fails. The Export Floors button (manual download) stays visible always.
   (() => {
     const controller = new AbortController();
     const tid = setTimeout(() => controller.abort(), 2000);
     fetch('/api/state', { method: 'GET', signal: controller.signal })
       .then(res => {
         clearTimeout(tid);
-        if (!res.ok) DOM.syncBtn.style.display = 'none';
+        if (!res.ok) {
+          DOM.syncBtn.style.display = 'none';
+          DOM.deployFloorsBtn.style.display = 'none';
+        }
       })
       .catch(() => {
         clearTimeout(tid);
         DOM.syncBtn.style.display = 'none';
+        DOM.deployFloorsBtn.style.display = 'none';
       });
   })();
   DOM.mobileMenuBtn.addEventListener('click', () => {
@@ -1607,6 +1613,140 @@ function exportFloorPresetsFile() {
               `  3. git push\n\n` +
               `Vercel deploys in ~60s, then all devices see the new layout on next reload.`;
   alert(msg);
+}
+
+/**
+ * Build the same floor_presets.js content the Export Floors button would
+ * produce, but POST it to /api/deploy-floors on the local dev server so
+ * the dev server writes the file, commits, and pushes to origin/main in
+ * one click. Only available when serve_https.py is the host — the button
+ * is hidden on Vercel by the probe in init.
+ *
+ * Includes a confirmation dialog with editable commit message + version
+ * preview so an accidental click can't ship bad data. Reports the full
+ * git step output on failure (e.g., merge conflict, auth issue).
+ */
+async function deployFloorPresetsToGit() {
+  // Reuse the same content-building logic by inlining the same algorithm
+  // as exportFloorPresetsFile. (Keeping them separate keeps Export pure
+  // — it only downloads, never POSTs.)
+  const allFloors = Object.assign({}, FLOOR_WALLS);
+  allFloors[STATE.currentFloor] = NODES.map(n => n.cellType || 'open');
+  const curVer = (typeof FLOOR_PRESETS_VERSION === 'number') ? FLOOR_PRESETS_VERSION : 2;
+  const newVer = curVer + 1;
+  const stamp  = new Date().toISOString();
+
+  const out = [];
+  out.push('/**');
+  out.push(' * floor_presets.js — pre-built 75×75 grid layouts for all 4 floors of');
+  out.push(' * Calamba City Hall, generated from the anonymized floor plans.');
+  out.push(' *');
+  out.push(' * Loaded automatically on first app start (or after grid-size mismatch).');
+  out.push(' * After load, the user can edit freely in the Map Editor as usual.');
+  out.push(' *');
+  out.push(` * AUTO-DEPLOYED from the running app on ${stamp}.`);
+  out.push(' * Do not hand-edit the cell arrays — use the "Deploy Floors" button instead.');
+  out.push(' */');
+  out.push('');
+  out.push('"use strict";');
+  out.push('');
+  out.push(`const FLOOR_PRESETS_GRID_SIZE = ${GRID_ROWS};`);
+  out.push('// Bump this whenever the bundled layout changes — the app re-applies presets');
+  out.push('// (overwriting stale localStorage) when the stored version differs.');
+  out.push(`const FLOOR_PRESETS_VERSION = ${newVer};   // deployed from app at v${curVer}`);
+  out.push('');
+  out.push('const FLOOR_PRESETS = {');
+  const floors = Object.keys(allFloors).map(Number)
+                       .filter(n => !isNaN(n))
+                       .sort((a, b) => a - b);
+  for (const f of floors) {
+    const arr = allFloors[f];
+    if (!Array.isArray(arr)) continue;
+    const cells = arr.map(v =>
+      typeof v === 'boolean' ? (v ? 'wall' : 'open') : (v || 'open'));
+    const lineArr = '[' + cells.map(c => `"${c}"`).join(',') + ']';
+    out.push(`  ${f}: ${lineArr},`);
+  }
+  out.push('};');
+  out.push('');
+  out.push('/** Suggested department centroids per floor, keyed by office name. */');
+  if (typeof FLOOR_PRESETS_DEPARTMENTS !== 'undefined') {
+    out.push('const FLOOR_PRESETS_DEPARTMENTS = '
+             + JSON.stringify(FLOOR_PRESETS_DEPARTMENTS, null, 2) + ';');
+  } else {
+    out.push('const FLOOR_PRESETS_DEPARTMENTS = {};');
+  }
+  out.push('');
+  out.push('/**');
+  out.push(' * Populate FLOOR_WALLS from the bundled presets.');
+  out.push(' * Returns the number of floors populated.');
+  out.push(' */');
+  out.push('function applyFloorPresets() {');
+  out.push('  let n = 0;');
+  out.push('  for (const [floor, cells] of Object.entries(FLOOR_PRESETS)) {');
+  out.push('    FLOOR_WALLS[Number(floor)] = cells.slice();');
+  out.push('    n++;');
+  out.push('  }');
+  out.push('  return n;');
+  out.push('}');
+  out.push('');
+  const content = out.join('\n');
+
+  // Confirmation dialog with editable commit message.
+  const defaultMsg = `Update floor plans (presets v${curVer} → v${newVer})`;
+  const message = window.prompt(
+    `Deploy floor plans?\n\n` +
+    `Version:   v${curVer} → v${newVer}\n` +
+    `Floors:    ${floors.length}\n` +
+    `Cells:     ${content.length.toLocaleString()} chars\n\n` +
+    `This will:\n` +
+    `  1. Overwrite wayfinding-app/js/floor_presets.js\n` +
+    `  2. git add + commit + push to origin/main\n` +
+    `  3. Vercel auto-deploys (~60s) → live for all users\n\n` +
+    `Commit message (editable; OK to deploy, Cancel to abort):`,
+    defaultMsg
+  );
+  if (message === null) {
+    return;  // User cancelled
+  }
+
+  // Visual busy state on the button.
+  const btn = DOM.deployFloorsBtn;
+  const origLabel = btn.textContent;
+  btn.textContent  = 'Deploying…';
+  btn.disabled     = true;
+
+  try {
+    const res = await fetch('/api/deploy-floors', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ content, message: message.trim() || defaultMsg }),
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      btn.textContent = '✓ Deployed';
+      const summary = `Deployed to git.\n\n` +
+                      `Commit:  ${message.trim() || defaultMsg}\n` +
+                      `Version: v${curVer} → v${newVer}\n\n` +
+                      `Vercel will pick this up automatically in ~60s.\n` +
+                      `Hard-refresh your phone / other devices after that.`;
+      alert(summary);
+    } else {
+      btn.textContent = '✗ Failed';
+      const stepsTxt = (data.steps || [])
+        .map(s => `[${s.rc === 0 ? '✓' : '✗'}] ${s.cmd}\n${s.stderr || s.stdout || ''}`)
+        .join('\n\n');
+      alert(`Deploy failed:\n\n${data.error || 'Unknown error'}\n\n${stepsTxt}`);
+    }
+  } catch (err) {
+    btn.textContent = '✗ Network';
+    alert(`Deploy failed: ${err.message}\n\nIs the dev server still running?`);
+  } finally {
+    setTimeout(() => {
+      btn.textContent = origLabel;
+      btn.disabled    = false;
+    }, 2500);
+  }
 }
 
 async function pushStateToServer() {

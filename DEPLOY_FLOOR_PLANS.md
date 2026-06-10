@@ -2,10 +2,25 @@
 
 This is the workflow for publishing new walls / doors / stairs to **every device that visits the production URL**. It's intentionally git-based so each change is reproducible, auditable for the dissertation, and free of backend cost.
 
-## TL;DR
+## Two workflows
+
+| Workflow | When to use | Visibility |
+|---|---|---|
+| **One-click: `Deploy Floors`** | Laptop, while `serve_https.py` is running. Easiest for routine edits. | Button auto-hides on Vercel / when dev server isn't reachable. |
+| **Manual: `Export Floors` + helper script + git** | Any device, including phones; or when you want to review the diff before pushing. | Button is always visible. |
+
+Pick one and go.
+
+## TL;DR — One-click (laptop)
 
 ```text
-Edit in Map Editor → click Export Floors → run helper script → git push → ~60 s later, every device sees the new floor on next reload
+Edit in Map Editor  →  click Deploy Floors  →  confirm in dialog  →  ~60 s  →  every device sees the new floor on next reload
+```
+
+## TL;DR — Manual (any device)
+
+```text
+Edit in Map Editor → click Export Floors → run helper script → git push → ~60 s → every device sees the new floor on next reload
 ```
 
 ## When to use this
@@ -17,7 +32,26 @@ Edit in Map Editor → click Export Floors → run helper script → git push �
 
 **Not for**: captured office coordinates (those live in `departments.json` and use the existing 💾 Export Captures workflow), or per-user preferences (those stay in localStorage on the device).
 
-## Step-by-step
+## Step-by-step — One-click Deploy Floors (recommended for laptop)
+
+1. **Start the dev server**:
+   ```bash
+   python wayfinding-app/serve_https.py
+   ```
+2. **Open** `https://localhost:3001/` and edit walls / doors / stairs.
+3. **Click `Deploy Floors`** in the top toolbar.
+4. **Confirm in the dialog** that appears:
+   - It shows the version change (e.g. v3 → v4), floor count, and content size.
+   - The commit message is editable — defaults to `Update floor plans (presets v3 → v4)`.
+   - Click **OK** to deploy, **Cancel** to abort.
+5. The button shows **`Deploying…`** while the server runs git add / commit / push.
+6. On success, a confirmation alert appears.
+   On failure, an error alert shows what went wrong (e.g. merge conflict, GitHub auth issue) plus the full git step output for debugging.
+7. Vercel auto-deploys within ~60 s. Hard-refresh your phone or any other device — they pick up the new layout via the auto-incremented `FLOOR_PRESETS_VERSION` cache-bust.
+
+The Deploy button is only visible when `serve_https.py` is the host. On Vercel-only access, the button is hidden and you'll use the manual workflow below.
+
+## Step-by-step — Manual export (works on any device)
 
 ### 1. Edit on the laptop
 
