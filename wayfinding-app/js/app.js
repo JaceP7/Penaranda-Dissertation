@@ -431,6 +431,24 @@ document.addEventListener('DOMContentLoaded', () => {
     DOM.syncBtn.disabled     = false;
     setTimeout(() => { DOM.syncBtn.textContent = '☁ Sync'; }, 2000);
   });
+
+  // Probe /api/state on init — the sync feature only works against the local
+  // dev server (serve_https.py). Vercel doesn't expose this endpoint, so the
+  // button is meaningless there. Hide it if the probe fails so users don't
+  // tap a button that will only ever fail.
+  (() => {
+    const controller = new AbortController();
+    const tid = setTimeout(() => controller.abort(), 2000);
+    fetch('/api/state', { method: 'GET', signal: controller.signal })
+      .then(res => {
+        clearTimeout(tid);
+        if (!res.ok) DOM.syncBtn.style.display = 'none';
+      })
+      .catch(() => {
+        clearTimeout(tid);
+        DOM.syncBtn.style.display = 'none';
+      });
+  })();
   DOM.mobileMenuBtn.addEventListener('click', () => {
     const open = DOM.headerSecondary.classList.toggle('open');
     DOM.mobileMenuBtn.textContent = open ? '✕' : '⋯';
@@ -1707,7 +1725,7 @@ function renderCatalogue() {
         `<span class="cat-item-coord">${floorBadge}(${col},\u202F${row}) · ${size}×${size}</span>` +
       `</div>` +
       `<div class="cat-item-btns">` +
-        `<button class="btn-cat-copy" data-id="${id}" title="Copy this stamp into the editor — your next stamp click pastes a duplicate">📋</button>` +
+        `<button class="btn-cat-copy" data-id="${id}" title="Copy this stamp into the editor — your next stamp click pastes a duplicate">Copy</button>` +
         `<button class="btn-cat-go"   data-id="${id}" title="Jump to this stamp on the map">Go</button>` +
         `<button class="btn-cat-del"  data-id="${id}" title="Delete this label (cells on the grid stay; only the catalogue entry is removed)">✕</button>` +
       `</div>`;
@@ -1766,7 +1784,7 @@ function copyPlacementToStamp(id) {
 
   if (DOM.hintBar) {
     DOM.hintBar.innerHTML =
-      `📋 Copied <strong>${escHtml(p.name)}</strong> ` +
+      `Copied <strong>${escHtml(p.name)}</strong> ` +
       `(${p.size}×${p.size}, F${typeof p.floor === 'number' ? p.floor : 0}). ` +
       `Click the grid to paste a duplicate.`;
   }
