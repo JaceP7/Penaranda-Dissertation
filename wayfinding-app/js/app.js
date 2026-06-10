@@ -196,6 +196,7 @@ const DOM = {
   resetBtn:        $('resetBtn'),
   newMapBtn:       $('newMapBtn'),
   syncBtn:         $('syncBtn'),
+  exportFloorsBtn: $('exportFloorsBtn'),
   mobileMenuBtn:   $('mobileMenuBtn'),
   headerSecondary: $('headerSecondary'),
   floorDown:       $('floorDown'),
@@ -431,6 +432,8 @@ document.addEventListener('DOMContentLoaded', () => {
     DOM.syncBtn.disabled     = false;
     setTimeout(() => { DOM.syncBtn.textContent = '☁ Sync'; }, 2000);
   });
+
+  DOM.exportFloorsBtn.addEventListener('click', exportFloorPresetsFile);
 
   // Probe /api/state on init — the sync feature only works against the local
   // dev server (serve_https.py). Vercel doesn't expose this endpoint, so the
@@ -1482,6 +1485,128 @@ function _applyStatePayload(data) {
     STAMP_PRESETS.push(...data.stampPresets);
     localStorage.setItem('gridPathfinder_stampPresets', JSON.stringify(STAMP_PRESETS));
   }
+}
+
+/**
+ * Export the current state of all floors as a drop-in replacement for
+ * wayfinding-app/js/floor_presets.js, then trigger a browser download.
+ *
+ * Workflow for shipping a new layout to all users:
+ *   1. Edit walls / doors / stairs in the Map Editor (any floor).
+ *   2. Click "Export Floors" → downloads floor_presets.js to your Downloads.
+ *   3. On the laptop, run:
+ *        python tools/replace_floor_presets.py ~/Downloads/floor_presets.js
+ *      …which overwrites the bundled file with the new one, showing the diff.
+ *   4. git add wayfinding-app/js/floor_presets.js && git commit && git push
+ *   5. Vercel auto-deploys → all visitors get the new layout on next reload.
+ *
+ * Implementation notes:
+ *   - FLOOR_PRESETS_VERSION is auto-incremented so existing devices' cached
+ *     localStorage (keyed against the old version) is invalidated and the
+ *     new bundled layout is applied automatically.
+ *   - FLOOR_PRESETS_DEPARTMENTS (suggested office centroids per floor) is
+ *     preserved as-is — this export only updates wall structure.
+ *   - The currently-active floor is read from NODES (live); inactive floors
+ *     are read from FLOOR_WALLS (cache).
+ *   - Backward-compatible: legacy boolean cells are upgraded to "wall"/"open"
+ *     strings on export.
+ */
+function exportFloorPresetsFile() {
+  // 1. Gather current cell types for every floor.
+  const allFloors = Object.assign({}, FLOOR_WALLS);
+  allFloors[STATE.currentFloor] = NODES.map(n => n.cellType || 'open');
+
+  // 2. Bump version (existing devices will re-apply automatically).
+  const curVer = (typeof FLOOR_PRESETS_VERSION === 'number') ? FLOOR_PRESETS_VERSION : 2;
+  const newVer = curVer + 1;
+  const stamp  = new Date().toISOString();
+
+  // 3. Build the new file content as a string.
+  const out = [];
+  out.push('/**');
+  out.push(' * floor_presets.js — pre-built 75×75 grid layouts for all 4 floors of');
+  out.push(' * Calamba City Hall, generated from the anonymized floor plans.');
+  out.push(' *');
+  out.push(' * Loaded automatically on first app start (or after grid-size mismatch).');
+  out.push(' * After load, the user can edit freely in the Map Editor as usual.');
+  out.push(' *');
+  out.push(` * AUTO-EXPORTED from the running app on ${stamp}.`);
+  out.push(' * Do not hand-edit the cell arrays — use the "Export Floors" button instead.');
+  out.push(' */');
+  out.push('');
+  out.push('"use strict";');
+  out.push('');
+  out.push(`const FLOOR_PRESETS_GRID_SIZE = ${GRID_ROWS};`);
+  out.push('// Bump this whenever the bundled layout changes — the app re-applies presets');
+  out.push('// (overwriting stale localStorage) when the stored version differs.');
+  out.push(`const FLOOR_PRESETS_VERSION = ${newVer};   // exported from app at v${curVer}`);
+  out.push('');
+  out.push('const FLOOR_PRESETS = {');
+
+  const floors = Object.keys(allFloors).map(Number)
+                       .filter(n => !isNaN(n))
+                       .sort((a, b) => a - b);
+  for (const f of floors) {
+    const arr = allFloors[f];
+    if (!Array.isArray(arr)) continue;
+    const cells = arr.map(v =>
+      typeof v === 'boolean' ? (v ? 'wall' : 'open') : (v || 'open'));
+    const lineArr = '[' + cells.map(c => `"${c}"`).join(',') + ']';
+    out.push(`  ${f}: ${lineArr},`);
+  }
+  out.push('};');
+  out.push('');
+
+  // 4. Preserve FLOOR_PRESETS_DEPARTMENTS verbatim (suggested office centroids).
+  out.push('/** Suggested department centroids per floor, keyed by office name. */');
+  if (typeof FLOOR_PRESETS_DEPARTMENTS !== 'undefined') {
+    out.push('const FLOOR_PRESETS_DEPARTMENTS = '
+             + JSON.stringify(FLOOR_PRESETS_DEPARTMENTS, null, 2) + ';');
+  } else {
+    out.push('const FLOOR_PRESETS_DEPARTMENTS = {};');
+  }
+  out.push('');
+
+  // 5. applyFloorPresets() function (preserved from original).
+  out.push('/**');
+  out.push(' * Populate FLOOR_WALLS from the bundled presets.');
+  out.push(' * Returns the number of floors populated.');
+  out.push(' */');
+  out.push('function applyFloorPresets() {');
+  out.push('  let n = 0;');
+  out.push('  for (const [floor, cells] of Object.entries(FLOOR_PRESETS)) {');
+  out.push('    FLOOR_WALLS[Number(floor)] = cells.slice();');
+  out.push('    n++;');
+  out.push('  }');
+  out.push('  return n;');
+  out.push('}');
+  out.push('');
+
+  const content = out.join('\n');
+
+  // 6. Trigger download.
+  const blob = new Blob([content], { type: 'text/javascript;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'floor_presets.js';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+
+  // 7. User feedback.
+  const cellCount = floors.reduce((sum, f) => sum + (allFloors[f]?.length || 0), 0);
+  const msg = `Exported floor_presets.js\n\n` +
+              `Version:  v${curVer} → v${newVer}\n` +
+              `Floors:   ${floors.length}\n` +
+              `Cells:    ${cellCount.toLocaleString()}\n\n` +
+              `Next steps (on the laptop):\n` +
+              `  1. python tools/replace_floor_presets.py ~/Downloads/floor_presets.js\n` +
+              `  2. git add . && git commit -m "Update floor plans"\n` +
+              `  3. git push\n\n` +
+              `Vercel deploys in ~60s, then all devices see the new layout on next reload.`;
+  alert(msg);
 }
 
 async function pushStateToServer() {
