@@ -1695,21 +1695,27 @@ function renderCatalogue() {
   }
 
   list.innerHTML = '';
-  STAMP_PLACEMENTS.forEach(({ id, name, row, col, size }) => {
+  STAMP_PLACEMENTS.forEach(({ id, name, row, col, size, floor }) => {
     const div = document.createElement('div');
     div.className = 'cat-item';
+    const floorBadge = (typeof floor === 'number')
+      ? `<span class="cat-item-floor">F${floor}</span>`
+      : '';
     div.innerHTML =
       `<div class="cat-item-info">` +
         `<span class="cat-item-name">${escHtml(name)}</span>` +
-        `<span class="cat-item-coord">(${col},\u202F${row}) · ${size}×${size}</span>` +
+        `<span class="cat-item-coord">${floorBadge}(${col},\u202F${row}) · ${size}×${size}</span>` +
       `</div>` +
       `<div class="cat-item-btns">` +
-        `<button class="btn-cat-go"  data-id="${id}">Go</button>` +
-        `<button class="btn-cat-del" data-id="${id}">✕</button>` +
+        `<button class="btn-cat-copy" data-id="${id}" title="Copy this stamp into the editor — your next stamp click pastes a duplicate">📋</button>` +
+        `<button class="btn-cat-go"   data-id="${id}" title="Jump to this stamp on the map">Go</button>` +
+        `<button class="btn-cat-del"  data-id="${id}" title="Delete this label (cells on the grid stay; only the catalogue entry is removed)">✕</button>` +
       `</div>`;
     list.appendChild(div);
   });
 
+  list.querySelectorAll('.btn-cat-copy').forEach(btn =>
+    btn.addEventListener('click', () => copyPlacementToStamp(btn.dataset.id)));
   list.querySelectorAll('.btn-cat-go').forEach(btn =>
     btn.addEventListener('click', () => goToStamp(btn.dataset.id)));
   list.querySelectorAll('.btn-cat-del').forEach(btn =>
@@ -1717,6 +1723,53 @@ function renderCatalogue() {
       deleteStampPlacement(btn.dataset.id);
       renderCatalogue();
     }));
+}
+
+/**
+ * Copy a placement into the active stamp editor (mobile-friendly copy/paste).
+ *
+ *   1. Switches to the placement's floor if needed.
+ *   2. Reads the current cell types in the placement's bounding box and uses
+ *      them as the new STAMP_PATTERN. (Reads from the live grid, so if you
+ *      edited cells inside the box after stamping, the copy reflects those
+ *      edits — usually what you want.)
+ *   3. Updates STAMP_SIZE, the size input, the name input, and redraws the
+ *      stamp editor.
+ *   4. Opens the tools panel so the next grid click pastes a duplicate.
+ */
+function copyPlacementToStamp(id) {
+  const p = STAMP_PLACEMENTS.find(x => x.id === id);
+  if (!p) return;
+
+  if (typeof p.floor === 'number' && p.floor !== STATE.currentFloor) {
+    switchFloor(p.floor);
+  }
+
+  STAMP_SIZE    = p.size;
+  STAMP_PATTERN = [];
+  for (let r = 0; r < p.size; r++) {
+    const patternRow = [];
+    for (let c = 0; c < p.size; c++) {
+      const node = NODE_MAP[nodeId(p.row + r, p.col + c)];
+      patternRow.push(node ? (node.cellType || 'open') : 'open');
+    }
+    STAMP_PATTERN.push(patternRow);
+  }
+
+  if (DOM.stampSizeInput) DOM.stampSizeInput.value = STAMP_SIZE;
+  if (DOM.stampNameInput) DOM.stampNameInput.value = p.name;
+  if (typeof drawStampEditor === 'function') drawStampEditor();
+
+  if (!STATE.panelOpen) setToolsPanel(true);
+
+  renderer._draw();
+
+  if (DOM.hintBar) {
+    DOM.hintBar.innerHTML =
+      `📋 Copied <strong>${escHtml(p.name)}</strong> ` +
+      `(${p.size}×${p.size}, F${typeof p.floor === 'number' ? p.floor : 0}). ` +
+      `Click the grid to paste a duplicate.`;
+  }
 }
 
 // ── Presets ───────────────────────────────────────────────────────────────────

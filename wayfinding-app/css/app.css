@@ -794,6 +794,30 @@ body {
 }
 .btn-cat-go:hover { background: #BFDBFE; }
 
+.btn-cat-copy {
+  background: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+  border-radius: 4px;
+  padding: 3px 7px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-cat-copy:hover { background: #FDE68A; }
+
+.cat-item-floor {
+  display: inline-block;
+  background: #E0E7FF;
+  color: #3730A3;
+  border-radius: 3px;
+  padding: 0 5px;
+  margin-right: 5px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
 .btn-cat-del {
   background: #FEE2E2;
   color: #991B1B;
