@@ -248,15 +248,23 @@ function loadStampPresets() {
 }
 
 // ── Stamp Placements Catalogue ────────────────────────────────────────────────
-// Tracks named stamp placements: { id, name, row, col, size }.
+// Tracks named stamp placements: { id, name, row, col, size, floor }.
+// The `floor` field was added so the renderer can show labels only for
+// placements on the currently active floor. Legacy entries (no `floor` field)
+// are migrated to floor 0 on load.
 // Persisted via localStorage.
 
 const STAMP_PLACEMENTS = [];
 
 /** Record a named stamp placement. Returns the new entry's id. */
-function addStampPlacement(name, row, col, size) {
+function addStampPlacement(name, row, col, size, floor) {
   const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
-  STAMP_PLACEMENTS.push({ id, name: name.trim(), row, col, size });
+  STAMP_PLACEMENTS.push({
+    id,
+    name:  name.trim(),
+    row, col, size,
+    floor: (typeof floor === 'number') ? floor : 0,  // backward compatible
+  });
   saveStampPlacements();
   return id;
 }
@@ -279,6 +287,11 @@ function saveStampPlacements() {
 function loadStampPlacements() {
   try {
     const raw = localStorage.getItem('gridPathfinder_stampPlacements');
-    if (raw) STAMP_PLACEMENTS.push(...JSON.parse(raw));
+    if (raw) {
+      const arr = JSON.parse(raw);
+      // Migration: legacy entries without `floor` → default to floor 0.
+      arr.forEach(p => { if (typeof p.floor !== 'number') p.floor = 0; });
+      STAMP_PLACEMENTS.push(...arr);
+    }
   } catch (_) {}
 }

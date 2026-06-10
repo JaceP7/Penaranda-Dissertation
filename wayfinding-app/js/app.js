@@ -658,7 +658,7 @@ function handleCellTap(row, col) {
 
     const name = DOM.stampNameInput.value.trim();
     if (name) {
-      addStampPlacement(name, row, col, STAMP_SIZE);
+      addStampPlacement(name, row, col, STAMP_SIZE, STATE.currentFloor);
       renderCatalogue();
     }
 

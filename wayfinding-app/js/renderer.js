@@ -525,6 +525,41 @@ class GridRenderer {
       ctx.strokeRect(hx + 1.25, hy + 1.25, cs - 2.5, cs - 2.5);
       ctx.restore();
     }
+
+    // ── Stamp placement labels (per active floor) ─────────────────────────────
+    // Each labelled stamp placement gets its name rendered at the centre of its
+    // bounding box, with a semi-transparent dark pill behind so it stays legible
+    // over walls, doors, stairs, and the floor watermark.
+    if (typeof STAMP_PLACEMENTS !== 'undefined' && STAMP_PLACEMENTS.length) {
+      ctx.save();
+      ctx.textAlign    = 'center';
+      ctx.textBaseline = 'middle';
+      const fontPx = Math.max(9, Math.min(15, Math.floor(cs * 0.55)));
+      ctx.font = `600 ${fontPx}px system-ui, -apple-system, "Segoe UI", sans-serif`;
+      const padX = 5, padY = 2;
+      for (const p of STAMP_PLACEMENTS) {
+        if (!p.name) continue;
+        if (p.floor !== this.currentFloor) continue;  // per-floor visibility
+        const cx = this._tx + (p.col + p.size / 2) * cs;
+        const cy = this._ty + (p.row + p.size / 2) * cs;
+        const m  = ctx.measureText(p.name);
+        const bw = m.width + padX * 2;
+        const bh = fontPx + padY * 2;
+        // Pill background
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.72)';   // slate-900 @ 72%
+        if (typeof ctx.roundRect === 'function') {
+          ctx.beginPath();
+          ctx.roundRect(cx - bw / 2, cy - bh / 2, bw, bh, 4);
+          ctx.fill();
+        } else {
+          ctx.fillRect(cx - bw / 2, cy - bh / 2, bw, bh);
+        }
+        // Label text
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText(p.name, cx, cy);
+      }
+      ctx.restore();
+    }
   }
 
   // ── Pointer / touch events ─────────────────────────────────────────────────
