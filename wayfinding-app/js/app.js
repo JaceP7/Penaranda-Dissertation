@@ -199,6 +199,8 @@ const DOM = {
   exportFloorsBtn: $('exportFloorsBtn'),
   deployFloorsBtn: $('deployFloorsBtn'),
   dupFloorBtn:     $('dupFloorBtn'),
+  floorActionsBtn: $('floorActionsBtn'),
+  floorActionsMenu:$('floorActionsMenu'),
   mobileMenuBtn:   $('mobileMenuBtn'),
   headerSecondary: $('headerSecondary'),
   floorDown:       $('floorDown'),
@@ -438,6 +440,30 @@ document.addEventListener('DOMContentLoaded', () => {
   DOM.exportFloorsBtn.addEventListener('click', exportFloorPresetsFile);
   DOM.deployFloorsBtn.addEventListener('click', deployFloorPresetsToGit);
   DOM.dupFloorBtn.addEventListener('click', duplicateCurrentFloor);
+
+  // Floor-actions dropdown: toggle on its button, close on outside click,
+  // close after any item is picked.
+  const _closeFloorMenu = () => {
+    if (!DOM.floorActionsMenu) return;
+    DOM.floorActionsMenu.setAttribute('hidden', '');
+    if (DOM.floorActionsBtn) DOM.floorActionsBtn.setAttribute('aria-expanded', 'false');
+  };
+  DOM.floorActionsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = !DOM.floorActionsMenu.hasAttribute('hidden');
+    if (isOpen) { _closeFloorMenu(); return; }
+    DOM.floorActionsMenu.removeAttribute('hidden');
+    DOM.floorActionsBtn.setAttribute('aria-expanded', 'true');
+  });
+  document.addEventListener('click', (e) => {
+    if (DOM.floorActionsMenu.hasAttribute('hidden')) return;
+    if (!DOM.floorActionsMenu.contains(e.target) && e.target !== DOM.floorActionsBtn) {
+      _closeFloorMenu();
+    }
+  });
+  [DOM.dupFloorBtn, DOM.exportFloorsBtn, DOM.deployFloorsBtn].forEach(btn => {
+    if (btn) btn.addEventListener('click', _closeFloorMenu);
+  });
 
   // Probe /api/state on init — the sync feature and the one-click Deploy
   // Floors feature only work against the local dev server (serve_https.py).

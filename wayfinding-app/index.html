@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=31" />
+  <link rel="stylesheet" href="css/app.css?v=32" />
 </head>
 <body>
 
@@ -31,9 +31,14 @@
       <button id="navModeBtn"    class="btn btn-nav-mode" aria-pressed="false">📍 Navigate</button>
       <button id="captureModeBtn" class="btn btn-capture" aria-pressed="false" title="Fieldwork: capture office coordinates">🎯 Capture</button>
       <button id="syncBtn"       class="btn btn-ghost btn-sync" title="Pull latest map from server (shares across devices)">☁ Sync</button>
-      <button id="dupFloorBtn"   class="btn btn-ghost btn-dup-floor" title="Copy the current floor's walls/doors/stairs to another floor. Useful when upper floors share the same outer shell as the ground floor.">Duplicate Floor</button>
-      <button id="exportFloorsBtn" class="btn btn-ghost btn-export-floors" title="Download a new floor_presets.js containing the current walls/doors/stairs across all floors. Paste it into wayfinding-app/js/floor_presets.js, git push, and every device on Vercel sees the new layout.">Export Floors</button>
-      <button id="deployFloorsBtn" class="btn btn-ghost btn-deploy-floors" title="(Laptop dev server only) Build new floor_presets.js + git commit + git push in one click. Hidden on Vercel — you'll get the manual Export Floors flow instead.">Deploy Floors</button>
+      <div id="floorActionsDropdown" class="floor-actions-dropdown">
+        <button id="floorActionsBtn" class="btn btn-ghost btn-floor-actions" aria-haspopup="true" aria-expanded="false" title="Duplicate / Export / Deploy floor plans">Floors ▾</button>
+        <div id="floorActionsMenu" class="floor-actions-menu" hidden>
+          <button id="dupFloorBtn"   class="floor-action-item" title="Copy the current floor's walls/doors/stairs to another floor. Useful when upper floors share the same outer shell as the ground floor.">Duplicate Floor</button>
+          <button id="exportFloorsBtn" class="floor-action-item" title="Download a new floor_presets.js containing the current walls/doors/stairs across all floors. Then run the helper script and git push to publish to all users.">Export Floors</button>
+          <button id="deployFloorsBtn" class="floor-action-item" title="(Laptop dev server only) Build new floor_presets.js + git commit + git push in one click. Hidden on Vercel — you'll get the manual Export Floors flow instead.">Deploy Floors</button>
+        </div>
+      </div>
       <a href="admin.html" class="btn btn-ghost btn-admin" title="Service Inquiry Analytics Dashboard" target="_blank">📊</a>
       <div class="floor-selector">
         <button id="floorDown" class="btn btn-ghost btn-floor-step" title="Go to lower floor">▼</button>
@@ -270,7 +275,7 @@
   <script src="js/renderer.js?v=31"></script>
   <script src="js/compass.js?v=31"></script>
   <script src="js/nav.js?v=32"></script>
-  <script src="js/app.js?v=44"></script>
+  <script src="js/app.js?v=45"></script>
   <script src="js/chat.js?v=31"></script>
 
 </body>

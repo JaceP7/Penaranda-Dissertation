@@ -818,6 +818,41 @@ body {
   letter-spacing: 0.03em;
 }
 
+/* ─── Floor-actions dropdown (top toolbar) ───────────────────── */
+.floor-actions-dropdown {
+  position: relative;
+  display: inline-block;
+}
+.floor-actions-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  background: #1F2937;
+  border: 1px solid #374151;
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  padding: 4px;
+  z-index: 100;
+  min-width: 170px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.floor-actions-menu[hidden] { display: none; }
+.floor-action-item {
+  text-align: left;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: #F3F4F6;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+.floor-action-item:hover { background: rgba(99, 179, 237, 0.18); color: #BEE3F8; }
+.floor-action-item:disabled { opacity: 0.4; cursor: not-allowed; }
+
 .btn-cat-del {
   background: #FEE2E2;
   color: #991B1B;
