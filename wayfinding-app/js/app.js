@@ -198,6 +198,7 @@ const DOM = {
   syncBtn:         $('syncBtn'),
   exportFloorsBtn: $('exportFloorsBtn'),
   deployFloorsBtn: $('deployFloorsBtn'),
+  dupFloorBtn:     $('dupFloorBtn'),
   mobileMenuBtn:   $('mobileMenuBtn'),
   headerSecondary: $('headerSecondary'),
   floorDown:       $('floorDown'),
@@ -436,6 +437,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   DOM.exportFloorsBtn.addEventListener('click', exportFloorPresetsFile);
   DOM.deployFloorsBtn.addEventListener('click', deployFloorPresetsToGit);
+  DOM.dupFloorBtn.addEventListener('click', duplicateCurrentFloor);
 
   // Probe /api/state on init — the sync feature and the one-click Deploy
   // Floors feature only work against the local dev server (serve_https.py).
@@ -1491,6 +1493,93 @@ function _applyStatePayload(data) {
     STAMP_PRESETS.push(...data.stampPresets);
     localStorage.setItem('gridPathfinder_stampPresets', JSON.stringify(STAMP_PRESETS));
   }
+}
+
+/**
+ * Copy the current floor's walls / doors / stairs onto another floor.
+ *
+ * Common use case: the upper floors of City Hall share the same outer
+ * octagonal shell as the ground floor. Design the shell once, duplicate
+ * it to floors 2/3/4, then edit interior partitions on each.
+ *
+ * Behavior:
+ *   - Prompts for the target floor number (1-indexed in the UI, matches
+ *     what the floor selector shows).
+ *   - Refuses to duplicate to the source floor.
+ *   - If the target floor already has non-empty content, confirms before
+ *     overwriting.
+ *   - Records an undo step so a misclick is recoverable.
+ *   - Does NOT switch to the target floor automatically — the operation
+ *     stays where you are. Use the floor ▼/▲ arrows to inspect the copy.
+ *
+ * Source cells are read live (active floor's NODES). Target is written
+ * into FLOOR_WALLS so the existing floor-switch machinery picks it up.
+ */
+function duplicateCurrentFloor() {
+  const sourceFloor = STATE.currentFloor;
+  const sourceCells = NODES.map(n => n.cellType || 'open');
+
+  // Detect occupied floors (anything with at least one non-open cell) to
+  // suggest a sensible default target.
+  const occupied = new Set([sourceFloor]);
+  Object.keys(FLOOR_WALLS).forEach(k => {
+    const arr = FLOOR_WALLS[k];
+    if (Array.isArray(arr) && arr.some(v => v && v !== 'open')) occupied.add(Number(k));
+  });
+  // Suggest the next floor number that exists OR the next number above source.
+  let suggested = sourceFloor + 1;
+  while (suggested <= 9 && occupied.has(suggested)) suggested++;
+  if (suggested > 9) suggested = sourceFloor + 1;
+
+  const targetStr = window.prompt(
+    `Duplicate Floor ${sourceFloor + 1}'s layout to which floor?\n\n` +
+    `Enter a floor number (1 – 10). Current floor stays unchanged; the\n` +
+    `target floor's walls / doors / stairs will be overwritten.\n\n` +
+    `Current:    Floor ${sourceFloor + 1}\n` +
+    `Suggested:  Floor ${suggested + 1}`,
+    String(suggested + 1)
+  );
+  if (targetStr === null) return;  // cancelled
+
+  const target = parseInt(targetStr, 10) - 1;  // UI 1-indexed → internal 0-indexed
+  if (isNaN(target) || target < 0 || target > 9) {
+    alert('Invalid floor number. Must be between 1 and 10.');
+    return;
+  }
+  if (target === sourceFloor) {
+    alert(`That's the same floor you're on. Pick a different one.`);
+    return;
+  }
+
+  // If the target has non-empty content, warn before overwriting.
+  const existing = FLOOR_WALLS[target];
+  if (Array.isArray(existing) && existing.some(v => v && v !== 'open')) {
+    const ok = window.confirm(
+      `Floor ${target + 1} already has content. Overwrite it with Floor ${sourceFloor + 1}?\n\n` +
+      `Use Undo (Ctrl+Z) to restore.`
+    );
+    if (!ok) return;
+  }
+
+  // Snapshot for undo, then copy.
+  if (typeof pushUndo === 'function') pushUndo();
+  FLOOR_WALLS[target] = sourceCells.slice();
+
+  // Persist immediately so the change survives reload even without an explicit save.
+  try {
+    const stored = JSON.parse(localStorage.getItem('wayfinding-grid-v1') || '{}');
+    stored.floorWalls = Object.assign({}, stored.floorWalls || {}, FLOOR_WALLS);
+    localStorage.setItem('wayfinding-grid-v1', JSON.stringify(stored));
+  } catch (_) {}
+
+  alert(
+    `Duplicated Floor ${sourceFloor + 1} → Floor ${target + 1}.\n\n` +
+    `Use the floor arrows (▼ / ▲) to switch to Floor ${target + 1} and edit ` +
+    `the interior. Click Deploy Floors / Export Floors when ready to ship.`
+  );
+
+  // Trigger a redraw so floor previews (if any) update.
+  if (typeof renderer !== 'undefined' && renderer._draw) renderer._draw();
 }
 
 /**
