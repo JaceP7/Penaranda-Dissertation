@@ -5,7 +5,7 @@
  * Loaded automatically on first app start (or after grid-size mismatch).
  * After load, the user can edit freely in the Map Editor as usual.
  *
- * AUTO-DEPLOYED from the running app on 2026-06-11T03:39:05.680Z.
+ * AUTO-DEPLOYED from the running app on 2026-06-11T03:41:33.908Z.
  * Do not hand-edit the cell arrays — use the "Deploy Floors" button instead.
  */
 
