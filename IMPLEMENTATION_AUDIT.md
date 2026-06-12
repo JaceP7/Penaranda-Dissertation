@@ -330,12 +330,55 @@ literature defaults. Estimate `bias_yaw` during a startup still-period (~1 s) by
 averaging `yaw_rate` while accelerometer magnitude ≈ g. Fall back to F1-only behavior
 if DeviceMotion permission is denied.
 
-### F3 — Manual heading recalibration (PLANNED — next session)
+### F3 — Manual heading recalibration (SUPERSEDED by F3-lite — see below)
 
-**UI.** Add a 🧭 button to the navigation toolbar. Tap → modal with 8 cardinal/ordinal
-buttons → on selection, `NAV.heading` is locked to that direction for 10 s while
-Compass adaptive smoothing is paused (no compass updates accepted). After 10 s,
-adaptive EMA resumes from the new baseline. Tap again any time to re-anchor.
+The full 8-direction picker is no longer planned. F3-lite (auto-align on PDR start
++ 🧭 Align button) covers the same need with simpler UX and less code. The 10-second
+freeze idea is not adopted; the 🧭 Align button captures the current heading
+instantaneously and adaptive EMA continues running.
+
+### F3-lite — Auto-align "forward" on PDR start (DONE — Session 5)
+
+**Motivation.** Walk 5 of the user's on-site test (38 s walk, 44 steps, 0.09
+straightness) showed that the magnetometer reports "North" pointing at arbitrary
+directions due to City Hall's steel + electrical interference. Step direction was
+mapping to whichever quadrant the wandering compass said.
+
+**Algorithm.** `NAV.headingOffset = heading-at-first-reading-after-PDR-start`.
+Step direction uses `effectiveHeading = (NAV.heading − NAV.headingOffset + 360) % 360`,
+so 0° always means "the direction the user was facing when PDR began". The
+🧭 Align button calls `navAlignForward()` to re-anchor at any time, useful when
+the compass drifts mid-walk past a magnetic hotspot.
+
+**Limitations.** F3-lite respects relative compass changes, so when the
+magnetometer wanders (without the user turning physically) the cursor still
+drifts. Full magnetic-wander immunity needs F2 (gyro fusion). Walk 5 data
+remains the primary motivation for prioritising F2 next.
+
+**Citation:** Ye et al. (2026), Sensors; Shoushtari et al. (2025), ION ITM.
+
+---
+
+## 🟪 GROUP G — Map Editor + Publishing UX (Jun 2026, Session 5)
+
+Quality-of-life features added during PDR fieldwork prep and floor design.
+All deployed and live; no remaining work unless noted.
+
+- [x] **G1** — **Set Position toggle** in Capture Mode toolbar. Mobile-friendly equivalent of the laptop Shift+click teleport. While the 📌 button is active, plain taps move `NAV.position` to the tapped cell instead of capturing the selected office. `STATE.setPosMode` + `setSetPosMode()`.
+- [x] **G2** — **WASD walking** in Capture Mode (laptop simulation). Plain keys move 1 cell per press; OS key-repeat handles holds; wall collision via existing `navSetPosition()`.
+- [x] **G3** — **Stamp placement labels** rendered on grid. Centre of each placement's bounding box, semi-transparent slate pill (rgba(15,23,42,0.72)) with white text. Font size scales with cell size (9–15 px). Filtered to active floor only. `STAMP_PLACEMENTS` gained `floor` field; legacy entries migrated to floor 0.
+- [x] **G4** — **Stamp catalogue "Copy" button**. Reads cells inside an existing placement's bounding box, loads them into the stamp editor (pattern + size + name), opens the tools panel so the next grid tap pastes a duplicate. Auto-switches floor if needed.
+- [x] **G5** — **Export Floors** button (top toolbar). Downloads a complete `floor_presets.js` with the current walls/doors/stairs across all floors. Auto-bumps `FLOOR_PRESETS_VERSION` so existing devices invalidate their cached layout on next reload. Helper script `tools/replace_floor_presets.py` installs the file + prints suggested git commands.
+- [x] **G6** — **Deploy Floors** button (laptop only). One-click POST to `/api/deploy-floors` (new endpoint on `serve_https.py`) which writes `floor_presets.js`, runs `git add / commit / push`. Confirmation dialog with editable commit message. Hidden on Vercel by the same probe that hides Sync.
+- [x] **G7** — **Duplicate Floor** button. Copy current floor's cells to another floor. Asks before overwriting non-empty target. `pushUndo()` first → Ctrl+Z restores. Persists immediately to localStorage so the change survives reload pre-deploy.
+- [x] **G8** — **`Floors ▾` dropdown**. Collapses Duplicate / Export / Deploy into one toolbar button. Wall Mode / Stamp & Places were getting pushed off-screen at typical viewport widths. Dark popover, click-outside-to-close, close-on-pick.
+- [x] **G9** — **Floor remap 5–8 → 1–4** (one-off, commit `aac8e1f`). User designed the 4 real floors at UI positions 5/6/7/8 with 99 labeled stamps; promoted to UI 1/2/3/4. Source cleared, presets v6 → v7. Backups: `*.bak_before_remap`. Script: `tools/remap_floors_5to8_to_1to4.py`.
+- [x] **G10** — **Charter alignment** (mid-session). 21 → 31 canonical offices (28 charter + 3 sub-units OSCA/PDAO/CDRRMD-MO). 98 service rows in `services.json` renamed (5 mappings + 1 typo). FAISS index rebuilt. `CHARTER_ALIGNMENT_REPORT.md` for dissertation traceability.
+
+### Related docs
+- `DEPLOY_FLOOR_PLANS.md` — full bake-and-push workflow (one-click + manual).
+- `tools/replace_floor_presets.py` — install helper for the manual flow.
+- `CHARTER_ALIGNMENT_REPORT.md` — the office-naming diff for the audit trail.
 
 ---
 

@@ -68,10 +68,11 @@ wayfinding-app/
 | Undo / Redo | 50-step history — `Ctrl+Z` / `Ctrl+Y` |
 | Stamp tool | Design reusable n×n patterns; open cells are transparent on stamp |
 | Presets | Save and reload named stamp patterns |
-| Catalogue | Log named stamp placements with jump-to navigation |
+| Catalogue | Log named stamp placements with jump-to navigation. Labels render **on the grid** as dark pills (per-floor filtered). Each entry has a **Copy** button → loads pattern + name into the editor for paste-elsewhere. |
 | Select mode | Drag to select a region; rotate CW/CCW, move, or delete |
-| Multi-floor | Up to 10 independent floor layouts; floor watermark on canvas |
-| Persistence | Auto-saved to `localStorage`; optional server sync |
+| Multi-floor | Up to 10 independent floor layouts; floor watermark on canvas; **Duplicate Floor** button to clone the active floor's layout to another |
+| Persistence | Auto-saved to `localStorage`; optional server sync (laptop dev only) |
+| Floor publishing | **Export Floors** (downloads new `floor_presets.js`) or **Deploy Floors** (one-click git push from laptop). Both bake-and-push to Vercel so every visitor sees the new layout on next reload via `FLOOR_PRESETS_VERSION` cache-bust. |
 
 ### Pathfinding
 | Feature | Description |
@@ -84,11 +85,29 @@ wayfinding-app/
 ### Navigation Mode
 | Feature | Description |
 |---|---|
-| PDR | Zero-crossing step detection; EMA compass ($\alpha=0.4$); phone-position invariant |
+| PDR | Zero-crossing step detection (Jiménez et al., 2010); phone-position invariant |
+| Heading | **Adaptive EMA compass** — $\alpha$ varies 0.05 (stationary, kills wobble) to 0.80 (active turn, kills lag) (Shi et al., 2025) |
+| Heading anchor | Forward direction auto-locked to the phone's facing direction at PDR start. 🧭 **Align** button re-anchors any time. Robust to indoor magnetic interference (Ye et al., 2026) |
 | QR anchors | Scan a printed QR to snap position to any cell and floor |
 | Drift indicator | Green → amber → red chip showing steps since last QR fix |
 | Breadcrumb trail | Last 10 positions shown on canvas, fading with age |
 | Arrow keys | Manual fallback (desktop / accessibility) |
+
+### Capture Mode (fieldwork)
+| Feature | Description |
+|---|---|
+| Tap-to-capture | Tap a cell on the grid → records `{office, floor, row, col}` in localStorage |
+| 📍 My position | Capture at the current PDR position |
+| 📌 Set Position | Mobile-friendly teleport — taps move the cursor instead of capturing (laptop equivalent is Shift+click) |
+| WASD walking | Laptop simulation — keys move the cursor one cell per press (Capture-Mode-gated) |
+| Export | Download captured coordinates as a JSON file |
+| Custom offices | "➕ Add new office" prompt in the dropdown lets fieldwork add labels not in the canonical 31-office list |
+
+### Walk Recorder (PDR diagnostics)
+| Feature | Description |
+|---|---|
+| 🔴 Rec / ⏹ Stop | Toggle recording. Samples `{t, row, col, heading, alpha}` at 5 Hz to localStorage. Auto-starts PDR if it isn't running |
+| 📥 Walks | Download all recorded walks as a single JSON file for offline analysis (motivated the F2 sensor fusion roadmap with concrete data) |
 
 ### Stair & Arrival
 | Feature | Description |

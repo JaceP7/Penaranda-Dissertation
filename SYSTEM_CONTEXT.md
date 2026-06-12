@@ -1,10 +1,56 @@
 # System Context — Geo-Agentic RAG Wayfinding System
 ### Calamba City Hall · Dissertation Project
-**Last updated:** 2026-05-28
+**Last updated:** 2026-06-22
 
 ---
 
 ## 0. SESSION LOG (read this first to resume)
+
+### Session 5 (2026-06-08 to 2026-06-22) — PDR improvements + publishing workflow + floor remap
+
+**PDR heading work** — backed by Scopus-indexed literature (Madgwick 2011 @ 1937 cits; Mahony 2008 @ 1630 cits; Shi 2025 IEEE TIM; Mansour 2026 IEEE TIM; Cheng 2025 @ 18 cits).
+- **F0 — Walk recorder.** New 🔴 Rec / 📥 Walks buttons in Capture toolbar. Samples `{t,row,col,heading,alpha}` at 5 Hz into localStorage (`wayfinding-walks-v1`), exportable as JSON. Auto-starts PDR if it isn't running (was a footgun — Rec without PDR produced static recordings).
+- **F1 — Adaptive EMA in `compass.js`.** α now varies per sample with |Δheading|: 0.05 stationary (kills wobble), 0.80 during active turns (kills lag), saturates at 20°. Replaces fixed α=0.4 from B1 (kept as fallback). Cite Shi (2025).
+- **F3-lite — Heading anchor on PDR start.** Indoor magnetometer reports wrong "North"; instead of trusting it absolutely, `NAV.headingOffset` captures the first compass reading after PDR start, and step direction maps from `(heading − headingOffset)` so walking direction matches user-facing direction. 🧭 Align button re-anchors anytime. Smaller than full F3 (no 8-direction picker), but solved the immediate "I walk but the cursor goes elsewhere" problem on Walk 5.
+- **F2 — Gyro + magnetometer fusion** still PLANNED. Walk 5 data confirms the need: 38 s walk, 44 steps, but only 0.09 straightness — magnetometer scrambled the direction even though steps were detected cleanly. F1 helped wobble but not the slow drift + spikes.
+
+**Capture Mode mobile UX**
+- WASD walking on laptop (Capture-Mode-gated). Plain click captures; Shift+click teleports `NAV.position`.
+- 📌 Set Position toggle button — mobile-friendly equivalent of Shift+click. When ON, taps teleport instead of capture.
+- Cosmetic Copy button text label (was a 📋 emoji — wasn't reading consistently across mobile fonts).
+
+**Floor publishing workflow (bake-and-push)** — chosen over Vercel KV for the dissertation's reproducibility requirements.
+- `Export Floors` — downloads a complete `floor_presets.js` with auto-bumped `FLOOR_PRESETS_VERSION`. User runs `tools/replace_floor_presets.py` + git push. Works on any device.
+- `Deploy Floors` — laptop-only one-click button. POSTs the new content to `/api/deploy-floors` on `serve_https.py`, which writes the file + runs `git add / commit / push`. Confirmation dialog with editable commit message. Hidden on Vercel via the same probe that hides Sync.
+- `Duplicate Floor` — copy current floor's walls/doors/stairs to another floor (Ctrl+Z restorable). Useful for reusing the octagonal shell across upper floors.
+- `Floors ▾` dropdown — collapses the three publishing buttons into one toolbar item after they were pushing Wall Mode / Stamp & Places off-screen at typical viewport widths.
+- `DEPLOY_FLOOR_PLANS.md` — full workflow doc (one-click and manual paths).
+
+**Stamp annotation labels**
+- Stamp names render on the grid as small dark pills at the centre of each placement (per active floor only). `STAMP_PLACEMENTS` schema gained a `floor` field; legacy entries migrated to floor 0.
+- Catalogue side panel: each placement gets a `Copy` button → loads pattern + name into stamp editor for paste-elsewhere via next grid click. Also a tiny `F0`/`F1`/… badge to show which floor a labelled placement lives on.
+
+**Charter alignment (mid-session)**
+- Cross-checked our 21-office canonical list against the official Citizen's Charter (calambacity.gov.ph/Users/Home/CitizenCharter) and the 12-category service listing. Charter has 28 offices; we keep 3 sub-units (OSCA / PDAO / CDRRMD-MO) → new canonical = **31 offices**.
+- **98 service rows** in `services.json` had `department` renamed across 6 mappings: 5 spelling differences + 1 typo (`MANAGMENT` → `MANAGEMENT`).
+- `departments.json` rebuilt 21 → 31. `OFFICE_FALLBACK` in `app.js` matches.
+- FAISS index rebuilt (`python -m rag_engine.build_index`, ~70 s for 235 chunks).
+- All 235 services cross-verified: count matches, IDs match, departments match.
+- `CHARTER_ALIGNMENT_REPORT.md` captures the diff for dissertation traceability.
+
+**Floor remap (commit `aac8e1f`)**
+- User designed the 4 real City Hall floors at UI positions 5/6/7/8 (internal 4–7), with **99 labeled stamps** (22 GF + 25 LG + 22 2F + 30 3F).
+- Promoted them to UI 1/2/3/4 via `tools/remap_floors_5to8_to_1to4.py` (one-off script).
+- Source floors 5–8 cleared. 5 old Floor-1 stamps dropped (per user's "Replace" choice).
+- `FLOOR_PRESETS_VERSION` bumped 6 → 7 → all devices auto-pick-up via cache-bust.
+- Backups: `app-state.json.bak_before_remap`, `floor_presets.js.bak_before_remap`.
+
+**Vercel KV cross-device sync** — deferred per user. Stamps + captures stay per-device-localStorage. Bake-and-push covers walls/doors/stairs for everyone.
+
+### Key new files (Session 5)
+- `tools/replace_floor_presets.py` — manual install helper for the Export Floors flow
+- `DEPLOY_FLOOR_PLANS.md` — bake-and-push workflow guide
+- `wayfinding-app/app-state.json` (gitignored) — server-side state from `serve_https.py`
 
 ### Session 4 (2026-05-28 PM) — corpus rebuild + chat fixes
 - **CORPUS REBUILT from the official Citizen's Charter**: `wayfinding-app/data/services.json` now has **235 services** (was 74), **all with `requirements`** (was 0). Built by `build_corpus_from_charter.py` which: parses `services raw/*.js` (10 category listing files = 235 services) → fetches each `https://calambacity.gov.ph/Users/Home/ViewServicesPage?createservicesId=N` (cached to `services_html/`) → extracts requirements checklist + process flow + who-may-avail. Old 74 corpus backed up to `services.json.bak74`.
