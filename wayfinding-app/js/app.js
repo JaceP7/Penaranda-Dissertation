@@ -199,6 +199,8 @@ const DOM = {
   exportFloorsBtn: $('exportFloorsBtn'),
   deployFloorsBtn: $('deployFloorsBtn'),
   dupFloorBtn:     $('dupFloorBtn'),
+  exportStampsBtn: $('exportStampsBtn'),
+  deployStampsBtn: $('deployStampsBtn'),
   floorActionsBtn: $('floorActionsBtn'),
   floorActionsMenu:$('floorActionsMenu'),
   mobileMenuBtn:   $('mobileMenuBtn'),
@@ -306,6 +308,10 @@ async function navigateToDepartment(deptName) {
 document.addEventListener('DOMContentLoaded', () => {
   loadStampPlacements();
   loadStampPresets();
+  // After loading per-device localStorage, apply any newer bundled stamp data
+  // (from stamp_presets.js, shipped via git+Vercel). Idempotent: only runs
+  // when STAMP_PRESETS_VERSION exceeds the stored version on this device.
+  if (typeof syncStampPresetsBundle === 'function') syncStampPresetsBundle();
   loadCaptures();         // restore any fieldwork coordinate captures
   _loadCustomOffices();   // restore any on-site custom offices
   navInit();       // initialise NAV.position to grid center
@@ -440,6 +446,8 @@ document.addEventListener('DOMContentLoaded', () => {
   DOM.exportFloorsBtn.addEventListener('click', exportFloorPresetsFile);
   DOM.deployFloorsBtn.addEventListener('click', deployFloorPresetsToGit);
   DOM.dupFloorBtn.addEventListener('click', duplicateCurrentFloor);
+  DOM.exportStampsBtn.addEventListener('click', exportStampPresetsFile);
+  DOM.deployStampsBtn.addEventListener('click', deployStampPresetsToGit);
 
   // Floor-actions dropdown: toggle on its button, close on outside click,
   // close after any item is picked.
@@ -461,9 +469,22 @@ document.addEventListener('DOMContentLoaded', () => {
       _closeFloorMenu();
     }
   });
-  [DOM.dupFloorBtn, DOM.exportFloorsBtn, DOM.deployFloorsBtn].forEach(btn => {
+  [DOM.dupFloorBtn, DOM.exportFloorsBtn, DOM.deployFloorsBtn,
+   DOM.exportStampsBtn, DOM.deployStampsBtn].forEach(btn => {
     if (btn) btn.addEventListener('click', _closeFloorMenu);
   });
+
+  // Same probe that hides Sync / Deploy Floors also hides Deploy Stamps — it
+  // requires the local dev server's /api/deploy-stamps endpoint. The Export
+  // Stamps button (download only) stays visible everywhere.
+  (() => {
+    if (!DOM.deployStampsBtn) return;
+    const controller = new AbortController();
+    const tid = setTimeout(() => controller.abort(), 2000);
+    fetch('/api/state', { method: 'GET', signal: controller.signal })
+      .then(res => { clearTimeout(tid); if (!res.ok) DOM.deployStampsBtn.style.display = 'none'; })
+      .catch(() => { clearTimeout(tid); DOM.deployStampsBtn.style.display = 'none'; });
+  })();
 
   // Probe /api/state on init — the sync feature and the one-click Deploy
   // Floors feature only work against the local dev server (serve_https.py).
@@ -1846,6 +1867,157 @@ async function deployFloorPresetsToGit() {
                       `Vercel will pick this up automatically in ~60s.\n` +
                       `Hard-refresh your phone / other devices after that.`;
       alert(summary);
+    } else {
+      btn.textContent = '✗ Failed';
+      const stepsTxt = (data.steps || [])
+        .map(s => `[${s.rc === 0 ? '✓' : '✗'}] ${s.cmd}\n${s.stderr || s.stdout || ''}`)
+        .join('\n\n');
+      alert(`Deploy failed:\n\n${data.error || 'Unknown error'}\n\n${stepsTxt}`);
+    }
+  } catch (err) {
+    btn.textContent = '✗ Network';
+    alert(`Deploy failed: ${err.message}\n\nIs the dev server still running?`);
+  } finally {
+    setTimeout(() => {
+      btn.textContent = origLabel;
+      btn.disabled    = false;
+    }, 2500);
+  }
+}
+
+// ── Stamp bundle export / deploy ───────────────────────────────────────
+//
+// Parallel of exportFloorPresetsFile() / deployFloorPresetsToGit() but for
+// stamp_presets.js. Bake the current STAMP_PLACEMENTS + STAMP_PRESETS into
+// a JS bundle, auto-bump STAMP_PRESETS_VERSION, and either download (Export)
+// or POST to /api/deploy-stamps so the local dev server writes + git pushes
+// in one click (Deploy).
+
+function _buildStampPresetsJS() {
+  const stamp = new Date().toISOString();
+  const curVer = (typeof STAMP_PRESETS_VERSION === 'number') ? STAMP_PRESETS_VERSION : 0;
+  const newVer = curVer + 1;
+
+  // Tag every placement as bundled in the export, so other devices' merge
+  // logic knows these came from the deploy (and not local-only).
+  const placements = STAMP_PLACEMENTS.map(p => Object.assign({}, p, { source: 'bundled' }));
+  // Pattern presets need a deep-ish copy so we don't mutate the live array.
+  const presets = STAMP_PRESETS.map(p => Object.assign({}, p, {
+    pattern: p.pattern.map(row => row.slice()),
+  }));
+
+  const out = [];
+  out.push('/**');
+  out.push(' * stamp_presets.js — bundled stamp placements + pattern presets for the');
+  out.push(' * Calamba City Hall wayfinding app.');
+  out.push(' *');
+  out.push(' * Loaded automatically on first app start or when STAMP_PRESETS_VERSION');
+  out.push(" * differs from what's cached in localStorage. Bundled placements OVERRIDE");
+  out.push(' * matching IDs in localStorage; any locally-placed stamps without a');
+  out.push(' * matching ID in the bundle are preserved (the merge logic lives in');
+  out.push(' * applyStampPresets() in stamp_presets.js).');
+  out.push(' *');
+  out.push(` * AUTO-EXPORTED from the running app on ${stamp}.`);
+  out.push(' * Do not hand-edit — use Floors ▾ → Export/Deploy Stamps instead.');
+  out.push(' */');
+  out.push('');
+  out.push('"use strict";');
+  out.push('');
+  out.push(`const STAMP_PRESETS_VERSION = ${newVer};   // exported from app at v${curVer}`);
+  out.push('');
+  out.push('const STAMP_PLACEMENTS_BUNDLED = ' + JSON.stringify(placements, null, 2) + ';');
+  out.push('');
+  out.push('const STAMP_PRESETS_BUNDLED = ' + JSON.stringify(presets, null, 2) + ';');
+  out.push('');
+  out.push('function applyStampPresets() {');
+  out.push("  if (typeof STAMP_PLACEMENTS !== 'undefined') {");
+  out.push('    const bundledIds = new Set(STAMP_PLACEMENTS_BUNDLED.map(p => p.id));');
+  out.push("    const locallyOnly = STAMP_PLACEMENTS.filter(p => !bundledIds.has(p.id) && p.source !== 'bundled');");
+  out.push('    STAMP_PLACEMENTS.length = 0;');
+  out.push('    STAMP_PLACEMENTS.push(');
+  out.push('      ...STAMP_PLACEMENTS_BUNDLED.map(p => Object.assign({}, p)),');
+  out.push('      ...locallyOnly,');
+  out.push('    );');
+  out.push("    if (typeof saveStampPlacements === 'function') saveStampPlacements();");
+  out.push('  }');
+  out.push("  if (typeof STAMP_PRESETS !== 'undefined') {");
+  out.push('    STAMP_PRESETS.length = 0;');
+  out.push('    STAMP_PRESETS.push(');
+  out.push('      ...STAMP_PRESETS_BUNDLED.map(p => Object.assign({}, p, {');
+  out.push('        pattern: p.pattern.map(row => row.slice()),');
+  out.push('      })),');
+  out.push('    );');
+  out.push("    if (typeof _saveStampPresets === 'function') _saveStampPresets();");
+  out.push('  }');
+  out.push('}');
+  out.push('');
+  return { content: out.join('\n'), curVer, newVer, placementCount: placements.length, presetCount: presets.length };
+}
+
+function exportStampPresetsFile() {
+  const { content, curVer, newVer, placementCount, presetCount } = _buildStampPresetsJS();
+  const blob = new Blob([content], { type: 'text/javascript;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'stamp_presets.js';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+
+  alert(
+    `Exported stamp_presets.js\n\n` +
+    `Version:     v${curVer} → v${newVer}\n` +
+    `Placements:  ${placementCount}\n` +
+    `Presets:     ${presetCount}\n` +
+    `Size:        ${content.length.toLocaleString()} chars\n\n` +
+    `Next steps (on the laptop):\n` +
+    `  1. python tools/replace_stamp_presets.py ~/Downloads/stamp_presets.js\n` +
+    `  2. git add . && git commit -m "Update stamps"\n` +
+    `  3. git push\n\n` +
+    `Vercel deploys in ~60s. All devices apply the new bundle on next reload.`
+  );
+}
+
+async function deployStampPresetsToGit() {
+  const { content, curVer, newVer, placementCount, presetCount } = _buildStampPresetsJS();
+  const defaultMsg = `Update stamps (stamp_presets v${curVer} → v${newVer})`;
+  const message = window.prompt(
+    `Deploy stamp placements?\n\n` +
+    `Version:     v${curVer} → v${newVer}\n` +
+    `Placements:  ${placementCount}\n` +
+    `Presets:     ${presetCount}\n\n` +
+    `This will:\n` +
+    `  1. Overwrite wayfinding-app/js/stamp_presets.js\n` +
+    `  2. git add + commit + push to origin/main\n` +
+    `  3. Vercel auto-deploys (~60s) → live for all users\n\n` +
+    `Commit message (editable; OK to deploy, Cancel to abort):`,
+    defaultMsg
+  );
+  if (message === null) return;
+
+  const btn = DOM.deployStampsBtn;
+  const origLabel = btn.textContent;
+  btn.textContent = 'Deploying…';
+  btn.disabled    = true;
+
+  try {
+    const res = await fetch('/api/deploy-stamps', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ content, message: message.trim() || defaultMsg }),
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      btn.textContent = '✓ Deployed';
+      alert(
+        `Deployed stamps to git.\n\n` +
+        `Commit:  ${message.trim() || defaultMsg}\n` +
+        `Version: v${curVer} → v${newVer}\n\n` +
+        `Vercel picks this up in ~60s.\n` +
+        `Hard-refresh your phone / other devices after that — applyStampPresets() runs automatically.`
+      );
     } else {
       btn.textContent = '✗ Failed';
       const stepsTxt = (data.steps || [])

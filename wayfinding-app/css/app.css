@@ -852,6 +852,11 @@ body {
 }
 .floor-action-item:hover { background: rgba(99, 179, 237, 0.18); color: #BEE3F8; }
 .floor-action-item:disabled { opacity: 0.4; cursor: not-allowed; }
+.floor-action-divider {
+  height: 1px;
+  background: #374151;
+  margin: 4px 0;
+}
 
 .btn-cat-del {
   background: #FEE2E2;

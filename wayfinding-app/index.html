@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=32" />
+  <link rel="stylesheet" href="css/app.css?v=33" />
 </head>
 <body>
 
@@ -37,6 +37,9 @@
           <button id="dupFloorBtn"   class="floor-action-item" title="Copy the current floor's walls/doors/stairs to another floor. Useful when upper floors share the same outer shell as the ground floor.">Duplicate Floor</button>
           <button id="exportFloorsBtn" class="floor-action-item" title="Download a new floor_presets.js containing the current walls/doors/stairs across all floors. Then run the helper script and git push to publish to all users.">Export Floors</button>
           <button id="deployFloorsBtn" class="floor-action-item" title="(Laptop dev server only) Build new floor_presets.js + git commit + git push in one click. Hidden on Vercel — you'll get the manual Export Floors flow instead.">Deploy Floors</button>
+          <div class="floor-action-divider"></div>
+          <button id="exportStampsBtn" class="floor-action-item" title="Download a new stamp_presets.js with the current placements + pattern presets. Same paste-and-push workflow as Export Floors but for the catalogue labels.">Export Stamps</button>
+          <button id="deployStampsBtn" class="floor-action-item" title="(Laptop dev server only) Bake current stamp placements into stamp_presets.js + git commit + push in one click. After deploy, every device sees the labels on next reload.">Deploy Stamps</button>
         </div>
       </div>
       <a href="admin.html" class="btn btn-ghost btn-admin" title="Service Inquiry Analytics Dashboard" target="_blank">📊</a>
@@ -269,13 +272,14 @@
   <script src="js/lib/jsQR.js"></script>
   <script src="js/lib/qrcode.min.js"></script>
 
-  <script src="js/data.js?v=31"></script>
+  <script src="js/data.js?v=32"></script>
   <script src="js/floor_presets.js?v=30"></script>
+  <script src="js/stamp_presets.js?v=1"></script>
   <script src="js/dijkstra.js?v=30"></script>
   <script src="js/renderer.js?v=31"></script>
   <script src="js/compass.js?v=31"></script>
   <script src="js/nav.js?v=32"></script>
-  <script src="js/app.js?v=45"></script>
+  <script src="js/app.js?v=46"></script>
   <script src="js/chat.js?v=31"></script>
 
 </body>

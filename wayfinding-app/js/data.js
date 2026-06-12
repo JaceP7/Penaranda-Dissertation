@@ -291,7 +291,34 @@ function loadStampPlacements() {
       const arr = JSON.parse(raw);
       // Migration: legacy entries without `floor` → default to floor 0.
       arr.forEach(p => { if (typeof p.floor !== 'number') p.floor = 0; });
+      // Migration: legacy entries without `source` → mark as 'local' so the
+      // stamp-bundle merge logic in applyStampPresets() preserves them
+      // rather than treating them as stale bundled stamps to be removed.
+      arr.forEach(p => { if (typeof p.source !== 'string') p.source = 'local'; });
       STAMP_PLACEMENTS.push(...arr);
     }
   } catch (_) {}
+}
+
+/**
+ * Cache-bust integration: if the bundled stamp_presets.js (loaded as a
+ * script tag, exposing STAMP_PRESETS_VERSION + applyStampPresets) has a
+ * higher version than what's recorded in localStorage, apply the bundle.
+ *
+ * Bundled placements REPLACE matching IDs in localStorage; local-only
+ * placements (source: 'local') survive. See applyStampPresets() in
+ * stamp_presets.js for the merge rules.
+ */
+const STAMP_PRESETS_VERSION_LS_KEY = 'gridPathfinder_stampPresetsVersion';
+function syncStampPresetsBundle() {
+  if (typeof STAMP_PRESETS_VERSION === 'undefined') return;     // no bundle present
+  if (typeof applyStampPresets !== 'function')   return;
+  let storedVer = 0;
+  try { storedVer = parseInt(localStorage.getItem(STAMP_PRESETS_VERSION_LS_KEY) || '0', 10); }
+  catch (_) {}
+  if (STAMP_PRESETS_VERSION > storedVer) {
+    applyStampPresets();
+    try { localStorage.setItem(STAMP_PRESETS_VERSION_LS_KEY, String(STAMP_PRESETS_VERSION)); }
+    catch (_) {}
+  }
 }
