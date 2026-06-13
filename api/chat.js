@@ -1,94 +1,105 @@
 /**
- * api/chat.js — Vercel serverless function
- * Receives { query, history? } → keyword-retrieves top-5 services → calls Groq
- * Returns { answer, department, subservice, needsContext, options }
+ * api/chat.js — Vercel serverless function (Serverless RAG)
  *
- * Model: llama-3.1-8b-instant
- *   • 14,400 req/day  (vs 1,000 for qwen3-32b)
- *   • 131,072 tok/min (vs ~6,000 for qwen3-32b)
- *   • More than sufficient quality for short city-hall service lookups
+ * Pipeline:
+ *   query → Upstash Vector (bge-m3, server-side embed + similarity search over
+ *           the 235 Calamba services) → top-K with metadata → Groq generation
+ *           grounded on that context → { answer, department, subservice, ... }
  *
- * Rate-limit handling: up to 2 automatic retries with short back-off.
- * If still limited, returns a friendly { rate_limited: true } payload so the
- * client can show a human-readable "busy" message instead of a raw error.
+ * No heavy local models: Upstash embeds both the stored services and the query,
+ * so this function stays within Vercel's serverless limits. Seed the index once
+ * with tools/upstash_seed.py (index must use the BAAI/bge-m3 embedding model).
+ *
+ * Required env vars (set in the Vercel project):
+ *   UPSTASH_VECTOR_REST_URL
+ *   UPSTASH_VECTOR_REST_TOKEN
+ *   GROQ_API_KEY
+ *
+ * Response shape is unchanged from the previous version, so the chat UI,
+ * "Take me there" button, and service_locations.js routing keep working.
  */
 
-const services = require('../wayfinding-app/data/services.json');
+const GROQ_URL    = 'https://api.groq.com/openai/v1/chat/completions';
+const MODEL       = 'llama-3.3-70b-versatile';   // parity with the local pipeline
+const MAX_TOKENS  = 900;                          // room for itemised requirements
+const MAX_RETRIES = 2;
+const TOP_K       = 6;
 
-const GROQ_URL   = 'https://api.groq.com/openai/v1/chat/completions';
-const MODEL      = 'llama-3.1-8b-instant';
-const MAX_TOKENS = 500;
-const MAX_RETRIES = 2;   // up to 3 total attempts
+const UPSTASH_URL   = (process.env.UPSTASH_VECTOR_REST_URL || '').replace(/\/$/, '');
+const UPSTASH_TOKEN = process.env.UPSTASH_VECTOR_REST_TOKEN || '';
 
-// ── Keyword retrieval ─────────────────────────────────────────────────────────
-
-function search(query, topN = 5) {
-  const tokens = query.toLowerCase().split(/\s+/).filter(t => t.length > 2);
-  if (!tokens.length) return { results: services.slice(0, topN), ambiguous: false, options: [] };
-
-  const scored = services.map(entry => {
-    const blob = [entry.service, entry.subservice, entry.department, ...entry.steps]
-      .join(' ').toLowerCase();
-    const score = tokens.reduce((acc, t) => acc + (blob.includes(t) ? 1 : 0), 0);
-    return { entry, score };
+// ── Upstash Vector retrieval (server-side embedding) ──────────────────────────
+async function upstashQuery(text, topK = TOP_K) {
+  const r = await fetch(`${UPSTASH_URL}/query-data`, {
+    method:  'POST',
+    headers: { 'Authorization': `Bearer ${UPSTASH_TOKEN}`, 'Content-Type': 'application/json' },
+    body:    JSON.stringify({ data: text, topK, includeMetadata: true }),
   });
-
-  const top      = scored.sort((a, b) => b.score - a.score).slice(0, topN);
-  const topScore = top[0]?.score ?? 0;
-  const tied     = topScore > 0 ? top.filter(x => x.score >= topScore - 1 && x.score > 0) : [];
-  const uniqueSubs = new Set(tied.map(x => x.entry.subservice));
-  const ambiguous  = uniqueSubs.size > 2;
-
-  return {
-    results:   top.map(x => x.entry),
-    ambiguous,
-    options:   ambiguous ? [...uniqueSubs].slice(0, 6) : [],
-  };
+  if (!r.ok) throw new Error(`Upstash query ${r.status}: ${(await r.text()).slice(0, 200)}`);
+  const d = await r.json();
+  return (d.result || []).map(x => x.metadata || {}).filter(m => m.subservice);
 }
 
 function buildContext(results) {
-  return results.map(r =>
-    `Service: ${r.service}\nSub-service: ${r.subservice}\nDepartment: ${r.department}\nSteps:\n${r.steps.join('\n')}`
-  ).join('\n\n---\n\n');
+  return results.map(m => {
+    const reqs = (m.requirements || [])
+      .map(rq => `  - ${rq.requirement} (secure at: ${rq.where_to_secure || 'N/A'})`)
+      .join('\n');
+    const steps = (m.steps || []).map((s, i) => `  ${i + 1}. ${s}`).join('\n');
+    return [
+      `Service: ${m.service}`,
+      `Sub-service: ${m.subservice}`,
+      `Department: ${m.department}`,
+      m.who_may_avail ? `Who may avail: ${m.who_may_avail}` : '',
+      reqs ? `Requirements:\n${reqs}` : '',
+      steps ? `Steps:\n${steps}` : '',
+    ].filter(Boolean).join('\n');
+  }).join('\n\n---\n\n');
 }
 
 // ── Groq call with retry on 429 ───────────────────────────────────────────────
-
 async function callGroq(messages, attempt = 0) {
   const res = await fetch(GROQ_URL, {
     method:  'POST',
-    headers: {
-      'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
-      'Content-Type':  'application/json',
-    },
-    body: JSON.stringify({ model: MODEL, messages, temperature: 0.3, max_tokens: MAX_TOKENS }),
+    headers: { 'Authorization': `Bearer ${process.env.GROQ_API_KEY}`, 'Content-Type': 'application/json' },
+    body:    JSON.stringify({ model: MODEL, messages, temperature: 0.3, max_tokens: MAX_TOKENS }),
   });
-
   if (res.status === 429 && attempt < MAX_RETRIES) {
-    // Respect Retry-After if present and short (< 5 s); otherwise use back-off
     const retryAfter = parseFloat(res.headers.get('retry-after') || '0');
-    const waitMs     = (retryAfter > 0 && retryAfter < 5)
-      ? retryAfter * 1000
-      : (attempt + 1) * 1200;   // 1.2 s, then 2.4 s
+    const waitMs = (retryAfter > 0 && retryAfter < 5) ? retryAfter * 1000 : (attempt + 1) * 1200;
     await new Promise(r => setTimeout(r, waitMs));
     return callGroq(messages, attempt + 1);
   }
-
   return res;
 }
 
-// ── Handler ───────────────────────────────────────────────────────────────────
+// ── Department resolution from the answer's "Go to:" line ─────────────────────
+function resolveDept(answer, results) {
+  const m = answer.match(/Go to:\s*(.+?)\s*$/im);
+  const depts = [...new Set(results.map(r => r.department).filter(Boolean))];
+  if (m) {
+    const name = m[1].trim().replace(/[.*_`]+$/g, '').trim();
+    const up = name.toUpperCase();
+    const exact = depts.find(d => d.toUpperCase() === up);
+    if (exact) return exact;
+    const partial = depts.find(d => up.includes(d.toUpperCase()) || d.toUpperCase().includes(up));
+    if (partial) return partial;
+    return name;   // LLM named a dept not in results — pass through verbatim
+  }
+  return null;
+}
 
-const SYSTEM_PROMPT = `You are a helpful assistant for Calamba City Hall.
-Answer questions about city government services using ONLY the provided context.
+const SYSTEM_PROMPT = `You are the Calamba City Hall services assistant. Use ONLY the provided context.
 
 Rules:
-1. If the query matches MULTIPLE different sub-services, list the options clearly and ask which one they need.
-2. Only provide detailed steps once the specific sub-service is clear.
-3. When giving steps, always end with "Go to: [EXACT DEPARTMENT NAME]".
-4. If the query is unrelated to city services, say you can only help with Calamba City Hall services.
-5. Keep answers concise.`;
+1. LANGUAGE: Reply in the SAME language as the user's question. If they wrote in Filipino or Taglish, reply in natural conversational Taglish. Keep office names, document names, and the "Go to:" line in their official English form.
+2. If the question clearly maps to ONE service, give the requirements as a numbered list. For each requirement append "(secure at: <where>)" taken from the context.
+3. End a resolved answer with a line exactly: "Go to: <EXACT DEPARTMENT NAME>" copied verbatim from the context.
+4. If the question could mean SEVERAL different sub-services, briefly list them and ask which one the user needs. In this case DO NOT include a "Go to:" line.
+5. If the context does not contain the answer, say you could not find it and suggest asking at the Information desk. No "Go to:" line.
+6. Be concise.`;
 
+// ── Handler ───────────────────────────────────────────────────────────────────
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin',  '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -97,17 +108,37 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST')   return res.status(405).json({ error: 'Method not allowed' });
 
+  if (!UPSTASH_URL || !UPSTASH_TOKEN) {
+    return res.status(500).json({
+      error: 'Vector store not configured',
+      detail: 'Set UPSTASH_VECTOR_REST_URL and UPSTASH_VECTOR_REST_TOKEN in the Vercel project.',
+    });
+  }
+
   const { query, history = [] } = req.body || {};
   if (!query || typeof query !== 'string') {
     return res.status(400).json({ error: 'query is required' });
   }
 
-  const { results, ambiguous, options } = search(query);
-  const context  = buildContext(results);
+  // 1. Retrieve from Upstash Vector
+  let results;
+  try {
+    results = await upstashQuery(query);
+  } catch (err) {
+    return res.status(502).json({ error: 'Vector search failed', detail: err.message });
+  }
+  if (!results.length) {
+    return res.status(200).json({
+      answer: "I couldn't find that in the Calamba City Hall services. Please ask at the Information desk.",
+      department: null, subservice: null, needsContext: false, options: [], rate_limited: false,
+    });
+  }
+
+  // 2. Generate with Groq grounded on the retrieved context
   const messages = [
-    { role: 'system',    content: SYSTEM_PROMPT },
+    { role: 'system', content: SYSTEM_PROMPT },
     ...history.slice(-6),
-    { role: 'user', content: `Context:\n${context}\n\nUser question: ${query}` },
+    { role: 'user', content: `Context:\n${buildContext(results)}\n\nUser question: ${query}` },
   ];
 
   let groqRes;
@@ -116,39 +147,40 @@ module.exports = async function handler(req, res) {
   } catch (err) {
     return res.status(502).json({ error: 'Failed to reach Groq API', detail: err.message });
   }
-
-  // Still rate-limited after retries → return a friendly payload (not a 5xx)
   if (groqRes.status === 429) {
     return res.status(200).json({
-      answer:       'The assistant is momentarily busy. Please wait a few seconds and try again.',
-      department:   null,
-      subservice:   null,
-      needsContext: false,
-      options:      [],
-      rate_limited: true,
+      answer: 'The assistant is momentarily busy. Please wait a few seconds and try again.',
+      department: null, subservice: null, needsContext: false, options: [], rate_limited: true,
     });
   }
-
   if (!groqRes.ok) {
-    const errBody = await groqRes.text();
-    return res.status(502).json({ error: 'Groq API error', detail: errBody });
+    return res.status(502).json({ error: 'Groq API error', detail: (await groqRes.text()).slice(0, 300) });
   }
 
   const data   = await groqRes.json();
   const raw    = data.choices?.[0]?.message?.content ?? 'No answer returned.';
   const answer = raw.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
 
-  const isAskingForContext = ambiguous ||
-    /which.*service|which.*permit|could you specify|please clarify|which one/i.test(answer);
-
-  const topMatch = isAskingForContext ? null : (results[0] ?? null);
+  // 3. Resolve department / clarification
+  const dept = resolveDept(answer, results);
+  const needsContext = !dept &&
+    /which|alin|anong serbisyo|could you specify|please clarify|specify/i.test(answer);
+  const options = needsContext
+    ? [...new Set(results.map(r => r.subservice).filter(Boolean))].slice(0, 6)
+    : [];
+  // subservice = the retrieved item whose department matches the resolved dept
+  let subservice = null;
+  if (dept) {
+    const hit = results.find(r => (r.department || '').toUpperCase() === dept.toUpperCase());
+    subservice = (hit || results[0]).subservice || null;
+  }
 
   return res.status(200).json({
     answer,
-    department:   topMatch?.department   ?? null,
-    subservice:   topMatch?.subservice   ?? null,
-    needsContext: isAskingForContext,
-    options:      isAskingForContext ? options : [],
+    department:   dept || null,
+    subservice,
+    needsContext,
+    options,
     rate_limited: false,
   });
 };
