@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=33" />
+  <link rel="stylesheet" href="css/app.css?v=34" />
 </head>
 <body>
 
@@ -12,6 +12,10 @@
   <header class="app-header">
     <h1>🗺️ Calamba City Hall Wayfinding</h1>
     <div class="header-actions">
+
+      <!-- Back to the Services / RAG home. The intended flow is
+           Services (RAG) → "Take me there" → Wayfinding → Home. -->
+      <a id="homeBtn" class="btn btn-home" href="rag_demo.html" title="Back to City Services (RAG assistant)">← Home</a>
 
       <!-- ── Secondary (map-editing tools) ─────────────────────────
            Desktop: always visible inline.
@@ -275,12 +279,13 @@
   <script src="js/data.js?v=32"></script>
   <script src="js/floor_presets.js?v=30"></script>
   <script src="js/stamp_presets.js?v=1"></script>
+  <script src="js/service_locations.js?v=1"></script>
   <script src="js/dijkstra.js?v=30"></script>
   <script src="js/renderer.js?v=31"></script>
   <script src="js/compass.js?v=31"></script>
   <script src="js/nav.js?v=32"></script>
-  <script src="js/app.js?v=46"></script>
-  <script src="js/chat.js?v=31"></script>
+  <script src="js/app.js?v=47"></script>
+  <script src="js/chat.js?v=32"></script>
 
 </body>
 </html>

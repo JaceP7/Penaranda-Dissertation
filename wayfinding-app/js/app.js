@@ -291,18 +291,82 @@ async function _loadDepartments() {
   return _departments;
 }
 
-async function navigateToDepartment(deptName) {
-  const deps = await _loadDepartments();
-  const loc  = deps[deptName];
-  if (!loc || loc.floor === null) {
-    alert(`Location for "${deptName}" has not been mapped yet.\nPlease ask staff for directions.`);
+// Human floor names for routing messages.
+function _floorName(f) {
+  return ({ 0: "the Ground Floor", 1: "the Lower Ground Floor",
+            2: "the 2nd Floor", 3: "the 3rd Floor" }[f]) || `Floor ${f + 1}`;
+}
+
+// Nearest 'stair' cell on the CURRENT floor to (row,col), or null if none.
+function _nearestStairOnCurrentFloor(row, col) {
+  let best = null, bestD = Infinity;
+  for (const n of NODES) {
+    if (n.cellType !== "stair") continue;
+    const d = Math.abs(n.row - row) + Math.abs(n.col - col);
+    if (d < bestD) { bestD = d; best = { row: n.row, col: n.col }; }
+  }
+  return best;
+}
+
+/**
+ * Route the user to a department/service resolved by the RAG answer.
+ * Uses service_locations.js to map the department → a stamp cell, picks the
+ * nearest window to the user, switches floor if needed (routing from the
+ * dest-floor stairs for cross-floor trips), and draws the path.
+ *
+ * @param {string} deptName    - canonical department from the RAG "Go to:" line
+ * @param {string} [subservice] - the specific service (enables overrides)
+ */
+function navigateToDepartment(deptName, subservice) {
+  if (typeof resolveServiceLocation !== "function") {
+    alert(`Location for "${deptName}" has not been mapped yet.\nPlease ask at the Information desk.`);
     return;
   }
-  if (loc.floor !== STATE.currentFloor) switchFloor(loc.floor);
-  const id = nodeId(loc.row, loc.col);
-  STATE.endId = id;
-  renderer.setEnd(id);   // setEnd() sets _endId + redraws; direct .endId was wrong
+
+  // Where is the user now? PDR fix if available, else the default GF entrance.
+  const from = NAV.position
+    ? { floor: STATE.currentFloor, row: NAV.position.row, col: NAV.position.col }
+    : SERVICE_DEFAULT_ENTRANCE;
+
+  const loc = resolveServiceLocation(deptName, subservice, from);
+
+  if (!loc) {
+    alert(`Location for "${deptName}" isn't mapped yet.\nPlease ask at the Information desk.`);
+    return;
+  }
+  if (loc.separateCampus) {
+    _showStairToast(`📍 ${deptName} is at a separate campus, not inside City Hall.`);
+    return;
+  }
+
+  // Switch floor if the office is elsewhere (clears endId/path — set them after).
+  const crossFloor = loc.floor !== STATE.currentFloor;
+  if (crossFloor) switchFloor(loc.floor);
+
+  // Start cell: same floor → the user's position; cross-floor → the dest-floor
+  // stairs nearest the office (the user climbs/descends, then follows the route).
+  let startCell;
+  if (crossFloor) {
+    startCell = _nearestStairOnCurrentFloor(loc.row, loc.col) || { row: loc.row, col: loc.col };
+  } else {
+    startCell = { row: from.row, col: from.col };
+  }
+  STATE.startId    = nodeId(startCell.row, startCell.col);
+  renderer.startId = STATE.startId;
+
+  // Destination + route.
+  STATE.endId = nodeId(loc.row, loc.col);
+  renderer.setEnd(STATE.endId);
   recompute();
+
+  // Tell the user what's happening.
+  if (loc.fallback) {
+    _showStairToast(`📍 ${deptName} isn't pinned yet — routing to the Information desk. Please ask there.`);
+  } else if (crossFloor) {
+    _showStairToast(`📍 ${loc.label} is on ${_floorName(loc.floor)}. Take the stairs/elevator, then follow the route.`);
+  } else {
+    _showStairToast(`📍 Routing to ${loc.label}.`);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -172,7 +172,8 @@ const CHAT = (() => {
         navBtn.className = 'chat-nav-btn';
         navBtn.textContent = 'Take me there';
         navBtn.addEventListener('click', () => {
-          if (_onNavigate) _onNavigate(msg.department);
+          // Pass the subservice too so service-specific routing overrides can apply.
+          if (_onNavigate) _onNavigate(msg.department, msg.subservice);
           if (_open) toggle();
         });
         loc.appendChild(navBtn);
