@@ -380,6 +380,25 @@ All deployed and live; no remaining work unless noted.
 - `tools/replace_floor_presets.py` — install helper for the manual flow.
 - `CHARTER_ALIGNMENT_REPORT.md` — the office-naming diff for the audit trail.
 
+## 🟫 GROUP H — Live deployment + RAG↔wayfinding + UX (Jun 2026, Session 6)
+
+All deployed to Vercel; live + working end-to-end on the website.
+
+- [x] **H1** — **RAG → wayfinding**. `service_locations.js` maps 31 canonical departments → 99 stamps (26/31 mapped → 197/235 services routable; 5 unmapped → Info-desk fallback; City College → separate campus). `navigateToDepartment()` resolves → switches floor → routes from PDR/default-entrance, cross-floor via stairs. Docs: `SERVICE_AREA_MAPPING_REVIEW.md`.
+- [x] **H2** — **Serverless RAG live** (`api/chat.js`): Upstash Vector (text-embedding-3-small) + Groq. Replaces the keyword fallback so the website chat resolves departments. Seed: `tools/upstash_seed.py`. Setup: `UPSTASH_RAG_SETUP.md`.
+- [x] **H3** — **Live retrieval eval** (`eval/run_upstash_eval.py`): **MRR 0.762 / P@1 0.750**, beating the local e5-large+bge-reranker baseline (0.714/0.607) with dense-only retrieval. Scopus-backed rationale: `UPSTASH_EVAL_AND_RATIONALE.md`. ⚠️ Different embedding model → report Upstash numbers as the live system's (supersedes B2 for the deployed system).
+- [x] **H4** — **Live-site analytics** (supersedes part of C): `api/chat.js` → Upstash Redis (`wf:querylog`); `api/analytics.js` reads it for `/admin.html`. Verified end-to-end. (Still TODO from C: navigation analytics, CSV/PDF export, audit trail.)
+- [x] **H5** — **Floors swapped 0↔1** (LG=idx0/UI1, Ground=idx1/UI2). Presets v8, stamps v2.
+- [x] **H6** — **User/Admin view separation**. Citizen chat-first view over the Calamba eGov hero (`calamba_hero.html` iframe); admin via PIN-gated 🔧 (kiosk-safe, not persisted). Floor rename (bundled `FLOOR_NAMES`). Default start tile (38,72) Ground; "you are here" + follow-cam on route (no Capture needed); zoom clamped to fit-grid.
+- [⏸] **H7** — bge-m3 index comparison (optional; text-embedding-3-small already wins). Needs a new Upstash index.
+
+### Open items still blocking dissertation-complete
+- 5 unmapped offices (CDRRMD-MO, OSCA, GSO, POSO floors; City College = separate) — pending colleague.
+- 2 temporary mappings to confirm (COMELEC, Legislative=SP Secretariat).
+- On-site coordinate verification (A2 fieldwork) — routing uses designed stamp positions.
+- SUS + observation instruments (A4/A5), generation metrics (B3).
+- Rotate exposed keys (Upstash Vector/Redis tokens, Groq, Gemini) pasted in chat.
+
 ---
 
 ## 🚢 Shipping decision tree

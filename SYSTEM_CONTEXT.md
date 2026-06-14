@@ -1,10 +1,32 @@
 # System Context — Geo-Agentic RAG Wayfinding System
 ### Calamba City Hall · Dissertation Project
-**Last updated:** 2026-06-22
+**Last updated:** 2026-06-13
 
 ---
 
 ## 0. SESSION LOG (read this first to resume)
+
+### Session 6 (2026-06-13) — serverless RAG live, RAG→wayfinding, user/admin split
+
+**RAG → wayfinding integration**
+- `service_locations.js` maps the 31 canonical RAG departments → the 99 floor stamps (built from the 4 floor photo directories in `note_*.pdf`). `resolveServiceLocation(dept, subservice, fromCell)`: exact + distinctive-token fuzzy match, reads cell coords live from `STAMP_PLACEMENTS`, picks the window nearest the user (decision: nearest), 5 unmapped depts → MOPAC/Info fallback, City College → "separate campus".
+- `navigateToDepartment()` rewritten: resolve → switch floor → route from PDR pos or default entrance, cross-floor via nearest stairs + toast. `SERVICE_AREA_MAPPING_REVIEW.md` documents coverage (26/31 depts → 197/235 services) + the 5 open questions for the colleague + the 2 temp mappings (LG19=COMELEC, Legislative=SP Secretariat).
+
+**Serverless RAG live on Vercel (Upstash Vector + Groq)**
+- `api/chat.js` rewritten: query → Upstash Vector `/query-data` (server-side `text-embedding-3-small`, 1536-dim — NOT bge-m3; the user's index used it and it WON, so kept) → Groq llama-3.3-70b grounds the Taglish answer + "Go to:" dept. Response contract unchanged. Seed via `tools/upstash_seed.py`. Setup: `UPSTASH_RAG_SETUP.md`.
+- **Live retrieval eval** (`eval/run_upstash_eval.py`): MRR **0.762** / P@1 **0.750** / NDCG@1 0.750 — beats the local e5-large+bge-reranker baseline (0.714 / 0.607) with dense retrieval only (no reranker). Scopus-backed rationale in `UPSTASH_EVAL_AND_RATIONALE.md` (6 decisions). ⚠️ Different embedding model than the local pipeline → report the Upstash numbers as the live system's.
+- **Live-site analytics**: `api/chat.js` logs each query to Upstash **Redis** (`wf:querylog`, capped 5000); `api/analytics.js` reads it for `/admin.html`. Verified end-to-end. Env vars: `UPSTASH_VECTOR_REST_URL/TOKEN`, `UPSTASH_REDIS_REST_URL/TOKEN`, `GROQ_API_KEY` (all on Vercel).
+
+**Floors swapped 0↔1**: Lower Ground is now internal idx 0 (UI Floor 1), Ground idx 1 (UI Floor 2) — physically correct. All data + code swapped; `FLOOR_PRESETS_VERSION`→8, `STAMP_PRESETS_VERSION`→2.
+
+**User / Admin view separation** (`body.view-user` default / `body.view-admin`)
+- Citizen view is **chat-first** over the **Calamba eGov hero** (`calamba_hero.html`, iframe background) until "Take me there" → route-active reveals the grid. All editing chrome hidden; header hidden.
+- Admin via fixed 🔧 → **PIN** (`ADMIN_PIN` in app.js, currently '2024' — ships in client JS, weak gate). View mode NOT persisted (kiosk-safe; resets to user each reload).
+- **Floor rename**: ✏️ beside floor selector (admin) → bundled `FLOOR_NAMES` in floor_presets.js, deploys via Export/Deploy Floors.
+- **Default start tile**: navInit → Ground (idx 1) cell (38,72); `SERVICE_DEFAULT_ENTRANCE` matched. On Take-me-there in user view: `renderer.navActive=true` + `focusOnCell(start, 2.2)` shows "you are here" centered, no Capture needed.
+- **Zoom/follow-cam**: `renderer._minScale=1` (fit-to-grid is the zoom-out limit); `focusOnCell()` added; PDR steps re-center via `onPositionChange` (follow-cam, manual pan still allowed).
+
+**Also**: `rag_demo.html` (standalone figure), Services-labeled chat button, ← Home button.
 
 ### Session 5 (2026-06-08 to 2026-06-22) — PDR improvements + publishing workflow + floor remap
 

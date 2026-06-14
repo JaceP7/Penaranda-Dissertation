@@ -405,8 +405,14 @@ function navigateToDepartment(deptName, subservice) {
   renderer.setEnd(STATE.endId);
   recompute();
 
-  // User (chat-first) view: reveal the map now that there's a route to show.
-  if (STATE.viewMode === 'user') document.body.classList.add('route-active');
+  // User (chat-first) view: reveal the map, show the "you are here" marker at
+  // the (default or PDR) start tile, and focus/zoom on it for follow-cam — no
+  // Capture needed. Each PDR step re-centers via NAV.onPositionChange.
+  if (STATE.viewMode === 'user') {
+    document.body.classList.add('route-active');
+    renderer.navActive = true;                       // draw "ME" at the start tile
+    renderer.focusOnCell(startCell.row, startCell.col, 2.2);  // zoom in + center
+  }
 
   // Tell the user what's happening.
   if (loc.fallback) {

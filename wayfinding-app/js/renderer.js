@@ -38,7 +38,7 @@ class GridRenderer {
     this._tx        = 0;
     this._ty        = 0;
     this._baseCell  = 50;   // pixels per cell at scale 1 (recomputed on resize)
-    this._minScale  = 0.2;
+    this._minScale  = 1;    // fit-to-grid is the zoom-OUT limit (no tiny grid + empty space)
     this._maxScale  = 10;
 
     this._dragging      = false;
@@ -101,6 +101,16 @@ class GridRenderer {
     const ch     = this.canvas.clientHeight;
     this._tx     = cw / 2 - (col + 0.5) * cs;
     this._ty     = ch / 2 - (row + 0.5) * cs;
+  }
+
+  /** Zoom to `scale` (clamped) and centre on (row, col), then redraw.
+   *  Used for the "you are here" / follow-cam focus when a route is shown. */
+  focusOnCell(row, col, scale) {
+    if (typeof scale === 'number') {
+      this._scale = Math.min(this._maxScale, Math.max(this._minScale, scale));
+    }
+    this.centerOnCell(row, col);
+    this._draw();
   }
   resize()      { this._fitToCanvas(); this._draw(); }
 
