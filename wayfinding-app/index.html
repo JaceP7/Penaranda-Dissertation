@@ -4,9 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=35" />
+  <link rel="stylesheet" href="css/app.css?v=36" />
 </head>
 <body class="view-user">
+
+  <!-- ═══ CITIZEN-VIEW BACKGROUND ════════════════════════════════════════
+       The real Calamba eGov hero, shown behind the Services chat until a
+       route is drawn. Isolated in an iframe so the site's Bootstrap/CSS
+       can't clash with the wayfinding app. Hidden in admin view and once
+       a route is active (body.route-active). -->
+  <iframe id="calambaHeroBg" class="calamba-hero-bg" src="calamba_hero.html?v=1"
+          title="City of Calamba" tabindex="-1" aria-hidden="true"></iframe>
 
   <!-- ═══ HEADER ═══════════════════════════════════════════════════════ -->
   <header class="app-header">

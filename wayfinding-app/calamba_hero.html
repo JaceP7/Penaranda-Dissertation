@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>City of Calamba</title>
+
+  <!-- Bootstrap 5 (carousel mechanics + grid) + Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ──────────────────────────────────────────────────────────────
+       Self-contained recreation of the Calamba eGov homepage hero.
+       Used as the citizen-view background of the wayfinding system
+       (shown before a route is drawn). Asset URLs point at the live
+       calambacity.gov.ph so it matches the real site; a navy gradient
+       is the fallback if the video/images are blocked.
+       The site's own global CSS isn't available here, so the classes
+       it relies on (.overlay, .qweqw, .main-button-*, etc.) are
+       redefined below to match the look.
+    ────────────────────────────────────────────────────────────── */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; font-family: "Open Sans", system-ui, sans-serif; }
+
+    .hero-container {
+      position: relative; width: 100%; height: 100vh; overflow: hidden;
+      background: linear-gradient(135deg, #001a33 0%, #003366 55%, #00509e 100%);
+    }
+    /* persistent background video for the whole hero */
+    .bg-video-wrap { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+    .bg-video-wrap video { width: 100%; height: 100%; object-fit: cover; }
+    .hero-shade { position: absolute; inset: 0; z-index: 1; background: rgba(0, 20, 45, 0.6); }
+
+    .carousel, .carousel-inner, .carousel-item { height: 100vh; }
+    .carousel-item { position: relative; z-index: 2; }
+    .overlay {
+      position: relative; z-index: 2; height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; color: #fff; padding: 24px 18px 90px;
+    }
+    .overlay .inner { max-width: 760px; width: 100%; }
+    .overlay img.logo  { width: 130px; height: auto; margin-bottom: 16px; filter: drop-shadow(0 4px 14px rgba(0,0,0,.45)); }
+    .overlay img.egov  { width: 240px; height: auto; margin-bottom: 14px; }
+    .qweqw, .overlay h1, .overlay h2 {
+      font-weight: 800; line-height: 1.2; margin-bottom: 16px;
+      text-shadow: 0 3px 14px rgba(0,0,0,.5); font-size: clamp(1.5rem, 4vw, 2.7rem);
+    }
+    .egovhead { font-size: clamp(1.2rem, 3vw, 1.9rem); font-weight: 700; margin-bottom: 14px; }
+    .overlay p { font-size: clamp(.85rem, 1.6vw, 1.02rem); line-height: 1.7; color: rgba(255,255,255,.92); margin: 0 auto 22px; max-width: 640px; }
+
+    .main-button-red a, .main-button-purple a, .main-button-blue a, .main-button-coop a {
+      display: inline-block; color: #fff; text-decoration: none; font-weight: 700;
+      padding: 11px 30px; border-radius: 40px; box-shadow: 0 8px 22px rgba(0,0,0,.35);
+      transition: transform .2s, filter .2s;
+    }
+    .main-button-red a    { background: #c4252c; }
+    .main-button-purple a { background: #7b2ff7; }
+    .main-button-blue a   { background: #0066cc; }
+    .main-button-coop a   { background: #0a8754; }
+    .main-button-red a:hover, .main-button-purple a:hover,
+    .main-button-blue a:hover, .main-button-coop a:hover { transform: translateY(-2px); filter: brightness(1.08); }
+
+    .store-badges { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .store-badges img { width: 150px; height: auto; }
+    .calambago-imgs { display: flex; gap: 18px; align-items: center; justify-content: center; flex-wrap: wrap; }
+    .calambago-imgs img { max-width: 180px; height: auto; }
+
+    .carousel-indicators { z-index: 3; margin-bottom: 18px; }
+    .carousel-control-prev, .carousel-control-next { z-index: 3; width: 8%; }
+
+    /* mock browser chrome so the figure reads as the live site */
+    .mock-urlbar {
+      position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 4;
+      background: rgba(255,255,255,.92); border-radius: 40px; padding: 5px 16px;
+      font-size: .78rem; color: #1f2937; display: flex; align-items: center; gap: 7px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.25);
+    }
+    .mock-urlbar .lock { color: #059669; }
+  </style>
+</head>
+<body>
+  <div class="hero-container">
+    <div class="bg-video-wrap">
+      <video autoplay muted loop playsinline
+             src="https://calambacity.gov.ph/maincss/assets/video/course-video.mp4"></video>
+    </div>
+    <div class="hero-shade"></div>
+
+    <div class="mock-urlbar"><span class="lock">🔒</span><span>calambacity.gov.ph</span></div>
+
+    <div id="calambaHero" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#calambaHero" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#calambaHero" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#calambaHero" data-bs-slide-to="2"></button>
+        <button type="button" data-bs-target="#calambaHero" data-bs-slide-to="3"></button>
+        <button type="button" data-bs-target="#calambaHero" data-bs-slide-to="4"></button>
+      </div>
+
+      <div class="carousel-inner">
+
+        <!-- Slide 1 — Welcome to the City of Calamba -->
+        <div class="carousel-item active">
+          <div class="overlay"><div class="inner">
+            <img class="logo" src="https://calambacity.gov.ph/maincss/assets/img/logocity.webp" alt="City of Calamba" loading="eager">
+            <h1 class="qweqw">Welcome to the City of Calamba</h1>
+            <p>Calamba, officially the City of Calamba, is a 1st class component city in the province of Laguna, Philippines. According to the 2020 census, it has a population of 539,671 people. Only 54 kilometers away from Metro Manila.</p>
+            <div class="main-button-red"><div class="scroll-to-section"><a href="#">Services</a></div></div>
+          </div></div>
+        </div>
+
+        <!-- Slide 2 — eGovPH -->
+        <div class="carousel-item">
+          <div class="overlay"><div class="inner">
+            <img class="egov" src="https://admin.calambacity.gov.ph/images/addFiles/Egovwhite.svg" alt="eGovPH" loading="lazy">
+            <h2 class="egovhead">CALAMBA CITY, May eGov kana ba?</h2>
+            <p>The eGov PH (e-Government Philippines) is a mobile application that simplifies transactions between the government and citizens — a one-stop online system that minimizes economic cost for the citizens.</p>
+            <div class="store-badges">
+              <a href="https://play.google.com/store/apps/details?id=egov.app" target="_blank"><img src="https://admin.calambacity.gov.ph/images/addFiles/playsotore.svg" alt="Google Play"></a>
+              <a href="https://apps.apple.com/ph/app/egovph/id6447682225" target="_blank"><img src="https://admin.calambacity.gov.ph/images/addFiles/apple.svg" alt="App Store"></a>
+              <a href="https://appgallery.huawei.com/app/C111221319" target="_blank"><img src="https://admin.calambacity.gov.ph/images/addFiles/appg.webp" alt="AppGallery"></a>
+            </div>
+          </div></div>
+        </div>
+
+        <!-- Slide 3 — CalambaGo -->
+        <div class="carousel-item">
+          <div class="overlay"><div class="inner">
+            <div class="calambago-imgs">
+              <img src="https://admin.calambacity.gov.ph/images/addFiles/CalambaGo.png" alt="CalambaGo" loading="lazy">
+              <img src="https://admin.calambacity.gov.ph/images/addFiles/boss.webp" alt="CalambaGo" loading="lazy">
+            </div>
+            <p>CalambaGo — the City of Calamba's online services portal. Sign up to transact with the city government online.</p>
+            <div class="main-button-blue"><div class="scroll-to-section"><a href="https://online.calambacity.gov.ph/" target="_blank">Sign-up Here</a></div></div>
+          </div></div>
+        </div>
+
+        <!-- Slide 4 — Gender and Development -->
+        <div class="carousel-item">
+          <div class="overlay"><div class="inner">
+            <img class="logo" src="https://calambacity.gov.ph/maincss/assets/img/gad.png" alt="GAD Calamba City" loading="lazy">
+            <h1 class="qweqw">Gender and Development (GAD)<br>Calamba City</h1>
+            <p>Gender and Development, as defined in Republic Act No. 9710, is a development perspective and process that is participatory, empowering, equitable, sustainable, and respectful of human rights.</p>
+            <div class="main-button-purple"><div class="scroll-to-section"><a href="https://gad.calambacity.gov.ph" target="_blank">See more</a></div></div>
+          </div></div>
+        </div>
+
+        <!-- Slide 5 — Cooperatives and Livelihood Development -->
+        <div class="carousel-item">
+          <div class="overlay"><div class="inner">
+            <img class="logo" src="https://admin.calambacity.gov.ph/images/addFiles/5e9ef812-b109-4f96-8268-fb2b58fc099f.png" alt="CLDD" loading="lazy">
+            <h1 class="qweqw">Cooperatives and Livelihood<br>Development Department</h1>
+            <p>The City of Calamba CLDD promotes a culture of entrepreneurship among Calambeños and strengthens the cooperative movement in the city.</p>
+            <div class="main-button-coop"><div class="scroll-to-section"><a href="https://clddcalamba.com/" target="_blank">See more</a></div></div>
+          </div></div>
+        </div>
+
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#calambaHero" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#calambaHero" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

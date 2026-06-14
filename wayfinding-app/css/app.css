@@ -906,9 +906,16 @@ body.view-user #floorDown,
 body.view-user #floorUp,
 body.view-user #renameFloorBtn { display: none !important; }
 
-/* USER VIEW header → slim, centered title; floor label stays as a read-only chip */
-body.view-user .app-header { justify-content: center; }
-body.view-user .app-header h1 { font-size: 1rem; }
+/* USER VIEW header → hidden entirely so the Calamba hero shows clean.
+   (Admin view keeps the full header.) */
+body.view-user .app-header { display: none !important; }
+
+/* Calamba eGov hero background (citizen view, before a route is drawn) */
+.calamba-hero-bg {
+  position: fixed; inset: 0; width: 100%; height: 100%;
+  border: 0; z-index: 0; display: none; pointer-events: auto;
+}
+body.view-user:not(.route-active) .calamba-hero-bg { display: block; }
 
 /* USER VIEW chat-first — map hidden until a route is drawn */
 body.view-user:not(.route-active) .app-body { visibility: hidden; }
