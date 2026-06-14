@@ -27,13 +27,56 @@ const STATE = {
   navMode:      false,   // navigate mode: position tracks PDR/QR, path from ME → tapped cell
   captureMode:  false,   // fieldwork: tap a cell (or use PDR pos) to record an office coordinate
   setPosMode:   false,   // sub-mode within capture: taps SET position instead of capturing
-  currentFloor: 0,       // active floor index (0 = ground)
+  currentFloor: 1,       // active floor index — default lands on Ground (idx 1; LG is idx 0)
+  viewMode:     'user',  // 'user' (citizen, chat-first) | 'admin' (full editor). NOT persisted.
   paintType:    'wall',  // active paint type: 'wall' | 'door' | 'stair' | 'erase'
 };
 
 // Tracks whether Shift is currently held — used for Shift+click "teleport" in Capture Mode
 // (sets NAV.position to the clicked cell instead of capturing the selected office).
 let _shiftHeld = false;
+
+// ── View mode (user / admin) + admin gate ──────────────────────────────────
+// CHANGE THIS PIN. It gates entry to the admin/editor view. The view mode is
+// NOT persisted — every reload returns to the citizen (user) view (kiosk-safe).
+const ADMIN_PIN = '2024';
+
+function setViewMode(mode) {
+  STATE.viewMode = (mode === 'admin') ? 'admin' : 'user';
+  document.body.classList.toggle('view-admin', STATE.viewMode === 'admin');
+  document.body.classList.toggle('view-user',  STATE.viewMode === 'user');
+  if (STATE.viewMode === 'admin') {
+    document.body.classList.remove('route-active');   // admin sees the full map
+  } else if (!document.body.classList.contains('route-active') && typeof CHAT !== 'undefined') {
+    CHAT.open && CHAT.open();   // chat-first: open the assistant as the surface
+  }
+  if (typeof renderer !== 'undefined' && renderer && renderer.resize) renderer.resize();
+}
+
+// ── Floor display names (bundled FLOOR_NAMES + per-device override) ──────────
+const FLOOR_NAMES_LS_KEY = 'wayfinding-floor-names';
+let _floorNames = {};
+function _loadFloorNames() {
+  _floorNames = Object.assign({}, (typeof FLOOR_NAMES !== 'undefined' ? FLOOR_NAMES : {}));
+  try {
+    const raw = localStorage.getItem(FLOOR_NAMES_LS_KEY);
+    if (raw) Object.assign(_floorNames, JSON.parse(raw));
+  } catch (_) {}
+}
+function _floorLabel(f) {
+  return _floorNames[f] || `Floor ${f + 1}`;
+}
+function renameCurrentFloor() {
+  const cur = _floorLabel(STATE.currentFloor);
+  const name = prompt(`Rename "${cur}":`, cur);
+  if (name === null) return;
+  const trimmed = name.trim();
+  if (!trimmed) return;
+  _floorNames[STATE.currentFloor] = trimmed;
+  try { localStorage.setItem(FLOOR_NAMES_LS_KEY, JSON.stringify(_floorNames)); } catch (_) {}
+  _syncFloorDisplay();
+  _flashCaptureFeedback(`Floor renamed to "${trimmed}". Use Floors → Deploy to publish to all devices.`);
+}
 
 // ── Capture points (fieldwork coordinate capture) ──────────────────────────────
 // Each entry: { floor, row, col, name }  keyed by office name (one coord per office).
@@ -208,6 +251,9 @@ const DOM = {
   floorDown:       $('floorDown'),
   floorUp:         $('floorUp'),
   floorDisplay:    $('floorDisplay'),
+  renameFloorBtn:  $('renameFloorBtn'),
+  adminToggleBtn:  $('adminToggleBtn'),
+  askAgainBtn:     $('askAgainBtn'),
   infoStart:       $('infoStart'),
   infoEnd:         $('infoEnd'),
   infoSteps:       $('infoSteps'),
@@ -359,6 +405,9 @@ function navigateToDepartment(deptName, subservice) {
   renderer.setEnd(STATE.endId);
   recompute();
 
+  // User (chat-first) view: reveal the map now that there's a route to show.
+  if (STATE.viewMode === 'user') document.body.classList.add('route-active');
+
   // Tell the user what's happening.
   if (loc.fallback) {
     _showStairToast(`📍 ${deptName} isn't pinned yet — routing to the Information desk. Please ask there.`);
@@ -378,7 +427,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof syncStampPresetsBundle === 'function') syncStampPresetsBundle();
   loadCaptures();         // restore any fieldwork coordinate captures
   _loadCustomOffices();   // restore any on-site custom offices
-  navInit();       // initialise NAV.position to grid center
+  _loadFloorNames();      // bundled FLOOR_NAMES + any local rename overrides
+  navInit();       // initialise NAV.position to the default entrance tile
   loadGridState(); // restore saved floor plan (after navInit so NODES exist)
 
   // Init chat widget
@@ -510,6 +560,20 @@ document.addEventListener('DOMContentLoaded', () => {
   DOM.exportFloorsBtn.addEventListener('click', exportFloorPresetsFile);
   DOM.deployFloorsBtn.addEventListener('click', deployFloorPresetsToGit);
   DOM.dupFloorBtn.addEventListener('click', duplicateCurrentFloor);
+  DOM.renameFloorBtn.addEventListener('click', renameCurrentFloor);
+
+  // View-mode controls
+  DOM.adminToggleBtn.addEventListener('click', () => {
+    if (STATE.viewMode === 'admin') { setViewMode('user'); return; }   // exit needs no PIN
+    const pin = prompt('Enter staff PIN to access admin tools:');
+    if (pin === null) return;
+    if (pin === ADMIN_PIN) setViewMode('admin');
+    else alert('Incorrect PIN.');
+  });
+  DOM.askAgainBtn.addEventListener('click', () => {
+    document.body.classList.remove('route-active');
+    if (typeof CHAT !== 'undefined' && CHAT.open) CHAT.open();
+  });
   DOM.exportStampsBtn.addEventListener('click', exportStampPresetsFile);
   DOM.deployStampsBtn.addEventListener('click', deployStampPresetsToGit);
 
@@ -745,6 +809,9 @@ document.addEventListener('DOMContentLoaded', () => {
   renderPresets();
   updateInfoBar();
   _syncFloorDisplay();
+
+  // Default to the citizen (chat-first) view. Kiosk-safe: never starts in admin.
+  setViewMode('user');
 });
 
 // ── Cell interaction ──────────────────────────────────────────────────────────
@@ -1428,7 +1495,7 @@ function switchFloor(newFloor) {
 }
 
 function _syncFloorDisplay() {
-  DOM.floorDisplay.textContent = `Floor ${STATE.currentFloor + 1}`;
+  DOM.floorDisplay.textContent = _floorLabel(STATE.currentFloor);
 }
 
 // ── Stair UI ──────────────────────────────────────────────────────────────────
@@ -1590,7 +1657,7 @@ function _applyStatePayload(data) {
       else { n.cellType = v || 'open'; n.wall = n.cellType === 'wall'; }
     });
     localStorage.setItem('wayfinding-grid-v1', JSON.stringify(data.grid));
-    if (DOM.floorDisplay) DOM.floorDisplay.textContent = `Floor ${floor + 1}`;
+    if (DOM.floorDisplay) DOM.floorDisplay.textContent = _floorLabel(floor);
   }
   // Stamp placements
   if (Array.isArray(data.stampPlacements)) {
@@ -1747,6 +1814,8 @@ function exportFloorPresetsFile() {
   out.push('// (overwriting stale localStorage) when the stored version differs.');
   out.push(`const FLOOR_PRESETS_VERSION = ${newVer};   // exported from app at v${curVer}`);
   out.push('');
+  out.push('const FLOOR_NAMES = ' + JSON.stringify(_floorNames, null, 2) + ';');
+  out.push('');
   out.push('const FLOOR_PRESETS = {');
 
   const floors = Object.keys(allFloors).map(Number)
@@ -1854,6 +1923,8 @@ async function deployFloorPresetsToGit() {
   out.push('// Bump this whenever the bundled layout changes — the app re-applies presets');
   out.push('// (overwriting stale localStorage) when the stored version differs.');
   out.push(`const FLOOR_PRESETS_VERSION = ${newVer};   // deployed from app at v${curVer}`);
+  out.push('');
+  out.push('const FLOOR_NAMES = ' + JSON.stringify(_floorNames, null, 2) + ';');
   out.push('');
   out.push('const FLOOR_PRESETS = {');
   const floors = Object.keys(allFloors).map(Number)

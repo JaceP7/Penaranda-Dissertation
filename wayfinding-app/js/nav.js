@@ -81,10 +81,9 @@ const NAV = {
 // ── Init ──────────────────────────────────────────────────────────────────────
 
 function navInit() {
-  NAV.position = {
-    row: Math.floor(GRID_ROWS / 2),
-    col: Math.floor(GRID_COLS / 2),
-  };
+  // Default starting tile until a QR scan or real-coordinate fix arrives:
+  // the Ground Floor entrance (internal floor 1), cell (38, 72).
+  NAV.position = { row: 38, col: 72 };
 }
 
 // ── Position ──────────────────────────────────────────────────────────────────

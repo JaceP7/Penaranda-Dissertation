@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=34" />
+  <link rel="stylesheet" href="css/app.css?v=35" />
 </head>
-<body>
+<body class="view-user">
 
   <!-- ═══ HEADER ═══════════════════════════════════════════════════════ -->
   <header class="app-header">
@@ -51,6 +51,7 @@
         <button id="floorDown" class="btn btn-ghost btn-floor-step" title="Go to lower floor">▼</button>
         <span   id="floorDisplay" class="floor-label">Floor 1</span>
         <button id="floorUp"   class="btn btn-ghost btn-floor-step" title="Go to upper floor">▲</button>
+        <button id="renameFloorBtn" class="btn btn-ghost btn-floor-step btn-rename-floor" title="Rename this floor (admin)">✏️</button>
       </div>
 
       <!-- ── Mobile overflow toggle (hidden on desktop) ───────────── -->
@@ -58,6 +59,12 @@
 
     </div>
   </header>
+
+  <!-- ═══ VIEW-MODE CONTROLS (fixed; survive header hiding) ═══════════════ -->
+  <!-- Admin toggle: PIN-gated entry to the full editor; tap again to exit. -->
+  <button id="adminToggleBtn" class="admin-toggle" title="Staff / admin access">🔧</button>
+  <!-- User-view "ask again": reopens the Services chat after a route is shown. -->
+  <button id="askAgainBtn" class="ask-again-btn" title="Ask the assistant again">💬 Ask again</button>
 
   <!-- ═══ MAIN ══════════════════════════════════════════════════════════ -->
   <main class="app-body">
@@ -277,15 +284,15 @@
   <script src="js/lib/qrcode.min.js"></script>
 
   <script src="js/data.js?v=32"></script>
-  <script src="js/floor_presets.js?v=31"></script>
+  <script src="js/floor_presets.js?v=32"></script>
   <script src="js/stamp_presets.js?v=2"></script>
-  <script src="js/service_locations.js?v=2"></script>
+  <script src="js/service_locations.js?v=3"></script>
   <script src="js/dijkstra.js?v=30"></script>
   <script src="js/renderer.js?v=31"></script>
   <script src="js/compass.js?v=31"></script>
-  <script src="js/nav.js?v=32"></script>
-  <script src="js/app.js?v=48"></script>
-  <script src="js/chat.js?v=32"></script>
+  <script src="js/nav.js?v=33"></script>
+  <script src="js/app.js?v=49"></script>
+  <script src="js/chat.js?v=33"></script>
 
 </body>
 </html>

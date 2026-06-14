@@ -294,5 +294,9 @@ const CHAT = (() => {
 
   function init() { _buildDOM(); }
 
-  return { init, onNavigate, toggle };
+  // Imperative open/close for the view-mode controller (chat-first user view).
+  function open()  { if (!_open) toggle(); }
+  function close() { if (_open) toggle(); }
+
+  return { init, onNavigate, toggle, open, close };
 })();

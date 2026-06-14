@@ -858,6 +858,72 @@ body {
   margin: 4px 0;
 }
 
+/* ─── Back-to-Services "Home" button ─────────────────────────── */
+.btn-home {
+  background: #059669;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+}
+.btn-home:hover { background: #047857; color: #fff; }
+
+/* ═══ View-mode separation: user (citizen, chat-first) vs admin (editor) ═══ */
+
+/* Admin entry toggle — fixed bottom-left, survives header hiding */
+.admin-toggle {
+  position: fixed; bottom: 18px; left: 18px; z-index: 1200;
+  width: 44px; height: 44px; border-radius: 50%;
+  border: none; background: rgba(30, 41, 59, 0.78); color: #e2e8f0;
+  font-size: 1.1rem; cursor: pointer; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
+  display: flex; align-items: center; justify-content: center;
+}
+.admin-toggle:hover { background: #1e293b; }
+body.view-admin .admin-toggle { background: #B45309; color: #fff; }  /* amber in admin */
+
+/* "Ask again" — user view, shown only after a route is drawn */
+.ask-again-btn {
+  position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+  z-index: 1200; display: none;
+  background: #1E40AF; color: #fff; border: none; border-radius: 40px;
+  padding: 11px 22px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+body.view-user.route-active .ask-again-btn { display: inline-block; }
+
+/* USER VIEW — hide all editing / admin chrome */
+body.view-user .header-secondary,
+body.view-user .floor-actions-dropdown,
+body.view-user #syncBtn,
+body.view-user .btn-admin,
+body.view-user .btn-home,
+body.view-user #captureModeBtn,
+body.view-user #navModeBtn,
+body.view-user #mobileMenuBtn,
+body.view-user #floorDown,
+body.view-user #floorUp,
+body.view-user #renameFloorBtn { display: none !important; }
+
+/* USER VIEW header → slim, centered title; floor label stays as a read-only chip */
+body.view-user .app-header { justify-content: center; }
+body.view-user .app-header h1 { font-size: 1rem; }
+
+/* USER VIEW chat-first — map hidden until a route is drawn */
+body.view-user:not(.route-active) .app-body { visibility: hidden; }
+/* enlarge + centre the chat as the primary surface (before a route) */
+body.view-user:not(.route-active) .chat-panel.chat-open {
+  width: min(560px, 94vw);
+  height: min(72vh, 620px);
+  left: 50%; right: auto;
+  transform: translateX(-50%) translateY(0) scale(1);
+  bottom: 76px;
+}
+
+/* ADMIN VIEW — never show the citizen "ask again" button */
+body.view-admin .ask-again-btn { display: none !important; }
+
 .btn-cat-del {
   background: #FEE2E2;
   color: #991B1B;
