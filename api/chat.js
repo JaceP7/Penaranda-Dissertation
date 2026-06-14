@@ -28,6 +28,30 @@ const TOP_K       = 6;
 const UPSTASH_URL   = (process.env.UPSTASH_VECTOR_REST_URL || '').replace(/\/$/, '');
 const UPSTASH_TOKEN = process.env.UPSTASH_VECTOR_REST_TOKEN || '';
 
+// Optional Upstash Redis for live-site analytics logging. If these env vars
+// aren't set, logging is silently skipped (the chat still works).
+const REDIS_URL   = (process.env.UPSTASH_REDIS_REST_URL || '').replace(/\/$/, '');
+const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || '';
+const LOG_KEY     = 'wf:querylog';
+const LOG_CAP     = 5000;   // keep the most recent N entries
+
+async function logQuery(entry) {
+  if (!REDIS_URL || !REDIS_TOKEN) return;   // logging not configured → skip
+  try {
+    const post = (cmd) => fetch(REDIS_URL, {
+      method:  'POST',
+      headers: { 'Authorization': `Bearer ${REDIS_TOKEN}`, 'Content-Type': 'application/json' },
+      body:    JSON.stringify(cmd),
+    });
+    await post(['LPUSH', LOG_KEY, JSON.stringify(entry)]);
+    await post(['LTRIM', LOG_KEY, '0', String(LOG_CAP - 1)]);
+  } catch (_) { /* best-effort; never break the chat on a logging failure */ }
+}
+
+// Crude language tag for analytics (matches the local server's fil/en split).
+const _FIL = /\b(saan|paano|pano|kumuha|magkano|ano|po|ng|sa|mag|ako|kailangan|pwede|para)\b/i;
+function langTag(q) { return _FIL.test(q || '') ? 'fil' : 'en'; }
+
 // ── Upstash Vector retrieval (server-side embedding) ──────────────────────────
 async function upstashQuery(text, topK = TOP_K) {
   const r = await fetch(`${UPSTASH_URL}/query-data`, {
@@ -115,6 +139,7 @@ module.exports = async function handler(req, res) {
     });
   }
 
+  const t0 = Date.now();
   const { query, history = [] } = req.body || {};
   if (!query || typeof query !== 'string') {
     return res.status(400).json({ error: 'query is required' });
@@ -128,6 +153,8 @@ module.exports = async function handler(req, res) {
     return res.status(502).json({ error: 'Vector search failed', detail: err.message });
   }
   if (!results.length) {
+    await logQuery({ ts: Date.now(), query, department: null, subservice: null,
+                     needsContext: false, latency_ms: Date.now() - t0, lang: langTag(query) });
     return res.status(200).json({
       answer: "I couldn't find that in the Calamba City Hall services. Please ask at the Information desk.",
       department: null, subservice: null, needsContext: false, options: [], rate_limited: false,
@@ -174,6 +201,9 @@ module.exports = async function handler(req, res) {
     const hit = results.find(r => (r.department || '').toUpperCase() === dept.toUpperCase());
     subservice = (hit || results[0]).subservice || null;
   }
+
+  await logQuery({ ts: Date.now(), query, department: dept || null, subservice,
+                   needsContext, latency_ms: Date.now() - t0, lang: langTag(query) });
 
   return res.status(200).json({
     answer,

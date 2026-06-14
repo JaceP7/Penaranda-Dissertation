@@ -52,6 +52,23 @@ Open `https://penaranda-dissertation.vercel.app`, ask the chat:
 You should get a grounded Taglish answer with requirements, a "Go to:" line,
 and a **Take me there** button that routes on the map.
 
+## Live-site analytics (optional, ~3 min)
+
+So real website queries appear in `/admin.html` (the serverless chat logs each
+query to Upstash **Redis**; the analytics function reads it back).
+
+1. Upstash console → **Redis → Create Database** (free tier). Name it anything.
+2. Open it → **REST** tab → copy **`UPSTASH_REDIS_REST_URL`** + **`UPSTASH_REDIS_REST_TOKEN`**.
+   *(These are DIFFERENT from the Vector URL/token — Redis ≠ Vector.)*
+3. Vercel → Settings → Environment Variables → add both (Production + Preview).
+4. Redeploy.
+
+Now every website chat is logged (capped at the most recent 5,000), and
+`penaranda-dissertation.vercel.app/admin.html` shows total / today / avg latency /
+ambiguity rate / top departments / top sub-services / queries-per-day / recent
+queries. Without these vars, the chat still works — it just skips logging and the
+dashboard shows a "not configured" note.
+
 ## Notes / caveats
 
 - **Different embedding model.** This uses `bge-m3` (via Upstash), not the
