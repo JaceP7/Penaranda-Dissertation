@@ -17,7 +17,7 @@
 // Bump this whenever the bundled stamp data changes. The app's
 // applyStampPresets() runs when this differs from the cached version
 // in localStorage.
-const STAMP_PRESETS_VERSION = 1;
+const STAMP_PRESETS_VERSION = 2;   // floors 0<->1 swapped
 
 /**
  * Bundled stamp placements — each is { id, name, row, col, size, floor, source: 'bundled' }.
@@ -29,7 +29,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 68,
     "col": 50,
     "size": 5,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -38,7 +38,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 63,
     "col": 16,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -47,7 +47,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 56,
     "col": 9,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -56,7 +56,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 52,
     "col": 5,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -65,7 +65,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 19,
     "col": 7,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -74,7 +74,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 9,
     "col": 17,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -83,7 +83,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 2,
     "col": 26,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -92,7 +92,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 2,
     "col": 28,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -101,7 +101,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 2,
     "col": 46,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -110,7 +110,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 47,
     "col": 2,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -119,7 +119,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 8,
     "col": 55,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -128,7 +128,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 17,
     "col": 64,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -137,7 +137,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 21,
     "col": 68,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -146,7 +146,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 31,
     "col": 70,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -155,7 +155,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 31,
     "col": 64,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -164,7 +164,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 41,
     "col": 70,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -173,7 +173,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 41,
     "col": 64,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -182,7 +182,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 47,
     "col": 71,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -191,7 +191,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 53,
     "col": 66,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -200,7 +200,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 56,
     "col": 63,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -209,7 +209,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 61,
     "col": 58,
     "size": 3,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -218,7 +218,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 36,
     "col": 36,
     "size": 5,
-    "floor": 0,
+    "floor": 1,
     "source": "bundled"
   },
   {
@@ -227,7 +227,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 37,
     "col": 37,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -236,7 +236,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 70,
     "col": 26,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -245,7 +245,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 63,
     "col": 16,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -254,7 +254,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 57,
     "col": 10,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -263,7 +263,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 53,
     "col": 6,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -272,7 +272,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 51,
     "col": 4,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -281,7 +281,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 43,
     "col": 2,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -290,7 +290,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 31,
     "col": 2,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -299,7 +299,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 17,
     "col": 8,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -308,7 +308,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 10,
     "col": 15,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -317,7 +317,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 14,
     "col": 19,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -326,7 +326,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 2,
     "col": 28,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -335,7 +335,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 2,
     "col": 45,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -344,7 +344,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 11,
     "col": 29,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -353,7 +353,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 9,
     "col": 57,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -362,7 +362,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 13,
     "col": 53,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -371,7 +371,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 15,
     "col": 63,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -380,7 +380,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 19,
     "col": 67,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -389,7 +389,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 30,
     "col": 71,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -398,7 +398,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 38,
     "col": 71,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -407,7 +407,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 54,
     "col": 66,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -416,7 +416,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 66,
     "col": 54,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -425,7 +425,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 70,
     "col": 48,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -434,7 +434,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 70,
     "col": 42,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {
@@ -443,7 +443,7 @@ const STAMP_PLACEMENTS_BUNDLED = [
     "row": 70,
     "col": 29,
     "size": 3,
-    "floor": 1,
+    "floor": 0,
     "source": "bundled"
   },
   {

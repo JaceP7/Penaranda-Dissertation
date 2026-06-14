@@ -64,7 +64,8 @@ const SEPARATE_CAMPUS = new Set([
 const SERVICE_FALLBACK_STAMP = "MOPAC";   // Mayor's Office Public Assistance Center
 
 // ── Default building entrance (used when the user has no PDR fix yet) ──────
-const SERVICE_DEFAULT_ENTRANCE = { floor: 0, row: 38, col: 70 };  // GF east entrance
+// Ground Floor is now internal index 1 (Lower Ground = 0). Entrance is on Ground.
+const SERVICE_DEFAULT_ENTRANCE = { floor: 1, row: 38, col: 70 };  // GF east entrance
 
 // ── Normalised lookup (build once) ────────────────────────────────────────
 function _svcNorm(s) {

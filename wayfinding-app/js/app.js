@@ -293,7 +293,7 @@ async function _loadDepartments() {
 
 // Human floor names for routing messages.
 function _floorName(f) {
-  return ({ 0: "the Ground Floor", 1: "the Lower Ground Floor",
+  return ({ 0: "the Lower Ground Floor", 1: "the Ground Floor",
             2: "the 2nd Floor", 3: "the 3rd Floor" }[f]) || `Floor ${f + 1}`;
 }
 
