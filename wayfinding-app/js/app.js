@@ -568,6 +568,13 @@ function _updateNavInstruction() {
   el.style.display = '';
 }
 
+// Hide the dev-server-only buttons (Sync / Deploy Floors / Deploy Stamps).
+function _hideDevOnlyButtons() {
+  [DOM.syncBtn, DOM.deployFloorsBtn, DOM.deployStampsBtn].forEach(b => {
+    if (b) b.style.display = 'none';
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   loadStampPlacements();
   loadStampPresets();
@@ -771,38 +778,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btn) btn.addEventListener('click', _closeFloorMenu);
   });
 
-  // Same probe that hides Sync / Deploy Floors also hides Deploy Stamps — it
-  // requires the local dev server's /api/deploy-stamps endpoint. The Export
-  // Stamps button (download only) stays visible everywhere.
-  (() => {
-    if (!DOM.deployStampsBtn) return;
-    const controller = new AbortController();
-    const tid = setTimeout(() => controller.abort(), 2000);
-    fetch('/api/state', { method: 'GET', signal: controller.signal })
-      .then(res => { clearTimeout(tid); if (!res.ok) DOM.deployStampsBtn.style.display = 'none'; })
-      .catch(() => { clearTimeout(tid); DOM.deployStampsBtn.style.display = 'none'; });
-  })();
-
-  // Probe /api/state on init — the sync feature and the one-click Deploy
-  // Floors feature only work against the local dev server (serve_https.py).
-  // Vercel doesn't expose these endpoints, so hide the buttons if the probe
-  // fails. The Export Floors button (manual download) stays visible always.
+  // Sync, Deploy Floors, and Deploy Stamps all need the local dev server
+  // (serve_https.py) — Vercel exposes neither /api/state nor /api/deploy-*.
+  // One probe hides all three when it's unreachable; the download-only Export
+  // buttons stay visible everywhere.
   (() => {
     const controller = new AbortController();
     const tid = setTimeout(() => controller.abort(), 2000);
     fetch('/api/state', { method: 'GET', signal: controller.signal })
-      .then(res => {
-        clearTimeout(tid);
-        if (!res.ok) {
-          DOM.syncBtn.style.display = 'none';
-          DOM.deployFloorsBtn.style.display = 'none';
-        }
-      })
-      .catch(() => {
-        clearTimeout(tid);
-        DOM.syncBtn.style.display = 'none';
-        DOM.deployFloorsBtn.style.display = 'none';
-      });
+      .then(res => { clearTimeout(tid); if (!res.ok) _hideDevOnlyButtons(); })
+      .catch(() => { clearTimeout(tid); _hideDevOnlyButtons(); });
   })();
   DOM.mobileMenuBtn.addEventListener('click', () => {
     const open = DOM.headerSecondary.classList.toggle('open');
@@ -2069,17 +2054,20 @@ function duplicateCurrentFloor() {
  *   - Backward-compatible: legacy boolean cells are upgraded to "wall"/"open"
  *     strings on export.
  */
-function exportFloorPresetsFile() {
-  // 1. Gather current cell types for every floor.
+/**
+ * Build the floor_presets.js file content from the current floors. Shared by
+ * the Export (download) and Deploy (git push) buttons so the two can never
+ * drift apart. Mirrors _buildStampPresetsJS(). Returns the file text plus the
+ * version + counts the callers report to the user.
+ */
+function _buildFloorPresetsJS() {
   const allFloors = Object.assign({}, FLOOR_WALLS);
   allFloors[STATE.currentFloor] = NODES.map(n => n.cellType || 'open');
 
-  // 2. Bump version (existing devices will re-apply automatically).
   const curVer = (typeof FLOOR_PRESETS_VERSION === 'number') ? FLOOR_PRESETS_VERSION : 2;
   const newVer = curVer + 1;
   const stamp  = new Date().toISOString();
 
-  // 3. Build the new file content as a string.
   const out = [];
   out.push('/**');
   out.push(' * floor_presets.js — pre-built 75×75 grid layouts for all 4 floors of');
@@ -2089,7 +2077,7 @@ function exportFloorPresetsFile() {
   out.push(' * After load, the user can edit freely in the Map Editor as usual.');
   out.push(' *');
   out.push(` * AUTO-EXPORTED from the running app on ${stamp}.`);
-  out.push(' * Do not hand-edit the cell arrays — use the "Export Floors" button instead.');
+  out.push(' * Do not hand-edit the cell arrays — use Floors ▾ → Export/Deploy Floors instead.');
   out.push(' */');
   out.push('');
   out.push('"use strict";');
@@ -2097,7 +2085,7 @@ function exportFloorPresetsFile() {
   out.push(`const FLOOR_PRESETS_GRID_SIZE = ${GRID_ROWS};`);
   out.push('// Bump this whenever the bundled layout changes — the app re-applies presets');
   out.push('// (overwriting stale localStorage) when the stored version differs.');
-  out.push(`const FLOOR_PRESETS_VERSION = ${newVer};   // exported from app at v${curVer}`);
+  out.push(`const FLOOR_PRESETS_VERSION = ${newVer};   // baked from app at v${curVer}`);
   out.push('');
   out.push('const FLOOR_NAMES = ' + JSON.stringify(_floorNames, null, 2) + ';');
   out.push('');
@@ -2111,13 +2099,11 @@ function exportFloorPresetsFile() {
     if (!Array.isArray(arr)) continue;
     const cells = arr.map(v =>
       typeof v === 'boolean' ? (v ? 'wall' : 'open') : (v || 'open'));
-    const lineArr = '[' + cells.map(c => `"${c}"`).join(',') + ']';
-    out.push(`  ${f}: ${lineArr},`);
+    out.push(`  ${f}: [${cells.map(c => `"${c}"`).join(',')}],`);
   }
   out.push('};');
   out.push('');
 
-  // 4. Preserve FLOOR_PRESETS_DEPARTMENTS verbatim (suggested office centroids).
   out.push('/** Suggested department centroids per floor, keyed by office name. */');
   if (typeof FLOOR_PRESETS_DEPARTMENTS !== 'undefined') {
     out.push('const FLOOR_PRESETS_DEPARTMENTS = '
@@ -2127,7 +2113,6 @@ function exportFloorPresetsFile() {
   }
   out.push('');
 
-  // 5. applyFloorPresets() function (preserved from original).
   out.push('/**');
   out.push(' * Populate FLOOR_WALLS from the bundled presets.');
   out.push(' * Returns the number of floors populated.');
@@ -2142,9 +2127,13 @@ function exportFloorPresetsFile() {
   out.push('}');
   out.push('');
 
-  const content = out.join('\n');
+  const cellCount = floors.reduce((sum, f) => sum + (allFloors[f]?.length || 0), 0);
+  return { content: out.join('\n'), curVer, newVer, floors, cellCount };
+}
 
-  // 6. Trigger download.
+function exportFloorPresetsFile() {
+  const { content, curVer, newVer, floors, cellCount } = _buildFloorPresetsJS();
+
   const blob = new Blob([content], { type: 'text/javascript;charset=utf-8' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
@@ -2155,18 +2144,15 @@ function exportFloorPresetsFile() {
   a.remove();
   URL.revokeObjectURL(url);
 
-  // 7. User feedback.
-  const cellCount = floors.reduce((sum, f) => sum + (allFloors[f]?.length || 0), 0);
-  const msg = `Exported floor_presets.js\n\n` +
-              `Version:  v${curVer} → v${newVer}\n` +
-              `Floors:   ${floors.length}\n` +
-              `Cells:    ${cellCount.toLocaleString()}\n\n` +
-              `Next steps (on the laptop):\n` +
-              `  1. python tools/replace_floor_presets.py ~/Downloads/floor_presets.js\n` +
-              `  2. git add . && git commit -m "Update floor plans"\n` +
-              `  3. git push\n\n` +
-              `Vercel deploys in ~60s, then all devices see the new layout on next reload.`;
-  alert(msg);
+  alert(`Exported floor_presets.js\n\n` +
+        `Version:  v${curVer} → v${newVer}\n` +
+        `Floors:   ${floors.length}\n` +
+        `Cells:    ${cellCount.toLocaleString()}\n\n` +
+        `Next steps (on the laptop):\n` +
+        `  1. python tools/replace_floor_presets.py ~/Downloads/floor_presets.js\n` +
+        `  2. git add . && git commit -m "Update floor plans"\n` +
+        `  3. git push\n\n` +
+        `Vercel deploys in ~60s, then all devices see the new layout on next reload.`);
 }
 
 /**
@@ -2181,72 +2167,8 @@ function exportFloorPresetsFile() {
  * git step output on failure (e.g., merge conflict, auth issue).
  */
 async function deployFloorPresetsToGit() {
-  // Reuse the same content-building logic by inlining the same algorithm
-  // as exportFloorPresetsFile. (Keeping them separate keeps Export pure
-  // — it only downloads, never POSTs.)
-  const allFloors = Object.assign({}, FLOOR_WALLS);
-  allFloors[STATE.currentFloor] = NODES.map(n => n.cellType || 'open');
-  const curVer = (typeof FLOOR_PRESETS_VERSION === 'number') ? FLOOR_PRESETS_VERSION : 2;
-  const newVer = curVer + 1;
-  const stamp  = new Date().toISOString();
-
-  const out = [];
-  out.push('/**');
-  out.push(' * floor_presets.js — pre-built 75×75 grid layouts for all 4 floors of');
-  out.push(' * Calamba City Hall, generated from the anonymized floor plans.');
-  out.push(' *');
-  out.push(' * Loaded automatically on first app start (or after grid-size mismatch).');
-  out.push(' * After load, the user can edit freely in the Map Editor as usual.');
-  out.push(' *');
-  out.push(` * AUTO-DEPLOYED from the running app on ${stamp}.`);
-  out.push(' * Do not hand-edit the cell arrays — use the "Deploy Floors" button instead.');
-  out.push(' */');
-  out.push('');
-  out.push('"use strict";');
-  out.push('');
-  out.push(`const FLOOR_PRESETS_GRID_SIZE = ${GRID_ROWS};`);
-  out.push('// Bump this whenever the bundled layout changes — the app re-applies presets');
-  out.push('// (overwriting stale localStorage) when the stored version differs.');
-  out.push(`const FLOOR_PRESETS_VERSION = ${newVer};   // deployed from app at v${curVer}`);
-  out.push('');
-  out.push('const FLOOR_NAMES = ' + JSON.stringify(_floorNames, null, 2) + ';');
-  out.push('');
-  out.push('const FLOOR_PRESETS = {');
-  const floors = Object.keys(allFloors).map(Number)
-                       .filter(n => !isNaN(n))
-                       .sort((a, b) => a - b);
-  for (const f of floors) {
-    const arr = allFloors[f];
-    if (!Array.isArray(arr)) continue;
-    const cells = arr.map(v =>
-      typeof v === 'boolean' ? (v ? 'wall' : 'open') : (v || 'open'));
-    const lineArr = '[' + cells.map(c => `"${c}"`).join(',') + ']';
-    out.push(`  ${f}: ${lineArr},`);
-  }
-  out.push('};');
-  out.push('');
-  out.push('/** Suggested department centroids per floor, keyed by office name. */');
-  if (typeof FLOOR_PRESETS_DEPARTMENTS !== 'undefined') {
-    out.push('const FLOOR_PRESETS_DEPARTMENTS = '
-             + JSON.stringify(FLOOR_PRESETS_DEPARTMENTS, null, 2) + ';');
-  } else {
-    out.push('const FLOOR_PRESETS_DEPARTMENTS = {};');
-  }
-  out.push('');
-  out.push('/**');
-  out.push(' * Populate FLOOR_WALLS from the bundled presets.');
-  out.push(' * Returns the number of floors populated.');
-  out.push(' */');
-  out.push('function applyFloorPresets() {');
-  out.push('  let n = 0;');
-  out.push('  for (const [floor, cells] of Object.entries(FLOOR_PRESETS)) {');
-  out.push('    FLOOR_WALLS[Number(floor)] = cells.slice();');
-  out.push('    n++;');
-  out.push('  }');
-  out.push('  return n;');
-  out.push('}');
-  out.push('');
-  const content = out.join('\n');
+  // Same content as the Export Floors button, via the shared builder.
+  const { content, curVer, newVer, floors } = _buildFloorPresetsJS();
 
   // Confirmation dialog with editable commit message.
   const defaultMsg = `Update floor plans (presets v${curVer} → v${newVer})`;

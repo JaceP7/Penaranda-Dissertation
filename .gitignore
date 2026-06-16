@@ -63,3 +63,9 @@ _instruments.txt
 # ── Compiled Python ───────────────────────────────────────────────────────────
 __pycache__/
 *.pyc
+
+# ── Local manual backups + exported runtime data (not source) ─────────────────
+*.bak_*
+*.bak
+try.zip
+pdr_walks_*.json
