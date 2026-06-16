@@ -1414,25 +1414,42 @@ body.view-user.route-active .dir-panel.dir-open { display: block; }
   bottom: 20px;
   right: 20px;
   z-index: 1100;
-  width: 52px;
   height: 52px;
-  border-radius: 50%;
+  padding: 0 18px;
+  border-radius: 26px;
   border: none;
   background: #1E40AF;
   color: #fff;
-  font-size: 1.45rem;
   cursor: pointer;
   box-shadow: 0 4px 18px rgba(0,0,0,0.35);
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 9px;
+  font-size: 0.95rem;
+  font-weight: 700;
   transition: transform 0.15s ease, background 0.15s ease;
 }
-.chat-toggle-btn:hover { background: #1D4ED8; transform: scale(1.07); }
+.chat-toggle-btn:hover { background: #1D4ED8; transform: scale(1.04); }
+.chat-toggle-label { white-space: nowrap; }
+.chat-toggle-icon  { font-size: 1.3rem; line-height: 1; }
+
+/* Collapse the pill to just the icon while the chat panel is open. */
+.chat-toggle-btn[aria-expanded="true"] {
+  width: 52px;
+  padding: 0;
+  border-radius: 50%;
+  justify-content: center;
+}
+.chat-toggle-btn[aria-expanded="true"] .chat-toggle-label { display: none; }
+
+/* Narrow phones: keep the labeled pill from crowding the screen edge. */
+@media (max-width: 380px) {
+  .chat-toggle-btn { font-size: 0.85rem; padding: 0 14px; gap: 7px; }
+}
 
 .chat-badge {
   position: absolute;
-  top: 4px; right: 4px;
+  top: 2px; right: 6px;
   width: 10px; height: 10px;
   border-radius: 50%;
   background: #EF4444;

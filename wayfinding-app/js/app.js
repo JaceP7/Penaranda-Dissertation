@@ -48,9 +48,10 @@ function setViewMode(mode) {
   if (STATE.viewMode === 'admin') {
     document.body.classList.remove('route-active');   // admin sees the full map
     if (typeof _hideDirections === 'function') _hideDirections();
-  } else if (!document.body.classList.contains('route-active') && typeof CHAT !== 'undefined') {
-    CHAT.open && CHAT.open();   // chat-first: open the assistant as the surface
   }
+  // Citizen view starts collapsed: the Calamba hero shows with the labeled
+  // "City Services Assistant 💬" button as the call-to-action. Tapping it opens
+  // the assistant. (No auto-open — the button is the entry point.)
   if (typeof renderer !== 'undefined' && renderer && renderer.resize) renderer.resize();
 }
 

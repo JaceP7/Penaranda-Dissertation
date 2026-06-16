@@ -267,7 +267,11 @@ const CHAT = (() => {
     _toggleBtn.className = 'chat-toggle-btn';
     _toggleBtn.setAttribute('aria-label', 'Ask about city services');
     _toggleBtn.setAttribute('aria-expanded', 'false');
-    _toggleBtn.innerHTML = '💬';
+    // Labeled pill: "City Services Assistant" to the left of the 💬 icon.
+    // Collapses to just the icon while the panel is open (see app.css).
+    _toggleBtn.innerHTML =
+      '<span class="chat-toggle-label">City Services Assistant</span>' +
+      '<span class="chat-toggle-icon">💬</span>';
 
     _badge = document.createElement('span');
     _badge.className = 'chat-badge';

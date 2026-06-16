@@ -89,8 +89,10 @@ const NAV = {
 
 function navInit() {
   // Default starting tile until a QR scan or real-coordinate fix arrives:
-  // the Ground Floor entrance (internal floor 1), cell (38, 72).
-  NAV.position = { row: 38, col: 72 };
+  // the Ground Floor (internal floor 1) east public entrance, just inside the
+  // door (36,72) and beside the MOPAC counter. (38,72) is the outer wall, so
+  // the walkable cell is (38,71) in the entrance corridor (open cols 65-71).
+  NAV.position = { row: 38, col: 71 };
 }
 
 // ── Deep-link / QR payload parsing ──────────────────────────────────────────
