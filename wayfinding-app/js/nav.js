@@ -68,6 +68,13 @@ const NAV = {
   _stream: null, // camera MediaStream
   _scanLoop: null, // rAF handle for QR decode loop
 
+  // ── Posted-QR deep links ───────────────────────────────────────────────────
+  // Posted QR codes encode a full app URL (e.g. https://app/?qr=1:38,72) so a
+  // citizen can scan them with their phone's NATIVE camera and land in the app
+  // with their location already set — no in-app scanner needed. Set this to the
+  // public deployment URL when generating QRs from a localhost dev session.
+  deepLinkBase: null,
+
   /** Called whenever position changes: (row, col) => void */
   onPositionChange: null,
   /** Called when a scanned QR specifies a different floor: (floor) => void */
@@ -84,6 +91,50 @@ function navInit() {
   // Default starting tile until a QR scan or real-coordinate fix arrives:
   // the Ground Floor entrance (internal floor 1), cell (38, 72).
   NAV.position = { row: 38, col: 72 };
+}
+
+// ── Deep-link / QR payload parsing ──────────────────────────────────────────
+
+/**
+ * Parse a location string into { floor, row, col } (internal 0-indexed floor).
+ * Accepts every form a posted or in-app QR might carry:
+ *   "GRID:1:38,72"                     in-app QR payload (new)
+ *   "GRID:38,72"                       legacy payload (assumes floor 0)
+ *   "https://app/?qr=1:38,72"          posted-QR deep link (native camera)
+ *   "1:38,72"  /  "38,72"              bare manual entry
+ * Returns null if it can't extract two coordinates + an optional floor.
+ */
+function navParseDeepLink(str) {
+  if (!str) return null;
+  let s = String(str).trim();
+
+  // If it's a URL (or carries a query param), pull out qr/loc/at.
+  const q = s.match(/[?&](?:qr|loc|at)=([^&#]+)/i);
+  if (q) {
+    try { s = decodeURIComponent(q[1]); } catch (_) { s = q[1]; }
+  }
+
+  s = s.replace(/^GRID:/i, "");
+
+  let floor = 0,
+    rest = s;
+  if (s.includes(":")) {
+    const i = s.indexOf(":");
+    floor = parseInt(s.slice(0, i), 10);
+    rest = s.slice(i + 1);
+  }
+
+  const parts = rest.split(",").map((x) => parseInt(x.trim(), 10));
+  if (parts.length !== 2 || isNaN(parts[0]) || isNaN(parts[1]) || isNaN(floor))
+    return null;
+  return { floor, row: parts[0], col: parts[1] };
+}
+
+/** Build a posted-QR deep-link URL for a cell (native-camera scannable). */
+function navBuildDeepLinkURL(floor, row, col) {
+  let base = NAV.deepLinkBase || location.origin + location.pathname;
+  base = base.replace(/[?#].*$/, ""); // strip any existing query/hash
+  return `${base}?qr=${floor}:${row},${col}`;
 }
 
 // ── Position ──────────────────────────────────────────────────────────────────
@@ -392,33 +443,18 @@ function _navQRLoop(videoEl, canvasEl, onFound) {
         inversionAttempts: "dontInvert",
       });
 
-      if (code && code.data.startsWith("GRID:")) {
-        const payload = code.data.slice(5);
-        let floor = 0,
-          r,
-          c;
-
-        if (payload.includes(":")) {
-          // New format: GRID:floor:row,col
-          const colonIdx = payload.indexOf(":");
-          floor = parseInt(payload.slice(0, colonIdx));
-          const parts = payload.slice(colonIdx + 1).split(",");
-          r = parseInt(parts[0]);
-          c = parseInt(parts[1]);
-        } else {
-          // Legacy format: GRID:row,col
-          const parts = payload.split(",");
-          r = parseInt(parts[0]);
-          c = parseInt(parts[1]);
-        }
-
-        if (!isNaN(r) && !isNaN(c) && !isNaN(floor)) {
+      // Accept both the in-app "GRID:floor:row,col" payload and a posted-QR
+      // deep-link URL ("https://app/?qr=floor:row,col"); navParseDeepLink
+      // returns null for any unrelated QR so we ignore those.
+      if (code) {
+        const loc = navParseDeepLink(code.data);
+        if (loc) {
           navStopQRScan();
-          if (floor !== NAV._currentFloor && NAV.onFloorChange)
-            NAV.onFloorChange(floor);
-          navSetPosition(r, c);
+          if (loc.floor !== NAV._currentFloor && NAV.onFloorChange)
+            NAV.onFloorChange(loc.floor);
+          navSetPosition(loc.row, loc.col);
           NAV._hasQRFix = true; // A2: first real fix recorded
-          if (onFound) onFound(r, c);
+          if (onFound) onFound(loc.row, loc.col);
           return;
         }
       }
@@ -445,10 +481,16 @@ function navStopQRScan() {
 
 /**
  * Render a QR code for a grid cell onto targetDiv.
- * Encodes "GRID:floor:row,col" — same format scanned above.
+ * By default encodes a posted-QR deep-link URL ("https://app/?qr=floor:row,col")
+ * so it works with a phone's native camera; pass {format:'grid'} for the legacy
+ * "GRID:floor:row,col" payload (in-app scanner only).
  */
-function navGenerateQR(floor, row, col, targetDiv) {
-  const text = `GRID:${floor}:${row},${col}`;
+function navGenerateQR(floor, row, col, targetDiv, opts) {
+  opts = opts || {};
+  const text =
+    opts.format === "grid"
+      ? `GRID:${floor}:${row},${col}`
+      : navBuildDeepLinkURL(floor, row, col);
   targetDiv.innerHTML = "";
   if (typeof QRCode !== "undefined") {
     new QRCode(targetDiv, {

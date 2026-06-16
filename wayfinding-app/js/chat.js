@@ -12,8 +12,21 @@ const CHAT = (() => {
   let _loading   = false;
   const _messages = [];   // { role, text, department?, subservice?, options? }
 
+  // ── Tappable starter prompts (citizens' own phones — most have no idea
+  //    what to type first). Label is the chip; query is the full sentence
+  //    sent to the RAG so retrieval gets clean natural language. Drawn from
+  //    the most-requested Calamba City Hall Citizen's Charter services. ──
+  const STARTERS = [
+    { label: 'Business permit',     query: 'How do I get a business permit?' },
+    { label: 'Cedula',              query: 'How do I get a cedula (community tax certificate)?' },
+    { label: 'Marriage certificate',query: 'How do I request a marriage certificate?' },
+    { label: 'Senior citizen ID',   query: 'How do I apply for a senior citizen ID?' },
+    { label: 'Real property tax',   query: 'How do I pay real property tax?' },
+    { label: 'Building permit',     query: 'How do I get a building permit?' },
+  ];
+
   // ── DOM refs ─────────────────────────────────────────────────────────
-  let _panel, _msgList, _input, _sendBtn, _toggleBtn, _badge;
+  let _panel, _msgList, _input, _sendBtn, _toggleBtn, _badge, _starters;
 
   // ── Navigate callback — wired by app.js ──────────────────────────────
   let _onNavigate = null;
@@ -124,6 +137,7 @@ const CHAT = (() => {
   }
 
   function _renderMessages() {
+    _updateStarters();
     _msgList.innerHTML = '';
 
     _messages.forEach((msg, idx) => {
@@ -272,6 +286,11 @@ const CHAT = (() => {
         <button class="chat-close-btn" aria-label="Close chat">✕</button>
       </div>
       <div class="chat-intro">Ask me about any Calamba City Hall service and I'll guide you there.</div>
+      <div class="chat-starters" id="chatStarters">
+        <div class="chat-starters-label">Common requests — tap one:</div>
+        <div class="chat-starters-chips" id="chatStartersChips"></div>
+        <div class="chat-qr-hint">📷 Already inside City Hall? <strong>Scan the QR posted near you</strong> to set your location for accurate directions.</div>
+      </div>
       <div class="chat-messages" id="chatMessages"></div>
       <div class="chat-input-row">
         <input  class="chat-input"  id="chatInput"  type="text"
@@ -283,13 +302,34 @@ const CHAT = (() => {
     document.body.appendChild(_toggleBtn);
     document.body.appendChild(_panel);
 
-    _msgList = document.getElementById('chatMessages');
-    _input   = document.getElementById('chatInput');
-    _sendBtn = document.getElementById('chatSendBtn');
+    _msgList  = document.getElementById('chatMessages');
+    _input    = document.getElementById('chatInput');
+    _sendBtn  = document.getElementById('chatSendBtn');
+    _starters = document.getElementById('chatStarters');
+
+    // Build the tappable starter chips once.
+    const chipsWrap = document.getElementById('chatStartersChips');
+    STARTERS.forEach(s => {
+      const chip = document.createElement('button');
+      chip.className = 'chat-starter-chip';
+      chip.textContent = s.label;
+      chip.addEventListener('click', () => {
+        if (_loading) return;
+        _input.value = s.query;
+        send();
+      });
+      chipsWrap.appendChild(chip);
+    });
 
     _panel.querySelector('.chat-close-btn').addEventListener('click', toggle);
     _sendBtn.addEventListener('click', send);
     _input.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
+  }
+
+  // Starters only help before the first exchange — hide them once the
+  // conversation begins so they don't clutter the thread.
+  function _updateStarters() {
+    if (_starters) _starters.style.display = _messages.length === 0 ? '' : 'none';
   }
 
   function init() { _buildDOM(); }

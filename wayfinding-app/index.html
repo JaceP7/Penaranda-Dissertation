@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=36" />
+  <link rel="stylesheet" href="css/app.css?v=37" />
 </head>
 <body class="view-user">
 
@@ -243,6 +243,15 @@
       <button id="arrivalCloseBtn" class="btn-arrival-close">✕</button>
     </div>
 
+    <!-- Turn-by-turn text directions (citizen view, alongside the map line) -->
+    <div id="dirPanel" class="dir-panel" hidden>
+      <button id="dirToggle" class="dir-header" aria-expanded="true" title="Show / hide steps">
+        <span class="dir-title">🧭 Step-by-step directions</span>
+        <span class="dir-chevron">▾</span>
+      </button>
+      <ol id="dirList" class="dir-list"></ol>
+    </div>
+
     <!-- Info bar -->
     <div class="info-bar">
       <span id="infoStart" class="info-chip start">Start (0, 0)</span>
@@ -278,7 +287,7 @@
         <button id="qrGenGoBtn" class="btn-nav">▶ Generate</button>
       </div>
       <div id="qrGenCanvas" style="display:inline-block;"></div>
-      <p class="qr-gen-hint">Print this and stick it at that location in the building. Scanning it moves <strong>ME</strong> to that cell.</p>
+      <p class="qr-gen-hint">Print this and post it at that spot in the building. A citizen scanning it with their phone's <strong>normal camera</strong> opens the app already located at that cell — no app install or in-app scanner needed.</p>
       <div class="qr-gen-actions">
         <button id="qrSaveBtn"     class="btn-nav">💾 Save PNG</button>
         <button id="qrGenCloseBtn" class="btn-nav btn-nav-cancel">✕ Close</button>
@@ -298,9 +307,9 @@
   <script src="js/dijkstra.js?v=30"></script>
   <script src="js/renderer.js?v=32"></script>
   <script src="js/compass.js?v=31"></script>
-  <script src="js/nav.js?v=33"></script>
-  <script src="js/app.js?v=50"></script>
-  <script src="js/chat.js?v=33"></script>
+  <script src="js/nav.js?v=34"></script>
+  <script src="js/app.js?v=51"></script>
+  <script src="js/chat.js?v=34"></script>
 
 </body>
 </html>

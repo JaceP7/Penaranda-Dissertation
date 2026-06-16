@@ -931,6 +931,41 @@ body.view-user:not(.route-active) .chat-panel.chat-open {
 /* ADMIN VIEW — never show the citizen "ask again" button */
 body.view-admin .ask-again-btn { display: none !important; }
 
+/* ── Turn-by-turn directions panel (citizen view) ──────────────────────── */
+.dir-panel {
+  position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+  z-index: 1150; width: min(440px, calc(100vw - 20px));
+  background: #fff; border-radius: 14px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.22);
+  overflow: hidden; display: none;
+}
+/* Only ever shown to citizens while a route is active. */
+body.view-user.route-active .dir-panel.dir-open { display: block; }
+.dir-header {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; padding: 11px 14px; background: #1E40AF; color: #fff;
+  border: none; cursor: pointer; font-size: 0.9rem; font-weight: 700;
+}
+.dir-chevron { transition: transform 0.2s; font-size: 0.8rem; }
+.dir-panel.dir-collapsed .dir-chevron { transform: rotate(-90deg); }
+.dir-list {
+  list-style: none; margin: 0; padding: 4px 10px 8px;
+  max-height: 38vh; overflow-y: auto;
+}
+.dir-panel.dir-collapsed .dir-list { display: none; }
+.dir-step {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 9px 6px; border-bottom: 1px solid #F1F5F9;
+  font-size: 0.86rem; color: #1E293B; line-height: 1.4;
+}
+.dir-step:last-child { border-bottom: none; }
+.dir-step-icon { flex-shrink: 0; font-size: 1rem; width: 1.4em; text-align: center; }
+.dir-step-sub { color: #64748B; font-style: normal; font-size: 0.78rem; }
+.dir-step-note {
+  background: #FFFBEB; border-radius: 8px; margin: 4px 0;
+  font-weight: 600; color: #92400E;
+}
+
 .btn-cat-del {
   background: #FEE2E2;
   color: #991B1B;
@@ -1463,6 +1498,46 @@ body.view-admin .ask-again-btn { display: none !important; }
   background: #F8FAFC;
   border-bottom: 1px solid #E2E8F0;
   flex-shrink: 0;
+}
+
+/* Tappable starter prompts (citizen-first onboarding) */
+.chat-starters {
+  padding: 10px 14px 12px;
+  background: #F8FAFC;
+  border-bottom: 1px solid #E2E8F0;
+  flex-shrink: 0;
+}
+.chat-starters-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 7px;
+}
+.chat-starters-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chat-starter-chip {
+  font-size: 0.78rem;
+  color: #1E40AF;
+  background: #EFF6FF;
+  border: 1.5px solid #BFDBFE;
+  border-radius: 20px;
+  padding: 6px 13px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.chat-starter-chip:hover { background: #DBEAFE; border-color: #93C5FD; }
+.chat-qr-hint {
+  margin-top: 10px;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: #334155;
+  background: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  border-radius: 8px;
+  padding: 7px 10px;
 }
 
 /* Message list */

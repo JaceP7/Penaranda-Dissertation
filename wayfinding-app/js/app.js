@@ -47,6 +47,7 @@ function setViewMode(mode) {
   document.body.classList.toggle('view-user',  STATE.viewMode === 'user');
   if (STATE.viewMode === 'admin') {
     document.body.classList.remove('route-active');   // admin sees the full map
+    if (typeof _hideDirections === 'function') _hideDirections();
   } else if (!document.body.classList.contains('route-active') && typeof CHAT !== 'undefined') {
     CHAT.open && CHAT.open();   // chat-first: open the assistant as the surface
   }
@@ -414,6 +415,13 @@ function navigateToDepartment(deptName, subservice) {
     renderer.focusOnCell(startCell.row, startCell.col, 2.2);  // zoom in + center
   }
 
+  // Turn-by-turn text directions alongside the map line. For a cross-floor
+  // trip the on-floor path starts at the stairs, so prefix the stair step.
+  _renderDirections(
+    crossFloor ? `Take the stairs / elevator to ${_floorName(loc.floor)}, then:` : null,
+    loc.label
+  );
+
   // Tell the user what's happening.
   if (loc.fallback) {
     _showStairToast(`📍 ${deptName} isn't pinned yet — routing to the Information desk. Please ask there.`);
@@ -422,6 +430,97 @@ function navigateToDepartment(deptName, subservice) {
   } else {
     _showStairToast(`📍 Routing to ${loc.label}.`);
   }
+}
+
+// ── Turn-by-turn text directions ────────────────────────────────────────────
+// Derives plain-language walking steps from the computed grid path so citizens
+// who can't read the map (or are walking, eyes-up) still get guidance. Steps
+// are computed once per route; the live "ME" marker + PDR re-centre handle
+// progress. Distance uses NAV.metresPerCell (~0.6 m/cell calibrated footprint).
+
+/** Cardinal name for a grid step vector. Grid up = North (matches PDR mapping). */
+function _dirCardinal(dr, dc) {
+  if (dr < 0) return 'north';
+  if (dr > 0) return 'south';
+  if (dc > 0) return 'east';
+  return 'west';
+}
+
+/** Compress a node-id path into spoken walking steps: [{icon, text, sub}]. */
+function _buildDirectionSteps(path) {
+  if (!path || path.length < 2) return [];
+  const pts = path.map(id => { const [r, c] = id.split(',').map(Number); return { r, c }; });
+
+  // Group consecutive cells that share a travel direction into straight runs.
+  const segs = [];
+  let dir = null, len = 0;
+  for (let i = 1; i < pts.length; i++) {
+    const dr = Math.sign(pts[i].r - pts[i - 1].r);
+    const dc = Math.sign(pts[i].c - pts[i - 1].c);
+    if (dir && dr === dir.dr && dc === dir.dc) { len++; }
+    else { if (dir) segs.push({ dr: dir.dr, dc: dir.dc, len }); dir = { dr, dc }; len = 1; }
+  }
+  if (dir) segs.push({ dr: dir.dr, dc: dir.dc, len });
+
+  const mpc  = (typeof NAV !== 'undefined' && NAV.metresPerCell) ? NAV.metresPerCell : 1;
+  const dist = cells => `about ${Math.max(1, Math.round(cells * mpc))} m`;
+
+  const steps = [];
+  segs.forEach((seg, i) => {
+    if (i === 0) {
+      steps.push({ icon: '🚶', text: `Head ${_dirCardinal(seg.dr, seg.dc)}`, sub: dist(seg.len) });
+    } else {
+      const p = segs[i - 1];
+      // Cross product in screen coords (x=col→, y=row↓): >0 right, <0 left.
+      const cross = p.dc * seg.dr - p.dr * seg.dc;
+      const dot   = p.dc * seg.dc + p.dr * seg.dr;
+      let icon = '⬆️', word = 'Continue';
+      if (dot < 0)        { icon = '↩️'; word = 'Make a U-turn'; }
+      else if (cross > 0) { icon = '➡️'; word = 'Turn right'; }
+      else if (cross < 0) { icon = '⬅️'; word = 'Turn left'; }
+      steps.push({ icon, text: `${word}, then walk ${dist(seg.len)}`, sub: null });
+    }
+  });
+  steps.push({ icon: '🏁', text: 'Arrive at your destination', sub: null });
+  return steps;
+}
+
+/** Render directions for the current renderer path. `prefix` = optional note. */
+function _renderDirections(prefix, destLabel) {
+  const panel = document.getElementById('dirPanel');
+  const list  = document.getElementById('dirList');
+  if (!panel || !list) return;
+
+  const path  = (renderer && renderer._path) ? renderer._path : null;
+  const steps = _buildDirectionSteps(path);
+  if (!steps.length) { _hideDirections(); return; }
+
+  list.innerHTML = '';
+  if (prefix) {
+    const li = document.createElement('li');
+    li.className = 'dir-step dir-step-note';
+    li.innerHTML = `<span class="dir-step-icon">🪜</span><span class="dir-step-text">${prefix}</span>`;
+    list.appendChild(li);
+  }
+  steps.forEach((s, i) => {
+    if (destLabel && i === steps.length - 1) s = { ...s, text: `Arrive at ${destLabel}` };
+    const li = document.createElement('li');
+    li.className = 'dir-step';
+    li.innerHTML = `<span class="dir-step-icon">${s.icon}</span>` +
+      `<span class="dir-step-text">${s.text}${s.sub ? ` <em class="dir-step-sub">${s.sub}</em>` : ''}</span>`;
+    list.appendChild(li);
+  });
+
+  panel.removeAttribute('hidden');
+  panel.classList.add('dir-open');
+  panel.classList.remove('dir-collapsed');
+  const tog = document.getElementById('dirToggle');
+  if (tog) tog.setAttribute('aria-expanded', 'true');
+}
+
+function _hideDirections() {
+  const panel = document.getElementById('dirPanel');
+  if (panel) { panel.setAttribute('hidden', ''); panel.classList.remove('dir-open'); }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -578,8 +677,19 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   DOM.askAgainBtn.addEventListener('click', () => {
     document.body.classList.remove('route-active');
+    _hideDirections();
     if (typeof CHAT !== 'undefined' && CHAT.open) CHAT.open();
   });
+
+  // Directions panel: tap the header to collapse/expand (keeps the map clear).
+  const _dirToggle = document.getElementById('dirToggle');
+  if (_dirToggle) {
+    _dirToggle.addEventListener('click', () => {
+      const panel = document.getElementById('dirPanel');
+      const collapsed = panel.classList.toggle('dir-collapsed');
+      _dirToggle.setAttribute('aria-expanded', String(!collapsed));
+    });
+  }
   DOM.exportStampsBtn.addEventListener('click', exportStampPresetsFile);
   DOM.deployStampsBtn.addEventListener('click', deployStampPresetsToGit);
 
@@ -818,7 +928,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Default to the citizen (chat-first) view. Kiosk-safe: never starts in admin.
   setViewMode('user');
+
+  // QR-first positioning: if the page was opened from a posted-QR deep link
+  // (e.g. ?qr=1:38,72 scanned with the phone's native camera), set the user's
+  // start location/floor now that the renderer + NAV callbacks are wired.
+  _applyStartupDeepLink();
 });
+
+/**
+ * Apply a posted-QR deep link (?qr= / ?loc= / ?at=) to set the citizen's
+ * starting floor + cell. This is the primary, most accurate way a citizen on
+ * their own phone gets localised — PDR step-counting is only the backup.
+ */
+function _applyStartupDeepLink() {
+  if (typeof navParseDeepLink !== 'function') return;
+  let raw;
+  try {
+    const params = new URLSearchParams(location.search);
+    raw = params.get('qr') || params.get('loc') || params.get('at');
+  } catch (_) { return; }
+  if (!raw) return;
+
+  const loc = navParseDeepLink(raw);
+  if (!loc) return;
+
+  const f = Math.max(0, Math.min(9, loc.floor));
+  if (f !== STATE.currentFloor) switchFloor(f);
+  navSetPosition(loc.row, loc.col);          // fires onPositionChange (renderer ready)
+  NAV._hasQRFix     = true;                  // treat as a real fix (A2)
+  NAV._stepsSinceQR = 0;
+  if (typeof updateDriftIndicator === 'function') updateDriftIndicator();
+  _showStairToast(`📍 Location set from QR — you're on ${_floorName(f)}.`);
+}
 
 // ── Cell interaction ──────────────────────────────────────────────────────────
 function handleCellTap(row, col) {
