@@ -951,6 +951,14 @@ body.view-admin .ask-again-btn { display: none !important; }
 .nav-step-prompt.wrong-way { background: #B91C1C; }   /* red when off-route */
 .nav-step-icon { flex-shrink: 0; font-size: 1.5rem; line-height: 1; }
 .nav-step-text { flex: 1; }
+/* Re-anchor: scan a fresh QR to correct accumulated PDR drift mid-walk. */
+.nav-rescan-btn {
+  flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%;
+  border: none; background: rgba(255, 255, 255, 0.22); color: #fff;
+  font-size: 1.1rem; cursor: pointer; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-rescan-btn:hover { background: rgba(255, 255, 255, 0.35); }
 
 /* ── On-load QR location prompt (citizen view) ─────────────────────────── */
 .qr-prompt-modal {

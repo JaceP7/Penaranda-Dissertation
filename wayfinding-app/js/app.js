@@ -288,10 +288,11 @@ const DOM = {
   pdrToggleBtn:    $('pdrToggleBtn'),
   genQRBtn:        $('genQRBtn'),
   recalBtn:        $('recalBtn'),
-  // QR location prompt (on-load, citizen view)
+  // QR location prompt (gates the route after "Take me there", citizen view)
   qrPromptModal:   $('qrPromptModal'),
   qrPromptScanBtn: $('qrPromptScanBtn'),
   qrPromptSkipBtn: $('qrPromptSkipBtn'),
+  navRescanBtn:    $('navRescanBtn'),
   // QR camera overlay
   qrOverlay:       $('qrOverlay'),
   qrVideo:         $('qrVideo'),
@@ -967,17 +968,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // (see requestNavigation); each button then resumes the pending route.
   if (DOM.qrPromptScanBtn) DOM.qrPromptScanBtn.addEventListener('click', () => {
     _hideQrPrompt();
-    DOM.qrOverlay.style.display = 'flex';
-    navStartQRScan(DOM.qrVideo, DOM.qrCanvas, (r, c) => {
-      NAV._stepsSinceQR = 0;
-      updateDriftIndicator();
-      DOM.qrOverlay.style.display = 'none';
-      _resumePendingNav();              // route from the freshly-scanned position
-    });
+    _openQrScan(_resumePendingNav);     // route from the freshly-scanned position
   });
   if (DOM.qrPromptSkipBtn) DOM.qrPromptSkipBtn.addEventListener('click', () => {
     _hideQrPrompt();
     _resumePendingNav();                // route from the default/current position
+  });
+
+  // Re-anchor mid-walk: scan a fresh QR to correct accumulated PDR drift. The
+  // scan re-fixes NAV.position (via navSetPosition inside the scanner), which
+  // recomputes the route from the new cell; we just clear the wrong-way streak
+  // so the teleport isn't mistaken for walking backwards.
+  if (DOM.navRescanBtn) DOM.navRescanBtn.addEventListener('click', () => {
+    _openQrScan(() => { _navStepReset(); _updateNavInstruction(); });
   });
 });
 
@@ -1020,6 +1023,22 @@ function _hideQrPrompt() {
 
 function _qrPromptDismissed() {
   try { return sessionStorage.getItem(QR_PROMPT_SS_KEY) === '1'; } catch (_) { return false; }
+}
+
+/**
+ * Open the camera QR scanner. On a successful scan the scanner re-fixes
+ * NAV.position itself (navSetPosition → onPositionChange), so this just manages
+ * the overlay and runs `onDone` afterwards. Used by both the initial prompt and
+ * the mid-walk re-anchor button.
+ */
+function _openQrScan(onDone) {
+  DOM.qrOverlay.style.display = 'flex';
+  navStartQRScan(DOM.qrVideo, DOM.qrCanvas, () => {
+    NAV._stepsSinceQR = 0;
+    updateDriftIndicator();
+    DOM.qrOverlay.style.display = 'none';
+    if (onDone) onDone();
+  });
 }
 
 /**
