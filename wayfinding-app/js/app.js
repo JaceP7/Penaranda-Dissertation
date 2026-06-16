@@ -242,6 +242,7 @@ const DOM = {
   syncBtn:         $('syncBtn'),
   exportFloorsBtn: $('exportFloorsBtn'),
   deployFloorsBtn: $('deployFloorsBtn'),
+  publishCloudBtn: $('publishCloudBtn'),
   dupFloorBtn:     $('dupFloorBtn'),
   exportStampsBtn: $('exportStampsBtn'),
   deployStampsBtn: $('deployStampsBtn'),
@@ -664,6 +665,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   DOM.exportFloorsBtn.addEventListener('click', exportFloorPresetsFile);
   DOM.deployFloorsBtn.addEventListener('click', deployFloorPresetsToGit);
+  if (DOM.publishCloudBtn) DOM.publishCloudBtn.addEventListener('click', publishMapToCloud);
   DOM.dupFloorBtn.addEventListener('click', duplicateCurrentFloor);
   DOM.renameFloorBtn.addEventListener('click', renameCurrentFloor);
 
@@ -713,7 +715,7 @@ document.addEventListener('DOMContentLoaded', () => {
       _closeFloorMenu();
     }
   });
-  [DOM.dupFloorBtn, DOM.exportFloorsBtn, DOM.deployFloorsBtn,
+  [DOM.publishCloudBtn, DOM.dupFloorBtn, DOM.exportFloorsBtn, DOM.deployFloorsBtn,
    DOM.exportStampsBtn, DOM.deployStampsBtn].forEach(btn => {
     if (btn) btn.addEventListener('click', _closeFloorMenu);
   });
@@ -928,6 +930,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Default to the citizen (chat-first) view. Kiosk-safe: never starts in admin.
   setViewMode('user');
+
+  // Pull the cloud-published map (rooms/labels admins published) and apply it if
+  // newer than this device's copy. Fire-and-forget — never blocks first paint.
+  pullCloudMapState();
 
   // QR-first positioning: if the page was opened from a posted-QR deep link
   // (e.g. ?qr=1:38,72 scanned with the phone's native camera), set the user's
@@ -1785,6 +1791,7 @@ function _buildStatePayload() {
     grid: { floorWalls: allFloors, currentFloor: STATE.currentFloor },
     stampPlacements: STAMP_PLACEMENTS,
     stampPresets:    STAMP_PRESETS,
+    floorNames:      _floorNames,
   };
 }
 
@@ -2344,6 +2351,101 @@ async function pullStateFromServer() {
     return true;
   } catch (_) {
     return false;
+  }
+}
+
+// ── Cloud-published map state (multi-admin, all-devices via Upstash) ───────────
+// Unlike the dev-only /api/state path above (localhost serve_https.py), this
+// works on Vercel: an admin edits rooms in the in-app editor, taps "Publish to
+// all devices", and every visitor's device pulls the shared map on next load.
+// Backed by api/mapstate.js (Upstash Redis, key wf:mapstate). Publishing is
+// gated by MAP_ADMIN_TOKEN set server-side in Vercel.
+const CLOUD_MAP_VER_LS_KEY = 'wf-cloud-mapver';
+const PUBLISH_TOKEN_SS_KEY = 'wf-publish-token';
+
+/**
+ * Apply a published map WITHOUT moving the viewer (a citizen mid-route must not
+ * be teleported). Merges every floor's walls, refreshes the active floor in
+ * NODES, replaces stamp placements + floor names. Persists so it survives reload.
+ */
+function _applyCloudState(state) {
+  if (!state || typeof state !== 'object') return;
+  if (state.grid && state.grid.floorWalls) {
+    Object.assign(FLOOR_WALLS, state.grid.floorWalls);
+    const walls = FLOOR_WALLS[STATE.currentFloor];
+    if (walls) NODES.forEach((n, i) => {
+      const v = walls[i];
+      if (typeof v === 'boolean') { n.wall = v; n.cellType = v ? 'wall' : 'open'; }
+      else { n.cellType = v || 'open'; n.wall = n.cellType === 'wall'; }
+    });
+    try {
+      localStorage.setItem('wayfinding-grid-v1', JSON.stringify({
+        floorWalls: FLOOR_WALLS, currentFloor: STATE.currentFloor,
+      }));
+    } catch (_) {}
+  }
+  if (Array.isArray(state.stampPlacements)) {
+    STAMP_PLACEMENTS.length = 0;
+    STAMP_PLACEMENTS.push(...state.stampPlacements);
+    try { localStorage.setItem('gridPathfinder_stampPlacements', JSON.stringify(STAMP_PLACEMENTS)); } catch (_) {}
+  }
+  if (state.floorNames && typeof state.floorNames === 'object') {
+    Object.assign(_floorNames, state.floorNames);
+    try { localStorage.setItem(FLOOR_NAMES_LS_KEY, JSON.stringify(_floorNames)); } catch (_) {}
+  }
+  if (renderer) { recompute(); renderer._draw(); }
+  if (typeof renderCatalogue === 'function') renderCatalogue();
+  _syncFloorDisplay();
+}
+
+/** On load: pull the published map; apply only if newer than what we hold. */
+async function pullCloudMapState() {
+  let stored = 0;
+  try { stored = parseInt(localStorage.getItem(CLOUD_MAP_VER_LS_KEY) || '0', 10); } catch (_) {}
+  try {
+    const res = await fetch('/api/mapstate', { method: 'GET' });
+    if (!res.ok) return;
+    const doc = await res.json();
+    if (!doc || !doc.state || typeof doc.version !== 'number') return;
+    if (doc.version <= stored) return;
+    _applyCloudState(doc.state);
+    try { localStorage.setItem(CLOUD_MAP_VER_LS_KEY, String(doc.version)); } catch (_) {}
+    console.info(`[wayfinding] applied cloud map v${doc.version} (by ${doc.updatedBy || '?'})`);
+  } catch (_) { /* offline / not configured — keep local */ }
+}
+
+/** Admin action: publish the current floors/rooms/labels to every device. */
+async function publishMapToCloud() {
+  let token = '';
+  try { token = sessionStorage.getItem(PUBLISH_TOKEN_SS_KEY) || ''; } catch (_) {}
+  if (!token) {
+    token = prompt('Enter the publish token (MAP_ADMIN_TOKEN) to push these rooms to all devices:');
+    if (!token) return;
+    token = token.trim();
+  }
+  if (!confirm('Publish the current floors, rooms, and labels to ALL devices?\nThis becomes the live map everyone sees.')) return;
+
+  try {
+    const res = await fetch('/api/mapstate', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body:    JSON.stringify({ state: _buildStatePayload(), updatedBy: 'admin' }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.ok) {
+      try { sessionStorage.setItem(PUBLISH_TOKEN_SS_KEY, token); } catch (_) {}
+      try { localStorage.setItem(CLOUD_MAP_VER_LS_KEY, String(data.version)); } catch (_) {}
+      alert(`Published as version ${data.version}.\nOther devices get it on their next reload.`);
+    } else if (res.status === 401) {
+      try { sessionStorage.removeItem(PUBLISH_TOKEN_SS_KEY); } catch (_) {}
+      alert('Publish failed: invalid token. Tap Publish again to retry.');
+    } else if (res.status === 503) {
+      alert('Publishing is not enabled yet — set MAP_ADMIN_TOKEN in the Vercel project, then redeploy.');
+    } else {
+      alert(`Publish failed: ${data.error || res.status}`);
+    }
+  } catch (err) {
+    alert(`Publish failed: ${err.message}`);
   }
 }
 

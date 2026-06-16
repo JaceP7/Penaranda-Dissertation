@@ -852,6 +852,8 @@ body {
 }
 .floor-action-item:hover { background: rgba(99, 179, 237, 0.18); color: #BEE3F8; }
 .floor-action-item:disabled { opacity: 0.4; cursor: not-allowed; }
+.floor-action-publish { color: #6EE7B7; font-weight: 700; }
+.floor-action-publish:hover { background: rgba(16, 185, 129, 0.22); color: #A7F3D0; }
 .floor-action-divider {
   height: 1px;
   background: #374151;

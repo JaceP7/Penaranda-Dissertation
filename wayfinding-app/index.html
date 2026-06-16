@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=37" />
+  <link rel="stylesheet" href="css/app.css?v=38" />
 </head>
 <body class="view-user">
 
@@ -46,6 +46,8 @@
       <div id="floorActionsDropdown" class="floor-actions-dropdown">
         <button id="floorActionsBtn" class="btn btn-ghost btn-floor-actions" aria-haspopup="true" aria-expanded="false" title="Duplicate / Export / Deploy floor plans">Floors ▾</button>
         <div id="floorActionsMenu" class="floor-actions-menu" hidden>
+          <button id="publishCloudBtn" class="floor-action-item floor-action-publish" title="Push the current floors, rooms, and labels to ALL devices via the cloud. Works on the live site — no git, no laptop. Requires the publish token (MAP_ADMIN_TOKEN).">☁ Publish to all devices</button>
+          <div class="floor-action-divider"></div>
           <button id="dupFloorBtn"   class="floor-action-item" title="Copy the current floor's walls/doors/stairs to another floor. Useful when upper floors share the same outer shell as the ground floor.">Duplicate Floor</button>
           <button id="exportFloorsBtn" class="floor-action-item" title="Download a new floor_presets.js containing the current walls/doors/stairs across all floors. Then run the helper script and git push to publish to all users.">Export Floors</button>
           <button id="deployFloorsBtn" class="floor-action-item" title="(Laptop dev server only) Build new floor_presets.js + git commit + git push in one click. Hidden on Vercel — you'll get the manual Export Floors flow instead.">Deploy Floors</button>
@@ -308,7 +310,7 @@
   <script src="js/renderer.js?v=32"></script>
   <script src="js/compass.js?v=31"></script>
   <script src="js/nav.js?v=34"></script>
-  <script src="js/app.js?v=51"></script>
+  <script src="js/app.js?v=52"></script>
   <script src="js/chat.js?v=34"></script>
 
 </body>
