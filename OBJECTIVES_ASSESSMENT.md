@@ -61,12 +61,13 @@ The **live deployment** uses a **cloud** stack instead:
 
 Both stacks exist in the repo. The **local pipeline** (`serve_https.py`: multilingual-e5-large + FAISS IndexFlatIP + bge-reranker-base + Groq) **matches the paper**; the **cloud pipeline** (Vercel + Upstash) is what citizens currently hit. They even score similarly (cloud MRR 0.762 vs local 0.714).
 
-**You must pick one before defense — two clean options:**
+**DECISION (2026-06-16): Option A — fully cloud.**
 
-- **Option A — Make the paper match the system (recommended for the cloud-first goal).** Rewrite the RAG description as a *cloud/serverless* (or *hybrid*) architecture: managed vector DB + hosted LLM, justified by zero-maintenance deployment to citizens' phones and no on-prem hardware. Re-frame the privacy clause as "only operational query logs leave the device; no Charter document is sensitive (it is public)." This aligns with your stated direction ("we want this all to be on the cloud").
-- **Option B — Make the system match the paper.** Host the local pipeline (e5-large + FAISS + bge-reranker + local LLM) on a server (e.g., Oracle VM) and point the site at it. Heavier ops; keeps "fully local inference" literally true.
+The methodology is being rewritten to describe a **cloud / serverless** RAG architecture (managed vector DB + hosted LLM), justified by zero on-prem hardware, zero-maintenance deployment to citizens' own phones, and the fact that the Citizen's Charter corpus is **public** (no sensitive document leaves a private boundary; only operational query logs are stored). The privacy clause changes from "locally hosted inference" to "no sensitive citizen records are processed; only anonymous operational query logs are retained (RA 10173-compliant)."
 
-Either is defensible. **A** is faster and matches the deployment reality and your cloud goal; **B** preserves the current wording. **Do not leave both unstated** — a panelist will catch "fully local" vs. a live Groq/Upstash call.
+See **`SYSTEM_REQUIREMENTS.md`** for the old→new requirement breakdown to hand to the colleague.
+
+*(Rejected — Option B: hosting the local e5-large + FAISS + bge-reranker + local LLM pipeline on a server. A 70B local LLM at parity with Groq needs ~40 GB+ VRAM, which defeats the no-hardware goal.)*
 
 ---
 
