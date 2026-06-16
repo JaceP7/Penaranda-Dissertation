@@ -42,9 +42,14 @@ backend and the literature backing the architecture decisions, for Chapter 3
   NDCG@1 0.750 vs 0.607.
 - Notably, the live backend achieves this with **dense retrieval only (no
   cross-encoder reranker)**, whereas the local pipeline includes a bge-reranker
-  stage. This indicates a strong base embedding model can substitute for a
-  reranker at this corpus scale (235 services), simplifying the production
-  architecture without a quality penalty.
+  stage. A **controlled ablation** (`eval/run_rerank_ablation.py`,
+  `eval/RERANK_ABLATION_SUMMARY.md`) — same Upstash candidate pool, with vs
+  without `bge-reranker-base` — confirms this is not luck: adding the reranker
+  **lowers** every metric (MRR 0.768 → 0.671, Precision@1 0.750 → 0.571).
+  The embedding model already ranks the correct service first, and the residual
+  errors are recall misses a reranker cannot fix. So the reranker is omitted as a
+  deliberate, evidence-backed decision — it would add latency/cost *and* reduce
+  quality at this corpus scale (235 services).
 - **Recall@K is intentionally low** for both backends and is *not* a quality
   signal here: the Recall denominator is the total number of corpus services
   belonging to the expected department, which for large offices (e.g. Social

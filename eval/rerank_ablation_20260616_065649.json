@@ -1,0 +1,364 @@
+{
+  "backend": "upstash-vector + bge-reranker-base ablation",
+  "embedding_model": "text-embedding-3-small (Upstash server-side)",
+  "reranker": "BAAI/bge-reranker-base",
+  "pool": 10,
+  "generated": "20260616_065649",
+  "n_queries": 28,
+  "relevance": "department-level",
+  "no_rerank": {
+    "recall@1": 0.111,
+    "recall@3": 0.23,
+    "recall@5": 0.323,
+    "precision@1": 0.75,
+    "precision@3": 0.631,
+    "precision@5": 0.571,
+    "ndcg@1": 0.75,
+    "ndcg@3": 0.666,
+    "ndcg@5": 0.633,
+    "mrr": 0.768
+  },
+  "rerank": {
+    "recall@1": 0.074,
+    "recall@3": 0.222,
+    "recall@5": 0.322,
+    "precision@1": 0.571,
+    "precision@3": 0.595,
+    "precision@5": 0.564,
+    "ndcg@1": 0.571,
+    "ndcg@3": 0.601,
+    "ndcg@5": 0.59,
+    "mrr": 0.671
+  },
+  "delta": {
+    "recall@1": -0.037,
+    "recall@3": -0.008,
+    "recall@5": -0.001,
+    "precision@1": -0.179,
+    "precision@3": -0.036,
+    "precision@5": -0.007,
+    "ndcg@1": -0.179,
+    "ndcg@3": -0.065,
+    "ndcg@5": -0.043,
+    "mrr": -0.097
+  },
+  "top1_changed": 7,
+  "per_query": [
+    {
+      "id": "Q01",
+      "query": "Saan po pwedeng mag-apply ng business permit?",
+      "expected": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "base_top1": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+      "rr_top1": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+      "base_mrr": 1.0,
+      "rr_mrr": 1.0
+    },
+    {
+      "id": "Q02",
+      "query": "Pano kumuha ng building permit?",
+      "expected": [
+        "BUILDING REGULATORY SERVICES OFFICE"
+      ],
+      "base_top1": "BUILDINGS REGULATORY SERVICES DEPARTMENT",
+      "rr_top1": "BUILDINGS REGULATORY SERVICES DEPARTMENT",
+      "base_mrr": 0.0,
+      "rr_mrr": 0.0
+    },
+    {
+      "id": "Q03",
+      "query": "Saan po nagbabayad ng real property tax?",
+      "expected": [
+        "CITY ASSESSMENT OFFICE",
+        "CITY ACCOUNTING AND INTERNAL CONTROL OFFICE"
+      ],
+      "base_top1": "CITY ASSESSMENT OFFICE",
+      "rr_top1": "CITY ASSESSMENT OFFICE",
+      "base_mrr": 1.0,
+      "rr_mrr": 1.0
+    },
+    {
+      "id": "Q04",
+      "query": "Pano mag-apply ng senior citizen ID?",
+      "expected": [
+        "OFFICE FOR THE SENIOR CITIZENS AFFAIRS"
+      ],
+      "base_top1": "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+      "rr_top1": "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+      "base_mrr": 1.0,
+      "rr_mrr": 1.0
+    },
+    {
+      "id": "Q05",
+      "query": "Saan kukuha ng PWD ID?",
+      "expected": [
+        "PERSONS WITH DISABILITY AFFAIRS OFFICE"
+      ],
+      "base_top1": "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+      "rr_top1": "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+      "base_mrr": 1.0,
+      "rr_mrr": 1.0
+    },
+    {
+      "id": "Q06",
+      "query": "Where to get marriage license?",
+      "expected": [
+        "CITY POPULATION MANAGEMENT OFFICE",
+        "CITY SOCIAL SERVICES DEPARTMENT"
+      ],
+      "base_top1": "CITY POPULATION MANAGEMENT OFFICE",
+      "rr_top1": "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+      "base_mrr": 1.0,
+      "rr_mrr": 0.333
+    },
+    {
+      "id": "Q07",
+      "query": "Saan ang office ng mayor?",
+      "expected": [
+        "OFFICE OF THE CITY MAYOR"
+      ],
+      "base_top1": "OFFICE OF THE MAYOR",
+      "rr_top1": "OFFICE OF THE MAYOR",
+      "base_mrr": 0.0,
+      "rr_mrr": 0.0
+    },
+    {
+      "id": "Q08",
+      "query": "Saan magpa-check ng aso at pusa?",
+      "expected": [
+        "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+      ],
+      "base_top1": "CITY HEALTH SERVICES DEPARTMENT",
+      "rr_top1": "CITY HEALTH SERVICES DEPARTMENT",
+      "base_mrr": 0.0,
+      "rr_mrr": 0.0
+    },
+    {
+      "id": "Q09",
+      "query": "Pano mag-renew ng business permit?",
+      "expected": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "base_top1": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+      "rr_top1": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+      "base_mrr": 1.0,
+      "rr_mrr": 1.0
+    },
+    {
+      "id": "Q10",
+      "query": "Saan ang health office?",
+      "expected": [
+        "CITY HEALTH SERVICES DEPARTMENT"
+      ],
+      "base_top1": "CITY HEALTH SERVICES DEPARTMENT",
+      "rr_top1": "OFFICE OF THE VICE MAYOR",
+      "base_mrr": 1.0,
+      "rr_mrr": 0.5
+    },
+    {
+      "id": "Q11",
+      "query": "Saan mag-apply ng tricycle franchise?",
+      "expected": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "base_top1": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+      "rr_top1": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+      "base_mrr": 1.0,
+      "rr_mrr": 1.0
+    },
+    {
+      "id": "Q12",
+      "query": "Pano mag-register ng cooperative?",
+      "expected": [
+        "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT"
+      ],
+      "base_top1": "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT",
+      "rr_top1": "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT",
+      "base_mrr": 1.0,
+      "rr_mrr": 1.0
+    },
+    {
+      "id": "Q13",
+      "query": "Saan ang job placement office?",
+      "expected": [
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+        "CITY SOCIAL SERVICES DEPARTMENT"
+      ],
+      "base_top1": "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+      "rr_top1": "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+      "base_mrr": 1.0,
+      "rr_mrr": 1.0
+    },
+    {
+      "id": "Q14",
+      "query": "Saan magtanong tungkol sa baha at disaster?",
+      "expected": [
+        "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO"
+      ],
+      "base_top1": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+      "rr_top1": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+      "base_mrr": 1.0,
+      "rr_mrr": 1.0
+    },
+    {
+      "id": "Q15",
+      "query": "Saan po para sa burial assistance?",
+      "expected": [
+        "CITY SOCIAL SERVICES DEPARTMENT"
+      ],
+      "base_top1": "CITY SOCIAL SERVICES OFFICE",
+      "rr_top1": "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+      "base_mrr": 0.0,
+      "rr_mrr": 0.0
+    },
+    {
+      "id": "Q16",
+      "query": "Where can I get a barangay clearance?",
+      "expected": [
+        "CITY ADMINISTRATION OFFICE",
+        "CITY POPULATION MANAGEMENT OFFICE"
+      ],
+      "base_top1": "CITY ASSESSMENT OFFICE",
+      "rr_top1": "CITY ASSESSMENT OFFICE",
+      "base_mrr": 0.167,
+      "rr_mrr": 0.111
+    },
+    {
+      "id": "Q17",
+      "query": "How do I apply for a business permit?",
+      "expected": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "base_top1": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+      "rr_top1": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+      "base_mrr": 1.0,
+      "rr_mrr": 1.0
+    },
+    {
+      "id": "Q18",
+      "query": "Saan office ng vice mayor?",
+      "expected": [
+        "OFFICE OF THE CITY VICE-MAYOR"
+      ],
+      "base_top1": "OFFICE OF THE MAYOR",
+      "rr_top1": "OFFICE OF THE VICE MAYOR",
+      "base_mrr": 0.0,
+      "rr_mrr": 0.0
+    },
+    {
+      "id": "Q19",
+      "query": "Saan mag-pa-assess ng property?",
+      "expected": [
+        "CITY ASSESSMENT OFFICE"
+      ],
+      "base_top1": "CITY ASSESSMENT OFFICE",
+      "rr_top1": "CITY ASSESSMENT OFFICE",
+      "base_mrr": 1.0,
+      "rr_mrr": 1.0
+    },
+    {
+      "id": "Q20",
+      "query": "Pano mag-apply ng work sa city hall?",
+      "expected": [
+        "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+        "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE"
+      ],
+      "base_top1": "CITY ADMINISTRATION OFFICE",
+      "rr_top1": "CITY ADMINISTRATION OFFICE",
+      "base_mrr": 0.333,
+      "rr_mrr": 0.333
+    },
+    {
+      "id": "Q21",
+      "query": "Saan po ang office para sa environmental concerns?",
+      "expected": [
+        "CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT"
+      ],
+      "base_top1": "CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT",
+      "rr_top1": "CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT",
+      "base_mrr": 1.0,
+      "rr_mrr": 1.0
+    },
+    {
+      "id": "Q23",
+      "query": "Where office ng business permits and saan ako mag-fa-file ng requirements?",
+      "expected": [
+        "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+      ],
+      "base_top1": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+      "rr_top1": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+      "base_mrr": 1.0,
+      "rr_mrr": 1.0
+    },
+    {
+      "id": "Q25",
+      "query": "treasry??",
+      "expected": [
+        "CITY ACCOUNTING AND INTERNAL CONTROL OFFICE",
+        "CITY ASSESSMENT OFFICE"
+      ],
+      "base_top1": "CITY ACCOUNTING AND INTERNAL CONTROL OFFICE",
+      "rr_top1": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+      "base_mrr": 1.0,
+      "rr_mrr": 0.5
+    },
+    {
+      "id": "Q26",
+      "query": "Saan ang opisina para sa pagpaplano ng siyudad?",
+      "expected": [
+        "CITY PLANNING AND DEVELOPMENT OFFICE"
+      ],
+      "base_top1": "CITY PLANNING AND DEVELOPMENT OFFICE",
+      "rr_top1": "BUILDINGS REGULATORY SERVICES DEPARTMENT",
+      "base_mrr": 1.0,
+      "rr_mrr": 0.5
+    },
+    {
+      "id": "Q27",
+      "query": "Pano mag-enroll sa City College of Calamba?",
+      "expected": [
+        "CITY COLLEGE OF CALAMBA"
+      ],
+      "base_top1": "CITY COLLEGE OF CALAMBA",
+      "rr_top1": "CITY COLLEGE OF CALAMBA",
+      "base_mrr": 1.0,
+      "rr_mrr": 1.0
+    },
+    {
+      "id": "Q28",
+      "query": "Saan magpa-konsulta tungkol sa legal na bagay?",
+      "expected": [
+        "CITY LEGAL SERVICES OFFICE"
+      ],
+      "base_top1": "CITY LEGAL SERVICES OFFICE",
+      "rr_top1": "CITY HEALTH SERVICES DEPARTMENT",
+      "base_mrr": 1.0,
+      "rr_mrr": 0.5
+    },
+    {
+      "id": "Q29",
+      "query": "Mayroon ba kayong vaccination services?",
+      "expected": [
+        "CITY HEALTH SERVICES DEPARTMENT",
+        "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+      ],
+      "base_top1": "CITY HEALTH SERVICES DEPARTMENT",
+      "rr_top1": "CITY HEALTH SERVICES DEPARTMENT",
+      "base_mrr": 1.0,
+      "rr_mrr": 1.0
+    },
+    {
+      "id": "Q30",
+      "query": "I need help finding the office that handles construction permits and zoning",
+      "expected": [
+        "BUILDING REGULATORY SERVICES OFFICE",
+        "CITY PLANNING AND DEVELOPMENT OFFICE"
+      ],
+      "base_top1": "CITY PLANNING AND DEVELOPMENT OFFICE",
+      "rr_top1": "CITY PLANNING AND DEVELOPMENT OFFICE",
+      "base_mrr": 1.0,
+      "rr_mrr": 1.0
+    }
+  ]
+}

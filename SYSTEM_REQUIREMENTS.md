@@ -95,6 +95,8 @@ No runtime language install, no model downloads, no package dependencies in the 
 
 Dropping the local cross-encoder reranker did **not** hurt retrieval: the live cloud stack scores **MRR 0.762 / P@1 0.750** vs. the local pipeline's **MRR 0.714** (`eval/run_upstash_eval.py` vs `eval/run_retrieval_metrics.py`). So the move to cloud is a net win on both ops and accuracy.
 
+**Clean reranker ablation** (`eval/run_rerank_ablation.py`, same Upstash candidate pool, with vs without `bge-reranker-base`) confirms the reranker is not just unnecessary but *harmful* on this corpus: **MRR 0.768 → 0.671** and **P@1 0.750 → 0.571** when reranking is added. Reason: the embedding model already ranks the correct service #1, and the residual failures are recall misses a reranker cannot fix. Full write-up: `eval/RERANK_ABLATION_SUMMARY.md`.
+
 ---
 
 ## G. Checklist for the colleague (paper edits)
