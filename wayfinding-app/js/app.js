@@ -566,7 +566,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Init chat widget
   CHAT.init();
-  CHAT.onNavigate(navigateToDepartment);
+  CHAT.onNavigate(requestNavigation);   // gates a QR location fix before routing
 
   renderer = new GridRenderer(DOM.canvas);
   renderer.currentFloor = STATE.currentFloor;
@@ -858,6 +858,7 @@ document.addEventListener('DOMContentLoaded', () => {
   DOM.qrCloseBtn.addEventListener('click', () => {
     navStopQRScan();
     DOM.qrOverlay.style.display = 'none';
+    _resumePendingNav();   // cancelled the scan → still route (from default/current)
   });
 
   DOM.qrGenCloseBtn.addEventListener('click', () => {
@@ -958,14 +959,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // QR-first positioning: if the page was opened from a posted-QR deep link
   // (e.g. ?qr=1:38,72 scanned with the phone's native camera), set the user's
-  // start location/floor now that the renderer + NAV callbacks are wired.
-  const _viaDeepLink = _applyStartupDeepLink();
+  // start location/floor now that the renderer + NAV callbacks are wired. This
+  // also sets NAV._hasQRFix, which suppresses the later "Take me there" prompt.
+  _applyStartupDeepLink();
 
-  // QR location prompt (citizen view): nudge the user to scan a nearby QR for an
-  // accurate start. Skipped if a deep link already located them.
-  _maybeShowQrPrompt(_viaDeepLink);
-
-  // QR prompt buttons.
+  // QR location prompt buttons. The prompt itself is shown AFTER "Take me there"
+  // (see requestNavigation); each button then resumes the pending route.
   if (DOM.qrPromptScanBtn) DOM.qrPromptScanBtn.addEventListener('click', () => {
     _hideQrPrompt();
     DOM.qrOverlay.style.display = 'flex';
@@ -973,9 +972,13 @@ document.addEventListener('DOMContentLoaded', () => {
       NAV._stepsSinceQR = 0;
       updateDriftIndicator();
       DOM.qrOverlay.style.display = 'none';
+      _resumePendingNav();              // route from the freshly-scanned position
     });
   });
-  if (DOM.qrPromptSkipBtn) DOM.qrPromptSkipBtn.addEventListener('click', _hideQrPrompt);
+  if (DOM.qrPromptSkipBtn) DOM.qrPromptSkipBtn.addEventListener('click', () => {
+    _hideQrPrompt();
+    _resumePendingNav();                // route from the default/current position
+  });
 });
 
 /**
@@ -1006,22 +1009,41 @@ function _applyStartupDeepLink() {
   return true;
 }
 
-// ── On-load QR location prompt ──────────────────────────────────────────────
+// ── QR location prompt — gates the route after "Take me there" ───────────────
 const QR_PROMPT_SS_KEY = 'wf-qr-prompt-dismissed';
+let _pendingNav = null;   // {deptName, subservice} awaiting the QR-fix decision
 
 function _hideQrPrompt() {
   if (DOM.qrPromptModal) DOM.qrPromptModal.style.display = 'none';
   try { sessionStorage.setItem(QR_PROMPT_SS_KEY, '1'); } catch (_) {}
 }
 
-/** Show the "scan a nearby QR" prompt once per session in the citizen view. */
-function _maybeShowQrPrompt(viaDeepLink) {
-  if (viaDeepLink) return;                          // already located
-  if (STATE.viewMode !== 'user') return;           // admins don't need it
-  let dismissed = false;
-  try { dismissed = sessionStorage.getItem(QR_PROMPT_SS_KEY) === '1'; } catch (_) {}
-  if (dismissed) return;
-  if (DOM.qrPromptModal) DOM.qrPromptModal.style.display = 'flex';
+function _qrPromptDismissed() {
+  try { return sessionStorage.getItem(QR_PROMPT_SS_KEY) === '1'; } catch (_) { return false; }
+}
+
+/**
+ * Chat "Take me there" entry point. In the citizen view, the first time the user
+ * navigates we offer a QR location fix (Scan / Skip) BEFORE drawing the route,
+ * so directions start from where they actually are. Once they've scanned (or
+ * skipped once, or arrived via a ?qr= deep link) we route immediately.
+ */
+function requestNavigation(deptName, subservice) {
+  const needFix = STATE.viewMode === 'user' && !NAV._hasQRFix && !_qrPromptDismissed();
+  if (needFix && DOM.qrPromptModal) {
+    _pendingNav = { deptName, subservice };
+    DOM.qrPromptModal.style.display = 'flex';
+    return;
+  }
+  navigateToDepartment(deptName, subservice);
+}
+
+/** Resume the route that was waiting on the QR prompt (after scan / skip / cancel). */
+function _resumePendingNav() {
+  if (!_pendingNav) return;
+  const { deptName, subservice } = _pendingNav;
+  _pendingNav = null;
+  navigateToDepartment(deptName, subservice);
 }
 
 // ── Cell interaction ──────────────────────────────────────────────────────────
