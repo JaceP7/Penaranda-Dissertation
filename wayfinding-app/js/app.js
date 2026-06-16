@@ -462,8 +462,10 @@ function navigateToDepartment(deptName, subservice) {
 // the REMAINING route — its first segment is the direction to walk right now.
 
 let _navPrevPathLen = null;   // remaining path length last step (wrong-way detection)
+let _navWrongStreak = 0;      // consecutive steps the route has grown
+const NAV_WRONG_WAY_STEPS = 2; // warn only after this many growth steps (PDR-drift tolerance)
 
-function _navStepReset() { _navPrevPathLen = null; }
+function _navStepReset() { _navPrevPathLen = null; _navWrongStreak = 0; }
 
 function _hideNavStep() {
   const el = document.getElementById('navStepPrompt');
@@ -488,17 +490,23 @@ function _updateNavInstruction() {
   const text = document.getElementById('navStepText');
   const remLen = path.length;
 
-  // Wrong-way: the shortest remaining route grew since the last step → the user
-  // stepped away from the destination.
+  // Wrong-way: the shortest remaining route grew vs the last step. A single
+  // growth can be PDR jitter, so only warn after NAV_WRONG_WAY_STEPS consecutive
+  // growth steps; any step toward the destination resets the streak.
   if (_navPrevPathLen != null && remLen > _navPrevPathLen) {
+    _navWrongStreak++;
+  } else {
+    _navWrongStreak = 0;
+  }
+  _navPrevPathLen = remLen;
+
+  if (_navWrongStreak >= NAV_WRONG_WAY_STEPS) {
     el.classList.add('wrong-way');
     icon.textContent = '⚠️';
     text.textContent = 'Wrong way — turn around and head back to the blue line';
-    _navPrevPathLen = remLen;
     el.style.display = '';
     return;
   }
-  _navPrevPathLen = remLen;
   el.classList.remove('wrong-way');
 
   // Compress the remaining path into straight runs.
