@@ -438,6 +438,7 @@ function navigateToDepartment(deptName, subservice) {
     document.body.classList.add('route-active');
     renderer.navActive = true;                       // draw "ME" at the start tile
     renderer.focusOnCell(startCell.row, startCell.col, 2.2);  // zoom in + center
+    _ensurePdrOn();                                  // start step-tracking so the dot moves as they walk
   }
 
   // One live instruction at a time (like the arrival prompt), updated as the
@@ -566,6 +567,19 @@ function _updateNavInstruction() {
     }
   }
   el.style.display = '';
+}
+
+// Start PDR step-tracking if it isn't already running, so the ME dot moves as
+// the citizen walks. Silent on devices without motion sensors (desktop testing
+// uses WASD/arrows instead) — no "not supported" alert.
+function _ensurePdrOn() {
+  if (NAV.pdrActive) return;
+  if (typeof DeviceMotionEvent === 'undefined') return;
+  const started = navStartPDR();
+  if (started && DOM.pdrToggleBtn) {
+    DOM.pdrToggleBtn.textContent = '🚶 PDR: On';
+    DOM.pdrToggleBtn.classList.add('active');
+  }
 }
 
 // Hide the dev-server-only buttons (Sync / Deploy Floors / Deploy Stamps).
@@ -920,28 +934,21 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') { clearSelectionState(); return; }
 
-    // Arrow keys: move nav position when nav mode is active (laptop PDR fallback)
-    if (STATE.navMode && !e.ctrlKey && !e.metaKey) {
-      const { row, col } = NAV.position;
-      if (e.key === 'ArrowUp')    { e.preventDefault(); navSetPosition(row - 1, col); return; }
-      if (e.key === 'ArrowDown')  { e.preventDefault(); navSetPosition(row + 1, col); return; }
-      if (e.key === 'ArrowLeft')  { e.preventDefault(); navSetPosition(row, col - 1); return; }
-      if (e.key === 'ArrowRight') { e.preventDefault(); navSetPosition(row, col + 1); return; }
-    }
-
-    // WASD: walk the position cursor while Capture Mode is on (laptop simulation
-    // of on-site PDR — drives the same NAV.position that captureAtPosition reads,
-    // so the "Capture here" button works identically to walking on-site).
-    // navSetPosition already clamps to grid bounds and silently stops at walls.
-    if (STATE.captureMode && !e.ctrlKey && !e.metaKey && !e.altKey) {
+    // Move the nav cursor with arrows OR WASD (laptop fallback for on-site PDR).
+    // Active in admin Navigate/Capture modes, and in the citizen view once a
+    // route is drawn — so the walking flow is testable without a phone.
+    // navSetPosition clamps to grid bounds and silently stops at walls.
+    const canWalk = STATE.navMode || STATE.captureMode ||
+      (STATE.viewMode === 'user' && document.body.classList.contains('route-active'));
+    if (canWalk && !e.ctrlKey && !e.metaKey && !e.altKey) {
       const tag = e.target && e.target.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
       const { row, col } = NAV.position || { row: 0, col: 0 };
       const k = e.key.toLowerCase();
-      if (k === 'w') { e.preventDefault(); navSetPosition(row - 1, col); return; }
-      if (k === 's') { e.preventDefault(); navSetPosition(row + 1, col); return; }
-      if (k === 'a') { e.preventDefault(); navSetPosition(row, col - 1); return; }
-      if (k === 'd') { e.preventDefault(); navSetPosition(row, col + 1); return; }
+      if (e.key === 'ArrowUp'    || k === 'w') { e.preventDefault(); navSetPosition(row - 1, col); return; }
+      if (e.key === 'ArrowDown'  || k === 's') { e.preventDefault(); navSetPosition(row + 1, col); return; }
+      if (e.key === 'ArrowLeft'  || k === 'a') { e.preventDefault(); navSetPosition(row, col - 1); return; }
+      if (e.key === 'ArrowRight' || k === 'd') { e.preventDefault(); navSetPosition(row, col + 1); return; }
     }
 
     if (!e.ctrlKey && !e.metaKey) return;
