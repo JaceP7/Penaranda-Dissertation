@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=39" />
+  <link rel="stylesheet" href="css/app.css?v=40" />
 </head>
 <body class="view-user">
 
@@ -245,13 +245,10 @@
       <button id="arrivalCloseBtn" class="btn-arrival-close">✕</button>
     </div>
 
-    <!-- Turn-by-turn text directions (citizen view, alongside the map line) -->
-    <div id="dirPanel" class="dir-panel" hidden>
-      <button id="dirToggle" class="dir-header" aria-expanded="true" title="Show / hide steps">
-        <span class="dir-title">🧭 Step-by-step directions</span>
-        <span class="dir-chevron">▾</span>
-      </button>
-      <ol id="dirList" class="dir-list"></ol>
+    <!-- One live walking instruction at a time (citizen view) -->
+    <div id="navStepPrompt" class="nav-step-prompt" style="display:none">
+      <span class="nav-step-icon" id="navStepIcon">➡️</span>
+      <span class="nav-step-text" id="navStepText">—</span>
     </div>
 
     <!-- Info bar -->
@@ -263,6 +260,19 @@
     </div>
 
   </main>
+
+  <!-- ═══ QR LOCATION PROMPT (on load, citizen view) ═══════════════════ -->
+  <div id="qrPromptModal" class="qr-prompt-modal" style="display:none">
+    <div class="qr-prompt-box">
+      <span class="qr-prompt-icon">📍</span>
+      <p class="qr-prompt-title">Set your location</p>
+      <p class="qr-prompt-text">Scan the QR code posted near you so we can give you accurate directions. No QR nearby? You can skip for now.</p>
+      <div class="qr-prompt-actions">
+        <button id="qrPromptScanBtn" class="btn-qr-prompt btn-qr-prompt-scan">📷 Scan QR</button>
+        <button id="qrPromptSkipBtn" class="btn-qr-prompt btn-qr-prompt-skip">Skip (for testing)</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ═══ QR CAMERA OVERLAY ════════════════════════════════════════════ -->
   <div id="qrOverlay" class="qr-overlay" style="display:none">
@@ -305,12 +315,12 @@
   <script src="js/data.js?v=32"></script>
   <script src="js/floor_presets.js?v=32"></script>
   <script src="js/stamp_presets.js?v=2"></script>
-  <script src="js/service_locations.js?v=4"></script>
+  <script src="js/service_locations.js?v=5"></script>
   <script src="js/dijkstra.js?v=30"></script>
   <script src="js/renderer.js?v=32"></script>
   <script src="js/compass.js?v=31"></script>
-  <script src="js/nav.js?v=35"></script>
-  <script src="js/app.js?v=53"></script>
+  <script src="js/nav.js?v=36"></script>
+  <script src="js/app.js?v=54"></script>
   <script src="js/chat.js?v=35"></script>
 
 </body>

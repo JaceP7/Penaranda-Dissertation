@@ -47,7 +47,7 @@ function setViewMode(mode) {
   document.body.classList.toggle('view-user',  STATE.viewMode === 'user');
   if (STATE.viewMode === 'admin') {
     document.body.classList.remove('route-active');   // admin sees the full map
-    if (typeof _hideDirections === 'function') _hideDirections();
+    if (typeof _hideNavStep === 'function') _hideNavStep();
   }
   // Citizen view starts collapsed: the Calamba hero shows with the labeled
   // "City Services Assistant 💬" button as the call-to-action. Tapping it opens
@@ -288,6 +288,10 @@ const DOM = {
   pdrToggleBtn:    $('pdrToggleBtn'),
   genQRBtn:        $('genQRBtn'),
   recalBtn:        $('recalBtn'),
+  // QR location prompt (on-load, citizen view)
+  qrPromptModal:   $('qrPromptModal'),
+  qrPromptScanBtn: $('qrPromptScanBtn'),
+  qrPromptSkipBtn: $('qrPromptSkipBtn'),
   // QR camera overlay
   qrOverlay:       $('qrOverlay'),
   qrVideo:         $('qrVideo'),
@@ -357,6 +361,17 @@ function _nearestStairOnCurrentFloor(row, col) {
   return best;
 }
 
+// Nearest walkable (non-wall) cell on the CURRENT floor to (row,col), or null.
+function _nearestOpenCell(row, col) {
+  let best = null, bestD = Infinity;
+  for (const n of NODES) {
+    if (n.wall) continue;
+    const d = Math.abs(n.row - row) + Math.abs(n.col - col);
+    if (d < bestD) { bestD = d; best = { row: n.row, col: n.col }; }
+  }
+  return best;
+}
+
 /**
  * Route the user to a department/service resolved by the RAG answer.
  * Uses service_locations.js to map the department → a stamp cell, picks the
@@ -400,6 +415,13 @@ function navigateToDepartment(deptName, subservice) {
   } else {
     startCell = { row: from.row, col: from.col };
   }
+  // Safety: the default entrance (38,72) sits on the outer wall — a route can't
+  // start on a wall. Snap to the nearest walkable cell so navigation works even
+  // before the user repositions via QR.
+  const _startNode = NODE_MAP[nodeId(startCell.row, startCell.col)];
+  if (_startNode && _startNode.wall) {
+    startCell = _nearestOpenCell(startCell.row, startCell.col) || startCell;
+  }
   STATE.startId    = nodeId(startCell.row, startCell.col);
   renderer.startId = STATE.startId;
 
@@ -417,12 +439,10 @@ function navigateToDepartment(deptName, subservice) {
     renderer.focusOnCell(startCell.row, startCell.col, 2.2);  // zoom in + center
   }
 
-  // Turn-by-turn text directions alongside the map line. For a cross-floor
-  // trip the on-floor path starts at the stairs, so prefix the stair step.
-  _renderDirections(
-    crossFloor ? `Take the stairs / elevator to ${_floorName(loc.floor)}, then:` : null,
-    loc.label
-  );
+  // One live instruction at a time (like the arrival prompt), updated as the
+  // user walks. Reset the wrong-way baseline for this fresh route.
+  _navStepReset();
+  _updateNavInstruction();
 
   // Tell the user what's happening.
   if (loc.fallback) {
@@ -434,26 +454,55 @@ function navigateToDepartment(deptName, subservice) {
   }
 }
 
-// ── Turn-by-turn text directions ────────────────────────────────────────────
-// Derives plain-language walking steps from the computed grid path so citizens
-// who can't read the map (or are walking, eyes-up) still get guidance. Steps
-// are computed once per route; the live "ME" marker + PDR re-centre handle
-// progress. Distance uses NAV.metresPerCell (~0.6 m/cell calibrated footprint).
+// ── Live single-instruction turn-by-turn ────────────────────────────────────
+// Instead of a full step list, show ONE instruction at a time (like the arrival
+// prompt) that updates as the user walks: e.g. "Turn left, then walk about 8 m".
+// Also warns when the user is heading the wrong way. Because onPositionChange
+// recomputes the path from the current cell each step, renderer._path is always
+// the REMAINING route — its first segment is the direction to walk right now.
 
-/** Cardinal name for a grid step vector. Grid up = North (matches PDR mapping). */
-function _dirCardinal(dr, dc) {
-  if (dr < 0) return 'north';
-  if (dr > 0) return 'south';
-  if (dc > 0) return 'east';
-  return 'west';
+let _navPrevPathLen = null;   // remaining path length last step (wrong-way detection)
+
+function _navStepReset() { _navPrevPathLen = null; }
+
+function _hideNavStep() {
+  const el = document.getElementById('navStepPrompt');
+  if (el) el.style.display = 'none';
 }
 
-/** Compress a node-id path into spoken walking steps: [{icon, text, sub}]. */
-function _buildDirectionSteps(path) {
-  if (!path || path.length < 2) return [];
-  const pts = path.map(id => { const [r, c] = id.split(',').map(Number); return { r, c }; });
+function _cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
-  // Group consecutive cells that share a travel direction into straight runs.
+/** Update the single live instruction from the remaining path. */
+function _updateNavInstruction() {
+  const el = document.getElementById('navStepPrompt');
+  if (!el) return;
+
+  // Only in the citizen view while a route is active.
+  if (STATE.viewMode !== 'user' || !document.body.classList.contains('route-active') || !STATE.endId) {
+    _hideNavStep(); return;
+  }
+  const path = (renderer && renderer._path) ? renderer._path : null;
+  if (!path || path.length < 2) { _hideNavStep(); return; }   // arrived / no path
+
+  const icon = document.getElementById('navStepIcon');
+  const text = document.getElementById('navStepText');
+  const remLen = path.length;
+
+  // Wrong-way: the shortest remaining route grew since the last step → the user
+  // stepped away from the destination.
+  if (_navPrevPathLen != null && remLen > _navPrevPathLen) {
+    el.classList.add('wrong-way');
+    icon.textContent = '⚠️';
+    text.textContent = 'Wrong way — turn around and head back to the blue line';
+    _navPrevPathLen = remLen;
+    el.style.display = '';
+    return;
+  }
+  _navPrevPathLen = remLen;
+  el.classList.remove('wrong-way');
+
+  // Compress the remaining path into straight runs.
+  const pts = path.map(id => { const [r, c] = id.split(',').map(Number); return { r, c }; });
   const segs = [];
   let dir = null, len = 0;
   for (let i = 1; i < pts.length; i++) {
@@ -464,65 +513,34 @@ function _buildDirectionSteps(path) {
   }
   if (dir) segs.push({ dr: dir.dr, dc: dir.dc, len });
 
-  const mpc  = (typeof NAV !== 'undefined' && NAV.metresPerCell) ? NAV.metresPerCell : 1;
-  const dist = cells => `about ${Math.max(1, Math.round(cells * mpc))} m`;
+  const mpc = (typeof NAV !== 'undefined' && NAV.metresPerCell) ? NAV.metresPerCell : 1;
+  const m   = cells => Math.max(1, Math.round(cells * mpc));
+  const s0  = segs[0];
 
-  const steps = [];
-  segs.forEach((seg, i) => {
-    if (i === 0) {
-      steps.push({ icon: '🚶', text: `Head ${_dirCardinal(seg.dr, seg.dc)}`, sub: dist(seg.len) });
+  if (segs.length === 1) {
+    icon.textContent = '🏁';
+    text.textContent = s0.len <= 2
+      ? 'Almost there — your destination is just ahead'
+      : `Walk about ${m(s0.len)} m to your destination`;
+  } else {
+    const s1    = segs[1];
+    const cross = s0.dc * s1.dr - s0.dr * s1.dc;   // >0 right, <0 left (y-down)
+    const dot   = s0.dc * s1.dc + s0.dr * s1.dr;
+    let tword = 'turn', ticon = '➡️';
+    if (dot < 0)        { tword = 'make a U-turn'; ticon = '↩️'; }
+    else if (cross > 0) { tword = 'turn right';    ticon = '➡️'; }
+    else if (cross < 0) { tword = 'turn left';     ticon = '⬅️'; }
+
+    if (s0.len <= 2) {
+      // At the corner → the user's requested phrasing.
+      icon.textContent = ticon;
+      text.textContent = `${_cap(tword)}, then walk about ${m(s1.len)} m`;
     } else {
-      const p = segs[i - 1];
-      // Cross product in screen coords (x=col→, y=row↓): >0 right, <0 left.
-      const cross = p.dc * seg.dr - p.dr * seg.dc;
-      const dot   = p.dc * seg.dc + p.dr * seg.dr;
-      let icon = '⬆️', word = 'Continue';
-      if (dot < 0)        { icon = '↩️'; word = 'Make a U-turn'; }
-      else if (cross > 0) { icon = '➡️'; word = 'Turn right'; }
-      else if (cross < 0) { icon = '⬅️'; word = 'Turn left'; }
-      steps.push({ icon, text: `${word}, then walk ${dist(seg.len)}`, sub: null });
+      icon.textContent = '🚶';
+      text.textContent = `Walk about ${m(s0.len)} m, then ${tword}`;
     }
-  });
-  steps.push({ icon: '🏁', text: 'Arrive at your destination', sub: null });
-  return steps;
-}
-
-/** Render directions for the current renderer path. `prefix` = optional note. */
-function _renderDirections(prefix, destLabel) {
-  const panel = document.getElementById('dirPanel');
-  const list  = document.getElementById('dirList');
-  if (!panel || !list) return;
-
-  const path  = (renderer && renderer._path) ? renderer._path : null;
-  const steps = _buildDirectionSteps(path);
-  if (!steps.length) { _hideDirections(); return; }
-
-  list.innerHTML = '';
-  if (prefix) {
-    const li = document.createElement('li');
-    li.className = 'dir-step dir-step-note';
-    li.innerHTML = `<span class="dir-step-icon">🪜</span><span class="dir-step-text">${prefix}</span>`;
-    list.appendChild(li);
   }
-  steps.forEach((s, i) => {
-    if (destLabel && i === steps.length - 1) s = { ...s, text: `Arrive at ${destLabel}` };
-    const li = document.createElement('li');
-    li.className = 'dir-step';
-    li.innerHTML = `<span class="dir-step-icon">${s.icon}</span>` +
-      `<span class="dir-step-text">${s.text}${s.sub ? ` <em class="dir-step-sub">${s.sub}</em>` : ''}</span>`;
-    list.appendChild(li);
-  });
-
-  panel.removeAttribute('hidden');
-  panel.classList.add('dir-open');
-  panel.classList.remove('dir-collapsed');
-  const tog = document.getElementById('dirToggle');
-  if (tog) tog.setAttribute('aria-expanded', 'true');
-}
-
-function _hideDirections() {
-  const panel = document.getElementById('dirPanel');
-  if (panel) { panel.setAttribute('hidden', ''); panel.classList.remove('dir-open'); }
+  el.style.display = '';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -566,7 +584,10 @@ document.addEventListener('DOMContentLoaded', () => {
     renderer._draw();
     // Arrival detection: show celebration when ME tile reaches destination
     if (STATE.endId && id === STATE.endId) {
+      _hideNavStep();
       _showArrivalPrompt();
+    } else {
+      _updateNavInstruction();   // refresh the one live instruction as they walk
     }
   };
 
@@ -680,19 +701,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   DOM.askAgainBtn.addEventListener('click', () => {
     document.body.classList.remove('route-active');
-    _hideDirections();
+    _hideNavStep();
     if (typeof CHAT !== 'undefined' && CHAT.open) CHAT.open();
   });
 
-  // Directions panel: tap the header to collapse/expand (keeps the map clear).
-  const _dirToggle = document.getElementById('dirToggle');
-  if (_dirToggle) {
-    _dirToggle.addEventListener('click', () => {
-      const panel = document.getElementById('dirPanel');
-      const collapsed = panel.classList.toggle('dir-collapsed');
-      _dirToggle.setAttribute('aria-expanded', String(!collapsed));
-    });
-  }
   DOM.exportStampsBtn.addEventListener('click', exportStampPresetsFile);
   DOM.deployStampsBtn.addEventListener('click', deployStampPresetsToGit);
 
@@ -939,25 +951,42 @@ document.addEventListener('DOMContentLoaded', () => {
   // QR-first positioning: if the page was opened from a posted-QR deep link
   // (e.g. ?qr=1:38,72 scanned with the phone's native camera), set the user's
   // start location/floor now that the renderer + NAV callbacks are wired.
-  _applyStartupDeepLink();
+  const _viaDeepLink = _applyStartupDeepLink();
+
+  // QR location prompt (citizen view): nudge the user to scan a nearby QR for an
+  // accurate start. Skipped if a deep link already located them.
+  _maybeShowQrPrompt(_viaDeepLink);
+
+  // QR prompt buttons.
+  if (DOM.qrPromptScanBtn) DOM.qrPromptScanBtn.addEventListener('click', () => {
+    _hideQrPrompt();
+    DOM.qrOverlay.style.display = 'flex';
+    navStartQRScan(DOM.qrVideo, DOM.qrCanvas, (r, c) => {
+      NAV._stepsSinceQR = 0;
+      updateDriftIndicator();
+      DOM.qrOverlay.style.display = 'none';
+    });
+  });
+  if (DOM.qrPromptSkipBtn) DOM.qrPromptSkipBtn.addEventListener('click', _hideQrPrompt);
 });
 
 /**
  * Apply a posted-QR deep link (?qr= / ?loc= / ?at=) to set the citizen's
  * starting floor + cell. This is the primary, most accurate way a citizen on
  * their own phone gets localised — PDR step-counting is only the backup.
+ * Returns true if a deep link was applied.
  */
 function _applyStartupDeepLink() {
-  if (typeof navParseDeepLink !== 'function') return;
+  if (typeof navParseDeepLink !== 'function') return false;
   let raw;
   try {
     const params = new URLSearchParams(location.search);
     raw = params.get('qr') || params.get('loc') || params.get('at');
-  } catch (_) { return; }
-  if (!raw) return;
+  } catch (_) { return false; }
+  if (!raw) return false;
 
   const loc = navParseDeepLink(raw);
-  if (!loc) return;
+  if (!loc) return false;
 
   const f = Math.max(0, Math.min(9, loc.floor));
   if (f !== STATE.currentFloor) switchFloor(f);
@@ -966,10 +995,33 @@ function _applyStartupDeepLink() {
   NAV._stepsSinceQR = 0;
   if (typeof updateDriftIndicator === 'function') updateDriftIndicator();
   _showStairToast(`📍 Location set from QR — you're on ${_floorName(f)}.`);
+  return true;
+}
+
+// ── On-load QR location prompt ──────────────────────────────────────────────
+const QR_PROMPT_SS_KEY = 'wf-qr-prompt-dismissed';
+
+function _hideQrPrompt() {
+  if (DOM.qrPromptModal) DOM.qrPromptModal.style.display = 'none';
+  try { sessionStorage.setItem(QR_PROMPT_SS_KEY, '1'); } catch (_) {}
+}
+
+/** Show the "scan a nearby QR" prompt once per session in the citizen view. */
+function _maybeShowQrPrompt(viaDeepLink) {
+  if (viaDeepLink) return;                          // already located
+  if (STATE.viewMode !== 'user') return;           // admins don't need it
+  let dismissed = false;
+  try { dismissed = sessionStorage.getItem(QR_PROMPT_SS_KEY) === '1'; } catch (_) {}
+  if (dismissed) return;
+  if (DOM.qrPromptModal) DOM.qrPromptModal.style.display = 'flex';
 }
 
 // ── Cell interaction ──────────────────────────────────────────────────────────
 function handleCellTap(row, col) {
+  // Citizen (user) view: the map is read-only. The destination is set only by
+  // the chat's "Take me there" — tapping the grid must NOT move the end tile.
+  if (STATE.viewMode === 'user') return;
+
   const id   = nodeId(row, col);
   const node = NODE_MAP[id];
 

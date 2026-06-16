@@ -885,15 +885,21 @@ body {
 .admin-toggle:hover { background: #1e293b; }
 body.view-admin .admin-toggle { background: #B45309; color: #fff; }  /* amber in admin */
 
-/* "Ask again" — user view, shown only after a route is drawn */
+/* "Ask again" — user view, shown only after a route is drawn. Lower-right
+   corner (never centered), takes the chat pill's place so only one bubble
+   is ever visible at a time. */
 .ask-again-btn {
-  position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+  position: fixed; bottom: 20px; right: 20px; left: auto; transform: none;
   z-index: 1200; display: none;
-  background: #1E40AF; color: #fff; border: none; border-radius: 40px;
-  padding: 11px 22px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  background: #1E40AF; color: #fff; border: none; border-radius: 26px;
+  padding: 0 18px; height: 52px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
 }
-body.view-user.route-active .ask-again-btn { display: inline-block; }
+body.view-user.route-active .ask-again-btn { display: inline-flex; align-items: center; }
+
+/* Only one chat bubble at a time: when a route is active, the "Ask again"
+   button replaces the "City Services Assistant" pill. */
+body.view-user.route-active .chat-toggle-btn { display: none !important; }
 
 /* USER VIEW — hide all editing / admin chrome */
 body.view-user .header-secondary,
@@ -933,40 +939,42 @@ body.view-user:not(.route-active) .chat-panel.chat-open {
 /* ADMIN VIEW — never show the citizen "ask again" button */
 body.view-admin .ask-again-btn { display: none !important; }
 
-/* ── Turn-by-turn directions panel (citizen view) ──────────────────────── */
-.dir-panel {
-  position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+/* ── Single live walking instruction (citizen view) ────────────────────── */
+.nav-step-prompt {
+  position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
   z-index: 1150; width: min(440px, calc(100vw - 20px));
-  background: #fff; border-radius: 14px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.22);
-  overflow: hidden; display: none;
+  display: flex; align-items: center; gap: 11px;
+  padding: 13px 18px; background: #1E40AF; color: #fff;
+  border-radius: 14px; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
+  font-size: 1rem; font-weight: 700; line-height: 1.3;
 }
-/* Only ever shown to citizens while a route is active. */
-body.view-user.route-active .dir-panel.dir-open { display: block; }
-.dir-header {
-  width: 100%; display: flex; align-items: center; justify-content: space-between;
-  gap: 8px; padding: 11px 14px; background: #1E40AF; color: #fff;
-  border: none; cursor: pointer; font-size: 0.9rem; font-weight: 700;
+.nav-step-prompt.wrong-way { background: #B91C1C; }   /* red when off-route */
+.nav-step-icon { flex-shrink: 0; font-size: 1.5rem; line-height: 1; }
+.nav-step-text { flex: 1; }
+
+/* ── On-load QR location prompt (citizen view) ─────────────────────────── */
+.qr-prompt-modal {
+  position: fixed; inset: 0; z-index: 1300;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(15, 23, 42, 0.55); padding: 20px;
 }
-.dir-chevron { transition: transform 0.2s; font-size: 0.8rem; }
-.dir-panel.dir-collapsed .dir-chevron { transform: rotate(-90deg); }
-.dir-list {
-  list-style: none; margin: 0; padding: 4px 10px 8px;
-  max-height: 38vh; overflow-y: auto;
+.qr-prompt-box {
+  background: #fff; border-radius: 18px; padding: 26px 22px;
+  max-width: 360px; width: 100%; text-align: center;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
 }
-.dir-panel.dir-collapsed .dir-list { display: none; }
-.dir-step {
-  display: flex; gap: 10px; align-items: flex-start;
-  padding: 9px 6px; border-bottom: 1px solid #F1F5F9;
-  font-size: 0.86rem; color: #1E293B; line-height: 1.4;
+.qr-prompt-icon { font-size: 2.4rem; display: block; margin-bottom: 6px; }
+.qr-prompt-title { font-size: 1.2rem; font-weight: 800; color: #1E293B; margin: 0 0 8px; }
+.qr-prompt-text  { font-size: 0.9rem; color: #475569; line-height: 1.5; margin: 0 0 18px; }
+.qr-prompt-actions { display: flex; flex-direction: column; gap: 10px; }
+.btn-qr-prompt {
+  border: none; border-radius: 12px; padding: 13px 16px;
+  font-size: 0.95rem; font-weight: 700; cursor: pointer;
 }
-.dir-step:last-child { border-bottom: none; }
-.dir-step-icon { flex-shrink: 0; font-size: 1rem; width: 1.4em; text-align: center; }
-.dir-step-sub { color: #64748B; font-style: normal; font-size: 0.78rem; }
-.dir-step-note {
-  background: #FFFBEB; border-radius: 8px; margin: 4px 0;
-  font-weight: 600; color: #92400E;
-}
+.btn-qr-prompt-scan { background: #1E40AF; color: #fff; }
+.btn-qr-prompt-scan:hover { background: #1D4ED8; }
+.btn-qr-prompt-skip { background: #F1F5F9; color: #475569; }
+.btn-qr-prompt-skip:hover { background: #E2E8F0; }
 
 .btn-cat-del {
   background: #FEE2E2;
