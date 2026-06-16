@@ -464,6 +464,7 @@ function navigateToDepartment(deptName, subservice) {
 
 let _navPrevPathLen = null;   // remaining path length last step (wrong-way detection)
 let _navWrongStreak = 0;      // consecutive steps the route has grown
+let _lastMeCell     = null;   // previous ME cell, for movement-based facing
 const NAV_WRONG_WAY_STEPS = 2; // warn only after this many growth steps (PDR-drift tolerance)
 
 function _navStepReset() { _navPrevPathLen = null; _navWrongStreak = 0; }
@@ -474,6 +475,21 @@ function _hideNavStep() {
 }
 
 function _cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+// ME-puck facing, snapped strictly to the four grid cardinals (matches the PDR
+// step mapping: grid up = North, right = East, down = South, left = West).
+function _cardinalFromDelta(dr, dc) {
+  if (dr === 0 && dc === 0) return null;
+  if (Math.abs(dr) >= Math.abs(dc)) return dr < 0 ? 'N' : 'S';
+  return dc > 0 ? 'E' : 'W';
+}
+function _cardinalFromHeading() {
+  const h = ((NAV.heading - NAV.headingOffset) % 360 + 360) % 360;
+  if (h < 45 || h >= 315) return 'N';
+  if (h < 135) return 'E';
+  if (h < 225) return 'S';
+  return 'W';
+}
 
 /** Update the single live instruction from the remaining path. */
 function _updateNavInstruction() {
@@ -587,6 +603,13 @@ document.addEventListener('DOMContentLoaded', () => {
     STATE.startId     = id;
     renderer.startId  = id;
     DOM.navPosDisplay.textContent = `${col}, ${row}`;
+    // Face the way they just moved (only for a real step; QR teleports/heading
+    // handle their own facing). Snapped strictly to a cardinal.
+    if (_lastMeCell) {
+      const card = _cardinalFromDelta(row - _lastMeCell.row, col - _lastMeCell.col);
+      if (card) renderer.meFacing = card;
+    }
+    _lastMeCell = { row, col };
     renderer.centerOnCell(row, col);
     updateDriftIndicator();
     recompute();
@@ -646,6 +669,12 @@ document.addEventListener('DOMContentLoaded', () => {
   NAV.onHeadingChange = (h) => {
     DOM.compassNeedle.style.transform = `rotate(${h}deg)`;
     DOM.compassHdgText.textContent = `${Math.round(h)}°`;
+    // Turn the ME-puck triangle to the way they're facing. Snapped to a cardinal,
+    // so we only redraw when it actually flips (crossing a 45° boundary) — cheap.
+    if (renderer && renderer.navActive) {
+      const card = _cardinalFromHeading();
+      if (card !== renderer.meFacing) { renderer.meFacing = card; renderer._draw(); }
+    }
   };
 
   // Header buttons

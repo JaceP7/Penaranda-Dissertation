@@ -64,6 +64,8 @@ class GridRenderer {
     this.startId   = '0,0';
     /** When true, draws "ME" label + pulse ring on the start cell. */
     this.navActive = false;
+    /** Facing direction of the ME puck, snapped strictly to 'N'|'E'|'S'|'W'. */
+    this.meFacing = 'N';
     /** When true, draws captured-coordinate pins on the current floor. */
     this.captureActive = false;
     /** Current floor index — shown as a watermark on the canvas. */
@@ -315,19 +317,41 @@ class GridRenderer {
       }
     }
 
-    // ── Nav "ME" pulse ring (drawn on top of the start cell) ─────────────────
+    // ── Nav "ME" puck: circle + facing triangle (strictly N/E/S/W) ───────────
     if (this.navActive) {
       const sid = this.startId.split(',').map(Number);
       const nr  = sid[0], nc = sid[1];
       const nx  = this._tx + nc * cs + cs / 2;
       const ny  = this._ty + nr * cs + cs / 2;
       const rad = cs * 0.46;
+
+      // Circle (the "you are here" ring)
       ctx.save();
       ctx.strokeStyle = '#FFFFFF';
       ctx.lineWidth   = Math.max(1.5, cs * 0.07);
       ctx.globalAlpha = 0.85;
       ctx.beginPath();
       ctx.arc(nx, ny, rad, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      // Facing triangle — snaps to one of the four cardinals only.
+      const faceAngle = { E: 0, S: Math.PI / 2, W: Math.PI, N: -Math.PI / 2 }[this.meFacing] ?? -Math.PI / 2;
+      const tip  = rad + cs * 0.22;   // points just beyond the ring
+      const base = rad * 0.55;
+      const half = cs * 0.18;
+      ctx.save();
+      ctx.translate(nx, ny);
+      ctx.rotate(faceAngle);          // triangle defined pointing east (+x), then rotated
+      ctx.beginPath();
+      ctx.moveTo(tip, 0);
+      ctx.lineTo(base, -half);
+      ctx.lineTo(base, half);
+      ctx.closePath();
+      ctx.fillStyle   = '#1E40AF';
+      ctx.fill();
+      ctx.lineWidth   = Math.max(1, cs * 0.045);
+      ctx.strokeStyle = '#FFFFFF';
       ctx.stroke();
       ctx.restore();
     }
