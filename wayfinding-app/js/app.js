@@ -373,6 +373,39 @@ function _nearestOpenCell(row, col) {
   return best;
 }
 
+// Nearest walkable cell to (targetRow,targetCol) that is REACHABLE from startId
+// (same connected walkable region). Guarantees a route exists from start to the
+// result. Returns { row, col, dist } where dist is the Manhattan gap left to the
+// target (0 = exact hit), or null if the start cell itself isn't walkable.
+// This avoids "No path" when an office's stamp anchor lands on a wall or in a
+// pocket the user can't reach.
+function _nearestReachableCell(targetRow, targetCol, startId) {
+  const start = NODE_MAP[startId];
+  if (!start || start.wall) return null;
+  const seen  = new Set([startId]);
+  const queue = [startId];
+  const dirs  = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+  let best  = { row: start.row, col: start.col };
+  let bestD = Math.abs(start.row - targetRow) + Math.abs(start.col - targetCol);
+  let head  = 0;
+  while (head < queue.length) {
+    const n = NODE_MAP[queue[head++]];
+    const d = Math.abs(n.row - targetRow) + Math.abs(n.col - targetCol);
+    if (d < bestD) { bestD = d; best = { row: n.row, col: n.col }; if (d === 0) break; }
+    for (const [dr, dc] of dirs) {
+      const nr = n.row + dr, nc = n.col + dc;
+      if (nr < 0 || nc < 0 || nr >= GRID_ROWS || nc >= GRID_COLS) continue;
+      const nid = nodeId(nr, nc);
+      if (seen.has(nid)) continue;
+      const nb = NODE_MAP[nid];
+      if (!nb || nb.wall) continue;
+      seen.add(nid); queue.push(nid);
+    }
+  }
+  best.dist = bestD;
+  return best;
+}
+
 /**
  * Route the user to a department/service resolved by the RAG answer.
  * Uses service_locations.js to map the department → a stamp cell, picks the
@@ -422,12 +455,21 @@ function navigateToDepartment(deptName, subservice) {
   const _startNode = NODE_MAP[nodeId(startCell.row, startCell.col)];
   if (_startNode && _startNode.wall) {
     startCell = _nearestOpenCell(startCell.row, startCell.col) || startCell;
+    // Same floor: also move the LIVE position onto the walkable cell, so the
+    // per-step recompute (PDR/WASD) never starts on a wall and flashes "blocked".
+    if (!crossFloor && NAV.position) NAV.position = { row: startCell.row, col: startCell.col };
   }
   STATE.startId    = nodeId(startCell.row, startCell.col);
   renderer.startId = STATE.startId;
 
-  // Destination + route.
-  STATE.endId = nodeId(loc.row, loc.col);
+  // Destination: the office's stamp anchor is often a wall (or sits in a
+  // walkable region the start can't reach), which would make recompute() report
+  // "No path — walls are blocking the route." Snap the end to the nearest cell
+  // actually reachable from the start so a route always draws.
+  const reach   = _nearestReachableCell(loc.row, loc.col, STATE.startId);
+  const endCell = reach || { row: loc.row, col: loc.col };
+  const reachGap = reach ? reach.dist : Infinity;   // 0 = exact office cell
+  STATE.endId = nodeId(endCell.row, endCell.col);
   renderer.setEnd(STATE.endId);
   recompute();
 
@@ -449,6 +491,10 @@ function navigateToDepartment(deptName, subservice) {
   // Tell the user what's happening.
   if (loc.fallback) {
     _showStairToast(`📍 ${deptName} isn't pinned yet — routing to the Information desk. Please ask there.`);
+  } else if (reachGap > 6) {
+    // Couldn't get near the office — the floor map is probably missing a
+    // doorway between regions. Guide as close as possible and say so.
+    _showStairToast(`📍 Couldn't map a full path to ${loc.label} (a doorway may be missing on the map). Guiding you as close as possible — please ask at the desk.`);
   } else if (crossFloor) {
     _showStairToast(`📍 ${loc.label} is on ${_floorName(loc.floor)}. Take the stairs/elevator, then follow the route.`);
   } else {
@@ -821,6 +867,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Arrival prompt close button
   document.getElementById('arrivalCloseBtn').addEventListener('click', _hideArrivalPrompt);
+  document.getElementById('arrivalAskAgainBtn').addEventListener('click', _arrivalAskAgain);
+  document.getElementById('arrivalHomeBtn').addEventListener('click', _arrivalGoHome);
 
   // Nav panel buttons
   DOM.scanQRBtn.addEventListener('click', () => {
@@ -984,6 +1032,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // start location/floor now that the renderer + NAV callbacks are wired. This
   // also sets NAV._hasQRFix, which suppresses the later "Take me there" prompt.
   _applyStartupDeepLink();
+
+  // Unless a QR/deep-link already placed the citizen precisely, open on the
+  // Ground Floor where the default entrance position lives (a stale restored
+  // floor must not strand the start marker / routing on the wrong floor).
+  if (!NAV._hasQRFix) _pinCitizenStartFloor();
 
   // QR location prompt buttons. The prompt itself is shown AFTER "Take me there"
   // (see requestNavigation); each button then resumes the pending route.
@@ -1774,6 +1827,34 @@ function _syncFloorDisplay() {
   DOM.floorDisplay.textContent = _floorLabel(STATE.currentFloor);
 }
 
+// Pin the citizen's starting floor to the Ground Floor — where the default
+// entrance position (navInit → SERVICE_DEFAULT_ENTRANCE) lives. loadGridState()
+// restores whatever floor was last saved on this device (an admin may have left
+// the editor on Lower Ground), which would otherwise strand the citizen's start
+// marker — and the "from floor" used for routing — on the wrong floor. We load
+// the Ground floor's walls WITHOUT saveGridState(), so the admin's saved floor
+// memory is preserved. A QR/deep-link fix takes priority, so callers skip this
+// when NAV._hasQRFix is set.
+function _pinCitizenStartFloor() {
+  const GF = (typeof SERVICE_DEFAULT_ENTRANCE === 'object' && SERVICE_DEFAULT_ENTRANCE)
+    ? SERVICE_DEFAULT_ENTRANCE.floor : 1;
+  if (STATE.currentFloor === GF) { _syncFloorDisplay(); return; }
+  // Cache the floor we're leaving, then load Ground (mirrors switchFloor, minus
+  // the destination-clearing and persistence side effects).
+  FLOOR_WALLS[STATE.currentFloor] = NODES.map(n => n.cellType || 'open');
+  STATE.currentFloor = GF;
+  NAV._currentFloor  = GF;
+  if (renderer) renderer.currentFloor = GF;
+  const walls = FLOOR_WALLS[GF];
+  NODES.forEach((n, i) => {
+    const v = walls ? walls[i] : 'open';
+    if (typeof v === 'boolean') { n.wall = v; n.cellType = v ? 'wall' : 'open'; }
+    else { n.cellType = v || 'open'; n.wall = n.cellType === 'wall'; }
+  });
+  _syncFloorDisplay();
+  if (renderer) { recompute(); renderer._draw(); }
+}
+
 // ── Stair UI ──────────────────────────────────────────────────────────────────
 
 let _stairToastTimer   = null;
@@ -1886,23 +1967,48 @@ function _hideStairConfirm() {
 
 // ── Arrival prompt ────────────────────────────────────────────────────────────
 
-let _arrivalTimer = null;
-
 function _showArrivalPrompt() {
   const el = document.getElementById('arrivalPrompt');
   if (!el) return;
   el.style.display = 'flex';
+  // No auto-dismiss: the prompt now offers "Ask again" / "Back home" actions,
+  // so it stays until the citizen chooses one (or taps ✕ to keep viewing the map).
   requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
-  clearTimeout(_arrivalTimer);
-  _arrivalTimer = setTimeout(_hideArrivalPrompt, 4000);
 }
 
 function _hideArrivalPrompt() {
-  clearTimeout(_arrivalTimer);
   const el = document.getElementById('arrivalPrompt');
   if (!el) return;
   el.classList.remove('visible');
   setTimeout(() => { if (!el.classList.contains('visible')) el.style.display = 'none'; }, 300);
+}
+
+// Clear the just-finished route (destination, path, ME marker) so the citizen
+// returns to a clean state before asking again or going home.
+function _clearFinishedRoute() {
+  STATE.endId = null;
+  document.body.classList.remove('route-active');
+  _hideNavStep();
+  if (renderer) {
+    renderer.navActive = false;
+    if (renderer.clearEnd)  renderer.clearEnd();
+    if (renderer.clearPath) renderer.clearPath();
+    renderer._draw();
+  }
+}
+
+// Arrival → "Ask again": clear the finished route and reopen the assistant.
+function _arrivalAskAgain() {
+  _hideArrivalPrompt();
+  _clearFinishedRoute();
+  if (typeof CHAT !== 'undefined' && CHAT.open) CHAT.open();
+}
+
+// Arrival → "Back home": clear the finished route and collapse to the hero.
+function _arrivalGoHome() {
+  _hideArrivalPrompt();
+  _clearFinishedRoute();
+  if (typeof CHAT !== 'undefined' && CHAT.close) CHAT.close();
 }
 
 // ── Grid persistence (localStorage + server sync) ─────────────────────────────
