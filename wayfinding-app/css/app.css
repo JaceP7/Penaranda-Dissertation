@@ -596,44 +596,75 @@ body {
   color: #ECFDF5;
   border-radius: 20px;
   box-shadow: 0 8px 36px rgba(0,0,0,0.45);
-  padding: 18px 26px;
+  padding: 26px 28px 22px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   z-index: 1002;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease, transform 0.3s ease;
-  white-space: nowrap;
+  text-align: center;
 }
 .arrival-prompt.visible {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
   pointer-events: auto;
 }
-.arrival-icon { font-size: 1.6rem; flex-shrink: 0; }
-.arrival-text { font-size: 1rem; font-weight: 700; }
+.arrival-icon { font-size: 2rem; flex-shrink: 0; }
+.arrival-text { font-size: 1.05rem; font-weight: 700; }
+.arrival-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.btn-arrival-action {
+  background: rgba(255,255,255,0.16);
+  color: #ECFDF5;
+  border: 1px solid rgba(255,255,255,0.32);
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+.btn-arrival-action:hover { background: rgba(255,255,255,0.28); }
+.btn-arrival-action:active { transform: scale(0.97); }
+.btn-arrival-action.primary {
+  background: #ECFDF5;
+  color: #065F46;
+  border-color: #ECFDF5;
+}
+.btn-arrival-action.primary:hover { background: #ffffff; }
 .btn-arrival-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
   background: rgba(255,255,255,0.18);
   color: #ECFDF5;
   border: 1px solid rgba(255,255,255,0.30);
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
   cursor: pointer;
   flex-shrink: 0;
-  margin-left: 6px;
   transition: background 0.15s;
 }
 .btn-arrival-close:hover { background: rgba(255,255,255,0.30); }
 @media (max-width: 640px) {
-  .arrival-prompt { padding: 14px 18px; gap: 10px; }
-  .arrival-text { font-size: 0.9rem; }
+  .arrival-prompt { padding: 22px 20px 18px; gap: 9px; }
+  .arrival-text { font-size: 0.95rem; }
+  .arrival-actions { width: 100%; }
+  .btn-arrival-action { flex: 1; min-width: 120px; }
 }
 
 /* ── Stamp action row (Clear + Save preset) ─────────────────────── */
@@ -1773,3 +1804,21 @@ body.view-admin .ask-again-btn { display: none !important; }
 }
 .chat-send-btn:hover { background: #1D4ED8; }
 .chat-send-btn:disabled { background: #94A3B8; cursor: not-allowed; }
+
+/* ── Mobile: full-screen chat that stays above the on-screen keyboard ─────── */
+@media (max-width: 640px) {
+  .chat-panel.chat-open,
+  body.view-user:not(.route-active) .chat-panel.chat-open {
+    top: 0; left: 0; right: 0; bottom: auto;
+    width: 100vw; height: 100dvh;
+    transform: none; border-radius: 0;
+  }
+  /* let the messages area shrink so the input row is never pushed off-screen */
+  .chat-messages { min-height: 0; }
+  /* 16px input prevents iOS Safari from auto-zooming (and shifting) on focus */
+  .chat-input { font-size: 16px; }
+  .chat-input-row { padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+  /* keyboard up → hide intro + starters to give messages + input the room */
+  .chat-panel.chat-kbd .chat-intro,
+  .chat-panel.chat-kbd .chat-starters { display: none; }
+}

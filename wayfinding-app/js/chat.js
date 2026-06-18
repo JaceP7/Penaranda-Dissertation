@@ -40,8 +40,13 @@ const CHAT = (() => {
     _toggleBtn.setAttribute('aria-expanded', String(_open));
     if (_open) {
       _badge.style.display = 'none';
+      _syncViewport();
       _input.focus();
       _scrollBottom();
+    } else {
+      _panel.style.height = '';   // restore CSS-driven sizing when closed
+      _panel.style.top = '';
+      _panel.classList.remove('chat-kbd');
     }
   }
 
@@ -311,23 +316,84 @@ const CHAT = (() => {
     _sendBtn  = document.getElementById('chatSendBtn');
     _starters = document.getElementById('chatStarters');
 
-    // Build the tappable starter chips once.
-    const chipsWrap = document.getElementById('chatStartersChips');
-    STARTERS.forEach(s => {
+    // Render the hardcoded starters immediately; analytics may replace them.
+    _renderStarterChips(STARTERS);
+
+    _panel.querySelector('.chat-close-btn').addEventListener('click', toggle);
+    _sendBtn.addEventListener('click', send);
+    _input.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
+
+    // Mobile: when the input is focused the keyboard opens — keep the field and
+    // latest messages visible by tracking the visual viewport.
+    _input.addEventListener('focus', () => setTimeout(() => { _syncViewport(); _scrollBottom(); }, 120));
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', _syncViewport);
+      window.visualViewport.addEventListener('scroll', _syncViewport);
+    }
+  }
+
+  // ── Starter chips ──────────────────────────────────────────────────────
+  function _renderStarterChips(list) {
+    const wrap = document.getElementById('chatStartersChips');
+    if (!wrap) return;
+    wrap.innerHTML = '';
+    list.forEach(s => {
       const chip = document.createElement('button');
       chip.className = 'chat-starter-chip';
       chip.textContent = s.label;
+      chip.title = s.query;
       chip.addEventListener('click', () => {
         if (_loading) return;
         _input.value = s.query;
         send();
       });
-      chipsWrap.appendChild(chip);
+      wrap.appendChild(chip);
     });
+  }
 
-    _panel.querySelector('.chat-close-btn').addEventListener('click', toggle);
-    _sendBtn.addEventListener('click', send);
-    _input.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
+  // Tidy a raw service name into a short chip label (drop trailing parentheticals).
+  function _starterLabel(name) {
+    let s = String(name).replace(/\s*[-–—]\s*\(.*?\)\s*$/, '').replace(/\s*\(.*?\)\s*$/, '').trim();
+    if (s.length > 30) s = s.slice(0, 28).trim() + '…';
+    return s || String(name).slice(0, 30);
+  }
+
+  // Replace the default chips with the top-5 most-asked services from the live
+  // analytics log. Falls back silently to the hardcoded STARTERS when there
+  // isn't enough real data yet (or analytics isn't reachable).
+  async function _loadDynamicStarters() {
+    try {
+      const res = await fetch('/api/analytics');
+      if (!res.ok) return;
+      const data = await res.json();
+      const top = Array.isArray(data.topSubservices) ? data.topSubservices : [];
+      if (top.length < 3) return;                       // not enough signal — keep defaults
+      const chips = top.slice(0, 5)
+        .filter(x => x && x.name)
+        .map(x => ({ label: _starterLabel(x.name), query: String(x.name) }));
+      if (chips.length >= 3) _renderStarterChips(chips);
+    } catch (_) { /* keep hardcoded defaults */ }
+  }
+
+  // ── Mobile viewport / keyboard handling ────────────────────────────────
+  function _isMobile() { return window.innerWidth <= 640; }
+
+  // Size the open panel to the visible viewport so the input row sits just above
+  // the on-screen keyboard (instead of being hidden behind it). When the
+  // keyboard is up, hide the intro/starters to give messages + input more room.
+  function _syncViewport() {
+    if (!_panel) return;
+    if (!_open || !_isMobile() || !window.visualViewport) {
+      _panel.style.height = '';
+      _panel.style.top = '';
+      _panel.classList.remove('chat-kbd');
+      return;
+    }
+    const vv = window.visualViewport;
+    _panel.style.top    = vv.offsetTop + 'px';
+    _panel.style.height = vv.height + 'px';
+    _panel.classList.toggle('chat-kbd', vv.height < window.innerHeight * 0.8);
+    _scrollBottom();
   }
 
   // Starters only help before the first exchange — hide them once the
@@ -336,7 +402,7 @@ const CHAT = (() => {
     if (_starters) _starters.style.display = _messages.length === 0 ? '' : 'none';
   }
 
-  function init() { _buildDOM(); }
+  function init() { _buildDOM(); _loadDynamicStarters(); }
 
   // Imperative open/close for the view-mode controller (chat-first user view).
   function open()  { if (!_open) toggle(); }
