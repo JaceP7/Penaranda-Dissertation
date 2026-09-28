@@ -178,6 +178,16 @@ def parse_pdf(path, department):
             if cur:
                 steps.append(clean(cur))
 
+        # The "Office or Division" value sits in the right-hand column and can be
+        # y-bucketed onto a row between the heading and the anchor, leaking into
+        # the title. Cut the title where that value starts.
+        ood = meta.get("Office or Division", "")
+        if ood and len(ood) > 8:
+            probe = ood[:24].lower()
+            idx = title.lower().find(probe)
+            if idx > 20:
+                title = title[:idx].strip(" -/,")
+
         services.append({
             "service": categorise(title),
             "subservice": title,
