@@ -23,7 +23,8 @@ const GROQ_URL    = 'https://api.groq.com/openai/v1/chat/completions';
 const MODEL       = 'openai/gpt-oss-120b';       // llama-3.3-70b went Groq-enterprise-only
                                                   // on 2026-08-16; this is the self-serve
                                                   // replacement (131K ctx, $0.15/$0.60 per M)
-const MAX_TOKENS  = 900;                          // room for itemised requirements
+const MAX_TOKENS  = 1600;                         // itemised requirements + the "Go to:" line
+                                                  // (raised from 900: reasoning models need headroom)
 const MAX_RETRIES = 2;
 const TOP_K       = 6;
 
@@ -88,7 +89,13 @@ async function callGroq(messages, attempt = 0) {
   const res = await fetch(GROQ_URL, {
     method:  'POST',
     headers: { 'Authorization': `Bearer ${process.env.GROQ_API_KEY}`, 'Content-Type': 'application/json' },
-    body:    JSON.stringify({ model: MODEL, messages, temperature: 0.3, max_tokens: MAX_TOKENS }),
+    body:    JSON.stringify({
+      model: MODEL, messages, temperature: 0.3, max_tokens: MAX_TOKENS,
+      // gpt-oss is a reasoning model: without this it spends the whole
+      // token budget thinking and truncates before emitting the
+      // trailing "Go to: <OFFICE>" line that drives navigation.
+      reasoning_effort: 'low',
+    }),
   });
   if (res.status === 429 && attempt < MAX_RETRIES) {
     const retryAfter = parseFloat(res.headers.get('retry-after') || '0');
