@@ -1902,3 +1902,13 @@ body.view-user .admin-toggle {
 }
 body.view-user .admin-toggle:hover,
 body.view-user .admin-toggle:focus { opacity: 1; }
+
+/* Citizen view: hide editor chrome that leaked onto the public screen.
+   The hint bar is author guidance ("Tap any cell to route from (0,0)... Enable
+   Wall Mode to place obstacles") and is actively wrong for citizens, whose map
+   is read-only. The Start/End chips are raw grid coordinates. The step/metre
+   estimate stays - that one is genuinely useful. */
+body.view-user .hint-bar { display: none !important; }
+body.view-user #infoStart,
+body.view-user #infoEnd { display: none !important; }
+body.view-user .info-bar { justify-content: center; }
