@@ -90,14 +90,11 @@
 
     <div class="mock-urlbar"><span class="lock">🔒</span><span>calambacity.gov.ph</span></div>
 
-    <div id="calambaHero" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
-      <div class="carousel-indicators">
-        <button type="button" data-bs-target="#calambaHero" data-bs-slide-to="0" class="active"></button>
-        <button type="button" data-bs-target="#calambaHero" data-bs-slide-to="1"></button>
-        <button type="button" data-bs-target="#calambaHero" data-bs-slide-to="2"></button>
-        <button type="button" data-bs-target="#calambaHero" data-bs-slide-to="3"></button>
-        <button type="button" data-bs-target="#calambaHero" data-bs-slide-to="4"></button>
-      </div>
+    <!-- Static background for the citizen view. Auto-rotation and the other
+     slides were removed: one of them advertised a competing mobile app
+     (App Store / Play / AppGallery) on top of our own call to action, and
+     auto-advancing content behind a task CTA fails WCAG 2.2.2. -->
+    <div id="calambaHero" class="carousel slide carousel-fade">
 
       <div class="carousel-inner">
 
@@ -107,64 +104,10 @@
             <img class="logo" src="https://calambacity.gov.ph/maincss/assets/img/logocity.webp" alt="City of Calamba" loading="eager">
             <h1 class="qweqw">Welcome to the City of Calamba</h1>
             <p>Calamba, officially the City of Calamba, is a 1st class component city in the province of Laguna, Philippines. According to the 2020 census, it has a population of 539,671 people. Only 54 kilometers away from Metro Manila.</p>
-            <div class="main-button-red"><div class="scroll-to-section"><a href="#">Services</a></div></div>
-          </div></div>
-        </div>
-
-        <!-- Slide 2 — eGovPH -->
-        <div class="carousel-item">
-          <div class="overlay"><div class="inner">
-            <img class="egov" src="https://admin.calambacity.gov.ph/images/addFiles/Egovwhite.svg" alt="eGovPH" loading="lazy">
-            <h2 class="egovhead">CALAMBA CITY, May eGov kana ba?</h2>
-            <p>The eGov PH (e-Government Philippines) is a mobile application that simplifies transactions between the government and citizens — a one-stop online system that minimizes economic cost for the citizens.</p>
-            <div class="store-badges">
-              <a href="https://play.google.com/store/apps/details?id=egov.app" target="_blank"><img src="https://admin.calambacity.gov.ph/images/addFiles/playsotore.svg" alt="Google Play"></a>
-              <a href="https://apps.apple.com/ph/app/egovph/id6447682225" target="_blank"><img src="https://admin.calambacity.gov.ph/images/addFiles/apple.svg" alt="App Store"></a>
-              <a href="https://appgallery.huawei.com/app/C111221319" target="_blank"><img src="https://admin.calambacity.gov.ph/images/addFiles/appg.webp" alt="AppGallery"></a>
-            </div>
-          </div></div>
-        </div>
-
-        <!-- Slide 3 — CalambaGo -->
-        <div class="carousel-item">
-          <div class="overlay"><div class="inner">
-            <div class="calambago-imgs">
-              <img src="https://admin.calambacity.gov.ph/images/addFiles/CalambaGo.png" alt="CalambaGo" loading="lazy">
-              <img src="https://admin.calambacity.gov.ph/images/addFiles/boss.webp" alt="CalambaGo" loading="lazy">
-            </div>
-            <p>CalambaGo — the City of Calamba's online services portal. Sign up to transact with the city government online.</p>
-            <div class="main-button-blue"><div class="scroll-to-section"><a href="https://online.calambacity.gov.ph/" target="_blank">Sign-up Here</a></div></div>
-          </div></div>
-        </div>
-
-        <!-- Slide 4 — Gender and Development -->
-        <div class="carousel-item">
-          <div class="overlay"><div class="inner">
-            <img class="logo" src="https://calambacity.gov.ph/maincss/assets/img/gad.png" alt="GAD Calamba City" loading="lazy">
-            <h1 class="qweqw">Gender and Development (GAD)<br>Calamba City</h1>
-            <p>Gender and Development, as defined in Republic Act No. 9710, is a development perspective and process that is participatory, empowering, equitable, sustainable, and respectful of human rights.</p>
-            <div class="main-button-purple"><div class="scroll-to-section"><a href="https://gad.calambacity.gov.ph" target="_blank">See more</a></div></div>
-          </div></div>
-        </div>
-
-        <!-- Slide 5 — Cooperatives and Livelihood Development -->
-        <div class="carousel-item">
-          <div class="overlay"><div class="inner">
-            <img class="logo" src="https://admin.calambacity.gov.ph/images/addFiles/5e9ef812-b109-4f96-8268-fb2b58fc099f.png" alt="CLDD" loading="lazy">
-            <h1 class="qweqw">Cooperatives and Livelihood<br>Development Department</h1>
-            <p>The City of Calamba CLDD promotes a culture of entrepreneurship among Calambeños and strengthens the cooperative movement in the city.</p>
-            <div class="main-button-coop"><div class="scroll-to-section"><a href="https://clddcalamba.com/" target="_blank">See more</a></div></div>
-          </div></div>
+                      </div></div>
         </div>
 
       </div>
-
-      <button class="carousel-control-prev" type="button" data-bs-target="#calambaHero" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#calambaHero" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-      </button>
     </div>
   </div>
 

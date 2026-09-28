@@ -42,6 +42,8 @@ const CHAT = (() => {
   function toggle() {
     _open = !_open;
     _panel.classList.toggle('chat-open', _open);
+    // lets the landing call-to-action hide itself while the chat is up
+    document.body.classList.toggle('chat-showing', _open);
     _panel.setAttribute('aria-hidden', String(!_open));
     _toggleBtn.setAttribute('aria-expanded', String(_open));
     if (_open) {

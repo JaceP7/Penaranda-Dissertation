@@ -1822,3 +1822,83 @@ body.view-admin .ask-again-btn { display: none !important; }
   .chat-panel.chat-kbd .chat-intro,
   .chat-panel.chat-kbd .chat-starters { display: none; }
 }
+
+/* ── Citizen landing call-to-action ─────────────────────────────────────── */
+/* Sits over the (now static) hero so the first screen reads as a task
+   launcher, not a city advertisement. Citizen view only, pre-route, and
+   hidden while the chat is open. */
+.landing-cta {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1050;
+  display: none;
+  width: min(430px, calc(100vw - 32px));
+  box-sizing: border-box;
+  padding: 26px 22px 20px;
+  text-align: center;
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 18px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.45);
+  color: #fff;
+}
+body.view-user:not(.route-active):not(.chat-showing) .landing-cta { display: block; }
+
+.landing-cta-eyebrow {
+  margin: 0 0 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #93C5FD;
+}
+.landing-cta-title {
+  margin: 0 0 10px;
+  font-size: 1.42rem;
+  line-height: 1.25;
+  font-weight: 800;
+}
+.landing-cta-sub {
+  margin: 0 0 18px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #E2E8F0;
+}
+.landing-cta-btn {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 15px 18px;
+  background: #1E40AF;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.landing-cta-btn:hover { background: #1D4ED8; }
+.landing-cta-hint {
+  margin: 12px 0 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: #CBD5E1;
+}
+@media (max-width: 380px) {
+  .landing-cta { padding: 20px 16px 16px; }
+  .landing-cta-title { font-size: 1.22rem; }
+}
+
+/* The staff control stays reachable but stops inviting taps from citizens
+   (it is PIN-gated, but a visible wrench gets poked during usability tests). */
+body.view-user .admin-toggle {
+  width: 30px; height: 30px;
+  font-size: 0.78rem;
+  opacity: 0.28;
+  box-shadow: none;
+}
+body.view-user .admin-toggle:hover,
+body.view-user .admin-toggle:focus { opacity: 1; }

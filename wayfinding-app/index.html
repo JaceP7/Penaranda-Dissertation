@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=42" />
+  <link rel="stylesheet" href="css/app.css?v=43" />
 </head>
 <body class="view-user">
 
@@ -13,8 +13,21 @@
        route is drawn. Isolated in an iframe so the site's Bootstrap/CSS
        can't clash with the wayfinding app. Hidden in admin view and once
        a route is active (body.route-active). -->
-  <iframe id="calambaHeroBg" class="calamba-hero-bg" src="calamba_hero.html?v=1"
+  <iframe id="calambaHeroBg" class="calamba-hero-bg" src="calamba_hero.html?v=2"
           title="City of Calamba" tabindex="-1" aria-hidden="true"></iframe>
+
+  <!-- ═══ CITIZEN LANDING CALL-TO-ACTION ═════════════════════════════════
+       Says what this site is for and opens the assistant. Shown only in the
+       citizen view before a route is drawn, and hidden while the chat is open.
+       Without this the landing page reads as a city advertisement rather than
+       a task launcher. -->
+  <section id="landingCta" class="landing-cta" aria-labelledby="landingCtaTitle">
+    <p class="landing-cta-eyebrow">Calamba City Hall</p>
+    <h2 id="landingCtaTitle" class="landing-cta-title">Anong kailangan mo sa City Hall?</h2>
+    <p class="landing-cta-sub">Itanong ang kahit anong serbisyo &mdash; requirements, bayad, at kung saan pumunta. Tagalog o English.</p>
+    <button id="landingCtaBtn" class="landing-cta-btn">Magtanong na &mdash; tap here</button>
+    <p class="landing-cta-hint">Nasa loob ka na ng City Hall? I-scan ang QR na nakapaskil para sa tumpak na direksyon.</p>
+  </section>
 
   <!-- ═══ HEADER ═══════════════════════════════════════════════════════ -->
   <header class="app-header">
@@ -325,8 +338,8 @@
   <script src="js/renderer.js?v=33"></script>
   <script src="js/compass.js?v=31"></script>
   <script src="js/nav.js?v=36"></script>
-  <script src="js/app.js?v=61"></script>
-  <script src="js/chat.js?v=37"></script>
+  <script src="js/app.js?v=62"></script>
+  <script src="js/chat.js?v=38"></script>
 
 </body>
 </html>

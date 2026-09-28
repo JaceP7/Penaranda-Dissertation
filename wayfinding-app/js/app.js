@@ -257,6 +257,7 @@ const DOM = {
   renameFloorBtn:  $('renameFloorBtn'),
   adminToggleBtn:  $('adminToggleBtn'),
   askAgainBtn:     $('askAgainBtn'),
+  landingCtaBtn:   $('landingCtaBtn'),
   infoStart:       $('infoStart'),
   infoEnd:         $('infoEnd'),
   infoSteps:       $('infoSteps'),
@@ -804,6 +805,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (pin === ADMIN_PIN) setViewMode('admin');
     else alert('Incorrect PIN.');
   });
+  // Landing call-to-action: the primary entry point on the citizen's first screen.
+  if (DOM.landingCtaBtn) {
+    DOM.landingCtaBtn.addEventListener('click', () => {
+      if (typeof CHAT !== 'undefined' && CHAT.open) CHAT.open();
+    });
+  }
+
   DOM.askAgainBtn.addEventListener('click', () => {
     document.body.classList.remove('route-active');
     _hideNavStep();
