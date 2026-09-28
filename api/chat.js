@@ -119,7 +119,11 @@ function resolveDept(answer, results) {
     if (partial) return partial;
     return name;   // LLM named a dept not in results — pass through verbatim
   }
-  return null;
+  // No "Go to:" line. The model omits it fairly often (more so on reasoning
+  // models), and returning null here would drop the "Take me there" button
+  // entirely. Fall back to the top-ranked retrieval result, which is a far
+  // more dependable signal than the model's formatting (P@1 = 0.750).
+  return depts[0] || null;
 }
 
 const SYSTEM_PROMPT = `You are the Calamba City Hall services assistant. Use ONLY the provided context.
