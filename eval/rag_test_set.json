@@ -1,7 +1,7 @@
 {
   "version": "2.0",
   "created": "2026-05-24",
-  "description": "Curated RAG test queries for Calamba City Hall wayfinding system. Each query has expected_department(s) — pass if pipeline's returned department is in this list.",
+  "description": "Curated RAG test queries for Calamba City Hall wayfinding system. Each query has expected_department(s) — pass if pipeline's returned department is in this list. Extended 2026-09-28 with 7 queries for the six offices merged from the official per-office PDF charters (Civil Registry, Treasury, Housing).",
   "departments_canonical": [
     "BUILDING REGULATORY SERVICES OFFICE",
     "CITY ACCOUNTING AND INTERNAL CONTROL OFFICE",
@@ -40,22 +40,24 @@
       "id": "Q02",
       "query": "Pano kumuha ng building permit?",
       "expected_department": [
-        "BUILDING REGULATORY SERVICES OFFICE"
+        "BUILDINGS REGULATORY SERVICES DEPARTMENT"
       ],
       "language": "filipino",
       "category": "direct-service",
-      "difficulty": "easy"
+      "difficulty": "easy",
+      "ground_truth_note": "dept name aligned to corpus vocabulary 2026-09-28 (was: ['BUILDING REGULATORY SERVICES OFFICE'])"
     },
     {
       "id": "Q03",
       "query": "Saan po nagbabayad ng real property tax?",
       "expected_department": [
-        "CITY ASSESSMENT OFFICE",
-        "CITY ACCOUNTING AND INTERNAL CONTROL OFFICE"
+        "CITY TREASURY MANAGEMENT OFFICE",
+        "CITY ASSESSMENT OFFICE"
       ],
       "language": "filipino",
       "category": "direct-service",
-      "difficulty": "easy"
+      "difficulty": "easy",
+      "ground_truth_note": "retargeted 2026-09-28: Treasury issues the Real Property Tax official receipt (payment); Assessment handles declarations (was: ['CITY ASSESSMENT OFFICE', 'CITY ACCOUNTING AND INTERNAL CONTROL OFFICE'])"
     },
     {
       "id": "Q04",
@@ -81,32 +83,34 @@
       "id": "Q06",
       "query": "Where to get marriage license?",
       "expected_department": [
-        "CITY POPULATION MANAGEMENT OFFICE",
-        "CITY SOCIAL SERVICES DEPARTMENT"
+        "CITY CIVIL REGISTRY OFFICE"
       ],
       "language": "english",
       "category": "direct-service",
-      "difficulty": "medium"
+      "difficulty": "medium",
+      "ground_truth_note": "retargeted 2026-09-28: Application for Marriage License is a City Civil Registry Office service (was: ['CITY POPULATION MANAGEMENT OFFICE', 'CITY SOCIAL SERVICES OFFICE'])"
     },
     {
       "id": "Q07",
       "query": "Saan ang office ng mayor?",
       "expected_department": [
-        "OFFICE OF THE CITY MAYOR"
+        "OFFICE OF THE MAYOR"
       ],
       "language": "filipino",
       "category": "direct-department",
-      "difficulty": "easy"
+      "difficulty": "easy",
+      "ground_truth_note": "dept name aligned to corpus vocabulary 2026-09-28 (was: ['OFFICE OF THE CITY MAYOR'])"
     },
     {
       "id": "Q08",
       "query": "Saan magpa-check ng aso at pusa?",
       "expected_department": [
-        "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+        "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
       ],
       "language": "filipino",
       "category": "descriptive",
-      "difficulty": "medium"
+      "difficulty": "medium",
+      "ground_truth_note": "dept name aligned to corpus vocabulary 2026-09-28 (was: ['VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE'])"
     },
     {
       "id": "Q09",
@@ -153,11 +157,12 @@
       "query": "Saan ang job placement office?",
       "expected_department": [
         "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
-        "CITY SOCIAL SERVICES DEPARTMENT"
+        "CITY SOCIAL SERVICES OFFICE"
       ],
       "language": "filipino",
       "category": "descriptive",
-      "difficulty": "medium"
+      "difficulty": "medium",
+      "ground_truth_note": "dept name aligned to corpus vocabulary 2026-09-28 (was: ['INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE', 'CITY SOCIAL SERVICES DEPARTMENT'])"
     },
     {
       "id": "Q14",
@@ -173,11 +178,12 @@
       "id": "Q15",
       "query": "Saan po para sa burial assistance?",
       "expected_department": [
-        "CITY SOCIAL SERVICES DEPARTMENT"
+        "CITY SOCIAL SERVICES OFFICE"
       ],
       "language": "filipino",
       "category": "direct-service",
-      "difficulty": "medium"
+      "difficulty": "medium",
+      "ground_truth_note": "dept name aligned to corpus vocabulary 2026-09-28 (was: ['CITY SOCIAL SERVICES DEPARTMENT'])"
     },
     {
       "id": "Q16",
@@ -204,11 +210,12 @@
       "id": "Q18",
       "query": "Saan office ng vice mayor?",
       "expected_department": [
-        "OFFICE OF THE CITY VICE-MAYOR"
+        "OFFICE OF THE VICE MAYOR"
       ],
       "language": "filipino",
       "category": "direct-department",
-      "difficulty": "easy"
+      "difficulty": "easy",
+      "ground_truth_note": "dept name aligned to corpus vocabulary 2026-09-28 (was: ['OFFICE OF THE CITY VICE-MAYOR'])"
     },
     {
       "id": "Q19",
@@ -273,13 +280,13 @@
       "id": "Q25",
       "query": "treasry??",
       "expected_department": [
-        "CITY ACCOUNTING AND INTERNAL CONTROL OFFICE",
-        "CITY ASSESSMENT OFFICE"
+        "CITY TREASURY MANAGEMENT OFFICE"
       ],
       "language": "filipino",
       "category": "typo",
       "difficulty": "hard",
-      "notes": "misspelled 'treasury' — tests robustness"
+      "notes": "misspelled 'treasury' — tests robustness",
+      "ground_truth_note": "retargeted 2026-09-28: query is a misspelling of 'treasury' (was: ['CITY ACCOUNTING AND INTERNAL CONTROL OFFICE', 'CITY ASSESSMENT OFFICE'])"
     },
     {
       "id": "Q26",
@@ -316,24 +323,104 @@
       "query": "Mayroon ba kayong vaccination services?",
       "expected_department": [
         "CITY HEALTH SERVICES DEPARTMENT",
-        "VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+        "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
       ],
       "language": "filipino",
       "category": "descriptive",
       "difficulty": "medium",
-      "notes": "both human and animal vaccination plausible"
+      "notes": "both human and animal vaccination plausible",
+      "ground_truth_note": "dept name aligned to corpus vocabulary 2026-09-28 (was: ['CITY HEALTH SERVICES DEPARTMENT', 'VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE'])"
     },
     {
       "id": "Q30",
       "query": "I need help finding the office that handles construction permits and zoning",
       "expected_department": [
-        "BUILDING REGULATORY SERVICES OFFICE",
+        "BUILDINGS REGULATORY SERVICES DEPARTMENT",
         "CITY PLANNING AND DEVELOPMENT OFFICE"
       ],
       "language": "english",
       "category": "descriptive",
-      "difficulty": "medium"
+      "difficulty": "medium",
+      "ground_truth_note": "dept name aligned to corpus vocabulary 2026-09-28 (was: ['BUILDING REGULATORY SERVICES OFFICE', 'CITY PLANNING AND DEVELOPMENT OFFICE'])"
+    },
+    {
+      "id": "Q31",
+      "query": "How do I get a copy of my birth certificate?",
+      "expected_department": [
+        "CITY CIVIL REGISTRY OFFICE"
+      ],
+      "language": "english",
+      "category": "direct-service",
+      "difficulty": "easy",
+      "note": "added 2026-09-28 - covers offices restored from the PDF charters"
+    },
+    {
+      "id": "Q32",
+      "query": "Saan po ako kukuha ng marriage certificate?",
+      "expected_department": [
+        "CITY CIVIL REGISTRY OFFICE"
+      ],
+      "language": "filipino",
+      "category": "direct-service",
+      "difficulty": "easy",
+      "note": "added 2026-09-28 - covers offices restored from the PDF charters"
+    },
+    {
+      "id": "Q33",
+      "query": "Saan po ako kukuha ng cedula?",
+      "expected_department": [
+        "CITY TREASURY MANAGEMENT OFFICE"
+      ],
+      "language": "filipino",
+      "category": "direct-service",
+      "difficulty": "easy",
+      "note": "added 2026-09-28 - covers offices restored from the PDF charters"
+    },
+    {
+      "id": "Q34",
+      "query": "Where do I apply for a marriage license?",
+      "expected_department": [
+        "CITY CIVIL REGISTRY OFFICE"
+      ],
+      "language": "english",
+      "category": "direct-service",
+      "difficulty": "easy",
+      "note": "added 2026-09-28 - covers offices restored from the PDF charters"
+    },
+    {
+      "id": "Q35",
+      "query": "Paano magparehistro ng namatay na kaanak?",
+      "expected_department": [
+        "CITY CIVIL REGISTRY OFFICE"
+      ],
+      "language": "filipino",
+      "category": "direct-service",
+      "difficulty": "easy",
+      "note": "added 2026-09-28 - covers offices restored from the PDF charters"
+    },
+    {
+      "id": "Q36",
+      "query": "Saan ako magbabayad ng business tax?",
+      "expected_department": [
+        "CITY TREASURY MANAGEMENT OFFICE"
+      ],
+      "language": "filipino",
+      "category": "direct-service",
+      "difficulty": "easy",
+      "note": "added 2026-09-28 - covers offices restored from the PDF charters"
+    },
+    {
+      "id": "Q37",
+      "query": "How do I apply for the city housing program?",
+      "expected_department": [
+        "HOUSING AND SETTLEMENTS DEPARTMENT"
+      ],
+      "language": "english",
+      "category": "direct-service",
+      "difficulty": "easy",
+      "note": "added 2026-09-28 - covers offices restored from the PDF charters"
     }
   ],
-  "recalibrated_for": "235-service corpus (multi-label expected departments where genuinely valid)"
+  "recalibrated_for": "305-service corpus (235 web-scraped + 70 PDF-charter)",
+  "ground_truth_revision": "2026-09-28: aligned 5 department names to corpus vocabulary; retargeted Q03/Q06/Q25 to the offices restored from the PDF charters"
 }

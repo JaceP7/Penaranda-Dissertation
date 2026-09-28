@@ -7657,5 +7657,1959 @@
     "steps": [
       "1. Punan ang Request Form para sa SIT / SIL / OJT Referral"
     ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagkuha ng katunayan – Pagpapatunay ng kasalukuyang gamit at pananim ng lupa at pagputol ng bungang kahoy",
+    "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "source_id": "1001",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_agricultural_services_office.pdf#page=9",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "1. Sulat Kahilingan",
+        "where_to_secure": "Kliyente"
+      },
+      {
+        "requirement": "2. Sertipikasyon ng Permiso mula sa Barangay",
+        "where_to_secure": "Barangay"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang sulat kahilingan.",
+      "2. Tanggapin ang sertipikasyon"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagkuha ng katunayan – Pagpapatunay ng antas ng pinsala sa halaman, hayop at pangisdaan",
+    "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "source_id": "1002",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_agricultural_services_office.pdf#page=10",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "1. Pasulat o pasalitang Kahilingan",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Humiling ng pagpapatunay.",
+      "2. Tanggapin ang sertipikasyon ng katibayan ng pinsala"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagkuha ng katunayan, farm plan o auxillary – na nakatala sa tanggapan bilang magsasaka / mangingisda Pagpapatunay na nakatala sa tanggapan bilang magsasaka / mangingisda",
+    "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "source_id": "1003",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_agricultural_services_office.pdf#page=11",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "1. Sulat-kahilingan para sa pagkuha katunayan (Pasulat o pasalitang kahilingan)",
+        "where_to_secure": "ng Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Humiling ng pagpapatunay.",
+      "2. Tanggapin ang sertipikasyon"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagpaparehistro bilang magsasaka / mangingisda",
+    "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "source_id": "1004",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_agricultural_services_office.pdf#page=12",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "1. Kopya ng patunay / kasulatan ng pagmamay-ari ng lupa o Barangay Certification",
+        "where_to_secure": "Kliyente"
+      },
+      {
+        "requirement": "2. Valid ID",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "3. 2 x 2 picture",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "4. Registry System for Basic Sectors Agriculture Form",
+        "where_to_secure": "in"
+      }
+    ],
+    "steps": [
+      "1. Punan ang Form at isumite ang mga kailangan dokumento"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Paghingi ng Tulong / Subsidiya sa mga kailangan sa bukid at pangisdaan CASO – Agri-Aqua Management Services Division /",
+    "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "source_id": "1005",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_agricultural_services_office.pdf#page=13",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "1. Pasulat o pasalitang kahilingan",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Kumonsulta ng pamamagitan ng (text), online o isumite ang sulat kahilingan.",
+      "2. Tanggapin ang subsidiya o tulong pagsasaka"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagpapaiwi ng hayop / paglilipat-iwi ng hayop",
+    "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "source_id": "1006",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_agricultural_services_office.pdf#page=14",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "Pasulat o pasalitang kahilingan",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Pagkonsulta sa tekniko",
+      "2.Tanggapin ang ipinagkaloob na hayop at lagdaan ang mga dokumento / kontrata ng dispersal"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Paghingi ng tulong teknikal patungkol sa mga gawain sa “value chain” (hal. produksyon, pagproseso, pagbebenta) ng mga produkto sa agrikultura at pangisdaan",
+    "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "source_id": "1007",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_agricultural_services_office.pdf#page=15",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "Pasulat o pasalitang kahilingan",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Humiling ng tulong ukol sa mga gawaing ukol sa produksyon, pagproseso pagbenta ng produkto sa agrikultura o pangisdaan",
+      "2. Pakikipag- ugnayan sa mga nararapat na indibidwal, grupo ahensya",
+      "3. Pagtakda ng mas detalyadong pagpupulong sa nararapat na indibidwal, grupo ahensya"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Serbisyo ng traktora Serbisyong traktora",
+    "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "source_id": "1008",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_agricultural_services_office.pdf#page=16",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "Pasalitang kahilingan",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Paghiling para serbisyo ng traktora sa lupang sakahan sa pamamagitan sms, online o pagpunta sa opis."
+    ]
+  },
+  {
+    "service": "Education, Training, Seminars, and Competencies",
+    "subservice": "Kahilingan para sa Pagsasagawa ng Pagsasanay at Seminar CASO – Agri-Aqua Research and Technical",
+    "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "source_id": "1009",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_agricultural_services_office.pdf#page=17",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "Sulat Kahilingan",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang Sulat Kahilingan"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Paghingi ng tulong-teknikal para sa pamamahala sa peste Tulong Teknikal para sa pamamahala sa peste CASO – Agri-Aqua Management Services Division /",
+    "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "source_id": "1010",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_agricultural_services_office.pdf#page=18",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "Pasulat o Pasalitang Kahilingan",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Pagkonsulta sa tekniko"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagsusuri ng Lupa gamit ang Soil Test Kit CASO – Agri-Aqua Management Services Division /",
+    "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "source_id": "1011",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_agricultural_services_office.pdf#page=19",
+    "classification": "Simple / Highly Technical",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "Pasulat o Pasalitang Kahilingan Lupang susuriin. Kalakip ang mga sumusunod:",
+        "where_to_secure": "Kliyente"
+      },
+      {
+        "requirement": "1. Pangalan ng magsasaka",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "2. Sukat at lokasyon ng sakahan",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "3. Halamang itatanim at dating nakatanim sa pinagkuhanan ng",
+        "where_to_secure": "lupa"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang sample ng lupa",
+      "2. Pagkuha ng resulta sa itinakdang panahon at pakikinig sa paliwanag ng tekniko"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagpapasubok ng Produkto CASO – Agri-Aqua Management Services Division /",
+    "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "source_id": "1012",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_agricultural_services_office.pdf#page=20",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "1. Pasulat o Pasalitang Kahilingan",
+        "where_to_secure": "Kliyente"
+      },
+      {
+        "requirement": "2. Panukalang pagsasagawa ng “Demo”",
+        "where_to_secure": ""
+      }
+    ],
+    "steps": [
+      "1. Isumite ang proposal sa pagsasagawa ng demo"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Paghingi ng tulong teknikal ng mga mananaliksik CASO – Agri-Aqua Management Services Division /",
+    "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "source_id": "1013",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_agricultural_services_office.pdf#page=21",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "1. Sulat Kahilingan",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang sulat kahilingan"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Kahilingan para sa Pagsusuri sa Taunang Barangay Budget at Taunang Sangguniang Kabataan Budget Pagsusuri sa Taunang Barangay Budget at Taunang SK Budget",
+    "department": "CITY BUDGET MANAGEMENT OFFICE",
+    "source_id": "1014",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_budget_management_office.pdf#page=9",
+    "classification": "Simple",
+    "type_of_transaction": "G2G – Government to Government",
+    "who_may_avail": "Government",
+    "requirements": [
+      {
+        "requirement": "Pang-suportang dokumento:",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "1. Barangay Annual Budget a. Barangay Appropriation Ordinance b. Budget of Expenditures and Sources Financing c. Programmed Appropriation by Expense Class, Object of Expenditure Expected Results d. List of Projects Chargeable Against 20% Development Fund e. Plantilla of Personnel f. Barangay Development Council Resolution approving the AIP g. Annual Investments Program h. Annual Procurement Plan (APP) i. Barangay Annual Gender & Development (GAD) Plan & Budget j. Barangay Disaster Risk & Management Fund Investment Plan (BDRRMFIP) k. Project Procurement Management (PPMP) l. Statement of Indebtedness",
+        "where_to_secure": "of City Budget Management Office PPA, & the (BDC) (AIP) Plan"
+      },
+      {
+        "requirement": "2. SK Annual Budget a. Budget of Expenditures and of Financing b. Programmed Appropriation Expense Class, Object of Expenditure & Expected Results c. Annual Investments Plan (AIP) d. Barangay Development Council (BDC) Resolution approving Annual Barangay Youth Investment Plan (ABYIP) e. Annual Procurement Plan f. Project Procurement Management Plan (PMPP) g. SK Annual Barangay Youth Investment Plan (ABYIP) reviewed the Local Youth Development (LYDO)",
+        "where_to_secure": "Sources by PPA, the (APP) 367 by Officer"
+      }
+    ],
+    "steps": [
+      "1.Isumite ang Taunang Barangay Badyet/ Taunang SK Badyet kalakip ang kompletong dokumento"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Request for Certified True Copies of Birth / Marriage and Death / Certification of Civil Registry Documents City Civil Registry Office - Civil Certification and",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1015",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=9",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1. Any Valid IDs (photocopy)",
+        "where_to_secure": "Kliyente"
+      },
+      {
+        "requirement": "2. Authorization Letter with valid ID from the Document Owner / Spouse / Daughter / Son / Parents / Grandparents (original and photocopy)",
+        "where_to_secure": "Kliyente / Authorized Representative"
+      },
+      {
+        "requirement": "3. Nearest Kin - Affidavit of Kinship and Valid IDs",
+        "where_to_secure": "Any Legal Office"
+      }
+    ],
+    "steps": [
+      "1.Punan ang request form at ipresinta ang valid id",
+      "2. Magbayad sa Treasury Office",
+      "3. Ipresinta ang opisyal na resibo at tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Application for Timely Registration of Birth (Hospital, Lying In Clinic and City Health Office) City Civil Registry Office – Civil Registration",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1016",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=10",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "(Birthing Facility)",
+    "requirements": [
+      {
+        "requirement": "1. Certificate of Live Birth (Form 102) (4 copies)",
+        "where_to_secure": "– Hospital / Lying-in Clinic"
+      },
+      {
+        "requirement": "2. Medical Certificate, If Hilot, Affidavit of Traditional Midwife or “Hilot” and Certification from the City Health Officer (if already deceased – Affidavit of Mother or Father or Guardian as the case maybe)",
+        "where_to_secure": "Hospital / Lying-in Clinic / City Health Office"
+      },
+      {
+        "requirement": "3. Certified True Copy of Marriage Contract of Parents / Certificate of Marriage",
+        "where_to_secure": "City Civil Registry Office / PSA"
+      },
+      {
+        "requirement": "4. If the child is illegitimate, in addition to the above: Affidavit to Use the Surname of the Father (if applicable)",
+        "where_to_secure": "Any Legal Office"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang Certificate of Live Birth (Form 102) at mga kinakailangang dokumento",
+      "2. Tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Application for Late Registration of Birth City Civil Registry Office - Civil",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1017",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=11",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1. PSA Negative",
+        "where_to_secure": "Philippine Statistics Office"
+      },
+      {
+        "requirement": "2. National Certification from the National Archives (if born 1944 and below)",
+        "where_to_secure": "National Archives"
+      },
+      {
+        "requirement": "3. Affidavit of Two (2) Disinterested",
+        "where_to_secure": "Persons Any Legal Office"
+      },
+      {
+        "requirement": "4. Any two (2) of the following: a) Baptismal Certificate b) School Records nursery, kindergarten or preparatory) c) Income tax of parent/s d) Insurance Policy e) Medical Records f) Barangay Certification g) Voter’s Registration h) SSS (E1 Form) i) Philhealth (MDR)",
+        "where_to_secure": "Church School Bureau of Internal Revenue (BIR) Insurance Company Hospital Barangay Comelec Social Security System (SSS) Philhealth"
+      },
+      {
+        "requirement": "5. If the child is illegitimate, in addition the above: Affidavit to Use the Surname Father / Affidavit of Acknowledgement Admission of Paternity (if applicable)",
+        "where_to_secure": "to of the Any Legal Office / 129"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang mga kinakai- langang dokumento",
+      "2. Tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Application for Timely Registration of Death City Civil Registry Office - Civil Registration",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1018",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=12",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1. Accomplished Form 103 (Death Form) (4 copies)",
+        "where_to_secure": "Hospital / Medico Legal / City Health Office 130"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang Accomplished Form 103 (Death Form)",
+      "2. Magbayad ng kaukulang halaga sa City Treasury Office",
+      "3. Ipresinta ang opisyal na resibo at tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Application for Late Registration of Death City Civil Registry Office - Civil Registration",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1019",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=14",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1.Four (4) duly accomplished Form",
+        "where_to_secure": "103 (Death Form) Health Office"
+      },
+      {
+        "requirement": "2. PSA Negative Result",
+        "where_to_secure": "Philippine Statistics Authority"
+      },
+      {
+        "requirement": "3. Affidavit for Delayed Registration",
+        "where_to_secure": "Any Legal Office"
+      },
+      {
+        "requirement": "4. Authenticated copy of the Certificate cremation, or of other means of corpse",
+        "where_to_secure": "of burial, Cemetery / Funeral Homes disposal."
+      }
+    ],
+    "steps": [
+      "1. Isumite ang duly accom- plished form 103 (Death Form) at mga kinakailangan dokumento",
+      "2. Tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Application for Timely Registration of Marriage City Civil Registry Office - Civil Registration",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1020",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=15",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1. Certificate of Marriage (4 copies)",
+        "where_to_secure": "Court"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang Certificate of Marriage (4 copies)",
+      "2. Tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Application for Late Registration of Marriage City Civil Registry Office - Civil Registration",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1021",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=16",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1. Marriage Certificate (4 copies)",
+        "where_to_secure": "Mayor’s Office/ Court"
+      },
+      {
+        "requirement": "2. Affidavit of the Contracting Parties",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "3. Affidavit of the Solemnizing Officer",
+        "where_to_secure": "Any Legal Office"
+      },
+      {
+        "requirement": "4. Affidavit of Two Disinterested Persons",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "5. Certificate of No Record of Marriage",
+        "where_to_secure": "Philippine Statistics Authority (PSA)"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang mga kinaka- ilangan dokumento",
+      "2. Tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Application for Marriage License City Civil Registry Office - Civil Registration",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1022",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=17",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1. CENOMAR / Birth Certificate or Certificate",
+        "where_to_secure": "Baptismal Philippine Statistics Authority / City Civil Registry Office / Church"
+      },
+      {
+        "requirement": "2. Certificate of Legal Capacity (if",
+        "where_to_secure": "foreigner) Embassy"
+      },
+      {
+        "requirement": "4.Family Planning Seminar / Pre-marriage counselling seminar",
+        "where_to_secure": "City Population Management Office / City Social Services Office"
+      },
+      {
+        "requirement": "5. Parental Advice (for ages 22 up Parental Consent (for ages 18 to 21 below)",
+        "where_to_secure": "to 25) or and City Civil Registry Office"
+      },
+      {
+        "requirement": "6. Cedula",
+        "where_to_secure": "Barangay"
+      },
+      {
+        "requirement": "7. Valid IDs",
+        "where_to_secure": "Kliyente"
+      },
+      {
+        "requirement": "7. Death Certificate of deceased Spouse Judicial Decree if Annulment or Nullity Marriage (if previously married)",
+        "where_to_secure": "/ of City Civil Registry Office"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang mga dokumento na kailangan.",
+      "2. Magbayad ng kaukulang halaga sa City Treasury Office",
+      "3. Ipresinta ang opisyal na resibo at tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Request for Endorsement City Civil Registry Office - Civil Certification and",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1023",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=18",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1.PSA Negative / Unannotated Civil Registry Document",
+        "where_to_secure": "City Civil Registry Office"
+      },
+      {
+        "requirement": "2. Certified True Copy of Civil Registry Document",
+        "where_to_secure": ""
+      }
+    ],
+    "steps": [
+      "1. Isumite ang mga dokumento na kailangan",
+      "2. Magbayad ng kaukulang halaga sa City Treasury Office",
+      "3. Suriin ang Endorsement Letter na ipapa- dala sa PSA at magpunta sa pinakamalapit na LBC para bayaran ang kaukulang halaga para sa pagpapadala",
+      "4. Ibigay ang kopya resibo ng LBC."
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Request for Registration of Court Decrees and Orders City Civil Registry Office - Civil Certification and",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1024",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=20",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1. Four (4) Certified True Copies of Court Decree / Order",
+        "where_to_secure": "Court"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang mga kailangang dokumento",
+      "2. Magbayad ng kaukulang halaga sa City Treasury Office.",
+      "3. Ipresinta ang opisyal na resibo at tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Legitimation City Civil Registry Office - Civil Certification and",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1025",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=21",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1. Birth Certificate (PSA or Local Copy)",
+        "where_to_secure": "PSA / City Civil Registry Office"
+      },
+      {
+        "requirement": "2. Joint Affidavit of Legitimation / RA 9858 (kung ang magulang ay menor edad noong pinagbubuntis ang bata). Note: If one of the parents is deceased, the requirements indicated in RA 9858 will apply.",
+        "where_to_secure": "de Any Legal Office"
+      },
+      {
+        "requirement": "3. Certified True Copy of Marriage Contract",
+        "where_to_secure": "City Civil Registry Office"
+      },
+      {
+        "requirement": "4. CENOMAR of both parents",
+        "where_to_secure": "Philippine Statistics Authority"
+      },
+      {
+        "requirement": "5. Any Valid IDs of parents",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang mga kailangang dokumento",
+      "2. Magbayad ng kaukulang halaga sa City Treasury Office.",
+      "3. Ipresinta ang opisyal na resibo at tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Request for Correction of Entries (CCE) RA 9048 City Civil Registry Office - Civil Certification and",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1026",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=22",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1. Certified True Machine Copy of Certificate or the page of the Registry Book containing the entry / entries sought to be CORRECTED and from PSA COPY (SECPA)",
+        "where_to_secure": "the Philippine Statistics Office"
+      },
+      {
+        "requirement": "2. At least 2 public or private documents showing the correct entry or entries which the correction shall be based as but not limited to the following:",
+        "where_to_secure": "upon such"
+      },
+      {
+        "requirement": "1. Baptismal Certificate",
+        "where_to_secure": "Church Philippine Statistics Authority (PSA)"
+      },
+      {
+        "requirement": "2. Birth Certificate (Wife/Husband for marriage petition)",
+        "where_to_secure": "-"
+      },
+      {
+        "requirement": "3. Voter’s Affidavit/Registration record",
+        "where_to_secure": "Comelec"
+      },
+      {
+        "requirement": "4. GSIS/SSS Record",
+        "where_to_secure": "GSIS / SSS"
+      },
+      {
+        "requirement": "5. Medical Record",
+        "where_to_secure": "Hospital"
+      },
+      {
+        "requirement": "6. Business Record",
+        "where_to_secure": "School"
+      },
+      {
+        "requirement": "7. School Records",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "3. Other relevant documents which petitioner or the City/Municipal Civil Registrar (C/MCR) or District Circuit Registrar (D/CR) may consider relevant and necessary for the approval of petition.",
+        "where_to_secure": "the Government Offices the 140"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang mga kailangang dokumento",
+      "2. Magbayad ng kaukulang halaga sa City Treasury Office.",
+      "3. Ipresinta ang opisyal na resibo at lagdaan ang petition form at kuhanin ang claim stub."
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Request for Correction of Entries – RA 9048 (CFN) City Civil Registry Office - Civil Certification and",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1027",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=24",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1. Certified True Machine Copy of Certificate or the page of the Registry Book containing the entry sought CHANGED and birth certificate issued by PSA",
+        "where_to_secure": "the to be Philippine Statistics Office"
+      },
+      {
+        "requirement": "2. At least 2 public or private documents showing the correct entries upon which the correction or change shall be based such as but not limited to the following: a. Baptismal Certificate b. Voter’s Affidavit/Registration record c. GSIS/SSS Record d. Medical Record e. Business Record f. School Records",
+        "where_to_secure": "Church Comelec GSIS / SSS Hospital School"
+      },
+      {
+        "requirement": "3. Police Clearance",
+        "where_to_secure": "Philippine National Police"
+      },
+      {
+        "requirement": "4. NBI Clearance",
+        "where_to_secure": "National Bureau of Investigation"
+      },
+      {
+        "requirement": "5. Affidavit of non-employment",
+        "where_to_secure": "Legal Office"
+      },
+      {
+        "requirement": "6. Certificate of Employment/Certification of No pending administrative, civil criminal case.",
+        "where_to_secure": "or Company / Agencies"
+      },
+      {
+        "requirement": "7. Affidavit of Self-Employed",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "8. Affidavit of Publication from newspaper of general circulation and copy of newspaper clipping",
+        "where_to_secure": "Legal Office 142"
+      },
+      {
+        "requirement": "9. Other relevant documents which petitioner or the City/Municipal Civil Registrar (C/MCR) or District Circuit Registrar (D/CR) may consider relevant and necessary for the approval of petition.",
+        "where_to_secure": "the Other Government Offices the"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang mga kailangang dokumento",
+      "2. Magbayad ng kaukulang halaga sa City Treasury Office.",
+      "3. Ipresinta ang opisyal na resibo at lagdaan ang petition form at kuhanin ang claim stub."
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Request for Changes of Entries RA 10172 in Birth Certificate City Civil Registry Office - Civil Certification and",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1028",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=26",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1. Certified True Machine Copy of Certificate or the page of the Registry Book containing the entry / entries sought to be CHANGED both the copy and the LCRO copy shall be submitted.",
+        "where_to_secure": "the Philippine Statistics Authority PSA"
+      },
+      {
+        "requirement": "2. Police Clearance",
+        "where_to_secure": "Philippine National Police"
+      },
+      {
+        "requirement": "3. NBI Clearance",
+        "where_to_secure": "National Bureau of Investigation"
+      },
+      {
+        "requirement": "4. Affidavit of Non- Employment/Certificate of Employment/Self-Employed",
+        "where_to_secure": "Legal Office"
+      },
+      {
+        "requirement": "5. Earliest School record or earliest school documents",
+        "where_to_secure": "School"
+      },
+      {
+        "requirement": "6. Medical Records",
+        "where_to_secure": "Hospital"
+      },
+      {
+        "requirement": "7. Medical Certificate (from government accredited physician)",
+        "where_to_secure": "Health Office"
+      },
+      {
+        "requirement": "8. Baptismal Certificate",
+        "where_to_secure": "Church"
+      },
+      {
+        "requirement": "9. Voter’s Affidavit/Registration Record",
+        "where_to_secure": "COMELEC"
+      },
+      {
+        "requirement": "10. Affidavit of Publication from newspaper of general circulation and copy of newspaper clipping",
+        "where_to_secure": "Legal Office"
+      },
+      {
+        "requirement": "11. Other relevant documents which petitioner or the City/Municipal Civil Registrar (C/MCR) or District Circuit Registrar (D/CR) may consider relevant and necessary for the approval of petition.",
+        "where_to_secure": "the Other Government Offices (DFA/SSS/COMELEC) the 144"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang mga kailangang dokumento",
+      "2. Magbayad ng kaukulang halaga sa City Treasury Office.",
+      "3. Ipresinta ang opisyal na resibo at lagdaan ang petition form at kuhanin ang claim stub."
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Request for Certificate of Finality and Annotation (RA 9048 & 10172) City Civil Registry Office - Civil Certification and",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1029",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=28",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1. Valid IDs",
+        "where_to_secure": "Kliyente"
+      },
+      {
+        "requirement": "2. Authorization Letter",
+        "where_to_secure": "Representative"
+      },
+      {
+        "requirement": "3. Request Form",
+        "where_to_secure": "City Civil Registry Office"
+      }
+    ],
+    "steps": [
+      "1. Punan at isumite ang request form",
+      "2. Tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Request for Affidavit to Use the Surname of the Father (if not registered) City Civil Registry Office - Civil Certification and",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1030",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=29",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1. Notarized Affidavit to Use the of the Father a. signed by the mother (if the child 0-6 years old) b. signed by the child (if he/she is old) - Sworn attestation of the mother c. signed by the child (if he/she is years old and above). d. signed by the guardian",
+        "where_to_secure": "Surname is 7-17 years Any Legal Office 18"
+      },
+      {
+        "requirement": "2. Cedula",
+        "where_to_secure": "Barangay"
+      },
+      {
+        "requirement": "3. Valid IDs",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang mga kailangang dokumento",
+      "2. Magbayad ng kaukulang halaga sa City Treasury Office.",
+      "3. Ipresinta ang opisyal na resibo at tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Request for Affidavit to Use the Surname of the Father (if registered) City Civil Registry Office - Civil Certification and",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1031",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=30",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1. Notarized Affidavit to Use the Surname of the Father a. signed by the mother (if the child 0-6 years old) b. signed by the child (if he/she is years old) - Sworn attestation of the mother c. signed by the child (if he/she is years old and above). d. signed by the guardian",
+        "where_to_secure": "is 7-17 Any Legal Office 18"
+      },
+      {
+        "requirement": "2. Affidavit of Acknowledgment / Admission of Paternity (if unknown father)",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "3. Certified True Copy of Birth Certificate of the Child.",
+        "where_to_secure": "City Civil Registry Office"
+      },
+      {
+        "requirement": "4. Cedula",
+        "where_to_secure": "Barangay"
+      },
+      {
+        "requirement": "5. Valid IDs",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang mga kailangang dokumento",
+      "2. Magbayad ng kaukulang halaga sa City Treasury Office.",
+      "3. Ipresinta ang opisyal na resibo at tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Batch Request Entry System (BREQS) Pagtatala ng Kapanganakan sa Ibang Lugar City Civil Registry Office - Civil Certification and",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1032",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=31",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1. Request Form",
+        "where_to_secure": "City Civil Registry Office"
+      },
+      {
+        "requirement": "2. Document owner/ Spouse / Daughter Son / Parents / Grandparents – Any Valid IDs",
+        "where_to_secure": "/ Kliyente"
+      },
+      {
+        "requirement": "4. Relatives - Authorization letter and Any Valid IDs (photocopy)",
+        "where_to_secure": "Kliyente"
+      },
+      {
+        "requirement": "4. Nearest kin - Affidavit of Kinship Any Valid IDs.",
+        "where_to_secure": "and Any Legal Office 149"
+      }
+    ],
+    "steps": [
+      "1. Punan ang request form at ipresinta ang valid ID at iba pang karam- patang pagka- kakilanlan",
+      "2. Magbayad ng kaukulang halaga sa City Treasury Office.",
+      "3. Magbayad para sa PSA Document",
+      "4. Ipresinta ang opisyal na resibo at tanggapin ang request na PSA Copy"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Application for Out-of-Town Registration of Birth City Civil Registry Office - Civil Certification and",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1033",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=33",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1. Four (4) copies of the Certificate Live Birth (Form 102) duly accomplished and signed by proper parties.",
+        "where_to_secure": "of City Civil Registry Office"
+      },
+      {
+        "requirement": "2. Affidavit of two (2) disinterested persons",
+        "where_to_secure": "Legal Office"
+      },
+      {
+        "requirement": "3. Certificate of Marriage (if married)",
+        "where_to_secure": "City Civil Registry Office"
+      },
+      {
+        "requirement": "4. Any two (2) of the following documentary evidences which may the name of the child, date and place birth, and name of the mother (and of the father if the child has been acknowledged): a) Baptismal Certificate b) School Records (Form 137 or Transcript of Record) c) Voter’s Registration Record",
+        "where_to_secure": "show of name Church School COMELEC"
+      },
+      {
+        "requirement": "5. Valid IDs",
+        "where_to_secure": "Kliyente"
+      },
+      {
+        "requirement": "6. Cedula",
+        "where_to_secure": "Barangay 151"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang mga kailangang dokumento",
+      "2. Magbayad ng kaukulang halaga sa City Treasury Office.",
+      "3. Ipresinta ang opisyal na resibo at tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Registration of Foundling City Civil Registry Office - Civil Certification and",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1034",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=35",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1.Four (4) copies of the Certificate Foundling (OCRG Form No. 101) accomplished and signed by proper parties.",
+        "where_to_secure": "of duly City Civil Registry Office"
+      },
+      {
+        "requirement": "2.Certified True Copy of Certificate issued by the Secretary of the DSWD stating that the child was legally available for adoption.",
+        "where_to_secure": "Department of Social Welfare and Development"
+      },
+      {
+        "requirement": "3. Certified True Copy of the child issued by DSWD.",
+        "where_to_secure": "profile"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang mga kailangang dokumento",
+      "2. Tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Request for Certificate of Supplemental Report City Civil Registry Office - Civil Certification and",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1035",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=36",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Citizen",
+    "requirements": [
+      {
+        "requirement": "1.PSA Copy of Live Birth/ Marriage/ Death",
+        "where_to_secure": "City Civil Registry Office"
+      },
+      {
+        "requirement": "2. Affidavit of Supplemental Report",
+        "where_to_secure": "Any Legal Office"
+      },
+      {
+        "requirement": "3. Baptismal Certificate",
+        "where_to_secure": "Church"
+      },
+      {
+        "requirement": "4. School Records (Form 137 or Transcript of Record)",
+        "where_to_secure": "School"
+      },
+      {
+        "requirement": "5. Any Valid IDs",
+        "where_to_secure": "Kliyente"
+      },
+      {
+        "requirement": "6. Cedula",
+        "where_to_secure": "Barangay"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang mga kailangang dokumento",
+      "2. Magbayad ng kaukulang halaga sa City Treasury Office.",
+      "3. Ipresinta ang opisyal na resibo at tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Issuance of Order of Payment (Death Certificate/Certified Death Certificate/Exhumation/Burial Transfer)",
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "source_id": "1036",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_civil_registry_office.pdf#page=37",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayan",
+    "requirements": [
+      {
+        "requirement": "Death Certificate Exhumation Permit Certificate of Burial Transfer",
+        "where_to_secure": "Hospital / City Health Services Office City Health Services Office"
+      }
+    ],
+    "steps": [
+      "1. Ipresinta ang kailangan dokumento",
+      "2. Magbayad ng kaukulang halaga sa City Treasury Office."
+    ]
+  },
+  {
+    "service": "Tax",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Business Tax Pagkolekta sa Business Tax",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1037",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=9",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "Application Form",
+        "where_to_secure": "Business Permits & Tricycle Franchising Office"
+      }
+    ],
+    "steps": [
+      "1. Ipresinta ang Business Appli- cation Form",
+      "2. Magbayad ng kaukulang halaga."
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa 2% PEZA Share Pagkolekta sa PEZA Share",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1038",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=11",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "1. Income Tax Return / Financial Statement",
+        "where_to_secure": "BIR"
+      },
+      {
+        "requirement": "2. PEZA registration / PEZA Certification",
+        "where_to_secure": "PEZA"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang Income Tax Return Financial Statement",
+      "2. Magbayad ng kaukulang halaga."
+    ]
+  },
+  {
+    "service": "Tax",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Amusement Tax Pagkolekta sa Amusement Tax",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1039",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=12",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "1. Gross Receipts",
+        "where_to_secure": "Ticket Checker"
+      },
+      {
+        "requirement": "2. Report from Ticket Checker",
+        "where_to_secure": ""
+      }
+    ],
+    "steps": [
+      "1. Ipresinta ang Gross Receipts at report mula sa ticket checker",
+      "2. Magbayad ng kaukulang halaga."
+    ]
+  },
+  {
+    "service": "Tax",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Annual Fixed Tax (AFT) Pagkolekta sa Annual Fixed Tax",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1040",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=13",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "1. Official Receipts (OR)",
+        "where_to_secure": "Land Transportation Office (LTO)"
+      },
+      {
+        "requirement": "2. Certificate of Registration (CR)",
+        "where_to_secure": ""
+      }
+    ],
+    "steps": [
+      "1. Ipresinta ang Official Receipts (OR) at Certification of Registration (CR)",
+      "2. Magbayad ng kaukulang halaga."
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Birth Fee Pagkolekta sa Birth Fee",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1041",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=14",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "1. Case Number",
+        "where_to_secure": "City Health Office"
+      }
+    ],
+    "steps": [
+      "1. Ipresinta ang Case Number na galing sa City Health Office",
+      "2. Magbayad ng kaukulang halaga."
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Tuition Fee at ibang bayarin Pagkolekta sa Tuition Fee at ibang bayarin",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1042",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=15",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Calamba City College (CCC) Students",
+    "requirements": [
+      {
+        "requirement": "1. Registration Form",
+        "where_to_secure": "City College of Calamba Registrar’s Office"
+      },
+      {
+        "requirement": "2. Assessment Form",
+        "where_to_secure": ""
+      }
+    ],
+    "steps": [
+      "1. Ipresinta ang Student Registration at Assessment Form",
+      "2. Magbayad ng kaukulang halaga."
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Pump Verification Testing and Sealing Pagkolekta sa mga gasoline station",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1043",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=16",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Gasoline Station",
+    "requirements": [
+      {
+        "requirement": "Business Permit",
+        "where_to_secure": "Office"
+      }
+    ],
+    "steps": [
+      "1. Ipresinta ang Business Permit",
+      "2. Magbayad ng kaukulang halaga"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Pagbibigay ng Community Tax Certificate (Cedula) Pagkolekta mula sa Community Tax Certificate (Cedula)",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1044",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=17",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "Income Tax Return",
+        "where_to_secure": "BIR"
+      }
+    ],
+    "steps": [
+      "1. I-presinta ang Income Tax Return (ITR)",
+      "2. Magbayad ng kaukulang halaga.",
+      "3. Tanggapin ang Community Tax Certificate (Cedula)"
+    ]
+  },
+  {
+    "service": "Tax",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Franchise Tax Pagkolekta mula sa Franchise Tax",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1045",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=18",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "Income Tax Receipt",
+        "where_to_secure": "BIR"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang Gross ng Annual Receipts",
+      "2. Magbayad ng kaukulang halaga."
+    ]
+  },
+  {
+    "service": "Tax",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Market Fees Pagkolekta sa Market Fees",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1046",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=19",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "Order of Payment",
+        "where_to_secure": "City Agriculture Officer / City Veterinary Office"
+      }
+    ],
+    "steps": [
+      "1. I-presinta ng Order of Payment",
+      "2. Magbayad ng kaukulang halaga."
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Police, Court at Mayor’s Permit Fee Pagkolekta mula sa Police, Court at Mayor’s Permit",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1047",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=20",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "Order of Payment",
+        "where_to_secure": "IIPESO"
+      }
+    ],
+    "steps": [
+      "1. I-presinta ng Order of Payment",
+      "2. Magbayad ng kaukulang halaga."
+    ]
+  },
+  {
+    "service": "Tax",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Slaughter and Coral Fees Pagkolekta mula sa Slaughter at Coral Fees",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1048",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=21",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "Order of Payment AGENCY",
+        "where_to_secure": "City Veterinary Services Office PROCESS PERSON"
+      }
+    ],
+    "steps": [
+      "1. Ipresinta ang Order of Payment",
+      "2. Magbayad ng kaukulang halaga."
+    ]
+  },
+  {
+    "service": "Tax",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Traffic Violation Fees Pagkolekta mula sa mga Traffic Violation",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1049",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=22",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "Order of Payment Traffic Citation Ticket (TCT)",
+        "where_to_secure": "Public Order & Safety Office (POSO)"
+      }
+    ],
+    "steps": [
+      "1. I-presinta ng Order of Payment at TCT",
+      "2. Magbayad ng kaukulang halaga."
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Beripikasyon, Inspeksyon at Sealing ng Weighing Scale Pagkolekta mula sa mga Weighing Scale",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1050",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=23",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "Weighing Scale",
+        "where_to_secure": ""
+      }
+    ],
+    "steps": [
+      "1. Ipresinta ang Weighing Scale",
+      "2. Magbayad ng kaukulang halaga."
+    ]
+  },
+  {
+    "service": "Tax",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Real Property Tax Pagkolekta mula sa Real Property Tax",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1051",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=24",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "1. Tax declaration",
+        "where_to_secure": "1. City Assessment Office"
+      },
+      {
+        "requirement": "2. Land Title",
+        "where_to_secure": "2. Registry of Deeds"
+      },
+      {
+        "requirement": "3. Previous Receipt",
+        "where_to_secure": "3. City Treasury Management Office"
+      }
+    ],
+    "steps": [
+      "1. Ipresinta ang tax declaration, land title or previous receipt",
+      "2. Magbayad ng kaukulang halaga."
+    ]
+  },
+  {
+    "service": "Tax",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Real Property Tax (Online Payment) Pagkolekta mula sa Real Property Tax (Online Payment)",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1052",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=25",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "1. Tax declaration",
+        "where_to_secure": "1. City Assessment Office"
+      },
+      {
+        "requirement": "2. Land Title",
+        "where_to_secure": "2. Registry of Deeds"
+      },
+      {
+        "requirement": "3. Previous Receipt",
+        "where_to_secure": "3. City Treasury Management Office"
+      }
+    ],
+    "steps": [
+      "1. Magrequest ng Statement of Account (SOA) via email or facebook messenger ng tanggapan",
+      "2. Magbayad ng kaukulang halaga sa pamamagitan ng Landbank Linkbiz Portal"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Pagbibigay ng Tax Clearance Pagkolekta mula sa Tax Clearance",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1053",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=26",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "1. Updated Tax Declaration / Previous",
+        "where_to_secure": "OR"
+      },
+      {
+        "requirement": "2. Owner’s ID",
+        "where_to_secure": "Property Owner"
+      },
+      {
+        "requirement": "3. Birth Certificate (photocopy / certified copy)",
+        "where_to_secure": "true Philippine Statistics Office (PSA) / Civil"
+      },
+      {
+        "requirement": "4. Death Certificate of registered owner Extrajudicial Settlement (photocopy true copy)",
+        "where_to_secure": "/ Registry Office / certified"
+      },
+      {
+        "requirement": "5. Consularized / Red Ribbon / Apostil abroad) If the requesting party is not the owner:  Special Power of Attorney (SPA) Notarized Authorization Letter  Valid ID of Representative  Notarized Secretary’s Certificate company owned)  ID of Corporate Secretary",
+        "where_to_secure": "(if / Company Board (if"
+      }
+    ],
+    "steps": [
+      "1. Ipresinta ang mga kaukulang dokumento",
+      "2. Magbayad ng kaukulang halaga.",
+      "3. Ipresinta ang opisyal na resibo at tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Tax",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Miscellaneous Fees ng iba’t - ibang opisina Pagkolekta sa iba’t-ibang opisina ng Miscellaneous Fees",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1054",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=27",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "* Improvement, Property, Tax * Order of Payment * Electrical * * Occupancy",
+        "where_to_secure": "City Assessor’s Office (Tax Declaration, Cert of No. Cert of Land Holdings, Cert of No. Tax Map, Brgy Jurisdiction, Issuance of New Declaration, & Transfer of Tax Declaration) City Planning & Development Office (Zoning Permit) Building Regulatory Services Office (Building / / Occupancy Permit PD1096) City Health Services Office (Sanitary / Health Permit) Housing & Settlements Department (Electrical / BP220)"
+      }
+    ],
+    "steps": [
+      "1. Ipresinta ang Order of Payment",
+      "2. Magbayad ng kaukulang halaga."
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Transfer Tax na may kasama Tax Clearance Pagkolekta sa Transfer Tax",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1055",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=28",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "Deed of Conveyance  Tax Declaration  Mode of Transfer (Sale, Donation,  Buyer & Seller’s ID  Buyer & Seller’s Authorization Letter  ID of representative  Secretary’s Certificate (if company  Valid ID of Corporate Secretary  Birth Certificate (photocopy / certified Adjudication Extra Judicial  Tax Declaration (updated)  Tax Declaration (time of death)  Extra Judicial Settlement  ID of Heirs  ID of Representative  Death Certificate of registered owner  Special Power of Attorney (SPA) Authorization Letter",
+        "where_to_secure": "City Assessment Office among others) Kliyente owned) true copy for Self City Civil Registry Office City Assessment Office Kliyente City Civil Registry Office / Notarized Any Legal Office"
+      }
+    ],
+    "steps": [
+      "1. Ipresinta ang mga kailangan na dokumento",
+      "2. Magbayad ng kaukulang halaga."
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Civil Registry Fees Pagkolekta sa Civil Registry Fees",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1056",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=29",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "Order of Payment",
+        "where_to_secure": "City Civil Registry Office"
+      }
+    ],
+    "steps": [
+      "1. Ipresinta ang Order of Payment",
+      "2. Magbayad ng kaukulang halaga."
+    ]
+  },
+  {
+    "service": "Tax",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Professional Tax Receipt Fees Pagkolekta sa Professional Tax Receipt Fees",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1057",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=30",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "1. Valid PRC ID",
+        "where_to_secure": "PRC"
+      },
+      {
+        "requirement": "2. Insurance ID / Certification",
+        "where_to_secure": "Insurance Company"
+      }
+    ],
+    "steps": [
+      "1. Ipresinta ang PRC ID",
+      "2. Magbayad ng kaukulang halaga."
+    ]
+  },
+  {
+    "service": "Tax",
+    "subservice": "Pagbibigay ng Opisyal na Resibo para sa Tricycle Franchise Pagkolekta sa Tricyle Franchise Fees",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1058",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=32",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "1. Order of Payment",
+        "where_to_secure": "Business Permits & Tricycle Franchising Office"
+      },
+      {
+        "requirement": "2. Official Receipts (OR)",
+        "where_to_secure": "Land Transportation Office (LTO)"
+      },
+      {
+        "requirement": "3. Certificate of Registration (CR)",
+        "where_to_secure": ""
+      }
+    ],
+    "steps": [
+      "1. Ipresinta ang Order of Payment, OR at CR",
+      "2. Magbayad ng kaukulang halaga."
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Pagbibigay ng Certified True Copy ng Opisyal na Resibo",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1059",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=33",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "1.Owner’s ID",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "2. Authorization Letter",
+        "where_to_secure": "Kliyente"
+      },
+      {
+        "requirement": "3. ID of Representative",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "4. Letter Request",
+        "where_to_secure": ""
+      }
+    ],
+    "steps": [
+      "1. Ipresinta ang mga kaukulang dokumento",
+      "2. Magbayad ng kaukulang halaga.",
+      "3. Ipresinta ang opisyal na resibo at tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Social Services",
+    "subservice": "Pag-rerelease ng Tseke para sa Financial Assistance, Supplier / Contractor at Land Acquisition Pagbibigay ng mga Tseke",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1060",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=34",
+    "classification": "Simple",
+    "type_of_transaction": "G2G- Government to Citizen",
+    "who_may_avail": "Stakeholders",
+    "requirements": [
+      {
+        "requirement": "Para sa Financial Assistance",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "1. Valid ID ng Payee / claimant",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "2. Authorization",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "3. ID of Representative (immediate family",
+        "where_to_secure": "only)"
+      },
+      {
+        "requirement": "4. Claim Stub (kapag ang FA ay mula",
+        "where_to_secure": "sa City Officials)"
+      },
+      {
+        "requirement": "5. Para sa FA ng Homeowners (Resibo Para sa mga Supplier/Contractor",
+        "where_to_secure": "ng HOA)"
+      },
+      {
+        "requirement": "1. Special Power of Attorney mula sa kumpanya",
+        "where_to_secure": "may ari ng"
+      },
+      {
+        "requirement": "2. I.D. ng May ari ng kumpanya",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "3. I.D. of Representative",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "4. Opisyal na Resibo Para sa Land Acquisition",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "1. Original Title",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "2. Valid ID ng may ari",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "3. Authorization ID ng Representative family only)",
+        "where_to_secure": "(immediate"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang mga kinakailangan dokumento at mag-presinta ng valid na ID",
+      "2. Tanggapin ang Tseke"
+    ]
+  },
+  {
+    "service": "Social Services",
+    "subservice": "Pagrerelease ng Financial Assistance (FA) Pagrerelease ng Tulong Pinansyal",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1061",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=35",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "1. Valid ID",
+        "where_to_secure": "Kliyente"
+      },
+      {
+        "requirement": "2. Authorization Letter at ID",
+        "where_to_secure": "Authorized Representative"
+      },
+      {
+        "requirement": "3. Representative’s ID (Immediate Family Only)",
+        "where_to_secure": ""
+      }
+    ],
+    "steps": [
+      "1. Isumite ang mga dokumento at mag-presinta ng valid na ID",
+      "2. Lagdaan ang Disbursement Voucher / Payroll",
+      "3.Tanggapin ang Pera o Tseke"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Pagbibigay ng Money Accountability Clearance",
+    "department": "CITY TREASURY MANAGEMENT OFFICE",
+    "source_id": "1062",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_treasury_management_office.pdf#page=36",
+    "classification": "Simple",
+    "type_of_transaction": "G2C - Government to Citizen",
+    "who_may_avail": "Stakeholders / Taxpayers",
+    "requirements": [
+      {
+        "requirement": "Kopya ng ID",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Ipresinta ang kopya ng ID",
+      "2. Magbayad ng kaukulang halaga.",
+      "3. Tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Kahilingan para sa pagkumpuni at pangangalaga ng mga kagamitan sa ibang Ahensya. Pagkukumpuni at Pangangalaga ng mga kagamitan sa ibang Ahensya",
+    "department": "HOUSING AND SETTLEMENTS DEPARTMENT",
+    "source_id": "1063",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/housing_and_settlements_department.pdf#page=8",
+    "classification": "Simple",
+    "type_of_transaction": "G2G – Government to Government",
+    "who_may_avail": "Other Agency",
+    "requirements": [
+      {
+        "requirement": "1. Request Form",
+        "where_to_secure": "GSO/ Building Maintenance Section"
+      }
+    ],
+    "steps": [
+      "1. Punan ang Request Form"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Pag-issue ng Building Permit (BP220) Ang BP220 ay ipinagkakaloob para sa mga residente na nagbibigay pahintulot sa kanila na magpagawa ng bagong bahay o magsagawa ng renovation sa bahay o",
+    "department": "HOUSING AND SETTLEMENTS DEPARTMENT",
+    "source_id": "1064",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/housing_and_settlements_department.pdf#page=10",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Calamba na magpapagawa ng istrukturang",
+    "requirements": [
+      {
+        "requirement": "1. Application form para sa hinihiling BP220 (original copy)",
+        "where_to_secure": "na Housing and Settlements Department"
+      },
+      {
+        "requirement": "2. HSD Form No. 1 (1 orihinal na kopya)",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "3. Plano ng disenyo, spesipikasyon, ng materyales, at ibang nakahandang dokumento na nilagdaan at tinatakan mga taong lisensyado at rehistradong propesyon gayun din naman ang may-ari aplikante (3 orihinal na set)",
+        "where_to_secure": "listahan  Draftsman ng  Architect may  / Civil Engineer  Professional Electrical Engineer  Sanitary Engineer"
+      },
+      {
+        "requirement": "4. Valid Professional Regulation Commission (PRC) ID and Professional Receipt (PTR) (1 photocopy)",
+        "where_to_secure": " Master Plumber Tax"
+      },
+      {
+        "requirement": "5. Tax Declaration (photocopy)",
+        "where_to_secure": "City Assessment Office"
+      },
+      {
+        "requirement": "6. Resibo ng Real Property Tax (photocopy)",
+        "where_to_secure": "Barangay kung saan ipapagawa ang"
+      },
+      {
+        "requirement": "7. Barangay Clearance (photocopy)",
+        "where_to_secure": "istruktura"
+      },
+      {
+        "requirement": "8. Bill of materials and specification original sets)",
+        "where_to_secure": "(2 Licensed Civil Engineer"
+      },
+      {
+        "requirement": "9. Certificate of Locational Clearance Exemption (photocopy)",
+        "where_to_secure": "City Planning and Development Office"
+      },
+      {
+        "requirement": "10. Fire Clearance (photocopy) Kung sakaling ang aplikante ang Transfer Certificate of Title (photocopy) Kung sakaling ang aplikante ay hindi Transfer Certificate of Title (photocopy) Deed of Sale o Contract to Sell o Lease Purchase Agreement (photocopy) Kung sakaling ang lupa o lote o ahensya ng gobyerno Certified True Copy ng Certification Award (photocopy) Kung hindi ang may-ari ang mag-aasikaso Authorization letter o Special Power Attorney (original) Any Valid ID ng mag-aasikaso (photocopy) Any Valid ID ng may-ari ng lupa (photocopy) Para sa mga istrukturang 2-storey Structural Analysis (2 orihinal na set) Para sa mga istrukturang 3-storey Boring Test (2 orihinal na set) Para sa mga home improvement o Occupancy Permit (1 photocopy)",
+        "where_to_secure": "Bureau of Fire Protection 77 rehistradong may-ari ng lupa o lote Register of Deeds rehistradong may-ari ng lupa o lote Register of Deeds Bangko, Pag-IBIG, taong nagbenta ng lupa, o ahensya ng gobyernong nag-award istruktura ay ini-award ng HSD o iba pang of Housing and Settlements Department o sa ahensya ng gobyernong nag-award ng aplikasyon of May-ari ng lupa o Notaryo Publiko Authorized Representative Kliyente pataas Licensed Civil Engineer pataas Licensed Geologist extension Sariling kopya o sa developer 78"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang application form mga kinakailangan dokumento",
+      "2. Alamin ang resulta ng inspeksyon at evaluation",
+      "3. Magbayad ng kaukulang halaga",
+      "4. Tanggapin ang Building Permit"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Issuance of Certificate of Final Electrical Inspection (CFEI)(BP220) Ang CFEI ay isang requirement para sa mga magpapakabit ng linya ng kuryente sa kanilang bahay o istruktura na klasipikadong low-cost housing, economic housing o",
+    "department": "HOUSING AND SETTLEMENTS DEPARTMENT",
+    "source_id": "1065",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/housing_and_settlements_department.pdf#page=14",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "cost housing, economic housing o socialized",
+    "requirements": [
+      {
+        "requirement": "Barangay Clearance (Photocopy) MERALCO Service Application Form (Photocopy) Occupancy Permit (Photocopy) Kung sakaling ang aplikante ang Transfer Certificate of Title (photocopy) Kung sakaling ang aplikante ay hindi Deed of Sale o Contract to Sell o Lease Purchase Agreement (photocopy) Notaryadong Undertaking (photocopy) Kung sakaling ang lupa o lote o ahensya ng gobyerno Certified True Copy ng Certification Award (Photocopy) Kung hindi ang may-ari ang mag-aasikaso Authorization letter o Special Power Attorney (Original) Valid ID ng Authorized Representative (Photocopy) Valid ID ng may-ari ng lupa (Photocopy)",
+        "where_to_secure": "Barangay MERALCO Sariling kopya o sa developer rehistradong may-ari ng lupa o lote Register of Deeds rehistradong may-ari ng lupa o lote Bangko, Pag-IBIG, taong nagbenta ng lupa, o ahensya ng gobyernong nag-award MERALCO at Notaryo Publiko istruktura ay ini-award ng HSD o iba pang of Housing and Settlements Department o sa ahensya ng gobyernong nag-award ng aplikasyon of May-ari ng lupa o NotaryoPubliko BIR, Post Office, DFA, PSA, SSS, GSIS, Pag-IBIG, Philhealth, PRC, COMELEC, OSCA, kompanyangpinagtatrabahuhan 81"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang mga kinaka- ilangang dokumento",
+      "2. Alamin ang resulta ng inspeksyon at evaluation",
+      "3. Magbayad ng kaukulang halaga",
+      "4. Alamin ang estado ng endorsement ng CFEI"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Aplikasyon sa Programang Pabahay at Palupa Ang Aplikasyon sa Programang Pabahay at Palupa ng Pamahalaang Panlungsod ay alinsunod sa Batas Republika 7279 o Urban Development and Housing Act ng 1992 na",
+    "department": "HOUSING AND SETTLEMENTS DEPARTMENT",
+    "source_id": "1066",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/housing_and_settlements_department.pdf#page=16",
+    "classification": "G2C – Government to Citizen",
+    "type_of_transaction": "Lahat ng residente ng Lungsod ng",
+    "who_may_avail": "Calamba na may edad 18-55 taong gulang",
+    "requirements": [
+      {
+        "requirement": "Notaryadong application form para sa pabahay at palupa (1 orihinal na kopya, photocopy) Pinakabagong 3R family picture nakumple- to ang mga miyembro ng kasama sa (2 orihinal na kopya, 1 photocopy) Birth Certificate ng Aplikante (1orihinal kopya, 2 photocopy) 2x2 ID Picture ng Aplikante (2 orihinal kopya, 1 photocopy) 1x1 ID Picture ng Aplikante (2 orihinal kopya, 1 photocopy) Certification of Non-Ownership (1 orihinal kopya, 1 photocopy) Barangay Clearance para sa Apply ng Pabahay Ownership (1 orihinal na kopya) 1 Valid ID ng Aplikante (2 photocopy) White folder na long (2 piraso) Kung sakaling ang aplikante ay single Certificate of No Marriage o CENOMAR orihinal na kopya, 2 photocopy) Kung sakaling ang aplikante ay kasal Marriage Contract (1 orihinal na kopya, photocopy) Birth Certificate ng Asawa (1 orihinal kopya na ipe-present lamang para sa beripikasyon, 1 photocopy na ipapasa) 1 Valid ID ng Asawa (2 photocopy) Kung sakalingang aplikante ay may unang asawa) Marriage Contract ng kasal sa unang (1 orihinal na kopya na ipe-present lamang para sa beripikasyon, 1 photocopy na ipapasa) Certificate of No Marriage o CENOMAR single sa magka-live in (1 orihinal na na ipe-present lamang para sa beripikasyon, 1 photocopy na ipapasa) Notarized Affidavit of Abandonment orihinal na kopya) Notarized Affidavit of Cohabitation (1 orihinal na kopya) 1 Valid ID ng ka-live in (2 photocopy) Kung sakaling ang aplikante ay may asawa) Marriage Contract ng aplikante (1 orihinal na kopya na ipe-present lamang para beripikasyon, 1 photocopy na ipapasa) Marriage contract ng ka-live in (1 orihinal kopya na ipe-present lamang para sa beripikasyon, 1 photocopy na ipapasa) Notarized Affidavit of Abandonment aplikante (1 orihinal na kopya) Notarized Affidavit of Abandonment live (1 orihinal na kopya) Notarized Affidavit of Cohabitation (1 orihinal na kopya) Any Valid ID ng ka-live in (2 photocopy) Kung sakaling ang aplikante ay balo Marriage Contract ng aplikante (1 orihinal kopya na ipe-present lamang para sa beripikasyon, 1 photocopy na ipapasa) Death Certificate ng asawa (1 orihinal kopya na ipe-present lamang para sa beripikasyon, 1 photocopy na ipapasa) Kung sakalingangaplikante ay regular Income Tax Return (1 photocopy) o Certificate of Compensation (1 orihinal kopya) Kung sakaling ang aplikante ay kontraktwal Certificate of Compensation (1 orihinal kopya) o Notarized Affidavit of Income orihinal na kopya) Kung sakaling ang aplikante ay self-employed Notarized Affidavit of Income (1 orihinal kopya) Kung sakaling ang aplikante ay walang Notarized Affidavit of Support ng sumusuportang pinansyal sa aplikante orihinal na kopya) 1 Valid ID ng sumusuporta (2 photocopy) Kung sakaling may mali sa birth certificate pamilya Notarized Affidavit of Discrepancy (1 orihinal na kopya) Kung sakaling ang aplikante ay may sa bahay at kasama sa apply Birth Certificate ng bawat isa (1 orihinal kopya na ipe-present lamang para sa beripikasyon, 1 photocopy na ipapasa) Kung sakaling ang pabahay na ina-apply-an Notarized Affidavit (Pabahay at Palupa sa Lungsod ng Calamba) (1 orihinal na kopya) Kung sakaling ang pabahay na ina-apply-an gobyerno Notarized Affidavit (Apply sa Pabahay, Walang sariling pag-aaring bahay, Hindi Awardee ng Pabahay ng gobyerno) orihinal na kopya)",
+        "where_to_secure": "5 Housing and Settlements Department apply Kliyente 83 na Philippine Statistics Authority o Civil Registry Office kung saan ipinanganak na Kliyente na na City Assessment Office Barangay na kasalukuyang tinitirhan BIR, Post Office, DFA, PSA, SSS, GSIS, Pag-IBIG, Philhealth, PRC, COMELEC, kompanyang pinagtatrabahuhan Tindahan (head of the family) (1 Philippine Statistics Authority sa kinakasama niya 2 Philippine Statistics Authority o Civil Registry Office kung saan ikinasal na BIR, Post Office, DFA, PSA, SSS, GSIS, Pag-IBIG, Philhealth, PRC, COMELEC, OSCA, kompanyang pinagtatrabahuhan ka-live in (pero isa sakanila ay kasal sa asawa Philippine Statistics Authority o Civil Registry Office kung saanikinasal 84 ng kopya Philippine Statistics Authority (1 Notaryo Publiko Housing and Settlements Department at NotaryoPubliko BIR, Post Office, DFA, PSA, SSS, GSIS, Pag-IBIG, Philhealth, PRC, COMELEC, OSCA, kompanyang pinagtatrabahuhan ka-live in (pero pareho silang kasal sa unang Philippine Statistics Authority o Civil sa Registry Office kung saan ikinasal na Philippine Statistics Authority o Civil Registry Office kung saan ikinasal ng Notaryo Publiko ng ka- Housing and Settlements Department at Notaryo Publiko BIR, Post Office, DFA, PSA, SSS, GSIS, Pag-IBIG, Philhealth, PRC, COMELEC, OSCA, kompanyang pinagtatrabahuhan na Philippine Statistics Authority o Civil Registry Office kung saan ikinasal na Philippine Statistics Authority o Civil Registry Office kung saan nirehistro ang pagkamatay ng asawa 85 naempleyado (pribado o gobyerno) na Kompanyang pinagtatrabahuhan na empleyado (pribado o gobyerno) na Kompanyang pinagtatrabahuhan o (1 Housing and Settlements Department o Notary Public o may sarilingnegosyo na Housing and Settlements Department o Notary Public sariling pinagkakakitaan Housing and Settlements Department o (1 Notary Public BIR, Post Office, DFA, PSA, SSS, GSIS, Pag-IBIG, Philhealth, PRC, COMELEC, LTO, kompanyang pinagtatrabahuhan o ID ng aplikante o miyembro ng Housing and Settlements Department o Notary Public mga anak at iba pang kamag-anak na kapisan na Philippine Statistics Authority o Civil Registry Office kung saan ipinanganak ay pag-aari ng Pamahalaang Lungsod Housing and Settlements Department o Notary Public ay pag-aari ng ibang ahensya ng Housing and Settlements Department, ahensya ng gobyernong nangangasiwa sa (1 pabahay o Notary Public 86"
+      }
+    ],
+    "steps": [
+      "1. Magtanong o mag-inquire kung paano magkaroon ng pabahay",
+      "2. Isumite ang mga kinakai- langang dokumento",
+      "3. Ipanotaryo at isumite ang mga karadagang form",
+      "4. Dumalo sa Orientation at tanggapin ang Certificate of Housing Award at susi ng bahay"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Pag-bibigay ng Occupancy Certification Ang Occupancy Certification ay ipinagkakaloob para sa mga: (1) awardee ng pabahay ng Pamahalaang Panlungsod ng Calamba na gagamitin itong requirement para sa",
+    "department": "HOUSING AND SETTLEMENTS DEPARTMENT",
+    "source_id": "1067",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/housing_and_settlements_department.pdf#page=23",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "tubig at B) mga informal settler family na na-",
+    "requirements": [
+      {
+        "requirement": "Barangay Clearance (photocopy) Any Valid ID ng aplikante (photocopy) Para sa mga informal settler family Building Permit (BP220) (photocopy) Kung ang istrukturang inia-apply Extension Permit (photocopy) Kung hindi ang may-ari ang magpapasa Authorization letter (orihinal) Valid ID ng magpapasa ng mga requirement (photocopy) Valid ID ng may-ari ng istruktura (photocopy)",
+        "where_to_secure": "Barangay na kasalukuyang tinitirhan Kliyente na na-census ng HSD Housing and Settlements Department ay may extension Housing and Settlements Department ng mga requirement May-ari ng istruktura Kliyente 90"
+      }
+    ],
+    "steps": [
+      "1. Sumangguni tungkol sa proseso ng pag- aapply para sa Occupancy Certification",
+      "2. Alamin ang resulta ng inspeksyon",
+      "3. Isumite ang mga kinakailangang dokumento",
+      "4. Tanggapin ang Occupancy Certification",
+      "4. Magbayad sa Treasury Office",
+      "5. Tanggapin ang Occupancy Certification"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Pagbibigay ng Occupancy Permit Ang Occupancy Permit ay ipinagkakaloob bilang patunay na ang pagkakatayo ng isang istruktura na klasipikadong low-cost housing ay nakasunod sa aprubadong planong",
+    "department": "HOUSING AND SETTLEMENTS DEPARTMENT",
+    "source_id": "1068",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/housing_and_settlements_department.pdf#page=27",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Calamba na magpapagawa ng istrukturang",
+    "requirements": [
+      {
+        "requirement": "Certificate of Building Completion (HSD Form No. 3) (3 orihinal na kopya) Aprubadong plano ng disenyo, spesipikasyon, listahan ng materyales, ibang nakahandang dokumento na nilagdaan at tinatakan ng mga taong lisensyado at rehistradong may propesyon gayundin naman ang may-ari/aplikante (photocopy) Professional Regulation Commission (PRC) ID (photocopy) Approved Building Permit 220 (photocopy) Mga larawan ng tapos nang itayong tura (harap, likod, kanan at kaliwang bahagi) (photocopy bawat isa) Kung hindi ang may-ariang mag-aasikaso Authorization letter o Special Power Attorney (1 orihinal) Valid ID ng mag-aasikaso (photocopy) Valid ID ng may-ari ng lupa (photocopy)",
+        "where_to_secure": "Housing and Settlements Department at  Draftsman  Architect  Civil Engineer  Professional Electrical Engineer  Sanitary Engineer  Master Plumber Housing and Settlements Department istruk- Sariling kopya ng aplikasyon of May-ari ng lupa o Notaryo Publiko BIR, Post Office, DFA, PSA, SSS, GSIS, Pag-IBIG, Philhealth, PRC, COMELEC, OSCA, kompanyang pinagtatrabahuhan 94"
+      }
+    ],
+    "steps": [
+      "1. Punan at Isumite ang Certificate of Building Completion form kasama ang iba pang mga nakalistang hinihinging dokumento",
+      "2. Alamin ang resulta ng inspeksyon at evaluation",
+      "2. Magbayad ng kaukulang halaga",
+      "3. Tanggapin ang Occupancy Permit"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagbibigay ng mga Sertipikadong Kopya / Sipi ng mga Dokumento ng Sangguniang Panlungsod Pagkakaloob ng mga Sertipikadong Kopya / Sipi ng mga dokumento ng Sangguniang",
+    "department": "LEGISLATIVE SERVICES OFFICE",
+    "source_id": "1069",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/legislative_services_office.pdf#page=9",
+    "classification": "Simple",
+    "type_of_transaction": "Business, G2G – Government to Government",
+    "who_may_avail": "Mamamayan",
+    "requirements": [
+      {
+        "requirement": "Sulat kahilingan kung saan nakasaad ang dokumento na kinakailangan Internal: Departamento o Opisina na matatagpuan sa loob Pamahalaang Lungsod ng Calamba External: Mga kliyente, Opisina o Tanggapan (Pribado at Gobyerno) sa labas ng Pamahalaang Lungsod ng Calamba",
+        "where_to_secure": "Legislative Records Management Division"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang sulat kahilingan sa Tagapag- tanggap INTERNAL: Hindi na kinakailangan ang sulat kahilingan",
+      "2. Punan ang Request Form at isumite sa itinalagang tauhan",
+      "3. Magbayad sa Tanggapan ng Ingat Yaman",
+      "4. Ipresinta ang opisyal na resibo at tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagsasampa ng Kasong Administratibo laban sa mga kawani at opisyal ng Gobyerno sa Sangguniang Panlungsod",
+    "department": "LEGISLATIVE SERVICES OFFICE",
+    "source_id": "1070",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/legislative_services_office.pdf#page=11",
+    "classification": "Simple",
+    "type_of_transaction": "Business, G2G – Government to Government",
+    "who_may_avail": "Mamamayan",
+    "requirements": [
+      {
+        "requirement": "1. 15 copies of notarized Sworn Statement",
+        "where_to_secure": "Divison"
+      },
+      {
+        "requirement": "2. Evidences & Sworn Statement of the Witnesses",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "3. Certificate of Non-Forum Shopping",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "4. Original Receipt of payment at the City Treasury Office",
+        "where_to_secure": "City Treasury Management Office"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang labinlimang (15) kopya ng mga dokumento sa pagsasampa ng Administratibong Kaso laban sa kawani at opisyal ng gobyerno",
+      "2. Magbayad sa Tanggapan ng Ingat Yaman",
+      "3. Ipresinta ang Opisyal na Resibo ng pinagbayaran.",
+      "4. Tanggapin ang kopya ng katunayan na tinanggap ng Legislative Services Office ang mga isinumiteng dokumento"
+    ]
   }
 ]
