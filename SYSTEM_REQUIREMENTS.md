@@ -15,7 +15,7 @@
 | Embedding model | `intfloat/multilingual-e5-large` (local, ~2.2 GB) | **Upstash Vector** managed embedding — `text-embedding-3-small` (1536-dim, server-side) |
 | Vector search | **FAISS** `IndexFlatIP` (in-process) | **Upstash Vector** (managed vector DB, REST) |
 | Reranker | `BAAI/bge-reranker-base` cross-encoder (local, ~1.1 GB) | *None* (managed ANN retrieval is sufficient; see metrics note) |
-| LLM (generation) | **Ollama** local LLM (default `qwen2.5:3b`, 4-bit) | **Groq** `llama-3.3-70b-versatile` (hosted inference, REST) |
+| LLM (generation) | **Ollama** local LLM (default `qwen2.5:3b`, 4-bit) | **Groq** `openai/gpt-oss-120b` (hosted inference, REST) |
 | Analytics store | Local file / process memory | **Upstash Redis** (REST, key `wf:querylog`) |
 | Compute owner | The LGU (must run + maintain a server 24/7) | Managed providers (no LGU compute) |
 
@@ -63,7 +63,7 @@ A dedicated machine running 24/7 to host the model stack:
 |---|---|---|
 | **Vercel** | Static frontend + serverless API + CDN + auto-deploy from GitHub | project env vars below |
 | **Upstash Vector** | Managed embeddings + vector search | `UPSTASH_VECTOR_REST_URL`, `UPSTASH_VECTOR_REST_TOKEN` |
-| **Groq** | Hosted LLM (`llama-3.3-70b-versatile`) | `GROQ_API_KEY` |
+| **Groq** | Hosted LLM (`openai/gpt-oss-120b`) | `GROQ_API_KEY` |
 | **Upstash Redis** | Live analytics log | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` |
 | **GitHub** | Source of truth; push → Vercel redeploys | repo connected to Vercel |
 
@@ -106,3 +106,21 @@ Dropping the local cross-encoder reranker did **not** hurt retrieval: the live c
 3. **Software & Hardware Requirements** — swap the local server/GPU table for §B/§C (no LGU hardware; client device + cloud services).
 4. **Methodology / Architecture figure** — update the RAG block to Vercel + Upstash Vector + Groq + Upstash Redis.
 5. Keep the **navigation** description as-is (QR-code positioning + PDR + grid/graph routing are unchanged and still local-to-the-browser).
+
+---
+
+## H. Generation-model change (2026-09-28)
+
+The hosted LLM changed from `llama-3.3-70b-versatile` to **`openai/gpt-oss-120b`**.
+Groq moved Llama 3.1 8B and Llama 3.3 70B to **enterprise-only** access on 2026-08-16, so the
+old model returns *not available* on a self-serve key (verified directly against the project's
+Groq account: `llama-3.3-70b-versatile` is absent from `/v1/models`).
+
+- **Retrieval metrics are unaffected** — MRR 0.762 / P@1 0.750 measure Upstash Vector retrieval,
+  which does not involve the LLM.
+- **Generation quality must be re-checked** on the new model (this is the pending
+  groundedness / faithfulness work, and it should now be run on `gpt-oss-120b`).
+- Pricing: **$0.15 / 1M input, $0.60 / 1M output** (~$0.00058 per citizen question at
+  TOP_K=6, measured on this corpus).
+- Alternatives available on the same account if Taglish quality disappoints:
+  `qwen/qwen3.8-27b`, `qwen/qwen3.6-27b` (both 131K context).

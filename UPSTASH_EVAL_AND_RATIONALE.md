@@ -119,7 +119,7 @@ supporting a quality-vs-efficiency trade-off that the literature evaluates:
   doi:10.1007/s10115-025-02624-x
 
 ### D6 — Cloud/API LLM generation for public-service chatbots
-Generation uses the Groq-hosted llama-3.3-70b API rather than a self-hosted LLM:
+Generation uses the Groq-hosted openai/gpt-oss-120b API rather than a self-hosted LLM:
 - Dong, W. (2026). *An LLM-based NLP pipeline to assist government agencies in
   digesting massive public comments and mitigating spam.* Information Processing
   & Management. doi:10.1016/j.ipm.2026.104821

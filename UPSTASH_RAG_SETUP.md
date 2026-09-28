@@ -7,7 +7,7 @@ without running any server/VM.
 ```
 Browser → Vercel api/chat.js → Upstash Vector (bge-m3 embeds + searches 235 services)
                  │                       ↓ top-K + metadata (requirements, steps, dept)
-                 └──────────► Groq (llama-3.3-70b) grounds the Taglish answer + "Go to:"
+                 └──────────► Groq (openai/gpt-oss-120b) grounds the Taglish answer + "Go to:"
 ```
 
 ## One-time setup (≈10 minutes)

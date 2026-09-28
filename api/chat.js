@@ -20,7 +20,9 @@
  */
 
 const GROQ_URL    = 'https://api.groq.com/openai/v1/chat/completions';
-const MODEL       = 'llama-3.3-70b-versatile';   // parity with the local pipeline
+const MODEL       = 'openai/gpt-oss-120b';       // llama-3.3-70b went Groq-enterprise-only
+                                                  // on 2026-08-16; this is the self-serve
+                                                  // replacement (131K ctx, $0.15/$0.60 per M)
 const MAX_TOKENS  = 900;                          // room for itemised requirements
 const MAX_RETRIES = 2;
 const TOP_K       = 6;

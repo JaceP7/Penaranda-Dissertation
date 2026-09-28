@@ -55,7 +55,7 @@ This is the most important finding. The paper's **Scope & Delimitation** and **D
 
 The **live deployment** uses a **cloud** stack instead:
 - **Upstash Vector** (managed, `text-embedding-3-small`) — not local FAISS
-- **Groq `llama-3.3-70b`** — not a local LLM
+- **Groq `openai/gpt-oss-120b`** — not a local LLM
 - **No cross-encoder reranker** in the serverless path
 - Embeddings/queries leave the device (the opposite of "locally hosted inference")
 
