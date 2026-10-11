@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=44" />
+  <link rel="stylesheet" href="css/app.css?v=46" />
 </head>
 <body class="view-user">
 
@@ -27,6 +27,21 @@
     <p class="landing-cta-sub">Itanong ang kahit anong serbisyo &mdash; requirements, bayad, at kung saan pumunta. Tagalog o English.</p>
     <button id="landingCtaBtn" class="landing-cta-btn">Magtanong na &mdash; tap here</button>
     <p class="landing-cta-hint">Nasa loob ka na ng City Hall? I-scan ang QR na nakapaskil para sa tumpak na direksyon.</p>
+
+    <!-- ╔══ TEMPORARY — REMOVE BEFORE PUBLIC USE ════════════════════════╗
+         Obvious staff entry to the map editor, for testing and demos. The
+         permanent control is the dim 🔧 at the bottom-left, which is
+         deliberately hard for citizens to notice; this one is not, so it
+         does not belong on a screen real visitors use.
+
+         To remove: delete this block, the `.temp-admin-entry` rules in
+         css/app.css, and the `tempAdminBtn` lines in js/app.js. Nothing
+         else references it. It is still PIN-gated either way.
+         ╚════════════════════════════════════════════════════════════════╝ -->
+    <div class="temp-admin-entry">
+      <button id="tempAdminBtn" class="temp-admin-btn">🔧 Staff: open map editor</button>
+      <span class="temp-admin-note">temporary — for testing</span>
+    </div>
   </section>
 
   <!-- ═══ HEADER ═══════════════════════════════════════════════════════ -->
@@ -59,7 +74,9 @@
       <div id="floorActionsDropdown" class="floor-actions-dropdown">
         <button id="floorActionsBtn" class="btn btn-ghost btn-floor-actions" aria-haspopup="true" aria-expanded="false" title="Duplicate / Export / Deploy floor plans">Floors ▾</button>
         <div id="floorActionsMenu" class="floor-actions-menu" hidden>
-          <button id="publishCloudBtn" class="floor-action-item floor-action-publish" title="Push the current floors, rooms, and labels to ALL devices via the cloud. Works on the live site — no git, no laptop. Requires the publish token (MAP_ADMIN_TOKEN).">☁ Publish to all devices</button>
+          <button id="publishCloudBtn" class="floor-action-item floor-action-publish" title="Push the current floors, rooms, and labels to ALL devices via the cloud. Shows what will change before it asks you to confirm. Requires the publish token (MAP_ADMIN_TOKEN).">☁ Publish to all devices</button>
+          <button id="previewCitizenBtn" class="floor-action-item" title="See exactly what a visitor sees, without leaving the editor. Your unpublished edits are included, so you can check them before publishing.">👁 Preview as citizen</button>
+          <button id="mapHistoryBtn" class="floor-action-item" title="Every published version, who published it and when. Restore any of them — restoring publishes a new version, so nothing is ever lost.">🕘 Version history</button>
           <div class="floor-action-divider"></div>
           <button id="dupFloorBtn"   class="floor-action-item" title="Copy the current floor's walls/doors/stairs to another floor. Useful when upper floors share the same outer shell as the ground floor.">Duplicate Floor</button>
           <button id="exportFloorsBtn" class="floor-action-item" title="Download a new floor_presets.js containing the current walls/doors/stairs across all floors. Then run the helper script and git push to publish to all users.">Export Floors</button>
@@ -68,6 +85,12 @@
           <button id="exportStampsBtn" class="floor-action-item" title="Download a new stamp_presets.js with the current placements + pattern presets. Same paste-and-push workflow as Export Floors but for the catalogue labels.">Export Stamps</button>
           <button id="deployStampsBtn" class="floor-action-item" title="(Laptop dev server only) Bake current stamp placements into stamp_presets.js + git commit + push in one click. After deploy, every device sees the labels on next reload.">Deploy Stamps</button>
         </div>
+      </div>
+      <!-- Draft indicator: shown only in admin, only when this device holds
+           edits that citizens cannot see yet. -->
+      <div id="draftBadge" class="draft-badge" hidden>
+        <span id="draftBadgeText">Unpublished changes</span>
+        <button id="revertDraftBtn" class="draft-revert" title="Discard the unpublished changes on this device and reload the live map">Revert</button>
       </div>
       <a href="admin.html" class="btn btn-ghost btn-admin" title="Service Inquiry Analytics Dashboard" target="_blank">📊</a>
       <div class="floor-selector">
@@ -279,6 +302,22 @@
 
   </main>
 
+  <!-- ═══ ADMIN: EXIT CITIZEN PREVIEW ══════════════════════════════════
+       Floats above the citizen view while an admin is previewing, so they can
+       return to the editor without a second PIN prompt. -->
+  <button id="exitPreviewBtn" class="exit-preview-chip" hidden>👁 Previewing as citizen — exit</button>
+
+  <!-- ═══ ADMIN: MAP VERSION HISTORY ═══════════════════════════════════ -->
+  <div id="mapHistoryModal" class="history-modal" hidden>
+    <div class="history-box">
+      <div class="history-head">
+        <h2 class="history-title">Published map versions</h2>
+        <button id="mapHistoryClose" class="history-close" title="Close">✕</button>
+      </div>
+      <div id="mapHistoryList" class="history-list"></div>
+    </div>
+  </div>
+
   <!-- ═══ QR LOCATION PROMPT (on load, citizen view) ═══════════════════ -->
   <div id="qrPromptModal" class="qr-prompt-modal" style="display:none">
     <div class="qr-prompt-box">
@@ -338,7 +377,7 @@
   <script src="js/renderer.js?v=33"></script>
   <script src="js/compass.js?v=31"></script>
   <script src="js/nav.js?v=36"></script>
-  <script src="js/app.js?v=62"></script>
+  <script src="js/app.js?v=64"></script>
   <script src="js/chat.js?v=38"></script>
 
 </body>

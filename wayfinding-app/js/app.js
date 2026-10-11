@@ -37,9 +37,42 @@ const STATE = {
 let _shiftHeld = false;
 
 // ── View mode (user / admin) + admin gate ──────────────────────────────────
-// CHANGE THIS PIN. It gates entry to the admin/editor view. The view mode is
-// NOT persisted — every reload returns to the citizen (user) view (kiosk-safe).
-const ADMIN_PIN = '2024';
+// The staff PIN is NOT in this file any more — it is compared server-side by
+// api/adminauth.js, so it no longer ships to the browser. That endpoint is a
+// deterrent, not a security boundary: the admin/citizen split is a body class,
+// so devtools can still reveal the editor. Nothing is protected by that alone —
+// every write to the shared map goes through api/mapstate.js, which verifies
+// MAP_ADMIN_TOKEN server-side. The view mode is NOT persisted; every reload
+// returns to the citizen view (kiosk-safe).
+
+/** Ask the server whether this PIN opens the editor. Returns true/false. */
+async function _adminPinAccepted(pin) {
+  try {
+    const res  = await fetch('/api/adminauth', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ pin }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.ok) {
+      if (data.configured === false) {
+        console.warn('[wayfinding] ADMIN_PIN is not set in Vercel — the fallback PIN is in use. ' +
+                     'Set ADMIN_PIN in the project environment and redeploy.');
+      }
+      return true;
+    }
+    return false;
+  } catch (_) {
+    // Endpoint unreachable (offline, or running from file://). Refuse rather
+    // than fall back to a client-side comparison, which is what we just removed.
+    alert('Cannot reach the server to check the PIN. Connect to the internet and try again.');
+    return false;
+  }
+}
+
+// Set while an admin is previewing the citizen view, so Exit Preview can return
+// them to the editor without a second PIN prompt.
+let _previewingAsCitizen = false;
 
 function setViewMode(mode) {
   STATE.viewMode = (mode === 'admin') ? 'admin' : 'user';
@@ -48,6 +81,11 @@ function setViewMode(mode) {
   if (STATE.viewMode === 'admin') {
     document.body.classList.remove('route-active');   // admin sees the full map
     if (typeof _hideNavStep === 'function') _hideNavStep();
+    if (typeof _refreshDraftBadge === 'function') _refreshDraftBadge();
+  } else if (!_previewingAsCitizen) {
+    // Leaving admin for real: drop the cached publish token so a shared or kiosk
+    // device cannot publish after the admin walks away.
+    try { sessionStorage.removeItem(PUBLISH_TOKEN_SS_KEY); } catch (_) {}
   }
   // Citizen view starts collapsed: the Calamba hero shows with the labeled
   // "City Services Assistant 💬" button as the call-to-action. Tapping it opens
@@ -244,6 +282,15 @@ const DOM = {
   exportFloorsBtn: $('exportFloorsBtn'),
   deployFloorsBtn: $('deployFloorsBtn'),
   publishCloudBtn: $('publishCloudBtn'),
+  previewCitizenBtn: $('previewCitizenBtn'),
+  mapHistoryBtn:   $('mapHistoryBtn'),
+  mapHistoryModal: $('mapHistoryModal'),
+  mapHistoryList:  $('mapHistoryList'),
+  mapHistoryClose: $('mapHistoryClose'),
+  draftBadge:      $('draftBadge'),
+  draftBadgeText:  $('draftBadgeText'),
+  revertDraftBtn:  $('revertDraftBtn'),
+  exitPreviewBtn:  $('exitPreviewBtn'),
   dupFloorBtn:     $('dupFloorBtn'),
   exportStampsBtn: $('exportStampsBtn'),
   deployStampsBtn: $('deployStampsBtn'),
@@ -258,6 +305,8 @@ const DOM = {
   adminToggleBtn:  $('adminToggleBtn'),
   askAgainBtn:     $('askAgainBtn'),
   landingCtaBtn:   $('landingCtaBtn'),
+  tempAdminBtn:    $('tempAdminBtn'),   // TEMPORARY — see index.html
+
   infoStart:       $('infoStart'),
   infoEnd:         $('infoEnd'),
   infoSteps:       $('infoSteps'),
@@ -793,18 +842,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
   DOM.exportFloorsBtn.addEventListener('click', exportFloorPresetsFile);
   DOM.deployFloorsBtn.addEventListener('click', deployFloorPresetsToGit);
-  if (DOM.publishCloudBtn) DOM.publishCloudBtn.addEventListener('click', publishMapToCloud);
+  // Wrapped, not passed directly: the click Event would arrive as `force` and
+  // turn every publish into a silent overwrite.
+  if (DOM.publishCloudBtn) DOM.publishCloudBtn.addEventListener('click', () => publishMapToCloud(false));
   DOM.dupFloorBtn.addEventListener('click', duplicateCurrentFloor);
   DOM.renameFloorBtn.addEventListener('click', renameCurrentFloor);
 
-  // View-mode controls
-  DOM.adminToggleBtn.addEventListener('click', () => {
-    if (STATE.viewMode === 'admin') { setViewMode('user'); return; }   // exit needs no PIN
+  // View-mode controls. Shared by the permanent 🔧 toggle and the temporary
+  // landing-page button, so the PIN gate exists in exactly one place.
+  async function _enterAdminWithPin(btn) {
     const pin = prompt('Enter staff PIN to access admin tools:');
     if (pin === null) return;
-    if (pin === ADMIN_PIN) setViewMode('admin');
+    if (btn) btn.disabled = true;
+    const ok = await _adminPinAccepted(pin.trim());
+    if (btn) btn.disabled = false;
+    if (ok) setViewMode('admin');
     else alert('Incorrect PIN.');
+  }
+
+  /** Leave the editor, warning first if this device holds unpublished edits. */
+  function _leaveAdminView() {
+    if (isMapDirty()) {
+      const go = confirm('You have map changes that have NOT been published.\n\n' +
+                         'They stay saved on this device, but citizens will not see them ' +
+                         'until you publish.\n\nLeave the editor anyway?');
+      if (!go) return;
+    }
+    _previewingAsCitizen = false;
+    setViewMode('user');
+  }
+
+  DOM.adminToggleBtn.addEventListener('click', () => {
+    if (STATE.viewMode === 'admin') { _leaveAdminView(); return; }   // exit needs no PIN
+    _enterAdminWithPin(DOM.adminToggleBtn);
   });
+
+  // TEMPORARY — remove with the matching block in index.html and app.css.
+  if (DOM.tempAdminBtn) {
+    DOM.tempAdminBtn.addEventListener('click', () => _enterAdminWithPin(DOM.tempAdminBtn));
+  }
+
+  // Admin safety rail: preview, revert, history
+  if (DOM.previewCitizenBtn) DOM.previewCitizenBtn.addEventListener('click', enterCitizenPreview);
+  if (DOM.exitPreviewBtn)    DOM.exitPreviewBtn.addEventListener('click', exitCitizenPreview);
+  if (DOM.revertDraftBtn)    DOM.revertDraftBtn.addEventListener('click', revertToPublished);
+  if (DOM.mapHistoryBtn)     DOM.mapHistoryBtn.addEventListener('click', showMapHistory);
+  if (DOM.mapHistoryClose)   DOM.mapHistoryClose.addEventListener('click', hideMapHistory);
   // Landing call-to-action: the primary entry point on the citizen's first screen.
   if (DOM.landingCtaBtn) {
     DOM.landingCtaBtn.addEventListener('click', () => {
@@ -2536,6 +2619,129 @@ async function pullStateFromServer() {
 // gated by MAP_ADMIN_TOKEN set server-side in Vercel.
 const CLOUD_MAP_VER_LS_KEY = 'wf-cloud-mapver';
 const PUBLISH_TOKEN_SS_KEY = 'wf-publish-token';
+const PUBLISHED_FP_LS_KEY  = 'wf-published-fp';     // fingerprint of the live map
+const ADMIN_NAME_LS_KEY    = 'wf-admin-name';       // who is editing, for the audit trail
+
+// ── Draft vs published ───────────────────────────────────────────────────────
+// Edits live in localStorage and only reach citizens on publish. Without a signal
+// an admin cannot tell which of their changes are live, so every edit updates a
+// fingerprint and the header shows whether this device is ahead of the cloud.
+
+/** FNV-1a over the serialised payload. Cheap, and we only need change detection. */
+function _mapFingerprint(payload) {
+  const s = JSON.stringify(payload);
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
+  }
+  return h.toString(36) + ':' + s.length;
+}
+
+function _publishedFingerprint() {
+  try { return localStorage.getItem(PUBLISHED_FP_LS_KEY) || ''; } catch (_) { return ''; }
+}
+function _publishedVersion() {
+  try { return parseInt(localStorage.getItem(CLOUD_MAP_VER_LS_KEY) || '0', 10) || 0; }
+  catch (_) { return 0; }
+}
+function _rememberPublished(version, fp) {
+  try {
+    localStorage.setItem(CLOUD_MAP_VER_LS_KEY, String(version));
+    localStorage.setItem(PUBLISHED_FP_LS_KEY, fp || _mapFingerprint(_buildStatePayload()));
+  } catch (_) {}
+  _refreshDraftBadge();
+}
+
+/** True when this device holds map edits that have not been published. */
+function isMapDirty() {
+  const live = _publishedFingerprint();
+  if (!live) return false;            // nothing pulled yet — cannot tell, assume clean
+  try { return _mapFingerprint(_buildStatePayload()) !== live; }
+  catch (_) { return false; }
+}
+
+/** Who is editing. Asked once, then remembered, so publishes carry a real name. */
+function _adminName(forcePrompt) {
+  let name = '';
+  try { name = localStorage.getItem(ADMIN_NAME_LS_KEY) || ''; } catch (_) {}
+  if (!name || forcePrompt) {
+    const typed = prompt('Your name or office (recorded with each publish, so the ' +
+                         'team can see who changed the map):', name || '');
+    if (typed === null) return name || '';
+    name = typed.trim().slice(0, 60);
+    try { localStorage.setItem(ADMIN_NAME_LS_KEY, name); } catch (_) {}
+  }
+  return name;
+}
+
+let _draftBadgeTimer = null;
+/** Recompute the badge a beat after the last edit — fingerprinting is not free. */
+function _scheduleDraftBadge() {
+  clearTimeout(_draftBadgeTimer);
+  _draftBadgeTimer = setTimeout(_refreshDraftBadge, 400);
+}
+
+function _refreshDraftBadge() {
+  if (!DOM.draftBadge) return;
+  if (STATE.viewMode !== 'admin') { DOM.draftBadge.hidden = true; return; }
+  const dirty = isMapDirty();
+  DOM.draftBadge.hidden = !dirty;
+  if (dirty && DOM.draftBadgeText) {
+    const v = _publishedVersion();
+    DOM.draftBadgeText.textContent = v
+      ? `Unpublished changes — citizens still see v${v}`
+      : 'Unpublished changes';
+  }
+}
+
+/** Count what differs between the working map and the published one. */
+function _diffMapStates(mine, live) {
+  const out = { cells: 0, floors: [], stampsAdded: 0, stampsRemoved: 0, stampsMoved: 0, namesChanged: 0 };
+  if (!live) return out;
+
+  const a = (mine.grid && mine.grid.floorWalls) || {};
+  const b = (live.grid && live.grid.floorWalls) || {};
+  for (const f of new Set([...Object.keys(a), ...Object.keys(b)])) {
+    const x = a[f] || [], y = b[f] || [];
+    let n = 0;
+    const len = Math.max(x.length, y.length);
+    for (let i = 0; i < len; i++) if ((x[i] || 'open') !== (y[i] || 'open')) n++;
+    if (n) { out.cells += n; out.floors.push({ floor: Number(f), cells: n }); }
+  }
+
+  const mapById = (arr) => Object.fromEntries((arr || []).map((p) => [p.id, p]));
+  const am = mapById(mine.stampPlacements), bm = mapById(live.stampPlacements);
+  for (const id of Object.keys(am)) {
+    if (!bm[id]) { out.stampsAdded++; continue; }
+    const p = am[id], q = bm[id];
+    if (p.row !== q.row || p.col !== q.col || p.floor !== q.floor || p.name !== q.name) out.stampsMoved++;
+  }
+  for (const id of Object.keys(bm)) if (!am[id]) out.stampsRemoved++;
+
+  const an = mine.floorNames || {}, bn = live.floorNames || {};
+  for (const k of new Set([...Object.keys(an), ...Object.keys(bn)])) {
+    if ((an[k] || '') !== (bn[k] || '')) out.namesChanged++;
+  }
+  return out;
+}
+
+/** Plain-language summary of a diff, for the publish confirmation. */
+function _describeDiff(d) {
+  const bits = [];
+  if (d.cells) {
+    const where = d.floors
+      .sort((p, q) => q.cells - p.cells)
+      .map((f) => `${_floorName(f.floor)} (${f.cells})`)
+      .join(', ');
+    bits.push(`${d.cells} wall/door/stair cell${d.cells === 1 ? '' : 's'} changed — ${where}`);
+  }
+  if (d.stampsAdded)   bits.push(`${d.stampsAdded} room${d.stampsAdded === 1 ? '' : 's'} added`);
+  if (d.stampsRemoved) bits.push(`${d.stampsRemoved} room${d.stampsRemoved === 1 ? '' : 's'} removed`);
+  if (d.stampsMoved)   bits.push(`${d.stampsMoved} room${d.stampsMoved === 1 ? '' : 's'} moved or renamed`);
+  if (d.namesChanged)  bits.push(`${d.namesChanged} floor name${d.namesChanged === 1 ? '' : 's'} changed`);
+  return bits.length ? bits.map((b) => '  • ' + b).join('\n') : '  • no differences detected';
+}
 
 /**
  * Apply a published map WITHOUT moving the viewer (a citizen mid-route must not
@@ -2572,44 +2778,233 @@ function _applyCloudState(state) {
   _syncFloorDisplay();
 }
 
-/** On load: pull the published map; apply only if newer than what we hold. */
+/**
+ * On load: pull the published map; apply only if newer than what we hold.
+ *
+ * An admin with unpublished edits is NOT overwritten — their work would vanish
+ * with no warning. They are told instead, and can Revert when ready.
+ */
 async function pullCloudMapState() {
-  let stored = 0;
-  try { stored = parseInt(localStorage.getItem(CLOUD_MAP_VER_LS_KEY) || '0', 10); } catch (_) {}
+  const stored = _publishedVersion();
   try {
     const res = await fetch('/api/mapstate', { method: 'GET' });
     if (!res.ok) return;
     const doc = await res.json();
     if (!doc || !doc.state || typeof doc.version !== 'number') return;
-    if (doc.version <= stored) return;
+    if (doc.version <= stored) { _refreshDraftBadge(); return; }
+
+    if (isMapDirty()) {
+      console.warn(`[wayfinding] cloud map v${doc.version} available, but this device has ` +
+                   'unpublished edits — keeping them. Use Revert to discard and take the live map.');
+      _refreshDraftBadge();
+      return;
+    }
     _applyCloudState(doc.state);
-    try { localStorage.setItem(CLOUD_MAP_VER_LS_KEY, String(doc.version)); } catch (_) {}
+    _rememberPublished(doc.version, _mapFingerprint(_buildStatePayload()));
     console.info(`[wayfinding] applied cloud map v${doc.version} (by ${doc.updatedBy || '?'})`);
   } catch (_) { /* offline / not configured — keep local */ }
 }
 
-/** Admin action: publish the current floors/rooms/labels to every device. */
-async function publishMapToCloud() {
+/** Discard local edits and take whatever is currently published. */
+async function revertToPublished() {
+  if (!confirm('Discard the unpublished changes on this device and reload the live map?\n\n' +
+               'This cannot be undone locally. Anything already published is unaffected.')) return;
+  try {
+    const res = await fetch('/api/mapstate', { method: 'GET' });
+    const doc = await res.json().catch(() => null);
+    if (!doc || !doc.state) { alert('Nothing has been published yet, so there is no live map to return to.'); return; }
+    _applyCloudState(doc.state);
+    _rememberPublished(doc.version, _mapFingerprint(_buildStatePayload()));
+    alert(`Reverted to the published map (v${doc.version}).`);
+  } catch (err) {
+    alert(`Could not reach the server: ${err.message}`);
+  }
+}
+
+// ── Preview as citizen ───────────────────────────────────────────────────────
+// Lets an admin check the visitor experience without exiting admin and losing
+// their place. Editing is suspended while previewing, exactly as for a citizen.
+
+function enterCitizenPreview() {
+  _previewingAsCitizen = true;
+  setViewMode('user');
+  document.body.classList.add('previewing');
+  if (DOM.exitPreviewBtn) DOM.exitPreviewBtn.hidden = false;
+}
+
+function exitCitizenPreview() {
+  _previewingAsCitizen = false;
+  document.body.classList.remove('previewing', 'route-active');
+  if (DOM.exitPreviewBtn) DOM.exitPreviewBtn.hidden = true;
+  if (typeof CHAT !== 'undefined' && CHAT.close) CHAT.close();
+  setViewMode('admin');
+}
+
+// ── Version history + rollback ───────────────────────────────────────────────
+
+function hideMapHistory() {
+  if (DOM.mapHistoryModal) DOM.mapHistoryModal.hidden = true;
+}
+
+/** List published versions, newest first, each restorable. */
+async function showMapHistory() {
+  if (!DOM.mapHistoryModal || !DOM.mapHistoryList) return;
+  DOM.mapHistoryModal.hidden = false;
+  DOM.mapHistoryList.innerHTML = '<p class="history-empty">Loading…</p>';
+  let doc;
+  try {
+    const res = await fetch('/api/mapstate?history=1');
+    doc = await res.json();
+  } catch (err) {
+    DOM.mapHistoryList.innerHTML = `<p class="history-empty">Could not load history: ${err.message}</p>`;
+    return;
+  }
+  const rows = (doc && doc.history) || [];
+  const cur  = (doc && doc.currentVersion) || 0;
+  if (!rows.length && !cur) {
+    DOM.mapHistoryList.innerHTML = '<p class="history-empty">Nothing has been published yet.</p>';
+    return;
+  }
+  const fmt = (t) => (t ? new Date(t).toLocaleString() : 'unknown time');
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  let html = `<p class="history-current">Live now: <strong>v${cur}</strong></p>`;
+  html += rows.map((r) => `
+    <div class="history-row">
+      <div class="history-meta">
+        <strong>v${r.version}</strong>
+        <span>${esc(r.updatedBy || 'unknown')}</span>
+        <span class="history-time">${fmt(r.updatedAt)}</span>
+      </div>
+      <button class="btn btn-ghost history-restore" data-version="${r.version}">Restore</button>
+    </div>`).join('');
+  html += '<p class="history-note">Restoring publishes the old map as a new version. ' +
+          'Nothing is deleted, so a restore can itself be undone.</p>';
+  DOM.mapHistoryList.innerHTML = html;
+
+  DOM.mapHistoryList.querySelectorAll('.history-restore').forEach((btn) => {
+    btn.addEventListener('click', () => rollbackMapTo(parseInt(btn.dataset.version, 10)));
+  });
+}
+
+/** Republish an archived version as the newest one. */
+async function rollbackMapTo(version) {
+  if (!Number.isFinite(version)) return;
+  if (!confirm(`Restore map version ${version} and make it live for everyone?`)) return;
+  const token = await _ensurePublishToken();
+  if (!token) return;
+  try {
+    const res = await fetch('/api/mapstate', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body:    JSON.stringify({ rollbackTo: version, updatedBy: _adminName() || 'admin' }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) {
+      if (res.status === 401) { try { sessionStorage.removeItem(PUBLISH_TOKEN_SS_KEY); } catch (_) {} }
+      alert(`Restore failed: ${data.error || res.status}`);
+      return;
+    }
+    try { sessionStorage.setItem(PUBLISH_TOKEN_SS_KEY, token); } catch (_) {}
+    const live = await (await fetch('/api/mapstate')).json();
+    if (live && live.state) {
+      _applyCloudState(live.state);
+      _rememberPublished(live.version, _mapFingerprint(_buildStatePayload()));
+    }
+    hideMapHistory();
+    alert(`Restored v${version}. It is now live as v${data.version}.`);
+  } catch (err) {
+    alert(`Restore failed: ${err.message}`);
+  }
+}
+
+/** Fetch the publish token from this session, asking once if needed. */
+async function _ensurePublishToken() {
   let token = '';
   try { token = sessionStorage.getItem(PUBLISH_TOKEN_SS_KEY) || ''; } catch (_) {}
-  if (!token) {
-    token = prompt('Enter the publish token (MAP_ADMIN_TOKEN) to push these rooms to all devices:');
-    if (!token) return;
-    token = token.trim();
+  if (token) return token;
+  token = prompt('Enter the publish token (MAP_ADMIN_TOKEN) to change the map everyone sees:');
+  if (!token) return '';
+  return token.trim();
+}
+
+/**
+ * Admin action: publish the current floors/rooms/labels to every device.
+ *
+ * Shows what will change before asking, and carries the version these edits were
+ * based on so the server can refuse a publish that would silently overwrite
+ * someone else's work. On conflict the admin chooses explicitly rather than
+ * losing either side by accident.
+ */
+async function publishMapToCloud(force) {
+  const mine = _buildStatePayload();
+  const base = _publishedVersion();
+
+  // Pull the live map to describe the change and to spot a conflict up front.
+  let live = null;
+  try {
+    const res = await fetch('/api/mapstate');
+    live = await res.json().catch(() => null);
+  } catch (_) { /* offline — the server still enforces the version check */ }
+
+  if (!force && live && typeof live.version === 'number' && live.version !== base && live.state) {
+    const who  = live.updatedBy || 'someone';
+    const when = live.updatedAt ? new Date(live.updatedAt).toLocaleString() : 'recently';
+    const pick = prompt(
+      `${who} published v${live.version} (${when}) while you were editing.\n` +
+      `Your edits are based on v${base}.\n\n` +
+      'Type one:\n' +
+      '  keep     — overwrite theirs with your version\n' +
+      '  discard  — throw away your edits and take theirs\n' +
+      '  cancel   — do nothing for now', 'cancel');
+    const choice = String(pick || 'cancel').trim().toLowerCase();
+    if (choice === 'discard') { await revertToPublished(); return; }
+    if (choice !== 'keep')    return;
+    return publishMapToCloud(true);
   }
-  if (!confirm('Publish the current floors, rooms, and labels to ALL devices?\nThis becomes the live map everyone sees.')) return;
+
+  const diff = _diffMapStates(mine, live && live.state);
+  if (!force && live && live.state && diff.cells === 0 && !diff.stampsAdded &&
+      !diff.stampsRemoved && !diff.stampsMoved && !diff.namesChanged) {
+    alert('Nothing to publish — this device already matches the live map.');
+    _rememberPublished(live.version, _mapFingerprint(mine));
+    return;
+  }
+
+  const name = _adminName();
+  if (!confirm(
+      'Publish to ALL devices?\n\n' +
+      'This becomes the live map every citizen sees:\n' +
+      _describeDiff(diff) + '\n\n' +
+      `Published by: ${name || 'admin'}`)) return;
+
+  const token = await _ensurePublishToken();
+  if (!token) return;
 
   try {
     const res = await fetch('/api/mapstate', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      body:    JSON.stringify({ state: _buildStatePayload(), updatedBy: 'admin' }),
+      body:    JSON.stringify({
+        state:       mine,
+        updatedBy:   name || 'admin',
+        baseVersion: base,
+        force:       !!force,
+      }),
     });
     const data = await res.json().catch(() => ({}));
+
     if (res.ok && data.ok) {
       try { sessionStorage.setItem(PUBLISH_TOKEN_SS_KEY, token); } catch (_) {}
-      try { localStorage.setItem(CLOUD_MAP_VER_LS_KEY, String(data.version)); } catch (_) {}
+      _rememberPublished(data.version, _mapFingerprint(mine));
       alert(`Published as version ${data.version}.\nOther devices get it on their next reload.`);
+    } else if (res.status === 409) {
+      // Someone published between our check and our write.
+      if (confirm(`${data.updatedBy || 'Someone'} published v${data.currentVersion} just now.\n\n` +
+                  'Overwrite their version with yours?')) {
+        return publishMapToCloud(true);
+      }
     } else if (res.status === 401) {
       try { sessionStorage.removeItem(PUBLISH_TOKEN_SS_KEY); } catch (_) {}
       alert('Publish failed: invalid token. Tap Publish again to retry.');
@@ -2641,7 +3036,8 @@ function saveGridState() {
       currentFloor: STATE.currentFloor,
     }));
   } catch (_) {}
-  _schedulePush();   // debounced push — avoids race conditions on rapid edits
+  _schedulePush();        // debounced push — avoids race conditions on rapid edits
+  _scheduleDraftBadge();  // this device is now potentially ahead of the live map
 }
 
 function loadGridState() {
@@ -2813,6 +3209,7 @@ function goToStamp(id) {
 }
 
 function renderCatalogue() {
+  _scheduleDraftBadge();   // room add/move/rename also diverges from the live map
   const list = DOM.catalogueList;
 
   if (STAMP_PLACEMENTS.length === 0) {

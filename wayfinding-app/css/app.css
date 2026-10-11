@@ -1912,3 +1912,172 @@ body.view-user .hint-bar { display: none !important; }
 body.view-user #infoStart,
 body.view-user #infoEnd { display: none !important; }
 body.view-user .info-bar { justify-content: center; }
+
+/* ══ ADMIN SAFETY RAIL ═══════════════════════════════════════════════════
+   Draft indicator, citizen preview, and published-version history. Edits are
+   local until published, so an admin needs to see at a glance whether what is
+   on their screen is what citizens are getting. */
+
+/* Draft badge — amber, matching the admin toggle, because it is a warning
+   state rather than an error. Only ever shown inside the editor. */
+.draft-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 4px 11px;
+  border-radius: 999px;
+  background: #FEF3C7;
+  border: 1px solid #FCD34D;
+  color: #92400E;
+  font-size: 0.74rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.draft-badge[hidden] { display: none; }
+body.view-user .draft-badge { display: none !important; }
+
+.draft-revert {
+  border: 1px solid #B45309;
+  background: #fff;
+  color: #92400E;
+  border-radius: 999px;
+  padding: 2px 9px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.draft-revert:hover { background: #B45309; color: #fff; }
+
+/* Exit-preview chip — the only way back to the editor while previewing, since
+   the citizen view hides the whole header. Sits clear of the chat bubble. */
+.exit-preview-chip {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 18px;
+  z-index: 9000;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 999px;
+  background: #36454F;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+.exit-preview-chip[hidden] { display: none; }
+.exit-preview-chip:hover { background: #212121; }
+
+/* Version history */
+.history-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 16px;
+}
+.history-modal[hidden] { display: none; }
+
+.history-box {
+  width: min(520px, 100%);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+.history-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #E5E7EB;
+}
+.history-title { margin: 0; font-size: 1rem; font-weight: 700; color: #111827; }
+.history-close {
+  border: none; background: none; cursor: pointer;
+  font-size: 1rem; color: #6B7280; padding: 4px 6px;
+}
+.history-close:hover { color: #111827; }
+
+.history-list { overflow-y: auto; padding: 8px 16px 16px; }
+.history-current { margin: 10px 0 6px; font-size: 0.82rem; color: #374151; }
+.history-empty   { margin: 18px 0; font-size: 0.85rem; color: #6B7280; text-align: center; }
+
+.history-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #F3F4F6;
+}
+.history-row:last-of-type { border-bottom: none; }
+.history-meta { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.history-meta strong { font-size: 0.86rem; color: #111827; }
+.history-meta span   { font-size: 0.78rem; color: #4B5563; overflow: hidden; text-overflow: ellipsis; }
+.history-time        { font-size: 0.72rem !important; color: #9CA3AF !important; }
+
+.history-restore { flex: 0 0 auto; font-size: 0.75rem; padding: 5px 12px; }
+.history-note {
+  margin: 12px 0 0;
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: #6B7280;
+}
+
+@media (max-width: 640px) {
+  .draft-badge { font-size: 0.68rem; padding: 3px 6px 3px 9px; }
+  .draft-badge span { max-width: 112px; overflow: hidden; text-overflow: ellipsis; }
+}
+
+/* While previewing, hide the staff wrench so the only way back is the Exit
+   Preview chip — the wrench would re-prompt for the PIN, which is pointless
+   when the admin never actually left. */
+body.previewing .admin-toggle { display: none !important; }
+
+/* ╔══ TEMPORARY — REMOVE BEFORE PUBLIC USE ══════════════════════════════╗
+   Obvious staff entry on the landing page, for testing and demos. Styled as
+   a quiet secondary action so it never competes with the citizen's task
+   launcher, but plainly findable — unlike the permanent 🔧, which is dimmed
+   on purpose. Delete this block together with the matching ones in
+   index.html and js/app.js.
+   ╚══════════════════════════════════════════════════════════════════════╝ */
+.temp-admin-entry {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.28);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.temp-admin-btn {
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.temp-admin-btn:hover,
+.temp-admin-btn:focus { background: rgba(255, 255, 255, 0.24); }
+.temp-admin-btn:disabled { opacity: 0.5; cursor: progress; }
+
+.temp-admin-note {
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* The editor replaces the landing page, so the button has no job there. */
+body.view-admin .temp-admin-entry { display: none !important; }
