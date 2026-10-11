@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" agent="Geo-Agentic RAG Annotation Template v1" version="22.1.16">
+  <diagram name="Floor Plan Annotation Template" id="annotation_template">
+    <mxGraphModel dx="1422" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1050" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- ============================================================ -->
+        <!-- TITLE                                                          -->
+        <!-- ============================================================ -->
+        <mxCell id="title" value="Floor Plan Annotation Template — Geo-Agentic RAG"
+                style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=20;fontStyle=1;fontColor=#1F4E79;"
+                vertex="1" parent="1">
+          <mxGeometry x="20" y="15" width="1360" height="35" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="subtitle" value="Trace bounding rectangles over your floor plan image. One rectangle per feature. Use the sample shapes below as your templates."
+                style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=2;fontColor=#444444;"
+                vertex="1" parent="1">
+          <mxGeometry x="20" y="50" width="1360" height="25" as="geometry"/>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- SAMPLE RECTANGLES — one per category                           -->
+        <!-- ============================================================ -->
+
+        <!-- Wall -->
+        <mxCell id="sample_wall" value="wall"
+                style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#444444;"
+                vertex="1" parent="1">
+          <mxGeometry x="20" y="100" width="200" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Walkway -->
+        <mxCell id="sample_walkway" value="walkway"
+                style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#444444;"
+                vertex="1" parent="1">
+          <mxGeometry x="240" y="100" width="200" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Room -->
+        <mxCell id="sample_room" value="room: BPLO"
+                style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#444444;"
+                vertex="1" parent="1">
+          <mxGeometry x="460" y="100" width="200" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Stairs -->
+        <mxCell id="sample_stairs_up" value="stairs:up"
+                style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#444444;"
+                vertex="1" parent="1">
+          <mxGeometry x="680" y="100" width="200" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- LEGEND / FORMAT CHEAT-SHEET (right of samples)                 -->
+        <!-- ============================================================ -->
+        <mxCell id="legend_box"
+                style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=2;align=left;verticalAlign=top;fontSize=11;spacingTop=10;spacingLeft=14;spacingRight=14;"
+                vertex="1" parent="1"
+                value="&lt;b&gt;Label format — copy this exactly so the importer can parse it.&lt;/b&gt;&#10;&#10;&lt;b&gt;wall&lt;/b&gt;&#10;Permanent walls. Cells inside this rectangle become unwalkable in the grid.&#10;&#10;&lt;b&gt;walkway&lt;/b&gt;&#10;Corridors, lobbies, hallways. Cells become walkable. Optional — uncovered cells default to walkable.&#10;&#10;&lt;b&gt;room: &amp;lt;DEPT_CODE&amp;gt;&lt;/b&gt;&#10;Office or service room. Replace &amp;lt;DEPT_CODE&amp;gt; with the office code from departments.json (e.g. BPLO, MTO, MHO, OCA, GSO, HRMO, MPDO, MASSO, MAO, MEEO, MENRO, MSWDO, MTAO, CICT, MCR, MCO, OSCA, PESO, ABC, KGI, SP). One room per rectangle.&#10;&#10;&lt;b&gt;stairs:up&lt;/b&gt; or &lt;b&gt;stairs:down&lt;/b&gt;&#10;Stairwell. Direction tells the importer whether to link this floor → next floor up (up) or floor below (down).">
+          <mxGeometry x="900" y="100" width="480" height="380" as="geometry"/>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- INSTRUCTIONS PANEL                                              -->
+        <!-- ============================================================ -->
+        <mxCell id="instructions_box"
+                style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#444444;strokeWidth=1;align=left;verticalAlign=top;fontSize=11;spacingTop=10;spacingLeft=14;spacingRight=14;"
+                vertex="1" parent="1"
+                value="&lt;b&gt;How to use this template&lt;/b&gt;&#10;&#10;1. &lt;b&gt;Drop your floor-plan image&lt;/b&gt; (.png / .jpg) into the dashed area below.&#10;2. With the image selected, open the right-panel &lt;b&gt;Edit Style&lt;/b&gt; (Ctrl+E) and append: &lt;code&gt;opacity=50;&lt;/code&gt; so you can see through it while tracing.&#10;3. Right-click the image → &lt;b&gt;Edit Geometry&lt;/b&gt; to align its corners to the dashed area, or resize freely.&#10;4. Right-click image → &lt;b&gt;To Back&lt;/b&gt; so your rectangles draw on top.&#10;5. Copy a sample rectangle above (Ctrl+C, Ctrl+V), drag it onto the floor plan, and resize over the corresponding feature.&#10;6. &lt;b&gt;One rectangle per feature.&lt;/b&gt; Do not combine multiple walls into one box — keep each segment separate so the importer can build the grid correctly.&#10;7. &lt;b&gt;Labels matter.&lt;/b&gt; Use the exact label formats shown in the Legend on the right. Wrong labels will be skipped by the importer.&#10;8. Save (Ctrl+S) and send me the .drawio file. I'll convert it to the 75×75 grid (FLOOR_PRESETS).&#10;&#10;&lt;b&gt;Per-floor convention&lt;/b&gt;&#10;Save one .drawio file per floor. Name them &lt;code&gt;Floor_0_Annotated.drawio&lt;/code&gt;, &lt;code&gt;Floor_1_Annotated.drawio&lt;/code&gt;, etc. (Floor 0 = ground floor.) Stairs in both source and destination floors should use matching coordinates so I can wire the floor transitions.">
+          <mxGeometry x="20" y="200" width="860" height="280" as="geometry"/>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- FLOOR-PLAN DROP AREA (dashed placeholder)                       -->
+        <!-- ============================================================ -->
+        <mxCell id="drop_area" value="&lt;b&gt;Drop your floor-plan image here&lt;/b&gt;&#10;(drag from File Explorer onto this dashed area)"
+                style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#999999;dashed=1;dashPattern=12 6;strokeWidth=3;align=center;verticalAlign=middle;fontSize=16;fontStyle=2;fontColor=#888888;"
+                vertex="1" parent="1">
+          <mxGeometry x="20" y="500" width="1360" height="520" as="geometry"/>
+        </mxCell>
+
+        <!-- Sample annotations inside the drop area (purely illustrative) -->
+        <mxCell id="example_wall_1" value="wall"
+                style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;strokeWidth=2;fontSize=10;fontStyle=1;opacity=70;"
+                vertex="1" parent="1">
+          <mxGeometry x="100" y="560" width="400" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="example_wall_2" value="wall"
+                style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;strokeWidth=2;fontSize=10;fontStyle=1;opacity=70;"
+                vertex="1" parent="1">
+          <mxGeometry x="100" y="560" width="20" height="300" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="example_walkway" value="walkway"
+                style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=2;fontSize=10;fontStyle=1;opacity=70;"
+                vertex="1" parent="1">
+          <mxGeometry x="140" y="600" width="600" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="example_room_bplo" value="room: BPLO"
+                style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;strokeWidth=2;fontSize=10;fontStyle=1;opacity=70;"
+                vertex="1" parent="1">
+          <mxGeometry x="140" y="700" width="180" height="140" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="example_room_mto" value="room: MTO"
+                style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;strokeWidth=2;fontSize=10;fontStyle=1;opacity=70;"
+                vertex="1" parent="1">
+          <mxGeometry x="340" y="700" width="180" height="140" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="example_room_mho" value="room: MHO"
+                style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;strokeWidth=2;fontSize=10;fontStyle=1;opacity=70;"
+                vertex="1" parent="1">
+          <mxGeometry x="540" y="700" width="180" height="140" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="example_stairs_up" value="stairs:up"
+                style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;strokeWidth=2;fontSize=10;fontStyle=1;opacity=70;"
+                vertex="1" parent="1">
+          <mxGeometry x="780" y="700" width="80" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Caption below the drop area -->
+        <mxCell id="drop_caption" value="Example below shows two wall segments, one walkway, three rooms, and one stairwell. Delete these when you trace your real floor."
+                style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=10;fontStyle=2;fontColor=#888888;"
+                vertex="1" parent="1">
+          <mxGeometry x="20" y="1025" width="1360" height="20" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

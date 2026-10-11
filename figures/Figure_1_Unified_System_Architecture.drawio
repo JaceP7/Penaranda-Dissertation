@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" agent="Generated for Geo-Agentic RAG" version="22.1.16">
+  <diagram name="Figure 1 — Unified System Architecture" id="Figure_1_—_Unified_System_Architecture">
+    <mxGraphModel dx="1422" dy="757" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="user" value="Citizen / Administrator
+(Browser on Phone or Desktop)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="30" width="240" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="frontend" value="Frontend (Static Web App — Vercel)
+HTML / CSS / JavaScript • Service Worker • localStorage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#444444;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="360" y="120" width="380" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="ai_mod" value="AI Module (RAG Pipeline)
+
+• Query Rewrite (history-aware)
+• multilingual-e5-large Embedder
+• FAISS IndexFlatIP Vector Search
+• bge-reranker-base Cross-Encoder
+• Groq LLM Generation (llama-3.3-70b)
+• Department Resolution" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=left;verticalAlign=top;spacingTop=10;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="220" width="320" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="nav_mod" value="Navigation Module
+
+• 75×75 Floor Grid Renderer
+• Pedestrian Dead Reckoning (PDR)
+• Zero-crossing Step Detection
+• QR Anchor Scan &amp; Generate
+• Dijkstra Routing
+• Capture Mode (office tagging)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=12;align=left;verticalAlign=top;spacingTop=10;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="390" y="220" width="320" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="ana_mod" value="Analytics Module
+
+• Query Log (JSONL append-only)
+• Inquiry Frequency Dashboard
+• Department-level Demand
+• Navigation Heatmap
+• Capture-driven Office Registry" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;fontSize=12;align=left;verticalAlign=top;spacingTop=10;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="740" y="220" width="320" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="d1" value="D1 • Document Corpus
+services.json
+(Citizen&#x27;s Charter, 235 services)" style="shape=partialRectangle;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;top=0;right=0;bottom=1;left=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="440" width="230" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="d2" value="D2 • Vector Index
+FAISS IndexFlatIP
++ metadata.jsonl" style="shape=partialRectangle;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;top=0;right=0;bottom=1;left=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="290" y="440" width="230" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="d3" value="D3 • Floor / Office Layout
+FLOOR_PRESETS
++ CUSTOM_OFFICES (localStorage)" style="shape=partialRectangle;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;top=0;right=0;bottom=1;left=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="540" y="440" width="230" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="d4" value="D4 • Logs &amp; Analytics
+query_log.jsonl
+(timestamps, depts, latency)" style="shape=partialRectangle;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;top=0;right=0;bottom=1;left=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="790" y="440" width="230" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="cloud" value="Groq Cloud LLM API
+(llama-3.3-70b-versatile)
+OpenAI-compatible" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="410" y="600" width="280" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_user_frontend" value="HTTPS / UI" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="user" target="frontend">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_front_ai" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="frontend" target="ai_mod">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_front_nav" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="frontend" target="nav_mod">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_front_ana" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="frontend" target="ana_mod">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_ai_d1" value="corpus" style="endArrow=classic;html=1;rounded=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="ai_mod" target="d1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_ai_d2" value="vectors" style="endArrow=classic;html=1;rounded=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="ai_mod" target="d2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_nav_d3" value="layout" style="endArrow=classic;html=1;rounded=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="nav_mod" target="d3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_ana_d4" value="logs" style="endArrow=classic;html=1;rounded=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="ana_mod" target="d4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_ai_nav" value="dept code" style="endArrow=classic;html=1;rounded=0;dashed=1;strokeColor=#888888;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="ai_mod" target="nav_mod">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_ai_ana" value="log entry" style="endArrow=classic;html=1;rounded=0;dashed=1;strokeColor=#888888;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="ai_mod" target="ana_mod">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_nav_ana" value="route logs" style="endArrow=classic;html=1;rounded=0;dashed=1;strokeColor=#888888;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="nav_mod" target="ana_mod">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_ai_cloud" value="prompt" style="endArrow=classic;html=1;rounded=0;strokeColor=#B85450;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="ai_mod" target="cloud">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_cloud_ai" value="answer" style="endArrow=classic;html=1;rounded=0;strokeColor=#B85450;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="cloud" target="ai_mod">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="title" value="Figure 1 — Unified System Architecture" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="690" width="440" height="30" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

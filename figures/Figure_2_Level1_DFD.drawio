@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" agent="Generated for Geo-Agentic RAG" version="22.1.16">
+  <diagram name="Figure 2 — Level-1 Data Flow Diagram" id="Figure_2_—_Level-1_Data_Flow_Diagram">
+    <mxGraphModel dx="1422" dy="757" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="e_citizen" value="Citizen
+(User)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="70" width="130" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_admin" value="Administrator
+(LGU Staff)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="360" width="130" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_groq" value="Groq Cloud LLM
+(External API)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="920" y="70" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="p1" value="P1
+Query Processing
+&amp; Language Detection" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="240" y="70" width="200" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2" value="P2
+RAG Retrieval &amp;
+Answer Generation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="540" y="70" width="220" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="p3" value="P3
+Indoor Wayfinding
+(PDR + QR Anchors)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="240" y="240" width="200" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4" value="P4
+Logging &amp;
+Administrative Analytics" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="540" y="240" width="220" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="p5" value="P5
+Capture Mode
+(Coordinate Tagging)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="390" y="400" width="220" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="d1" value="D1 • Citizen&#x27;s Charter
+services.json (235 services)" style="shape=partialRectangle;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;top=0;right=0;bottom=1;left=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="20" y="550" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="d2" value="D2 • FAISS Index +
+metadata.jsonl" style="shape=partialRectangle;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;top=0;right=0;bottom=1;left=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="270" y="550" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="d3" value="D3 • Floor Plan &amp;
+Office Coords (FLOOR_PRESETS)" style="shape=partialRectangle;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;top=0;right=0;bottom=1;left=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="520" y="550" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="d4" value="D4 • query_log.jsonl
+(timestamps, dept, latency)" style="shape=partialRectangle;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;top=0;right=0;bottom=1;left=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="770" y="550" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1" value="F1 query (Taglish/Eng)" style="endArrow=classic;html=1;rounded=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="e_citizen" target="p1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2" value="F2 rewritten query" style="endArrow=classic;html=1;rounded=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="p1" target="p2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f3" value="F3 embed lookup" style="endArrow=classic;html=1;rounded=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="p2" target="d2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f4" value="F4 candidate chunks" style="endArrow=classic;html=1;rounded=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="d2" target="p2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f5" value="F5 service text" style="endArrow=classic;html=1;rounded=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="p2" target="d1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f6" value="F6 prompt" style="endArrow=classic;html=1;rounded=0;strokeColor=#B85450;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="p2" target="e_groq">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f7" value="F7 completion" style="endArrow=classic;html=1;rounded=0;strokeColor=#B85450;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="e_groq" target="p2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f8" value="F8 answer + dept" style="endArrow=classic;html=1;rounded=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="p2" target="e_citizen">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f9" value="F9 log entry" style="endArrow=classic;html=1;rounded=0;dashed=1;strokeColor=#888888;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="p2" target="p4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f10" value="F10 motion/QR" style="endArrow=classic;html=1;rounded=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="e_citizen" target="p3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f11" value="F11 route + position" style="endArrow=classic;html=1;rounded=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="p3" target="e_citizen">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f12" value="F12 floor data" style="endArrow=classic;html=1;rounded=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="p3" target="d3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f13" value="F13 dept-to-coord" style="endArrow=classic;html=1;rounded=0;dashed=1;strokeColor=#888888;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="p2" target="p3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f14" value="F14 tap / PDR" style="endArrow=classic;html=1;rounded=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="e_admin" target="p5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f15" value="F15 new office" style="endArrow=classic;html=1;rounded=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="p5" target="d3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f16" value="F16 analytics query" style="endArrow=classic;html=1;rounded=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="e_admin" target="p4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f17" value="F17 dashboard" style="endArrow=classic;html=1;rounded=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="p4" target="e_admin">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f18" value="(write) log" style="endArrow=classic;html=1;rounded=0;dashed=1;strokeColor=#888888;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="p4" target="d4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f19" value="read logs" style="endArrow=classic;html=1;rounded=0;;labelBackgroundColor=#FFFFFF" edge="1" parent="1" source="d4" target="p4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="dfd_title" value="Figure 2 — Level-1 Data Flow Diagram" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="640" width="440" height="30" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

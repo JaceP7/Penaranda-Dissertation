@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Geo-Agentic RAG — Demo (Calamba City Website context)</title>
+
+  <!-- Real chat widget styles (so the panel looks identical to the live app) -->
+  <link rel="stylesheet" href="css/app.css?v=34" />
+
+  <style>
+    /* ──────────────────────────────────────────────────────────────
+       This page is a DEMO / dissertation figure. It recreates the
+       Calamba City Hall website hero ("Welcome to the City of Calamba"
+       slide) as a full-page background, then floats the real RAG chat
+       widget on top showing a sample query + grounded response, plus a
+       "Show Wayfinding" button beside the chat icon.
+
+       The hero markup mirrors the live site's welcome slide. Because the
+       site's global stylesheet isn't available here, the hero styles
+       below are a faithful self-contained reproduction. Asset URLs point
+       at the absolute calambacity.gov.ph paths so they load when online;
+       a dark gradient is used as a fallback if the video is blocked.
+    ────────────────────────────────────────────────────────────── */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; font-family: "Open Sans", system-ui, -apple-system, "Segoe UI", sans-serif; }
+
+    /* ── Hero (copied structure from the Calamba welcome slide) ────── */
+    .hero-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      /* Fallback gradient behind the video in case it can't load */
+      background: linear-gradient(135deg, #001a33 0%, #003366 55%, #00509e 100%);
+      overflow: hidden;
+    }
+    .bg-video-wrap {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .bg-video-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: rgba(0, 20, 45, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .hero-content {
+      max-width: 760px;
+      text-align: center;
+      color: #fff;
+    }
+    .hero-content img.citylogo {
+      width: 150px;
+      height: auto;
+      margin-bottom: 18px;
+      filter: drop-shadow(0 4px 14px rgba(0,0,0,0.4));
+    }
+    .hero-content h1 {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 18px;
+      text-shadow: 0 3px 14px rgba(0,0,0,0.45);
+      letter-spacing: -0.01em;
+    }
+    .hero-content p {
+      font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+      line-height: 1.7;
+      color: rgba(255,255,255,0.92);
+      margin-bottom: 24px;
+    }
+    .main-button-red a {
+      display: inline-block;
+      background: #c4252c;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 12px 34px;
+      border-radius: 40px;
+      box-shadow: 0 8px 22px rgba(196,37,44,0.4);
+      transition: transform 0.2s, background 0.2s;
+    }
+    .main-button-red a:hover { background: #a51d23; transform: translateY(-2px); }
+
+    /* Small "mock browser chrome" so the figure reads as the live website */
+    .mock-urlbar {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      background: rgba(255,255,255,0.92);
+      border-radius: 40px;
+      padding: 6px 18px 6px 14px;
+      font-size: 0.8rem;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      max-width: calc(100vw - 40px);
+    }
+    .mock-urlbar .lock { color: #059669; font-size: 0.85rem; }
+    .mock-urlbar .url { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* ── Floating action cluster (bottom-right): Wayfinding + Chat ── */
+    .demo-fab-cluster {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1100;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .demo-wayfinding-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #059669;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 12px 18px;
+      border-radius: 40px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(5,150,105,0.45);
+      transition: transform 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+    .demo-wayfinding-btn:hover { background: #047857; transform: translateY(-2px); }
+
+    /* Chat toggle styled as a labelled "Services" pill — this is the primary
+       entry point for the RAG assistant (matches the Calamba site's
+       "Services" call-to-action). */
+    .demo-chat-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 52px;
+      padding: 0 22px;
+      border-radius: 40px;
+      border: none;
+      background: #1E40AF;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.35);
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .demo-chat-toggle .chat-emoji { font-size: 1.35rem; line-height: 1; }
+    .demo-chat-toggle:hover { background: #1E3A8A; }
+
+    /* "Show Wayfinding" is a TEMPORARY demo shortcut — the real flow is
+       Services → ask → "Take me there" → Wayfinding. De-emphasised vs the
+       Services pill. */
+    .demo-wayfinding-btn.is-temporary {
+      background: rgba(5,150,105,0.85);
+      font-weight: 600;
+      font-size: 0.82rem;
+      opacity: 0.92;
+    }
+
+    /* Pin the chat panel open for the demo (overrides the hidden default) */
+    .chat-panel.demo-open {
+      opacity: 1 !important;
+      transform: translateY(0) scale(1) !important;
+      pointer-events: auto !important;
+      bottom: 84px;
+      right: 20px;
+    }
+
+    /* Caption strip for the dissertation figure */
+    .demo-caption {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1101;
+      background: rgba(15,23,42,0.82);
+      color: #e2e8f0;
+      font-size: 0.72rem;
+      text-align: center;
+      padding: 5px 12px;
+      letter-spacing: 0.02em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Calamba City Hall hero (welcome slide) as the page background ═══ -->
+  <div class="hero-container">
+    <div class="bg-video-wrap">
+      <video autoplay muted loop playsinline
+             src="https://calambacity.gov.ph/maincss/assets/video/course-video.mp4"></video>
+    </div>
+
+    <div class="mock-urlbar">
+      <span class="lock">🔒</span>
+      <span class="url">calambacity.gov.ph</span>
+    </div>
+
+    <div class="overlay">
+      <div class="hero-content">
+        <img class="citylogo"
+             src="https://calambacity.gov.ph/maincss/assets/img/logocity.webp"
+             alt="City of Calamba" />
+        <h1>Welcome to the City of Calamba</h1>
+        <p>
+          Calamba, officially the City of Calamba, is a 1st class component city in the
+          province of Laguna, Philippines. According to the 2020 census, it has a
+          population of 539,671 people. Only 54 kilometers away from Metro Manila.
+        </p>
+        <div class="main-button-red">
+          <a href="#services">Services</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ RAG chat widget (open, showing a sample query + response) ═══ -->
+  <div class="chat-panel demo-open" id="chatPanel" aria-hidden="false">
+    <div class="chat-header">
+      <span class="chat-header-icon">🏛️</span>
+      <span class="chat-header-title">City Services Assistant</span>
+      <button class="chat-close-btn" aria-label="Close chat">✕</button>
+    </div>
+    <div class="chat-intro">Ask me about any Calamba City Hall service and I'll guide you there.</div>
+    <div class="chat-messages" id="chatMessages">
+
+      <!-- User query -->
+      <div class="chat-bubble chat-bubble-user">Paano kumuha ng business permit?</div>
+
+      <!-- Grounded bot response (faithful to real pipeline output, Taglish) -->
+      <div class="chat-bubble chat-bubble-bot">
+        <p class="chat-para">Para sa <strong>Application for Business Permit Renewal</strong> (On-Site / Walk-In), narito ang mga kailangan mong ihanda:</p>
+        <ol class="chat-list">
+          <li>Unified Application Form na may tamang kasagutan
+            <span class="chat-secure">↳ secure at: Calamba City website (calambacity.gov.ph) / BPTFO B.O.S.S. Area</span>
+          </li>
+          <li>Katunayan ng Kabuuang Benta o Gross Receipts
+            <span class="chat-secure">↳ ikaw ang maghahanda nito (provided by you)</span>
+          </li>
+          <li>Barangay Business Clearance
+            <span class="chat-secure">↳ secure at: Barangay Hall</span>
+          </li>
+          <li>Community Tax Certificate (Cedula)
+            <span class="chat-secure">↳ secure at: City Treasury Management Office</span>
+          </li>
+        </ol>
+        <p class="chat-para">Kapag kumpleto na ang mga ito, pumunta sa opisina sa ibaba para iproseso ang iyong permit.</p>
+        <div class="chat-goto">📍 BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE</div>
+      </div>
+
+      <!-- "Take me there" action (rendered by chat.js when a dept is resolved) -->
+      <div class="chat-location">
+        <span class="chat-dept-label">BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE</span>
+        <button class="chat-nav-btn" id="demoTakeMeBtn">Take me there</button>
+      </div>
+
+    </div>
+    <div class="chat-input-row">
+      <input class="chat-input" type="text" value="" placeholder="e.g. How do I get a business permit?" maxlength="200" />
+      <button class="chat-send-btn" aria-label="Send">&#9658;</button>
+    </div>
+  </div>
+
+  <!-- ═══ Floating cluster: (temp) Show Wayfinding + Services chat toggle ═══ -->
+  <div class="demo-fab-cluster">
+    <a class="demo-wayfinding-btn is-temporary" href="index.html"
+       title="Temporary shortcut. The real flow is: ask Services → Take me there → Wayfinding.">
+      🧭 Show Wayfinding (temp)
+    </a>
+    <button class="demo-chat-toggle" title="Ask the City Services Assistant" aria-label="Services">
+      <span class="chat-emoji">💬</span><span>Services</span>
+    </button>
+  </div>
+
+  <div class="demo-caption">
+    Figure — Geo-Agentic RAG conversational assistant embedded in the Calamba City Hall website context. The “Show Wayfinding” button hands off to the indoor navigation module.
+  </div>
+
+  <script>
+    // Minimal interactivity so the demo is clickable for a live walkthrough.
+    // "Take me there" and the chat toggle jump to the wayfinding app.
+    document.getElementById('demoTakeMeBtn')?.addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
+    document.querySelector('.demo-chat-toggle')?.addEventListener('click', () => {
+      const p = document.getElementById('chatPanel');
+      p.classList.toggle('demo-open');
+    });
+    document.querySelector('.chat-close-btn')?.addEventListener('click', () => {
+      document.getElementById('chatPanel').classList.remove('demo-open');
+    });
+  </script>
+
+</body>
+</html>
