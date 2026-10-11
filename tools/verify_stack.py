@@ -102,6 +102,23 @@ def check_note_endpoint(base, path, label):
         return record(label, False, str(e)[:120])
 
 
+def _expected_vector_count():
+    """Number of services in the corpus the index is seeded from.
+
+    Derived rather than hardcoded: the count has already moved once (235 -> 305
+    when the charter-PDF offices were merged), and a stale literal here turns a
+    genuine seeding mismatch into a line of text nobody rereads.
+    """
+    path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                        "wayfinding-app", "data", "services.json")
+    try:
+        with open(path, encoding="utf-8") as fh:
+            data = json.load(fh)
+        return len(data if isinstance(data, list) else data.get("services", data))
+    except Exception:
+        return None
+
+
 def check_vector_direct():
     url = os.environ.get("UPSTASH_VECTOR_REST_URL", "").rstrip("/")
     token = os.environ.get("UPSTASH_VECTOR_REST_TOKEN", "")
@@ -114,9 +131,17 @@ def check_vector_direct():
         res = d.get("result", d)
         count = res.get("vectorCount", res.get("pendingVectorCount", "?"))
         dim = res.get("dimension", "?")
+        expected = _expected_vector_count()
         ok = isinstance(count, int) and count > 0
-        return record("Upstash Vector index", ok,
-                      f"{count} vectors, dim={dim} (expect 235)")
+        detail = f"{count} vectors, dim={dim}"
+        if expected is None:
+            detail += " (corpus size unknown)"
+        elif count == expected:
+            detail += f" (matches corpus: {expected})"
+        else:
+            ok = False
+            detail += f" (MISMATCH: corpus has {expected} - re-seed needed)"
+        return record("Upstash Vector index", ok, detail)
     except Exception as e:
         return record("Upstash Vector index", False, str(e)[:120])
 

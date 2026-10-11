@@ -36,7 +36,12 @@ const UPSTASH_TOKEN = process.env.UPSTASH_VECTOR_REST_TOKEN || '';
 const REDIS_URL   = (process.env.UPSTASH_REDIS_REST_URL || '').replace(/\/$/, '');
 const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || '';
 const LOG_KEY     = 'wf:querylog';
-const LOG_CAP     = 5000;   // keep the most recent N entries
+// Keep the most recent N entries. Raised from 5,000 so an evaluation period
+// cannot silently lose its earliest queries — at ~200 bytes an entry this is
+// roughly 10 MB, well inside the Upstash free tier. api/analytics.js pages
+// through the list, so a large cap costs nothing on read.
+// Must stay <= MAX_SCAN in api/analytics.js.
+const LOG_CAP     = 50000;
 
 async function logQuery(entry) {
   if (!REDIS_URL || !REDIS_TOKEN) return;   // logging not configured → skip

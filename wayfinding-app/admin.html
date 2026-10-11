@@ -183,6 +183,50 @@
       margin-bottom: 20px;
       display: none;
     }
+    /* ── Date range + export ──────────────────────────────────────────── */
+    .filter-bar {
+      display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 14px 16px; margin-bottom: 20px;
+    }
+    .filter-group { display: flex; flex-direction: column; gap: 5px; }
+    .filter-label {
+      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .filter-input {
+      background: var(--bg); color: var(--text);
+      border: 1px solid var(--border); border-radius: 7px;
+      padding: 7px 10px; font-size: 0.86rem; font-family: inherit;
+      color-scheme: dark;            /* native date picker follows the theme */
+    }
+    .filter-input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .filter-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .btn-filter {
+      border: 1px solid var(--border); background: var(--bg); color: var(--text);
+      border-radius: 7px; padding: 7px 13px; font-size: 0.82rem;
+      font-family: inherit; cursor: pointer;
+    }
+    .btn-filter:hover { background: rgba(148,163,184,0.16); }
+    .btn-filter.primary {
+      border-color: var(--accent); background: rgba(6,182,212,0.18); color: var(--accent);
+      font-weight: 600;
+    }
+    .btn-filter.primary:hover { background: rgba(6,182,212,0.3); }
+    .btn-filter.csv {
+      border-color: var(--green); background: rgba(34,197,94,0.15); color: var(--green);
+      font-weight: 600; margin-left: auto;
+    }
+    .btn-filter.csv:hover { background: rgba(34,197,94,0.28); }
+    .range-note {
+      flex-basis: 100%; font-size: 0.76rem; color: var(--muted); margin: 0;
+    }
+    .range-note strong { color: var(--text); }
+    .range-note.warn { color: var(--amber); }
+    @media (max-width: 720px) {
+      .btn-filter.csv { margin-left: 0; }
+      .filter-group { flex: 1 1 140px; }
+    }
   </style>
 </head>
 <body>
@@ -201,12 +245,33 @@
 
   <div class="error-banner" id="err-banner"></div>
 
+  <!-- Date range + export. Figures below respond to this window, so a study
+       can report its evaluation period rather than all-time totals. -->
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label class="filter-label" for="f-from">From</label>
+      <input type="date" id="f-from" class="filter-input">
+    </div>
+    <div class="filter-group">
+      <label class="filter-label" for="f-to">To</label>
+      <input type="date" id="f-to" class="filter-input">
+    </div>
+    <div class="filter-actions">
+      <button class="btn-filter primary" id="f-apply">Apply</button>
+      <button class="btn-filter" id="f-7">Last 7 days</button>
+      <button class="btn-filter" id="f-30">Last 30 days</button>
+      <button class="btn-filter" id="f-all">All time</button>
+    </div>
+    <button class="btn-filter csv" id="f-csv">⬇ Export CSV</button>
+    <p class="range-note" id="f-note">Showing <strong>all time</strong>.</p>
+  </div>
+
   <!-- Stats -->
   <div class="stats">
     <div class="stat">
       <div class="stat-label">Total Queries</div>
       <div class="stat-val" id="s-total">—</div>
-      <div class="stat-sub">all time</div>
+      <div class="stat-sub" id="s-total-sub">all time</div>
     </div>
     <div class="stat">
       <div class="stat-label">Today</div>
@@ -228,7 +293,7 @@
   <!-- Charts row -->
   <div class="charts-row">
     <div class="card">
-      <div class="card-title">Queries — Last 7 Days</div>
+      <div class="card-title" id="c-daily-title">Queries — Last 7 Days</div>
       <div class="chart-box"><canvas id="c-daily"></canvas></div>
     </div>
     <div class="card">
@@ -406,11 +471,61 @@ function render(d) {
     </tr>`).join('');
 }
 
+/* ── Date range ── */
+const elFrom = document.getElementById('f-from');
+const elTo   = document.getElementById('f-to');
+const elNote = document.getElementById('f-note');
+
+const isoDay   = (d) => d.toISOString().slice(0, 10);
+const daysAgo  = (n) => isoDay(new Date(Date.now() - n * 86400000));
+
+/** Current window as URL params; empty when no range is set. */
+function rangeParams() {
+  const p = new URLSearchParams();
+  if (elFrom.value) p.set('from', elFrom.value);
+  if (elTo.value)   p.set('to',   elTo.value);
+  return p;
+}
+
+function setRange(from, to) {
+  elFrom.value = from || '';
+  elTo.value   = to   || '';
+  load();
+}
+
+/** Tell the reader exactly which window the figures describe. */
+function describeRange(d) {
+  const r = (d && d.range) || {};
+  const totalSub = document.getElementById('s-total-sub');
+  const dailyTitle = document.getElementById('c-daily-title');
+
+  if (r.applied) {
+    const label = `${r.from || 'the beginning'} to ${r.to || 'now'}`;
+    elNote.innerHTML = `Showing <strong>${esc(label)}</strong> — ` +
+      `${d.total ?? 0} of ${d.scanned ?? '?'} logged queries.`;
+    if (totalSub)   totalSub.textContent = 'in selected range';
+    if (dailyTitle) dailyTitle.textContent = 'Queries — selected range';
+  } else {
+    elNote.innerHTML = `Showing <strong>all time</strong>${
+      d && d.scanned != null ? ` — ${d.scanned} logged queries` : ''}.`;
+    if (totalSub)   totalSub.textContent = 'all time';
+    if (dailyTitle) dailyTitle.textContent = 'Queries — Last 7 Days';
+  }
+
+  if (d && d.capped) {
+    elNote.classList.add('warn');
+    elNote.innerHTML += ' <strong>Log read limit reached</strong> — the oldest entries are not included.';
+  } else {
+    elNote.classList.remove('warn');
+  }
+}
+
 /* ── Fetch ── */
 async function load() {
   const banner = document.getElementById('err-banner');
   try {
-    const resp = await fetch('/api/analytics');
+    const qs   = rangeParams().toString();
+    const resp = await fetch('/api/analytics' + (qs ? `?${qs}` : ''));
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
     if (data._note) {
@@ -420,12 +535,27 @@ async function load() {
       banner.style.display = 'none';
     }
     render(data);
+    describeRange(data);
   } catch (err) {
     banner.style.display = 'block';
     banner.textContent = `Could not load analytics: ${err.message}. Make sure serve_https.py is running.`;
     console.error(err);
   }
 }
+
+document.getElementById('f-apply').addEventListener('click', () => load());
+document.getElementById('f-7').addEventListener('click',   () => setRange(daysAgo(6),  isoDay(new Date())));
+document.getElementById('f-30').addEventListener('click',  () => setRange(daysAgo(29), isoDay(new Date())));
+document.getElementById('f-all').addEventListener('click', () => setRange('', ''));
+[elFrom, elTo].forEach((el) => el.addEventListener('change', () => load()));
+
+// CSV goes through a normal navigation so the browser handles the download
+// and the Content-Disposition filename, rather than us building a blob.
+document.getElementById('f-csv').addEventListener('click', () => {
+  const p = rangeParams();
+  p.set('format', 'csv');
+  window.location.href = '/api/analytics?' + p.toString();
+});
 
 /* ── Auto-refresh (30 s) ── */
 let countdown = 30;

@@ -10,9 +10,10 @@ To get zero browser warnings:
 """
 
 import http.server, ssl, subprocess, os, sys, socket, shutil, json, re
-import socketserver, threading
+import socketserver, threading, csv, io
 from datetime import datetime, timedelta, timezone
 from collections import defaultdict
+from urllib.parse import urlparse, parse_qs
 try:
     import urllib.request as _urlreq
 except ImportError:
@@ -339,8 +340,11 @@ def _log_query(entry):
         print(f'[LOG] Warning: could not write query log: {e}')
 
 
-def _get_analytics():
-    """Read query_log.jsonl and return aggregated stats."""
+DATE_RE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
+
+
+def _read_log():
+    """Every parseable entry in query_log.jsonl, oldest first."""
     lines = []
     try:
         with open(QUERY_LOG, 'r', encoding='utf-8') as f:
@@ -353,6 +357,57 @@ def _get_analytics():
                         pass
     except FileNotFoundError:
         pass
+    return lines
+
+
+def _in_range(entry, frm, to):
+    """Inclusive UTC-date filter. Entries without a usable date are excluded
+    only when a range is actually set."""
+    day = (entry.get('timestamp') or '')[:10]
+    if not (frm or to):
+        return True
+    if not day:
+        return False
+    if frm and day < frm:
+        return False
+    if to and day > to:
+        return False
+    return True
+
+
+def _clean_range(frm, to):
+    """Keep only well-formed dates, and swap a reversed range rather than
+    silently returning nothing."""
+    frm = frm if DATE_RE.match(frm or '') else ''
+    to  = to  if DATE_RE.match(to  or '') else ''
+    if frm and to and frm > to:
+        frm, to = to, frm
+    return frm, to
+
+
+def _analytics_csv(frm='', to=''):
+    """The filtered rows as CSV text, oldest first, for offline analysis."""
+    frm, to = _clean_range(frm, to)
+    rows = [l for l in _read_log() if _in_range(l, frm, to)]
+    buf = io.StringIO()
+    w = csv.writer(buf, lineterminator='\r\n')
+    w.writerow(['timestamp_utc', 'date', 'query', 'rewritten', 'department',
+                'subservice', 'needs_context', 'latency_ms'])
+    for l in rows:
+        ts = l.get('timestamp') or ''
+        w.writerow([ts, ts[:10], l.get('query') or '', l.get('rewritten') or '',
+                    l.get('department') or '', l.get('subservice') or '',
+                    'yes' if l.get('needsContext') else 'no',
+                    l.get('latency_ms') if l.get('latency_ms') is not None else ''])
+    return buf.getvalue()
+
+
+def _get_analytics(frm='', to=''):
+    """Read query_log.jsonl and return aggregated stats, optionally scoped to
+    an inclusive UTC date range so a study can report its evaluation period."""
+    frm, to = _clean_range(frm, to)
+    applied = bool(frm or to)
+    lines = [l for l in _read_log() if _in_range(l, frm, to)]
 
     total = len(lines)
 
@@ -379,7 +434,17 @@ def _get_analytics():
         day = ts[:10] if ts else 'unknown'
         day_counts[day] += 1
     today_date = datetime.now(timezone.utc).date()
-    days = [(today_date - timedelta(days=i)).isoformat() for i in range(6, -1, -1)]
+    if applied:
+        # Span the chosen window so the chart matches the figures above it.
+        seen  = sorted(d for d in day_counts if d != 'unknown')
+        start = frm or (seen[0]  if seen else today_date.isoformat())
+        end   = to  or (seen[-1] if seen else today_date.isoformat())
+        d0 = datetime.strptime(start, '%Y-%m-%d').date()
+        d1 = datetime.strptime(end,   '%Y-%m-%d').date()
+        span = (d1 - d0).days
+        days = [(d0 + timedelta(days=i)).isoformat() for i in range(0, min(span, 400) + 1)]
+    else:
+        days = [(today_date - timedelta(days=i)).isoformat() for i in range(6, -1, -1)]
     queries_per_day = [{'date': d, 'count': day_counts.get(d, 0)} for d in days]
 
     # Summary stats
@@ -397,6 +462,9 @@ def _get_analytics():
         'topSubservices': [{'name': k, 'count': v} for k, v in top_subs],
         'queriesPerDay':  queries_per_day,
         'recentQueries':  list(reversed(lines[-20:])),
+        'range':          {'from': frm, 'to': to, 'applied': applied},
+        'scanned':        total,
+        'capped':         False,   # the local log is a file; nothing is trimmed
     }
 
 
@@ -416,10 +484,26 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.send_header('Content-Length', str(len(body)))
             self.end_headers()
             self.wfile.write(body)
-        elif self.path == '/api/analytics':
-            body = json.dumps(_get_analytics()).encode('utf-8')
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
+        elif urlparse(self.path).path == '/api/analytics':
+            # Query params carry the date window and the CSV switch, so match on
+            # the path alone — an exact-string match 404s the moment one is sent.
+            q   = parse_qs(urlparse(self.path).query)
+            frm = (q.get('from')   or [''])[0]
+            to  = (q.get('to')     or [''])[0]
+            fmt = (q.get('format') or [''])[0].lower()
+
+            if fmt == 'csv':
+                stamp = f'{frm or "start"}_to_{to or "now"}' if (frm or to) else 'all-time'
+                # utf-8-sig: Excel needs the BOM to read Tagalog text correctly.
+                body = _analytics_csv(frm, to).encode('utf-8-sig')
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/csv; charset=utf-8')
+                self.send_header('Content-Disposition',
+                                 f'attachment; filename="calamba-queries-{stamp}.csv"')
+            else:
+                body = json.dumps(_get_analytics(frm, to)).encode('utf-8')
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
             self.send_header('Access-Control-Allow-Origin', '*')
             self.send_header('Content-Length', str(len(body)))
             self.end_headers()
