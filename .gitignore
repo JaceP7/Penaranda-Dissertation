@@ -69,3 +69,13 @@ __pycache__/
 *.bak
 try.zip
 pdr_walks_*.json
+
+# ── Renders/traces derived from the real floor plan ───────────────────────────
+# Same sensitivity as the source drawing: these PNGs contain the full
+# architectural plan (room layout, fixtures, title block), so the existing
+# *_Annotated*.drawio rule is not enough. The repo is public.
+**/Floor_Slide*_Trace_Preview*.png
+figures/try/
+
+# ── Office lock files (created while a doc is open) ───────────────────────────
+~$*
