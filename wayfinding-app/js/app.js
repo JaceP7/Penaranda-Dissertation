@@ -1004,7 +1004,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   DOM.askAgainBtn.addEventListener('click', () => {
-    document.body.classList.remove('route-active');
+    // Was only hiding the chrome, which left the trip open: no nav_abandon was
+    // recorded, the QR prompt stayed suppressed, and the old arrival reminder
+    // survived into the next journey. Ending the route properly, exactly as the
+    // arrival prompt's own "Ask again" does.
+    _clearFinishedRoute();
     _hideNavStep();
     if (typeof CHAT !== 'undefined' && CHAT.open) CHAT.open();
   });
@@ -1369,6 +1373,14 @@ function _applyStartupDeepLink() {
 }
 
 // ── QR location prompt — gates the route after "Take me there" ───────────────
+//
+// Skipping suppresses the prompt for THIS journey only, not the whole session.
+// Suppressing it session-wide meant one "Skip" silenced every later route until
+// the tab was closed, which both hid the feature during on-site testing and
+// meant a citizen who skipped once was never offered an accurate fix again.
+// Cleared when a route ends (_clearFinishedRoute), so the next "Take me there"
+// asks again. Someone who actually scanned has NAV._hasQRFix set and is never
+// re-prompted regardless.
 const QR_PROMPT_SS_KEY = 'wf-qr-prompt-dismissed';
 let _pendingNav = null;   // {deptName, subservice} awaiting the QR-fix decision
 
@@ -1379,6 +1391,11 @@ function _hideQrPrompt() {
 
 function _qrPromptDismissed() {
   try { return sessionStorage.getItem(QR_PROMPT_SS_KEY) === '1'; } catch (_) { return false; }
+}
+
+/** Let the next route offer the QR prompt again. */
+function _resetQrPrompt() {
+  try { sessionStorage.removeItem(QR_PROMPT_SS_KEY); } catch (_) {}
 }
 
 /**
@@ -2330,6 +2347,9 @@ function _clearFinishedRoute() {
   // Closing a route that never arrived is the completion-rate denominator.
   // _navTripAbandon() no-ops when the trip already arrived.
   _navTripAbandon();
+  // This journey is over, so the next one may offer the QR prompt again.
+  _resetQrPrompt();
+  _arrivalReminder = null;
   STATE.endId = null;
   document.body.classList.remove('route-active');
   _hideNavStep();
