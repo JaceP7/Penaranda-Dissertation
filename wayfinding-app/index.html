@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=46" />
+  <link rel="stylesheet" href="css/app.css?v=47" />
 </head>
 <body class="view-user">
 
@@ -328,6 +328,44 @@
         <button id="qrPromptScanBtn" class="btn-qr-prompt btn-qr-prompt-scan">📷 Scan QR</button>
         <button id="qrPromptSkipBtn" class="btn-qr-prompt btn-qr-prompt-skip">Skip (for testing)</button>
       </div>
+
+      <!-- ╔══ TEMPORARY — REMOVE BEFORE PUBLIC USE ════════════════════════╗
+           Manual location entry, so a sign that will not scan does not block
+           a test run. Citizens should never be asked for grid coordinates;
+           this exists only while the QR anchors are being validated on site.
+
+           To remove: delete this block, the `.manual-loc` rules in
+           css/app.css, and the `manualLoc` lines in js/app.js.
+           ╚════════════════════════════════════════════════════════════════╝ -->
+      <div class="manual-loc">
+        <button id="manualLocToggle" class="manual-loc-toggle" aria-expanded="false">
+          QR not working? Enter location manually
+        </button>
+        <div id="manualLocPanel" class="manual-loc-panel" hidden>
+          <div class="manual-loc-row">
+            <label class="manual-loc-field">
+              <span>Floor</span>
+              <select id="manualLocFloor">
+                <option value="1">1 — Lower Ground</option>
+                <option value="2" selected>2 — Ground</option>
+                <option value="3">3 — 2nd Floor</option>
+                <option value="4">4 — 3rd Floor</option>
+              </select>
+            </label>
+            <label class="manual-loc-field">
+              <span>Row</span>
+              <input id="manualLocRow" type="number" min="0" max="74" inputmode="numeric" value="38">
+            </label>
+            <label class="manual-loc-field">
+              <span>Col</span>
+              <input id="manualLocCol" type="number" min="0" max="74" inputmode="numeric" value="71">
+            </label>
+          </div>
+          <button id="manualLocGo" class="btn-qr-prompt btn-qr-prompt-scan">Set my location</button>
+          <p id="manualLocMsg" class="manual-loc-msg">Row and column as printed on the sign
+            (<code>floor:row,col</code>) — the entrance is <code>2:38,71</code>.</p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -372,12 +410,12 @@
   <script src="js/data.js?v=32"></script>
   <script src="js/floor_presets.js?v=33"></script>
   <script src="js/stamp_presets.js?v=2"></script>
-  <script src="js/service_locations.js?v=5"></script>
+  <script src="js/service_locations.js?v=6"></script>
   <script src="js/dijkstra.js?v=30"></script>
   <script src="js/renderer.js?v=33"></script>
   <script src="js/compass.js?v=31"></script>
-  <script src="js/nav.js?v=36"></script>
-  <script src="js/app.js?v=65"></script>
+  <script src="js/nav.js?v=37"></script>
+  <script src="js/app.js?v=66"></script>
   <script src="js/chat.js?v=38"></script>
 
 </body>

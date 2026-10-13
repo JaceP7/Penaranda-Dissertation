@@ -54,6 +54,10 @@ STAIRWELLS = [
 # ranking had no query data behind it. Regenerate Tier 3 from measured demand
 # once the evaluation period has produced some. Override with --tiers 1,2,3.
 TIERS = {1, 2}
+# Which floors to print. Default is all; --floors 1 gives a Ground-floor
+# starter pack, which is the sensible first on-site test - six signs instead
+# of twenty, covering the entrance and every landing people actually use.
+FLOORS_WANTED = {0, 1, 2, 3}
 
 SPOTS = [
     # (floor, row, col, name, tier)
@@ -186,7 +190,7 @@ def main():
     made = skipped = moved = 0
 
     for floor, r, c, name, tier in SPOTS:
-        if tier not in TIERS:
+        if tier not in TIERS or floor not in FLOORS_WANTED:
             continue
         t = cell(floor, r, c)
 
@@ -241,5 +245,11 @@ if __name__ == "__main__":
     for i, a in enumerate(sys.argv):
         if a == "--tiers" and i + 1 < len(sys.argv):
             TIERS = {int(x) for x in sys.argv[i + 1].split(",") if x.strip()}
-    print(f"Generating tiers {sorted(TIERS)}\n")
+        if a == "--floors" and i + 1 < len(sys.argv):
+            FLOORS_WANTED = {int(x) for x in sys.argv[i + 1].split(",") if x.strip()}
+        if a == "--out" and i + 1 < len(sys.argv):
+            OUTDIR = os.path.join(ROOT, sys.argv[i + 1])
+    print("Generating tiers %s, floors %s" % (sorted(TIERS), sorted(FLOORS_WANTED)))
+    print("into " + os.path.relpath(OUTDIR, ROOT))
+    print()
     main()

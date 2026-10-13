@@ -2081,3 +2081,66 @@ body.previewing .admin-toggle { display: none !important; }
 
 /* The editor replaces the landing page, so the button has no job there. */
 body.view-admin .temp-admin-entry { display: none !important; }
+
+/* ╔══ TEMPORARY — REMOVE BEFORE PUBLIC USE ══════════════════════════════╗
+   Manual location entry inside the QR prompt, so a sign that will not scan
+   does not block an on-site test. Citizens should never be asked for grid
+   coordinates. Delete with the matching blocks in index.html and js/app.js.
+   ╚══════════════════════════════════════════════════════════════════════╝ */
+.manual-loc { margin-top: 14px; }
+.manual-loc-toggle {
+  background: none;
+  border: none;
+  padding: 4px 2px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  color: #1E40AF;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.manual-loc-toggle:hover { color: #1D4ED8; }
+
+.manual-loc-panel {
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px dashed #CBD5E1;
+  border-radius: 10px;
+  background: #F8FAFC;
+  text-align: left;
+}
+.manual-loc-panel[hidden] { display: none; }
+
+.manual-loc-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.manual-loc-field { flex: 1 1 0; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.manual-loc-field span {
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em;
+  text-transform: uppercase; color: #64748B;
+}
+.manual-loc-field select,
+.manual-loc-field input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 9px;
+  border: 1px solid #CBD5E1;
+  border-radius: 7px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  background: #fff;
+  color: #0F172A;
+}
+.manual-loc-field select:focus,
+.manual-loc-field input:focus { outline: 2px solid #1E40AF; outline-offset: 1px; }
+
+/* The floor select carries the longest text, so let it take the slack. */
+.manual-loc-field:first-child { flex: 1.7 1 0; }
+
+.manual-loc-msg {
+  margin: 9px 0 0;
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: #475569;
+}
+.manual-loc-msg.bad { color: #B91C1C; font-weight: 600; }
+.manual-loc-msg code {
+  background: #E2E8F0; border-radius: 4px; padding: 1px 4px; font-size: 0.72rem;
+}

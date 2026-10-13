@@ -93,7 +93,11 @@ function navInit() {
   // the MOPAC counter. A placeholder "you're at the entrance" position; the
   // on-load QR prompt nudges the citizen to scan for a precise fix. Routing
   // snaps to the nearest walkable cell if this sits on the outer wall.
-  NAV.position = { row: 38, col: 72 };
+  // Ground floor, main public entrance. 38,71 not 38,72: the latter is the
+  // east outer wall, so the ME marker rendered on a wall until the first
+  // route snapped it here anyway. This is also the cell the posted entrance
+  // QR encodes, so the default and the anchor now agree.
+  NAV.position = { row: 38, col: 71 };
 }
 
 // ── Deep-link / QR payload parsing ──────────────────────────────────────────

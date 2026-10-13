@@ -342,6 +342,14 @@ const DOM = {
   qrPromptModal:   $('qrPromptModal'),
   qrPromptScanBtn: $('qrPromptScanBtn'),
   qrPromptSkipBtn: $('qrPromptSkipBtn'),
+  // TEMPORARY — manual location entry; see index.html
+  manualLocToggle: $('manualLocToggle'),
+  manualLocPanel:  $('manualLocPanel'),
+  manualLocFloor:  $('manualLocFloor'),
+  manualLocRow:    $('manualLocRow'),
+  manualLocCol:    $('manualLocCol'),
+  manualLocGo:     $('manualLocGo'),
+  manualLocMsg:    $('manualLocMsg'),
   navRescanBtn:    $('navRescanBtn'),
   // QR camera overlay
   qrOverlay:       $('qrOverlay'),
@@ -1235,6 +1243,38 @@ document.addEventListener('DOMContentLoaded', () => {
     _resumePendingNav();                // route from the default/current position
   });
 
+  // TEMPORARY — manual location entry. Remove with the matching blocks in
+  // index.html and app.css. See the comment there.
+  if (DOM.manualLocToggle) {
+    DOM.manualLocToggle.addEventListener('click', () => {
+      const open = DOM.manualLocPanel.hasAttribute('hidden');
+      DOM.manualLocPanel.toggleAttribute('hidden', !open);
+      DOM.manualLocToggle.setAttribute('aria-expanded', String(open));
+    });
+  }
+  if (DOM.manualLocGo) {
+    DOM.manualLocGo.addEventListener('click', () => {
+      const f   = parseInt(DOM.manualLocFloor.value, 10) - 1;   // select is 1-indexed
+      const row = parseInt(DOM.manualLocRow.value, 10);
+      const col = parseInt(DOM.manualLocCol.value, 10);
+      const say = (msg, bad) => {
+        if (!DOM.manualLocMsg) return;
+        DOM.manualLocMsg.textContent = msg;
+        DOM.manualLocMsg.classList.toggle('bad', !!bad);
+      };
+      if (!Number.isFinite(row) || !Number.isFinite(col) ||
+          row < 0 || col < 0 || row >= GRID_ROWS || col >= GRID_COLS) {
+        say(`Row and column must be between 0 and ${GRID_ROWS - 1}.`, true);
+        return;
+      }
+      const applied = _applyManualLocation(f, row, col);
+      say(applied.message, false);
+      if (applied.ok) {
+        setTimeout(() => { _hideQrPrompt(); _resumePendingNav(); }, 700);
+      }
+    });
+  }
+
   // Re-anchor mid-walk: scan a fresh QR to correct accumulated PDR drift. The
   // scan re-fixes NAV.position (via navSetPosition inside the scanner), which
   // recomputes the route from the new cell; we just clear the wrong-way streak
@@ -1263,6 +1303,44 @@ document.addEventListener('DOMContentLoaded', () => {
  * their own phone gets localised — PDR step-counting is only the backup.
  * Returns true if a deep link was applied.
  */
+/**
+ * TEMPORARY — set the citizen's position from typed coordinates.
+ *
+ * Does exactly what a scanned QR does (_applyStartupDeepLink), so a test run is
+ * not blocked by a sign that will not scan. A wall cell is snapped to the
+ * nearest walkable one and the snap is reported, rather than silently leaving
+ * the marker inside a wall.
+ *
+ * Remove with the matching blocks in index.html and css/app.css.
+ *
+ * @returns {{ok: boolean, message: string}}
+ */
+function _applyManualLocation(floor, row, col) {
+  const f = Math.max(0, Math.min(9, floor));
+  if (f !== STATE.currentFloor) switchFloor(f);
+
+  let r = row, c = col, snapped = false;
+  const node = NODE_MAP[nodeId(r, c)];
+  if (!node || node.wall) {
+    const open = _nearestOpenCell(r, c);
+    if (!open) return { ok: false, message: 'That floor has no walkable cell near there.' };
+    r = open.row; c = open.col; snapped = true;
+  }
+
+  navSetPosition(r, c);
+  NAV._hasQRFix     = true;          // treat as a real fix, same as a scan
+  NAV._stepsSinceQR = 0;
+  if (typeof updateDriftIndicator === 'function') updateDriftIndicator();
+
+  const where = `${_floorName(f)} at ${r},${c}`;
+  return {
+    ok: true,
+    message: snapped
+      ? `${row},${col} is a wall — moved you to the nearest open cell: ${where}.`
+      : `Location set: ${where}.`,
+  };
+}
+
 function _applyStartupDeepLink() {
   if (typeof navParseDeepLink !== 'function') return false;
   let raw;
