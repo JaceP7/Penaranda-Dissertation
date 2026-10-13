@@ -2187,3 +2187,27 @@ body.view-admin .temp-admin-entry { display: none !important; }
 }
 .arrival-list li { margin-bottom: 3px; }
 .arrival-list li:last-child { margin-bottom: 0; }
+
+/* Cross-floor leg one: a manual way to start the climb. PDR often never lands
+   the ME tile exactly on the stair cell, so waiting for automatic detection
+   would strand people halfway through a two-leg journey. */
+.nav-stair-btn {
+  flex: 0 0 auto;
+  margin-left: 8px;
+  padding: 7px 12px;
+  border: 1px solid #B45309;
+  border-radius: 999px;
+  background: #FEF3C7;
+  color: #92400E;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-family: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.nav-stair-btn[hidden] { display: none; }
+.nav-stair-btn:hover { background: #FDE68A; }
+
+@media (max-width: 480px) {
+  .nav-stair-btn { font-size: 0.72rem; padding: 6px 9px; margin-left: 6px; }
+}

@@ -352,6 +352,7 @@ const DOM = {
   manualLocGo:     $('manualLocGo'),
   manualLocMsg:    $('manualLocMsg'),
   navRescanBtn:    $('navRescanBtn'),
+  navStairBtn:     $('navStairBtn'),
   // QR camera overlay
   qrOverlay:       $('qrOverlay'),
   qrVideo:         $('qrVideo'),
@@ -463,6 +464,125 @@ function _nearestReachableCell(targetRow, targetCol, startId) {
   }
   best.dist = bestD;
   return best;
+}
+
+// ── Cross-floor routing ──────────────────────────────────────────────────────
+// A trip to another floor is two walks, not one: current position → stairs, then
+// stairs → office. The old code showed only the second, jumping the map to the
+// destination floor and planting "you are here" on a stairwell the citizen had
+// not reached yet, which threw away the position they had just set.
+//
+// The stair is chosen by minimising BOTH legs together. Picking the stair
+// nearest the office (the previous rule, and by straight-line distance at that,
+// ignoring walls) was sub-optimal on 24 of 35 cross-floor routes measured
+// against the real layouts — worst case 157 cells walked where 59 would do.
+
+let _crossFloorTrip = null;   // { leg, stair, destFloor, destCell, dept, subservice, answerText }
+
+/** cellType array for a floor. The active floor lives in NODES, the rest in FLOOR_WALLS. */
+function _floorCellTypes(floor) {
+  if (floor === STATE.currentFloor) return NODES.map(n => n.cellType || 'open');
+  const w = FLOOR_WALLS[floor];
+  if (!w) return null;
+  return w.map(v => (typeof v === 'boolean' ? (v ? 'wall' : 'open') : (v || 'open')));
+}
+
+/** Step distances from one cell across a floor, -1 where unreachable. */
+function _bfsDistances(types, startRow, startCol) {
+  const n = GRID_ROWS * GRID_COLS;
+  const dist = new Int32Array(n).fill(-1);
+  const s = startRow * GRID_COLS + startCol;
+  if (types[s] === 'wall') return dist;
+  dist[s] = 0;
+  const queue = [s];
+  for (let head = 0; head < queue.length; head++) {
+    const u = queue[head];
+    const ur = (u / GRID_COLS) | 0, uc = u % GRID_COLS;
+    for (const [dr, dc] of [[0, 1], [0, -1], [1, 0], [-1, 0]]) {
+      const nr = ur + dr, nc = uc + dc;
+      if (nr < 0 || nc < 0 || nr >= GRID_ROWS || nc >= GRID_COLS) continue;
+      const v = nr * GRID_COLS + nc;
+      if (dist[v] !== -1 || types[v] === 'wall') continue;
+      dist[v] = dist[u] + 1;
+      queue.push(v);
+    }
+  }
+  return dist;
+}
+
+/**
+ * The stairwell that makes the whole journey shortest.
+ *
+ * Considers only cells that are stairs on BOTH floors — a landing that exists
+ * on one side is not a way through. Returns null when no such stair is
+ * reachable, so the caller can fall back rather than route into nothing.
+ */
+function _bestStairFor(fromFloor, fromRow, fromCol, toFloor, toRow, toCol) {
+  const a = _floorCellTypes(fromFloor);
+  const b = _floorCellTypes(toFloor);
+  if (!a || !b) return null;
+
+  // Office stamp anchors are frequently wall cells — 7 of the 11 on the 3rd
+  // floor are. Measuring the second leg from a wall would make every BFS come
+  // back empty and quietly disable two-leg routing for most offices, so snap
+  // both ends onto walkable ground first.
+  const snap = (types, row, col) => {
+    if (types[row * GRID_COLS + col] !== 'wall') return { row, col };
+    let best = null, bd = Infinity;
+    for (let i = 0; i < types.length; i++) {
+      if (types[i] === 'wall') continue;
+      const d = Math.abs(((i / GRID_COLS) | 0) - row) + Math.abs((i % GRID_COLS) - col);
+      if (d < bd) { bd = d; best = { row: (i / GRID_COLS) | 0, col: i % GRID_COLS }; }
+    }
+    return best;
+  };
+  const start = snap(a, fromRow, fromCol);
+  const end   = snap(b, toRow, toCol);
+  if (!start || !end) return null;
+
+  const dFrom = _bfsDistances(a, start.row, start.col);
+  const dTo   = _bfsDistances(b, end.row, end.col);
+
+  let best = null;
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== 'stair' || b[i] !== 'stair') continue;
+    if (dFrom[i] < 0 || dTo[i] < 0) continue;          // unreachable on either side
+    const total = dFrom[i] + dTo[i];
+    if (!best || total < best.total) {
+      best = { row: (i / GRID_COLS) | 0, col: i % GRID_COLS,
+               legOne: dFrom[i], legTwo: dTo[i], total };
+    }
+  }
+  return best;
+}
+
+/** Begin the second leg: cross to the destination floor and route to the office. */
+function _startCrossFloorLegTwo() {
+  const t = _crossFloorTrip;
+  if (!t || t.leg !== 1) return;
+
+  switchFloor(t.destFloor);
+  navSetPosition(t.stair.row, t.stair.col);     // they came out of this stairwell
+  NAV._stepsSinceQR = 0;
+
+  t.leg = 2;
+  STATE.startId = nodeId(t.stair.row, t.stair.col);
+  renderer.startId = STATE.startId;
+
+  const reach = _nearestReachableCell(t.destCell.row, t.destCell.col, STATE.startId);
+  const end   = reach || t.destCell;
+  STATE.endId = nodeId(end.row, end.col);
+  renderer.setEnd(STATE.endId);
+  recompute();
+
+  renderer.navActive = true;
+  renderer.focusOnCell(t.stair.row, t.stair.col, 2.2);
+  document.body.classList.add('route-active');
+  if (DOM.navStairBtn) DOM.navStairBtn.hidden = true;
+
+  _navStepReset();
+  _updateNavInstruction();
+  _showStairToast(`🪜 ${_floorName(t.destFloor)} — follow the route to ${t.label || 'your office'}.`);
 }
 
 // ── Navigation telemetry ─────────────────────────────────────────────────────
@@ -582,14 +702,36 @@ function navigateToDepartment(deptName, subservice, answerText) {
     return;
   }
 
-  // Switch floor if the office is elsewhere (clears endId/path — set them after).
   const crossFloor = loc.floor !== STATE.currentFloor;
-  if (crossFloor) switchFloor(loc.floor);
 
-  // Start cell: same floor → the user's position; cross-floor → the dest-floor
-  // stairs nearest the office (the user climbs/descends, then follows the route).
-  let startCell;
+  // Cross-floor is two walks. Leg one goes from where the citizen actually is to
+  // the stairwell that makes the whole journey shortest; leg two starts when
+  // they confirm they have changed floors. The stair is picked over both legs,
+  // not just proximity to the office.
+  _crossFloorTrip = null;
+  let stair = null;
   if (crossFloor) {
+    stair = _bestStairFor(STATE.currentFloor, from.row, from.col, loc.floor, loc.row, loc.col);
+    if (stair) {
+      _crossFloorTrip = {
+        leg: 1, stair,
+        destFloor: loc.floor,
+        destCell:  { row: loc.row, col: loc.col },
+        label:     loc.label || deptName,
+        dept: deptName, subservice, answerText,
+      };
+    } else {
+      // No stairwell is a stair on BOTH floors and reachable from here — the map
+      // cannot describe the climb. Fall back to the old destination-floor-only
+      // route so the citizen still gets something usable.
+      switchFloor(loc.floor);
+    }
+  }
+
+  // Start cell: where the citizen is, except in the fallback above, which has
+  // nothing better to offer than the dest-floor stairs nearest the office.
+  let startCell;
+  if (crossFloor && !stair) {
     startCell = _nearestStairOnCurrentFloor(loc.row, loc.col) || { row: loc.row, col: loc.col };
   } else {
     startCell = { row: from.row, col: from.col };
@@ -611,9 +753,13 @@ function navigateToDepartment(deptName, subservice, answerText) {
   // walkable region the start can't reach), which would make recompute() report
   // "No path — walls are blocking the route." Snap the end to the nearest cell
   // actually reachable from the start so a route always draws.
-  const reach   = _nearestReachableCell(loc.row, loc.col, STATE.startId);
-  const endCell = reach || { row: loc.row, col: loc.col };
-  const reachGap = reach ? reach.dist : Infinity;   // 0 = exact office cell
+  // On leg one the destination is the stairwell, not the office.
+  const target = (_crossFloorTrip && _crossFloorTrip.leg === 1)
+    ? _crossFloorTrip.stair
+    : { row: loc.row, col: loc.col };
+  const reach   = _nearestReachableCell(target.row, target.col, STATE.startId);
+  const endCell = reach || { row: target.row, col: target.col };
+  const reachGap = reach ? reach.dist : Infinity;   // 0 = exact target cell
   STATE.endId = nodeId(endCell.row, endCell.col);
   renderer.setEnd(STATE.endId);
   recompute();
@@ -653,6 +799,12 @@ function navigateToDepartment(deptName, subservice, answerText) {
     // Couldn't get near the office — the floor map is probably missing a
     // doorway between regions. Guide as close as possible and say so.
     _showStairToast(`📍 Couldn't map a full path to ${loc.label} (a doorway may be missing on the map). Guiding you as close as possible — please ask at the desk.`);
+  } else if (_crossFloorTrip && _crossFloorTrip.leg === 1) {
+    const mpc = (typeof NAV !== 'undefined' && NAV.metresPerCell) ? NAV.metresPerCell : 1;
+    const m   = Math.max(1, Math.round(_crossFloorTrip.stair.legOne * mpc));
+    _showStairToast(`📍 ${loc.label} is on ${_floorName(loc.floor)}. First walk about ${m} m ` +
+                    `to the stairs — the route shows the way.`);
+    if (DOM.navStairBtn) DOM.navStairBtn.hidden = false;
   } else if (crossFloor) {
     _showStairToast(`📍 ${loc.label} is on ${_floorName(loc.floor)}. Take the stairs/elevator, then follow the route.`);
   } else {
@@ -839,8 +991,12 @@ document.addEventListener('DOMContentLoaded', () => {
     updateDriftIndicator();
     recompute();
     renderer._draw();
-    // Arrival detection: show celebration when ME tile reaches destination
-    if (STATE.endId && id === STATE.endId) {
+    // Arrival detection. On leg one of a cross-floor trip the "destination" is
+    // the stairwell, so reaching it starts the climb rather than celebrating.
+    if (STATE.endId && id === STATE.endId && _crossFloorTrip && _crossFloorTrip.leg === 1) {
+      _hideNavStep();
+      _showStairConfirm(_crossFloorTrip.destFloor);
+    } else if (STATE.endId && id === STATE.endId) {
       _hideNavStep();
       _showArrivalPrompt();
     } else {
@@ -1288,6 +1444,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // scan re-fixes NAV.position (via navSetPosition inside the scanner), which
   // recomputes the route from the new cell; we just clear the wrong-way streak
   // so the teleport isn't mistaken for walking backwards.
+  // Manual leg-two trigger. PDR is unreliable enough that waiting for the ME
+  // tile to land exactly on the stair cell would strand people mid-journey.
+  if (DOM.navStairBtn) {
+    DOM.navStairBtn.addEventListener('click', () => {
+      if (_crossFloorTrip && _crossFloorTrip.leg === 1) _startCrossFloorLegTwo();
+    });
+  }
+
   if (DOM.navRescanBtn) DOM.navRescanBtn.addEventListener('click', () => {
     _openQrScan(() => {
       _navStepReset();
@@ -2301,6 +2465,11 @@ function _showStairConfirm(targetFloor) {
 
   newYes.addEventListener('click', () => {
     _hideStairConfirm();
+    // Mid-journey: changing floor is leg two starting, not just a map switch.
+    if (_crossFloorTrip && _crossFloorTrip.leg === 1 && targetFloor === _crossFloorTrip.destFloor) {
+      _startCrossFloorLegTwo();
+      return;
+    }
     switchFloor(targetFloor);
     _showStairToast(`🪜 Floor ${targetFloor + 1}`);
   });
@@ -2358,6 +2527,8 @@ function _clearFinishedRoute() {
   // NAV.position is deliberately left alone — it is still the best guess until
   // they scan again, and clearing it would strand them at the default cell.
   _resetQrPrompt();
+  _crossFloorTrip = null;
+  if (DOM.navStairBtn) DOM.navStairBtn.hidden = true;
   NAV._hasQRFix = false;
   if (typeof updateDriftIndicator === 'function') updateDriftIndicator();
   _arrivalReminder = null;
