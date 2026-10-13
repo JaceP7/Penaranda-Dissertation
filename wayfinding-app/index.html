@@ -357,16 +357,16 @@
               </select>
             </label>
             <label class="manual-loc-field">
-              <span>Row ↓ down</span>
-              <input id="manualLocRow" type="number" min="0" max="74" inputmode="numeric" value="38">
+              <span>→ Across</span>
+              <input id="manualLocCol" type="number" min="0" max="74" inputmode="numeric" value="71">
             </label>
             <label class="manual-loc-field">
-              <span>Col → across</span>
-              <input id="manualLocCol" type="number" min="0" max="74" inputmode="numeric" value="71">
+              <span>↓ Down</span>
+              <input id="manualLocRow" type="number" min="0" max="74" inputmode="numeric" value="38">
             </label>
           </div>
           <button id="manualLocGo" class="btn-qr-prompt btn-qr-prompt-scan">Set my location</button>
-          <p id="manualLocMsg" class="manual-loc-msg">Order is <strong>row first, then column</strong> — row counts <em>down</em>, column counts <em>across</em>. Same order as the sign (<code>floor:row,col</code>); the entrance is <code>2:38,71</code>.</p>
+          <p id="manualLocMsg" class="manual-loc-msg">Type the two numbers printed on the sign, <strong>across first, then down</strong>. The main entrance is <strong>across 71, down 38</strong> on Floor 2.</p>
         </div>
       </div>
     </div>
@@ -418,7 +418,7 @@
   <script src="js/renderer.js?v=33"></script>
   <script src="js/compass.js?v=31"></script>
   <script src="js/nav.js?v=37"></script>
-  <script src="js/app.js?v=72"></script>
+  <script src="js/app.js?v=73"></script>
   <script src="js/chat.js?v=39"></script>
 
 </body>

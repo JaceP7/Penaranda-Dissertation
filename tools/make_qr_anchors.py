@@ -178,7 +178,11 @@ def make_sign(name, floor, r, c, url):
     d.text((tx, y), "Open your camera and point here.", font=font(22), fill="#555555")
 
     # Admin footer: which anchor this is, and the link in plain text as a fallback.
-    d.text((qx, SIGN_H - 62), f"anchor {floor}:{r},{c}", font=font(19), fill="#888888")
+    # Label the axes. A bare "38,71" reads as across,down to most people,
+    # which is the reverse of the row,col the deep link carries - so an admin
+    # copying it into the app would land somewhere else entirely.
+    d.text((qx, SIGN_H - 62), f"Floor {floor + 1}  ·  across {c}  ·  down {r}",
+           font=font(19), fill="#888888")
     d.text((qx, SIGN_H - 36), url, font=font(17), fill="#aaaaaa")
     d.line([(0, SIGN_H - 1), (SIGN_W, SIGN_H - 1)], fill="#dddddd", width=1)
     return img
