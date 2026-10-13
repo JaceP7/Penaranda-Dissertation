@@ -2347,8 +2347,19 @@ function _clearFinishedRoute() {
   // Closing a route that never arrived is the completion-rate denominator.
   // _navTripAbandon() no-ops when the trip already arrived.
   _navTripAbandon();
-  // This journey is over, so the next one may offer the QR prompt again.
+  // This journey is over, so the next one asks for a location again.
+  //
+  // Both halves of the gate have to clear. _resetQrPrompt() undoes a "Skip";
+  // _hasQRFix undoes a real scan or a manual entry, which otherwise stayed true
+  // for the life of the page and silently suppressed every later prompt. That
+  // mattered because the fix is stale the moment the journey ends: the citizen
+  // is now standing at the office they were routed to, not where they scanned,
+  // and PDR is the known weak link for carrying a position that far.
+  // NAV.position is deliberately left alone — it is still the best guess until
+  // they scan again, and clearing it would strand them at the default cell.
   _resetQrPrompt();
+  NAV._hasQRFix = false;
+  if (typeof updateDriftIndicator === 'function') updateDriftIndicator();
   _arrivalReminder = null;
   STATE.endId = null;
   document.body.classList.remove('route-active');
