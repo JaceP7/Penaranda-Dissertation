@@ -123,7 +123,7 @@
 
         <!-- Nav panel (visible only when Navigate mode is active) -->
         <div id="navPanel" class="nav-panel" style="display:none">
-          <span class="nav-pos-label">📍 You: <strong id="navPosDisplay">12, 12</strong></span>
+          <span class="nav-pos-label" title="row, column — same order as the posted QR signs">📍 You: <strong id="navPosDisplay">0, 0</strong></span>
           <div class="compass-widget">
             <div class="compass-dial" id="compassDial">
               <span class="compass-lbl cn">N</span>
@@ -297,8 +297,8 @@
 
     <!-- Info bar -->
     <div class="info-bar">
-      <span id="infoStart" class="info-chip start">Start (0, 0)</span>
-      <span id="infoEnd"   class="info-chip end">Tap a cell to set destination</span>
+      <span id="infoStart" class="info-chip start" title="row, column — same order as the posted QR signs">Start  0,0</span>
+      <span id="infoEnd"   class="info-chip end" title="row, column — same order as the posted QR signs">Tap a cell to set destination</span>
       <span id="infoSteps" class="info-chip steps" style="display:none"></span>
       <span id="infoMsg"   class="info-chip warn"  style="display:none"></span>
     </div>
@@ -418,7 +418,7 @@
   <script src="js/renderer.js?v=33"></script>
   <script src="js/compass.js?v=31"></script>
   <script src="js/nav.js?v=37"></script>
-  <script src="js/app.js?v=69"></script>
+  <script src="js/app.js?v=70"></script>
   <script src="js/chat.js?v=39"></script>
 
 </body>

@@ -827,7 +827,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const id          = nodeId(row, col);
     STATE.startId     = id;
     renderer.startId  = id;
-    DOM.navPosDisplay.textContent = `${col}, ${row}`;
+    DOM.navPosDisplay.textContent = `${row}, ${col}`;   // row,col — matches the signs
     // Face the way they just moved (only for a real step; QR teleports/heading
     // handle their own facing). Snapped strictly to a cardinal.
     if (_lastMeCell) {
@@ -1108,7 +1108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     DOM.qrGenFloorInput.value = STATE.currentFloor + 1;
     DOM.qrGenRowInput.value   = def.row;
     DOM.qrGenColInput.value   = def.col;
-    DOM.qrGenLabel.textContent = `(${def.col}, ${def.row}) Floor ${STATE.currentFloor + 1}`;
+    DOM.qrGenLabel.textContent = `${def.row},${def.col} · Floor ${STATE.currentFloor + 1}`;
     navGenerateQR(STATE.currentFloor, def.row, def.col, DOM.qrGenCanvas);
     DOM.qrGenModal.style.display = 'flex';
   });
@@ -1118,7 +1118,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const r     = parseInt(DOM.qrGenRowInput.value);
     const c     = parseInt(DOM.qrGenColInput.value);
     if (isNaN(r) || isNaN(c) || isNaN(fDisp)) return;
-    DOM.qrGenLabel.textContent = `(${c}, ${r}) Floor ${fDisp}`;
+    DOM.qrGenLabel.textContent = `${r},${c} · Floor ${fDisp}`;
     navGenerateQR(fDisp - 1, r, c, DOM.qrGenCanvas);  // convert to 0-indexed internally
   });
 
@@ -1718,7 +1718,7 @@ function setNavMode(active) {
     const id            = nodeId(row, col);
     STATE.startId       = id;
     renderer.startId    = id;
-    DOM.navPosDisplay.textContent = `${col}, ${row}`;
+    DOM.navPosDisplay.textContent = `${row}, ${col}`;   // row,col — matches the signs
     updateDriftIndicator();
   }
 
@@ -3655,14 +3655,14 @@ function updateCursorAndHint() {
 function updateInfoBar(steps, msg) {
   if (STATE.navMode && NAV.position) {
     const { row, col } = NAV.position;
-    DOM.infoStart.textContent = `You  (${col}, ${row})`;
+    DOM.infoStart.textContent = `You  ${row},${col}`;
   } else {
-    DOM.infoStart.textContent = 'Start  (0, 0)';
+    DOM.infoStart.textContent = 'Start  0,0';
   }
 
   if (STATE.endId) {
     const [er, ec]            = STATE.endId.split(',').map(Number);
-    DOM.infoEnd.textContent   = `End  (${ec}, ${er})`;
+    DOM.infoEnd.textContent   = `End  ${er},${ec}`;
     DOM.infoEnd.style.display = '';
   } else {
     DOM.infoEnd.textContent   = 'Tap a cell to set destination';
