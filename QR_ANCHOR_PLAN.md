@@ -41,7 +41,7 @@ The five distinct stairwells repeat on every floor. Post one QR at each landing,
 | South-left | (60,26) | `1:60,26` | `2:60,26` | `3:60,26` | `0:60,26` |
 | South-right | (60,49) | `1:60,49` | `2:60,49` | `3:60,49` | `0:60,49` |
 
-*(The north stairwell is actually a pair at (12,33)+(12,41); one sign between them is enough. The 3rd floor has no west stair in the layout — skip `3:26,3`.)*
+*(The north stairwell is actually a pair at (12,33)+(12,41); one sign between them is enough. The 3rd floor has no **east** stair in the layout — skip `3:26,72`. The west stair (26,3) **is** present on all four floors; an earlier version of this table had these two reversed, verified against `floor_presets.js` on 2026-10-13.)*
 
 Full deep link example for the East landing on the 2nd floor: `https://<your-app>/?qr=2:26,72`.
 
@@ -74,3 +74,29 @@ If any wing is longer than ~one anchor-spacing, add a QR at the corridor interse
 3. One QR at each landing on every other floor you expect visitors to use.
 
 That alone gives every visitor an entry fix plus a fresh fix on each floor change — the two highest-impact corrections.
+
+
+---
+
+## Generating the signs
+
+`python tools/make_qr_anchors.py` writes `qr_anchors/`:
+
+- `QR_Anchor_Signs.pdf` — every sign, two per A4 page, ready to print
+- one PNG per anchor, for posting individually
+- `QR_Anchor_Index.csv` — what was generated, what was corrected, what was skipped
+
+The script **validates every anchor against the baked layout before encoding it**, because a QR pointing at a wall or at a landing that does not exist is worse than no QR:
+
+- a cell that is a wall is moved to the nearest walkable cell (and the move is recorded)
+- a stairwell absent on a given floor is skipped rather than printed
+
+Corrections it applied to the table above:
+
+| Planned | Actual | Why |
+|---|---|---|
+| `1:38,72` | `1:38,71` | 38,72 is the east outer wall; the app snaps here at runtime anyway |
+| `1:54,7` | `1:53,7` | 54,7 is a wall cell |
+| `3:26,72` | *skipped* | no east stair on the 3rd floor |
+
+Signs use error-correction level H (~30% recoverable), so a scuffed or partly covered sign still scans. All generated codes were decoded back with OpenCV to confirm each resolves to its intended deep link.
