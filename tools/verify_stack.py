@@ -70,8 +70,12 @@ def check_chat(base):
     """The full RAG path: Upstash Vector retrieval + Groq generation."""
     try:
         t0 = time.time()
+        # X-Health-Check marks this as automated traffic so api/chat.js tags the
+        # log entry synthetic and the dashboard leaves it out. Without it this
+        # one string becomes the most-asked "citizen" query in the analytics.
         status, raw = _req(base + "/api/chat", "POST",
-                           {"query": "How do I get a business permit?", "history": []})
+                           {"query": "How do I get a business permit?", "history": []},
+                           headers={"X-Health-Check": "1"})
         dt = round(time.time() - t0, 1)
         d = json.loads(raw)
         if d.get("error"):

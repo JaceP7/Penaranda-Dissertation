@@ -456,6 +456,92 @@ function _nearestReachableCell(targetRow, targetCol, startId) {
   return best;
 }
 
+// ── Navigation telemetry ─────────────────────────────────────────────────────
+// The chat log records what people asked; this records where they actually
+// needed to go and whether they got there — route-completion rate and
+// task-completion time (SOP 4.2.2), neither of which was measurable before.
+//
+// Privacy (RA 10173): the session id is a random token held only for this tab,
+// used to pair a start with its arrival. Nothing identifies a person, nothing
+// persists across visits, and no free text is sent.
+//
+// Only the citizen view is logged. An admin dragging routes around in the
+// editor is not a citizen trip, and counting it would corrupt the demand data.
+
+const NAV_SID_SS_KEY = 'wf-nav-sid';
+let _navTrip = null;
+
+function _navSid() {
+  try {
+    let s = sessionStorage.getItem(NAV_SID_SS_KEY);
+    if (!s) {
+      s = Math.random().toString(36).slice(2) + Date.now().toString(36);
+      sessionStorage.setItem(NAV_SID_SS_KEY, s);
+    }
+    return s;
+  } catch (_) { return 'nosession'; }
+}
+
+/** Fire-and-forget. keepalive so an event sent as the page closes still lands. */
+function _navLog(event, extra) {
+  if (STATE.viewMode !== 'user') return;
+  const body = JSON.stringify(Object.assign({ event, sid: _navSid() }, extra || {}));
+  try {
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon('/api/navlog', new Blob([body], { type: 'application/json' }));
+      return;
+    }
+  } catch (_) { /* fall through to fetch */ }
+  try {
+    fetch('/api/navlog', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body, keepalive: true,
+    }).catch(() => {});
+  } catch (_) { /* telemetry must never break navigation */ }
+}
+
+function _navTripStart(dept, subservice, from, to, pathLen) {
+  // A new route while one is open means the previous trip was given up on.
+  if (_navTrip && !_navTrip.arrived) _navTripAbandon();
+  _navTrip = {
+    startedAt: Date.now(), department: dept || null, subservice: subservice || null,
+    from, to, pathLen, rescans: 0, arrived: false,
+  };
+  _navLog('nav_start', {
+    department: dept, subservice,
+    fromFloor: from.floor, fromRow: from.row, fromCol: from.col,
+    toFloor: to.floor, toRow: to.row, toCol: to.col, pathLen,
+  });
+}
+
+function _navTripArrive() {
+  if (!_navTrip || _navTrip.arrived) return;
+  _navTrip.arrived = true;
+  _navLog('nav_arrive', {
+    department: _navTrip.department, subservice: _navTrip.subservice,
+    toFloor: _navTrip.to.floor, toRow: _navTrip.to.row, toCol: _navTrip.to.col,
+    pathLen: _navTrip.pathLen, rescans: _navTrip.rescans,
+    elapsed_ms: Date.now() - _navTrip.startedAt,
+  });
+}
+
+function _navTripAbandon() {
+  if (!_navTrip || _navTrip.arrived) { _navTrip = null; return; }
+  _navLog('nav_abandon', {
+    department: _navTrip.department, subservice: _navTrip.subservice,
+    toFloor: _navTrip.to.floor, toRow: _navTrip.to.row, toCol: _navTrip.to.col,
+    pathLen: _navTrip.pathLen, rescans: _navTrip.rescans,
+    elapsed_ms: Date.now() - _navTrip.startedAt,
+  });
+  _navTrip = null;
+}
+
+// A tab closed mid-route is an abandon too, otherwise the completion rate
+// quietly counts only the people who stayed.
+window.addEventListener('pagehide', () => {
+  if (_navTrip && !_navTrip.arrived) _navTripAbandon();
+});
+
 /**
  * Route the user to a department/service resolved by the RAG answer.
  * Uses service_locations.js to map the department → a stamp cell, picks the
@@ -537,6 +623,15 @@ function navigateToDepartment(deptName, subservice) {
   // user walks. Reset the wrong-way baseline for this fresh route.
   _navStepReset();
   _updateNavInstruction();
+
+  // Telemetry: this is the moment a trip begins. pathLen comes from the drawn
+  // route, so it reflects the path actually given rather than a straight line.
+  _navTripStart(
+    deptName, subservice,
+    { floor: STATE.currentFloor, row: startCell.row, col: startCell.col },
+    { floor: loc.floor,          row: endCell.row,   col: endCell.col   },
+    (renderer && renderer._path) ? renderer._path.length - 1 : null,
+  );
 
   // Tell the user what's happening.
   if (loc.fallback) {
@@ -1145,7 +1240,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // recomputes the route from the new cell; we just clear the wrong-way streak
   // so the teleport isn't mistaken for walking backwards.
   if (DOM.navRescanBtn) DOM.navRescanBtn.addEventListener('click', () => {
-    _openQrScan(() => { _navStepReset(); _updateNavInstruction(); });
+    _openQrScan(() => {
+      _navStepReset();
+      _updateNavInstruction();
+      // Re-anchoring mid-route usually means they lost track of where they
+      // were, so the count stands in for disorientation on that trip.
+      if (_navTrip) {
+        _navTrip.rescans++;
+        _navLog('qr_rescan', {
+          department: _navTrip.department,
+          rescans:    _navTrip.rescans,
+          elapsed_ms: Date.now() - _navTrip.startedAt,
+        });
+      }
+    });
   });
 });
 
@@ -2061,6 +2169,7 @@ function _hideStairConfirm() {
 function _showArrivalPrompt() {
   const el = document.getElementById('arrivalPrompt');
   if (!el) return;
+  _navTripArrive();        // the trip completed — record time on task
   el.style.display = 'flex';
   // No auto-dismiss: the prompt now offers "Ask again" / "Back home" actions,
   // so it stays until the citizen chooses one (or taps ✕ to keep viewing the map).
@@ -2077,6 +2186,9 @@ function _hideArrivalPrompt() {
 // Clear the just-finished route (destination, path, ME marker) so the citizen
 // returns to a clean state before asking again or going home.
 function _clearFinishedRoute() {
+  // Closing a route that never arrived is the completion-rate denominator.
+  // _navTripAbandon() no-ops when the trip already arrived.
+  _navTripAbandon();
   STATE.endId = null;
   document.body.classList.remove('route-active');
   _hideNavStep();

@@ -79,3 +79,6 @@ figures/try/
 
 # ── Office lock files (created while a doc is open) ───────────────────────────
 ~$*
+
+# ── Pre-clear dumps of the runtime query log (data, not source) ───────────────
+eval/log_backups/

@@ -136,22 +136,27 @@ module.exports = async function handler(req, res) {
                                   _note: `Analytics read failed: ${err.message}` });
   }
 
-  // Apply the date window.
+  // Apply the date window, and drop automated health-check traffic unless it is
+  // explicitly asked for. Without this the verify_stack.py probe string becomes
+  // the top "citizen" query and any demand ranking measures our own testing.
+  const keepSynthetic = String(q.synthetic || '') === '1';
   const applied = Boolean(lo || hi);
-  const rows = applied
-    ? all.filter((e) => {
-        const d = dayOf(e);
-        if (!d) return false;
-        if (lo && d < lo) return false;
-        if (hi && d > hi) return false;
-        return true;
-      })
-    : all;
+  const rows = all.filter((e) => {
+    if (!keepSynthetic && e.synthetic) return false;
+    if (!applied) return true;
+    const d = dayOf(e);
+    if (!d) return false;
+    if (lo && d < lo) return false;
+    if (hi && d > hi) return false;
+    return true;
+  });
+  const syntheticExcluded = keepSynthetic ? 0 : all.filter((e) => e.synthetic).length;
 
   // ── CSV export ─────────────────────────────────────────────────────────────
   if (isCsv) {
     const header = ['timestamp_utc', 'date', 'query', 'department', 'subservice',
                     'needs_context', 'latency_ms', 'lang'];
+    // rows is already filtered, so the export matches what the dashboard shows
     // Oldest first reads naturally in a spreadsheet; the list is LPUSH'd newest-first.
     const body = rows.slice().reverse().map((e) => [
       e.ts ? new Date(e.ts).toISOString() : '',
@@ -177,6 +182,7 @@ module.exports = async function handler(req, res) {
       ...EMPTY,
       range: { from: lo, to: hi, applied },
       scanned: all.length,
+      syntheticExcluded,
       capped,
       _note: applied ? 'No queries in the selected date range.' : 'No website queries logged yet.',
     });
@@ -238,6 +244,7 @@ module.exports = async function handler(req, res) {
     recentQueries,
     range:   { from: lo, to: hi, applied },
     scanned: all.length,
+    syntheticExcluded,
     capped,
   });
 };

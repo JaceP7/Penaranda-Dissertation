@@ -159,6 +159,10 @@ module.exports = async function handler(req, res) {
 
   const t0 = Date.now();
   const { query, history = [] } = req.body || {};
+  // Automated checks (tools/verify_stack.py) send this header so their traffic
+  // can be excluded from analytics. Without it the health-check string becomes
+  // the top "citizen" query and the demand ranking measures our own testing.
+  const synthetic = String(req.headers['x-health-check'] || '') === '1' || undefined;
   if (!query || typeof query !== 'string') {
     return res.status(400).json({ error: 'query is required' });
   }
@@ -172,7 +176,8 @@ module.exports = async function handler(req, res) {
   }
   if (!results.length) {
     await logQuery({ ts: Date.now(), query, department: null, subservice: null,
-                     needsContext: false, latency_ms: Date.now() - t0, lang: langTag(query) });
+                     needsContext: false, latency_ms: Date.now() - t0, lang: langTag(query),
+                     synthetic });
     return res.status(200).json({
       answer: "I couldn't find that in the Calamba City Hall services. Please ask at the Information desk.",
       department: null, subservice: null, needsContext: false, options: [], rate_limited: false,
@@ -221,7 +226,8 @@ module.exports = async function handler(req, res) {
   }
 
   await logQuery({ ts: Date.now(), query, department: dept || null, subservice,
-                   needsContext, latency_ms: Date.now() - t0, lang: langTag(query) });
+                   needsContext, latency_ms: Date.now() - t0, lang: langTag(query),
+                   synthetic });
 
   return res.status(200).json({
     answer,

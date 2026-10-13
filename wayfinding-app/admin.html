@@ -183,6 +183,18 @@
       margin-bottom: 20px;
       display: none;
     }
+    .section-head {
+      font-size: 0.95rem; font-weight: 700; color: var(--text);
+      margin: 26px 0 12px; letter-spacing: 0.01em;
+    }
+    .section-head span { color: var(--muted); font-weight: 400; }
+    .card-note { margin: 10px 0 0; font-size: 0.76rem; color: var(--muted); }
+    .btn-filter.csv-nav {
+      border-color: var(--blue); background: rgba(59,130,246,0.15); color: var(--blue);
+      font-weight: 600;
+    }
+    .btn-filter.csv-nav:hover { background: rgba(59,130,246,0.28); }
+
     /* ── Date range + export ──────────────────────────────────────────── */
     .filter-bar {
       display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px;
@@ -262,7 +274,8 @@
       <button class="btn-filter" id="f-30">Last 30 days</button>
       <button class="btn-filter" id="f-all">All time</button>
     </div>
-    <button class="btn-filter csv" id="f-csv">⬇ Export CSV</button>
+    <button class="btn-filter csv" id="f-csv">⬇ Export queries CSV</button>
+    <button class="btn-filter csv-nav" id="f-csv-nav">⬇ Export navigation CSV</button>
     <p class="range-note" id="f-note">Showing <strong>all time</strong>.</p>
   </div>
 
@@ -289,6 +302,40 @@
       <div class="stat-sub">needed clarification</div>
     </div>
   </div>
+
+  <!-- Navigation (SOP 4.2.2). Separate from the chat stats above because these
+       describe whether people reached the office, not what they typed. -->
+  <h2 class="section-head">Navigation <span>— did they get there?</span></h2>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">Routes Started</div>
+      <div class="stat-val" id="n-started">—</div>
+      <div class="stat-sub">“Take me there” tapped</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Arrival Rate</div>
+      <div class="stat-val" id="n-rate">—</div>
+      <div class="stat-sub" id="n-rate-sub">of resolved routes</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Median Time</div>
+      <div class="stat-val" id="n-median">—</div>
+      <div class="stat-sub">question → arrival</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Re-scans</div>
+      <div class="stat-val" id="n-rescan">—</div>
+      <div class="stat-sub">re-anchored mid-route</div>
+    </div>
+  </div>
+
+  <div class="card card-wide">
+    <div class="card-title">Top Destinations — where people actually went</div>
+    <div class="chart-box"><canvas id="c-dest"></canvas></div>
+    <p class="card-note" id="n-note">—</p>
+  </div>
+
+  <h2 class="section-head">Service inquiries <span>— what they asked</span></h2>
 
   <!-- Charts row -->
   <div class="charts-row">
@@ -536,12 +583,66 @@ async function load() {
     }
     render(data);
     describeRange(data);
+    loadNav(qs);
   } catch (err) {
     banner.style.display = 'block';
     banner.textContent = `Could not load analytics: ${err.message}. Make sure serve_https.py is running.`;
     console.error(err);
   }
 }
+
+/* ── Navigation (SOP 4.2.2) ── */
+let _dest = null;
+
+function fmtDur(ms) {
+  if (!ms) return '—';
+  const s = Math.round(ms / 1000);
+  return s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, '0')}s`;
+}
+
+async function loadNav(qs) {
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  let d;
+  try {
+    const resp = await fetch('/api/navlog' + (qs ? `?${qs}` : ''));
+    d = await resp.json();
+  } catch (err) {
+    set('n-note', `Could not load navigation data: ${err.message}`);
+    return;
+  }
+
+  set('n-started', d.started ?? '—');
+  set('n-rate',    d.resolved ? d.arrivalRate + '%' : '—');
+  set('n-median',  fmtDur(d.medianTimeToArrive));
+  set('n-rescan',  d.rescans ?? '—');
+  const rsub = document.getElementById('n-rate-sub');
+  if (rsub) rsub.textContent = d.resolved ? `of ${d.resolved} resolved routes` : 'no resolved routes yet';
+
+  const labels = (d.topDestinations || []).map(x => x.name);
+  const counts = (d.topDestinations || []).map(x => x.count);
+  if (!_dest) { _dest = makeChart('c-dest', 'bar', labels, counts, true); }
+  else         { patchChart(_dest, labels, counts, true); }
+
+  const note = document.getElementById('n-note');
+  if (note) {
+    if (!d.started) {
+      note.textContent = 'No routes recorded yet. These fill in once citizens start tapping ' +
+                         '“Take me there” — this is the demand signal, independent of how the ' +
+                         'question was phrased.';
+    } else {
+      note.textContent = `${d.started} routes started · ${d.arrived} arrived · ` +
+                         `${d.abandoned} abandoned · mean time ${fmtDur(d.meanTimeToArrive)}. ` +
+                         'Routes still open, or ended by a closed tab mid-walk, are not counted ' +
+                         'in the arrival rate.';
+    }
+  }
+}
+
+document.getElementById('f-csv-nav').addEventListener('click', () => {
+  const p = rangeParams();
+  p.set('format', 'csv');
+  window.location.href = '/api/navlog?' + p.toString();
+});
 
 document.getElementById('f-apply').addEventListener('click', () => load());
 document.getElementById('f-7').addEventListener('click',   () => setRange(daysAgo(6),  isoDay(new Date())));
