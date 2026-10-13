@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=47" />
+  <link rel="stylesheet" href="css/app.css?v=48" />
 </head>
 <body class="view-user">
 
@@ -279,6 +279,9 @@
       <button id="arrivalCloseBtn" class="btn-arrival-close" title="Dismiss">✕</button>
       <span class="arrival-icon">🎉</span>
       <strong class="arrival-text">You have arrived!</strong>
+      <!-- What to hand over at the counter. Filled from the chat answer, which
+           is closed by the time the citizen gets here. -->
+      <div id="arrivalReminder" class="arrival-reminder" hidden></div>
       <div class="arrival-actions">
         <button id="arrivalAskAgainBtn" class="btn-arrival-action primary">💬 Ask again</button>
         <button id="arrivalHomeBtn" class="btn-arrival-action">🏠 Back home</button>
@@ -415,8 +418,8 @@
   <script src="js/renderer.js?v=33"></script>
   <script src="js/compass.js?v=31"></script>
   <script src="js/nav.js?v=37"></script>
-  <script src="js/app.js?v=66"></script>
-  <script src="js/chat.js?v=38"></script>
+  <script src="js/app.js?v=67"></script>
+  <script src="js/chat.js?v=39"></script>
 
 </body>
 </html>

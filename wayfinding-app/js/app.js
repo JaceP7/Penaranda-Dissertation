@@ -303,6 +303,7 @@ const DOM = {
   floorDisplay:    $('floorDisplay'),
   renameFloorBtn:  $('renameFloorBtn'),
   adminToggleBtn:  $('adminToggleBtn'),
+  arrivalReminder: $('arrivalReminder'),
   askAgainBtn:     $('askAgainBtn'),
   landingCtaBtn:   $('landingCtaBtn'),
   tempAdminBtn:    $('tempAdminBtn'),   // TEMPORARY — see index.html
@@ -559,7 +560,7 @@ window.addEventListener('pagehide', () => {
  * @param {string} deptName    - canonical department from the RAG "Go to:" line
  * @param {string} [subservice] - the specific service (enables overrides)
  */
-function navigateToDepartment(deptName, subservice) {
+function navigateToDepartment(deptName, subservice, answerText) {
   if (typeof resolveServiceLocation !== "function") {
     alert(`Location for "${deptName}" has not been mapped yet.\nPlease ask at the Information desk.`);
     return;
@@ -631,6 +632,10 @@ function navigateToDepartment(deptName, subservice) {
   // user walks. Reset the wrong-way baseline for this fresh route.
   _navStepReset();
   _updateNavInstruction();
+
+  // Carry the requirements to the arrival prompt. Built here rather than on
+  // arrival because the chat answer is only in scope at this point.
+  _arrivalReminder = _buildArrivalReminder(answerText, deptName, subservice);
 
   // Telemetry: this is the moment a trip begins. pathLen comes from the drawn
   // route, so it reflects the path actually given rather than a straight line.
@@ -1398,22 +1403,79 @@ function _openQrScan(onDone) {
  * so directions start from where they actually are. Once they've scanned (or
  * skipped once, or arrived via a ?qr= deep link) we route immediately.
  */
-function requestNavigation(deptName, subservice) {
+function requestNavigation(deptName, subservice, answerText) {
   const needFix = STATE.viewMode === 'user' && !NAV._hasQRFix && !_qrPromptDismissed();
   if (needFix && DOM.qrPromptModal) {
-    _pendingNav = { deptName, subservice };
+    _pendingNav = { deptName, subservice, answerText };
     DOM.qrPromptModal.style.display = 'flex';
     return;
   }
-  navigateToDepartment(deptName, subservice);
+  navigateToDepartment(deptName, subservice, answerText);
 }
 
 /** Resume the route that was waiting on the QR prompt (after scan / skip / cancel). */
 function _resumePendingNav() {
   if (!_pendingNav) return;
-  const { deptName, subservice } = _pendingNav;
+  const { deptName, subservice, answerText } = _pendingNav;
   _pendingNav = null;
-  navigateToDepartment(deptName, subservice);
+  navigateToDepartment(deptName, subservice, answerText);
+}
+
+// ── Arrival reminder ─────────────────────────────────────────────────────────
+// The requirements are in the chat answer, but the chat is closed by the time
+// the citizen reaches the counter — exactly when they need to know what to hand
+// over. Carry them to the arrival prompt instead of making them scroll back.
+
+let _arrivalReminder = null;   // { dept, service, items[] }
+
+/**
+ * Pull the requirement lines out of a RAG answer.
+ *
+ * Answers look like a numbered list followed by a "Go to:" line, e.g.
+ *   1. Income Tax Return (secure at: BIR)
+ *   Go to: CITY TREASURY MANAGEMENT OFFICE
+ * The routing line is for the app, not the citizen, so it is dropped.
+ */
+function _buildArrivalReminder(answerText, dept, service) {
+  const items = [];
+  for (let raw of String(answerText || '').split('\n')) {
+    const line = raw.trim();
+    if (!line) continue;
+    if (/^go to\s*:/i.test(line)) continue;               // routing directive
+    const m = line.match(/^(?:\d+[.)]|[-•*])\s*(.+)$/);   // 1. / 1) / - / •
+    if (!m || !m[1].trim()) continue;
+    // The model emits markdown emphasis. The reminder is rendered as escaped
+    // text, so **bold** would otherwise show as literal asterisks.
+    const text = m[1]
+      .replace(/\*\*(.+?)\*\*/g, '$1')
+      .replace(/__(.+?)__/g, '$1')
+      .replace(/(^|\s)[*_](\S[^*_]*?)[*_](?=\s|$)/g, '$1$2')
+      .trim();
+    if (text) items.push(text);
+  }
+  return { dept: dept || null, service: service || null, items: items.slice(0, 8) };
+}
+
+/** Render the reminder into the arrival prompt, or hide it if there is none. */
+function _renderArrivalReminder() {
+  const box = DOM.arrivalReminder;
+  if (!box) return;
+  const r = _arrivalReminder;
+  if (!r || (!r.items.length && !r.service)) { box.hidden = true; return; }
+
+  const esc = (t) => String(t).replace(/[&<>"]/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  let html = '';
+  if (r.service) html += `<p class="arrival-service">${esc(r.service)}</p>`;
+  if (r.items.length) {
+    html += '<p class="arrival-reminder-head">Ihanda / Have ready:</p><ul class="arrival-list">' +
+            r.items.map((i) => `<li>${esc(i)}</li>`).join('') + '</ul>';
+  } else {
+    html += '<p class="arrival-reminder-head">Ask at the counter for this service.</p>';
+  }
+  box.innerHTML = html;
+  box.hidden = false;
 }
 
 // ── Cell interaction ──────────────────────────────────────────────────────────
@@ -2247,7 +2309,8 @@ function _hideStairConfirm() {
 function _showArrivalPrompt() {
   const el = document.getElementById('arrivalPrompt');
   if (!el) return;
-  _navTripArrive();        // the trip completed — record time on task
+  _navTripArrive();            // the trip completed — record time on task
+  _renderArrivalReminder();    // show what to hand over at the counter
   el.style.display = 'flex';
   // No auto-dismiss: the prompt now offers "Ask again" / "Back home" actions,
   // so it stays until the citizen chooses one (or taps ✕ to keep viewing the map).

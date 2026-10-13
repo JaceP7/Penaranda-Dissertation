@@ -2144,3 +2144,46 @@ body.view-admin .temp-admin-entry { display: none !important; }
 .manual-loc-msg code {
   background: #E2E8F0; border-radius: 4px; padding: 1px 4px; font-size: 0.72rem;
 }
+
+/* ── Arrival reminder ───────────────────────────────────────────────────────
+   The requirements come from the chat answer, but the chat is closed by the
+   time the citizen reaches the counter — which is exactly when they need to
+   know what to hand over. Scrollable: some services list many documents. */
+.arrival-reminder {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 10px 0 2px;
+  padding: 11px 13px;
+  border-radius: 10px;
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  text-align: left;
+  max-height: 30vh;
+  overflow-y: auto;
+}
+.arrival-reminder[hidden] { display: none; }
+
+.arrival-service {
+  margin: 0 0 7px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #0F172A;
+}
+.arrival-reminder-head {
+  margin: 0 0 5px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #1E40AF;
+}
+.arrival-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #334155;
+}
+.arrival-list li { margin-bottom: 3px; }
+.arrival-list li:last-child { margin-bottom: 0; }
