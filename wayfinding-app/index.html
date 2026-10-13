@@ -357,17 +357,16 @@
               </select>
             </label>
             <label class="manual-loc-field">
-              <span>Row</span>
+              <span>Row ↓ down</span>
               <input id="manualLocRow" type="number" min="0" max="74" inputmode="numeric" value="38">
             </label>
             <label class="manual-loc-field">
-              <span>Col</span>
+              <span>Col → across</span>
               <input id="manualLocCol" type="number" min="0" max="74" inputmode="numeric" value="71">
             </label>
           </div>
           <button id="manualLocGo" class="btn-qr-prompt btn-qr-prompt-scan">Set my location</button>
-          <p id="manualLocMsg" class="manual-loc-msg">Row and column as printed on the sign
-            (<code>floor:row,col</code>) — the entrance is <code>2:38,71</code>.</p>
+          <p id="manualLocMsg" class="manual-loc-msg">Order is <strong>row first, then column</strong> — row counts <em>down</em>, column counts <em>across</em>. Same order as the sign (<code>floor:row,col</code>); the entrance is <code>2:38,71</code>.</p>
         </div>
       </div>
     </div>
@@ -419,7 +418,7 @@
   <script src="js/renderer.js?v=33"></script>
   <script src="js/compass.js?v=31"></script>
   <script src="js/nav.js?v=37"></script>
-  <script src="js/app.js?v=71"></script>
+  <script src="js/app.js?v=72"></script>
   <script src="js/chat.js?v=39"></script>
 
 </body>
