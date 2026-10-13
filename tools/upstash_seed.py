@@ -1,6 +1,8 @@
 """Seed an Upstash Vector index with the 235 Calamba City services.
 
-The index must be created with the built-in embedding model BAAI/bge-m3
+The index uses Upstash's built-in embedding model text-embedding-3-small
+(1536-d, COSINE) — confirmed from the live index /info. An earlier version
+of this note said BAAI/bge-m3, which is 1024-d and does not match the index
 (multilingual, 1024-dim) so Upstash embeds both the upserted text and queries
 server-side. We upsert a CONCISE identity string as the embedded `data`
 (mirroring the local build_index.py concise-identity approach that recovered
@@ -51,7 +53,7 @@ def _post(path, payload):
 
 
 def concise_identity(s):
-    """Short, retrieval-friendly text — what gets embedded by bge-m3."""
+    """Short, retrieval-friendly text — what the index embeds server-side."""
     who = (s.get("who_may_avail") or "")[:200]
     return (f"{s.get('subservice','')}. "
             f"Department: {s.get('department','')}. "

@@ -1,0 +1,56 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram name="Figure 2 — Level-1 Data Flow Diagram" id="Figure_2_Level1_DFD_v2">
+    <mxGraphModel dx="1422" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1180" pageHeight="840" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="citizen" value="Citizen
+(public user)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontColor=#7F6000;fontSize=12;align=center;verticalAlign=middle;arcSize=8;" vertex="1" parent="1"><mxGeometry x="60" y="40" width="240" height="62" as="geometry"/></mxCell>
+        <mxCell id="admin" value="Administrator
+(LGU staff)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontColor=#7F6000;fontSize=12;align=center;verticalAlign=middle;arcSize=8;" vertex="1" parent="1"><mxGeometry x="880" y="40" width="240" height="62" as="geometry"/></mxCell>
+        <mxCell id="groq" value="Groq Cloud LLM
+(external service)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#7A4100;fontSize=12;align=center;verticalAlign=middle;arcSize=8;" vertex="1" parent="1"><mxGeometry x="470" y="40" width="240" height="62" as="geometry"/></mxCell>
+        <mxCell id="p1" value="P1  Query processing
+Language detection (fil / en), history-aware rewrite" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontColor=#15385C;fontSize=12;align=center;verticalAlign=middle;arcSize=8;" vertex="1" parent="1"><mxGeometry x="60" y="180" width="260" height="86" as="geometry"/></mxCell>
+        <mxCell id="p2" value="P2  RAG retrieval &amp;
+answer generation
+top-6 → grounded answer → office" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontColor=#15385C;fontSize=12;align=center;verticalAlign=middle;arcSize=8;" vertex="1" parent="1"><mxGeometry x="460" y="180" width="260" height="86" as="geometry"/></mxCell>
+        <mxCell id="p5" value="P5  Map authoring
+&amp; publishing
+draft → diff → publish / rollback" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontColor=#15385C;fontSize=12;align=center;verticalAlign=middle;arcSize=8;" vertex="1" parent="1"><mxGeometry x="860" y="180" width="260" height="86" as="geometry"/></mxCell>
+        <mxCell id="p3" value="P3  Indoor wayfinding
+QR anchor → position, Dijkstra route, live instruction" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontColor=#15385C;fontSize=12;align=center;verticalAlign=middle;arcSize=8;" vertex="1" parent="1"><mxGeometry x="260" y="380" width="260" height="86" as="geometry"/></mxCell>
+        <mxCell id="p4" value="P4  Logging &amp;
+administrative analytics
+date-ranged dashboard + CSV" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontColor=#15385C;fontSize=12;align=center;verticalAlign=middle;arcSize=8;" vertex="1" parent="1"><mxGeometry x="660" y="380" width="260" height="86" as="geometry"/></mxCell>
+        <mxCell id="d1" value="D1  Service corpus
+Upstash Vector — 305 services" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontColor=#4B2E57;fontSize=12;align=center;verticalAlign=middle;arcSize=8;" vertex="1" parent="1"><mxGeometry x="60" y="580" width="250" height="70" as="geometry"/></mxCell>
+        <mxCell id="d2" value="D2  Floor layouts &amp; office coords
+wf:mapstate + floor_presets" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontColor=#4B2E57;fontSize=12;align=center;verticalAlign=middle;arcSize=8;" vertex="1" parent="1"><mxGeometry x="345" y="580" width="250" height="70" as="geometry"/></mxCell>
+        <mxCell id="d3" value="D3  Query log
+wf:querylog" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontColor=#4B2E57;fontSize=12;align=center;verticalAlign=middle;arcSize=8;" vertex="1" parent="1"><mxGeometry x="630" y="580" width="250" height="70" as="geometry"/></mxCell>
+        <mxCell id="d4" value="D4  Navigation log
+wf:navlog" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontColor=#4B2E57;fontSize=12;align=center;verticalAlign=middle;arcSize=8;" vertex="1" parent="1"><mxGeometry x="915" y="580" width="205" height="70" as="geometry"/></mxCell>
+        <mxCell id="priv" value="Logs are anonymous by construction: no name, IP or user agent is stored. The navigation session id is a random per-tab token used only to pair
+a route start with its arrival, and does not persist across visits (RA 10173)." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#B3B3B3;fontColor=#555555;fontSize=12;align=center;verticalAlign=middle;arcSize=8;dashed=1;verticalAlign=top;fontSize=13;fontStyle=1;spacingTop=6;" vertex="1" parent="1"><mxGeometry x="60" y="700" width="1060" height="54" as="geometry"/></mxCell>
+        <mxCell id="e0" value="F1 question (Taglish / English)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;strokeColor=#555555;fontColor=#333333;endArrow=block;endFill=1;" edge="1" parent="1" source="citizen" target="p1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e1" value="F2 rewritten query" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;strokeColor=#555555;fontColor=#333333;endArrow=block;endFill=1;" edge="1" parent="1" source="p1" target="p2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" value="F3 context + prompt" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;strokeColor=#555555;fontColor=#333333;endArrow=block;endFill=1;" edge="1" parent="1" source="p2" target="groq"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" value="F4 completion" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;strokeColor=#555555;fontColor=#333333;endArrow=block;endFill=1;" edge="1" parent="1" source="groq" target="p2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" value="F5 candidate services" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;strokeColor=#555555;fontColor=#333333;endArrow=block;endFill=1;" edge="1" parent="1" source="d1" target="p2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e5" value="F6 answer + responsible office" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;strokeColor=#555555;fontColor=#333333;endArrow=block;endFill=1;" edge="1" parent="1" source="p2" target="citizen"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e6" value="F7 office → destination cell" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;strokeColor=#555555;fontColor=#333333;endArrow=block;endFill=1;" edge="1" parent="1" source="p2" target="p3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e7" value="F8 QR scan / steps" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;strokeColor=#555555;fontColor=#333333;endArrow=block;endFill=1;" edge="1" parent="1" source="citizen" target="p3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e8" value="F9 walls, stairs, office coords" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;strokeColor=#555555;fontColor=#333333;endArrow=block;endFill=1;" edge="1" parent="1" source="d2" target="p3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e9" value="F10 route + live instruction" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;strokeColor=#555555;fontColor=#333333;endArrow=block;endFill=1;" edge="1" parent="1" source="p3" target="citizen"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e10" value="F11 query, latency, dept" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;strokeColor=#555555;fontColor=#333333;endArrow=block;endFill=1;" edge="1" parent="1" source="p2" target="d3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e11" value="F12 start / arrive / abandon" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;strokeColor=#555555;fontColor=#333333;endArrow=block;endFill=1;" edge="1" parent="1" source="p3" target="d4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e12" value="F13 inquiries" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;strokeColor=#555555;fontColor=#333333;endArrow=block;endFill=1;" edge="1" parent="1" source="d3" target="p4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e13" value="F14 completion + time on task" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;strokeColor=#555555;fontColor=#333333;endArrow=block;endFill=1;" edge="1" parent="1" source="d4" target="p4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e14" value="F15 dashboard + CSV" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;strokeColor=#555555;fontColor=#333333;endArrow=block;endFill=1;" edge="1" parent="1" source="p4" target="admin"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e15" value="F16 room edits" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;strokeColor=#555555;fontColor=#333333;endArrow=block;endFill=1;" edge="1" parent="1" source="admin" target="p5"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e16" value="F17 published version" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;strokeColor=#555555;fontColor=#333333;endArrow=block;endFill=1;" edge="1" parent="1" source="p5" target="d2"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

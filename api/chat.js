@@ -2,13 +2,16 @@
  * api/chat.js — Vercel serverless function (Serverless RAG)
  *
  * Pipeline:
- *   query → Upstash Vector (bge-m3, server-side embed + similarity search over
+ *   query → Upstash Vector (text-embedding-3-small, server-side embed + similarity search over
  *           the 235 Calamba services) → top-K with metadata → Groq generation
  *           grounded on that context → { answer, department, subservice, ... }
  *
  * No heavy local models: Upstash embeds both the stored services and the query,
  * so this function stays within Vercel's serverless limits. Seed the index once
- * with tools/upstash_seed.py (index must use the BAAI/bge-m3 embedding model).
+ * with tools/upstash_seed.py. The live index uses Upstash's built-in
+ * text-embedding-3-small (1536-d, COSINE) — verified against /info on
+ * 2026-10-13. An earlier comment here said bge-m3, which is 1024-d and was
+ * never what this index ran.
  *
  * Required env vars (set in the Vercel project):
  *   UPSTASH_VECTOR_REST_URL
