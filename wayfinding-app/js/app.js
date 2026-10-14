@@ -1522,11 +1522,11 @@ function _applyManualLocation(floor, row, col) {
   // Spell the axes out: '38,71' alone reads as x,y to most people, which is
   // the reverse of the convention used by the node ids, the QR links and the
   // printed signs.
-  const where = `${_floorName(f)} at across ${c}, down ${r}`;
+  const where = `${_floorName(f)} at down ${r}, across ${c}`;
   return {
     ok: true,
     message: snapped
-      ? `across ${col}, down ${row} is a wall — moved you to the nearest open cell: ${where}.`
+      ? `down ${row}, across ${col} is a wall — moved you to the nearest open cell: ${where}.`
       : `Location set: ${where}.`,
   };
 }
