@@ -2214,6 +2214,24 @@ body.view-admin .temp-admin-entry { display: none !important; }
 
 /* "I'm already here" — the citizen found the office before the route ran out.
    Sits in the step bar, so it is only ever visible while a route is active. */
+/* Shown only when iOS has not granted motion access, so the citizen has a
+   way to turn it on - the request cannot be made from the QR decode callback. */
+.nav-motion-btn {
+  flex: 0 0 auto;
+  margin-left: 8px;
+  padding: 7px 12px;
+  border: 1px solid #B45309;
+  border-radius: 999px;
+  background: #FEF3C7;
+  color: #78350F;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-family: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.nav-motion-btn[hidden] { display: none; }
+
 .nav-here-btn {
   flex: 0 0 auto;
   margin-left: 8px;

@@ -352,6 +352,7 @@ const DOM = {
   manualLocGo:     $('manualLocGo'),
   manualLocMsg:    $('manualLocMsg'),
   navRescanBtn:    $('navRescanBtn'),
+  navMotionBtn:    $('navMotionBtn'),
   navStairBtn:     $('navStairBtn'),
   navHereBtn:      $('navHereBtn'),
   // QR camera overlay
@@ -936,13 +937,22 @@ function _updateNavInstruction() {
 // the citizen walks. Silent on devices without motion sensors (desktop testing
 // uses WASD/arrows instead) — no "not supported" alert.
 function _ensurePdrOn() {
-  if (NAV.pdrActive) return;
+  if (NAV.pdrActive) { _showMotionEnable(false); return; }
   if (typeof DeviceMotionEvent === 'undefined') return;
   const started = navStartPDR();
   if (started && DOM.pdrToggleBtn) {
     DOM.pdrToggleBtn.textContent = '🚶 PDR: On';
     DOM.pdrToggleBtn.classList.add('active');
   }
+  // Not started means iOS has not granted motion access. That cannot be fixed
+  // from here - the request only works inside a tap - so surface a button the
+  // citizen can tap instead of leaving the ME dot frozen with no explanation.
+  _showMotionEnable(!started && typeof navMotionReady === 'function' && !navMotionReady());
+}
+
+/** Show or hide the step-bar "turn motion on" button. */
+function _showMotionEnable(show) {
+  if (DOM.navMotionBtn) DOM.navMotionBtn.hidden = !show;
 }
 
 // Hide the dev-server-only buttons (Sync / Deploy Floors / Deploy Stamps).
@@ -1252,11 +1262,14 @@ document.addEventListener('DOMContentLoaded', () => {
       DOM.pdrToggleBtn.textContent = '🚶 PDR: Off';
       DOM.pdrToggleBtn.classList.remove('active');
     } else {
-      const started = navStartPDR();
-      if (started) {
-        DOM.pdrToggleBtn.textContent = '🚶 PDR: On';
-        DOM.pdrToggleBtn.classList.add('active');
-      }
+      // A real tap, so the permission request is allowed to run from here.
+      navRequestMotionPermission().then(() => {
+        if (navStartPDR()) {
+          DOM.pdrToggleBtn.textContent = '🚶 PDR: On';
+          DOM.pdrToggleBtn.classList.add('active');
+          _showMotionEnable(false);
+        }
+      });
     }
   });
 
@@ -1408,11 +1421,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // QR location prompt buttons. The prompt itself is shown AFTER "Take me there"
   // (see requestNavigation); each button then resumes the pending route.
+  // Collect motion access HERE, in the tap, not after the scan. The decode
+  // callback runs frames later with no user activation, and iOS refuses the
+  // request outright at that point - which is why motion was never permitted
+  // after a scan. Asking first means the grant is already cached by the time
+  // the route starts. Fired without awaiting so the camera still opens at once.
   if (DOM.qrPromptScanBtn) DOM.qrPromptScanBtn.addEventListener('click', () => {
+    if (typeof navRequestMotionPermission === 'function') navRequestMotionPermission();
     _hideQrPrompt();
     _openQrScan(_resumePendingNav);     // route from the freshly-scanned position
   });
   if (DOM.qrPromptSkipBtn) DOM.qrPromptSkipBtn.addEventListener('click', () => {
+    if (typeof navRequestMotionPermission === 'function') navRequestMotionPermission();
     _hideQrPrompt();
     _resumePendingNav();                // route from the default/current position
   });
@@ -1428,6 +1448,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   if (DOM.manualLocGo) {
     DOM.manualLocGo.addEventListener('click', () => {
+      // Same reason as the Scan button: this tap is the last activation before
+      // the route starts, so take the motion grant now.
+      if (typeof navRequestMotionPermission === 'function') navRequestMotionPermission();
       const f   = parseInt(DOM.manualLocFloor.value, 10) - 1;   // select is 1-indexed
       const row = parseInt(DOM.manualLocRow.value, 10);
       const col = parseInt(DOM.manualLocCol.value, 10);
@@ -1468,7 +1491,27 @@ document.addEventListener('DOMContentLoaded', () => {
     DOM.navHereBtn.addEventListener('click', _markAlreadyHere);
   }
 
+  // Tap-to-enable motion. This handler IS a gesture, so the request iOS
+  // refused during the scan succeeds here.
+  if (DOM.navMotionBtn) {
+    DOM.navMotionBtn.addEventListener('click', () => {
+      navRequestMotionPermission().then((ok) => {
+        if (ok && navStartPDR()) {
+          _showMotionEnable(false);
+          if (DOM.pdrToggleBtn) {
+            DOM.pdrToggleBtn.textContent = '🚶 PDR: On';
+            DOM.pdrToggleBtn.classList.add('active');
+          }
+          _showStairToast('🚶 Motion on — the dot follows you now.');
+        } else {
+          _showStairToast('Motion is off. iPhone: Settings → Apps → Safari → Motion & Orientation Access.');
+        }
+      });
+    });
+  }
+
   if (DOM.navRescanBtn) DOM.navRescanBtn.addEventListener('click', () => {
+    if (typeof navRequestMotionPermission === 'function') navRequestMotionPermission();
     _openQrScan(() => {
       _navStepReset();
       _updateNavInstruction();
@@ -2077,6 +2120,11 @@ function startWalkRecording() {
   let pdrAttempted   = false;
   if (!pdrAlreadyOn && typeof navStartPDR === 'function') {
     try {
+      // The Rec button is a real tap, so the iOS motion request is allowed
+      // from here. Without it the recorder would log a frozen position.
+      if (typeof navRequestMotionPermission === 'function') {
+        navRequestMotionPermission().then(() => navStartPDR());
+      }
       navStartPDR();
       pdrAttempted = true;
       // Sync the PDR toggle button label if present so the UI is consistent
@@ -2608,6 +2656,7 @@ function _clearFinishedRoute() {
   _resetQrPrompt();
   _crossFloorTrip = null;
   if (DOM.navStairBtn) DOM.navStairBtn.hidden = true;
+  _showMotionEnable(false);          // goes with the route, not the session
   NAV._hasQRFix = false;
   if (typeof updateDriftIndicator === 'function') updateDriftIndicator();
   _arrivalReminder = null;

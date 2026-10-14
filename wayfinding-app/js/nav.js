@@ -42,6 +42,13 @@ const NAV = {
   headingOffset: 0,        // degrees subtracted from raw heading before step mapping
   _autoAlignPending: false, // true between navStartPDR() and first compass reading
 
+  // ── Motion permission (iOS 13+) ──────────────────────────────────────────
+  // null = never asked, true = granted, false = refused. iOS only honours
+  // DeviceMotionEvent.requestPermission() while a user gesture is still
+  // "active", so the ask must happen in a tap handler - never in the QR decode
+  // callback, which runs frames later with no activation left.
+  _motionGranted: null,
+
   // ── Compass ──────────────────────────────────────────────────────────────
   _compass: null, // Compass instance (compass.js)
   _compassReady: false, // true once first heading reading arrives (A3)
@@ -186,14 +193,46 @@ function navSetPosition(row, col) {
  * the first heading reading arrives (A3 — avoids North-biased early steps).
  * DeviceMotion permission requested on iOS 13+.
  */
+/**
+ * Ask for motion access. MUST be called straight from a tap handler on iOS:
+ * requestPermission() needs transient user activation and rejects without it.
+ *
+ * Idempotent and silent. Once iOS has granted the origin, later calls resolve
+ * immediately with no dialog, so calling it on every gesture costs nothing.
+ * Platforms without the permission API (Android, desktop) resolve true.
+ */
+function navRequestMotionPermission() {
+  if (NAV._motionGranted === true) return Promise.resolve(true);
+  if (typeof DeviceMotionEvent === "undefined") {
+    NAV._motionGranted = false;
+    return Promise.resolve(false);
+  }
+  if (typeof DeviceMotionEvent.requestPermission !== "function") {
+    NAV._motionGranted = true;          // no gate on this platform
+    return Promise.resolve(true);
+  }
+  return DeviceMotionEvent.requestPermission()
+    .then((state) => {
+      NAV._motionGranted = state === "granted";
+      return NAV._motionGranted;
+    })
+    .catch(() => {
+      // Thrown when there is no user activation. Leave the state unknown so a
+      // later, properly-gestured tap can still succeed.
+      return false;
+    });
+}
+
+/** True when motion can be bound right now without asking for anything. */
+function navMotionReady() {
+  if (typeof DeviceMotionEvent === "undefined") return false;
+  if (typeof DeviceMotionEvent.requestPermission !== "function") return true;
+  return NAV._motionGranted === true;
+}
+
 function navStartPDR() {
   if (NAV.pdrActive) return true;
-  if (typeof DeviceMotionEvent === "undefined") {
-    alert(
-      "DeviceMotionEvent is not supported in this browser.\nUse arrow keys or D-pad to move instead.",
-    );
-    return false;
-  }
+  if (typeof DeviceMotionEvent === "undefined") return false;
 
   // F3-lite: arm auto-alignment — the very next compass reading captures
   // "forward" as the direction the phone is currently pointing, so the
@@ -241,24 +280,15 @@ function navStartPDR() {
     window.addEventListener("devicemotion", _navOnMotion);
   };
 
-  if (typeof DeviceMotionEvent.requestPermission === "function") {
-    DeviceMotionEvent.requestPermission()
-      .then((state) => {
-        if (state === "granted") {
-          _bindMotion();
-          if (NAV.onPositionChange)
-            NAV.onPositionChange(NAV.position.row, NAV.position.col);
-        } else {
-          alert(
-            "Motion access denied.\n\nTo fix on iOS: Settings → Safari → Motion & Orientation Access → ON.\n\nUse the D-pad or arrow keys to move instead.",
-          );
-        }
-      })
-      .catch(() => alert("Could not request motion permission."));
-    return false;
-  }
+  // Never ask from here: navStartPDR is reached from the QR decode callback,
+  // where iOS has no activation left and the request is refused outright. The
+  // grant is collected by navRequestMotionPermission() in the tap handlers; if
+  // it is not held, report failure and let the caller offer a tap-to-enable
+  // button rather than firing an alert the citizen can do nothing about.
+  if (!navMotionReady()) return false;
 
   _bindMotion();
+  if (NAV.onPositionChange) NAV.onPositionChange(NAV.position.row, NAV.position.col);
   return true;
 }
 
