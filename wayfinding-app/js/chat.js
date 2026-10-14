@@ -33,6 +33,7 @@ const CHAT = (() => {
 
   // ── DOM refs ─────────────────────────────────────────────────────────
   let _panel, _msgList, _input, _sendBtn, _toggleBtn, _badge, _starters;
+  let _resume, _newBtn;
 
   // ── Navigate callback — wired by app.js ──────────────────────────────
   let _onNavigate = null;
@@ -49,7 +50,14 @@ const CHAT = (() => {
     if (_open) {
       _badge.style.display = 'none';
       _syncViewport();
-      _input.focus();
+      // Only pull focus on a device with a real keyboard. On a phone, focusing
+      // the field opens the soft keyboard immediately, which covers the starter
+      // chips and the QR hint before the citizen has read either. They can tap
+      // the field when they actually want to type.
+      if (!window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
+        _input.focus();
+      }
+      _maybeOfferFreshStart();
       _scrollBottom();
     } else {
       _panel.style.height = '';   // restore CSS-driven sizing when closed
@@ -303,7 +311,16 @@ const CHAT = (() => {
       <div class="chat-header">
         <span class="chat-header-icon">🏛️</span>
         <span class="chat-header-title">City Services Assistant</span>
+        <button class="chat-new-btn" id="chatNewBtn" hidden
+                title="Clear this conversation and ask something unrelated">↻ New</button>
         <button class="chat-close-btn" aria-label="Close chat">✕</button>
+      </div>
+      <div class="chat-resume" id="chatResume" hidden>
+        <span class="chat-resume-text">Bago bang tanong? · Is this a new question?</span>
+        <span class="chat-resume-actions">
+          <button class="chat-resume-btn primary" id="chatResumeNew">Bagong tanong</button>
+          <button class="chat-resume-btn" id="chatResumeKeep">Ituloy / Continue</button>
+        </span>
       </div>
       <div class="chat-intro">Ask me about any Calamba City Hall service and I'll guide you there.</div>
       <div class="chat-starters" id="chatStarters">
@@ -321,6 +338,14 @@ const CHAT = (() => {
 
     document.body.appendChild(_toggleBtn);
     document.body.appendChild(_panel);
+
+    _resume  = _panel.querySelector('#chatResume');
+    _newBtn  = _panel.querySelector('#chatNewBtn');
+    _newBtn.addEventListener('click', () => startFresh());
+    _panel.querySelector('#chatResumeNew').addEventListener('click', () => startFresh());
+    _panel.querySelector('#chatResumeKeep').addEventListener('click', () => {
+      _resume.hidden = true;
+    });
 
     _msgList  = document.getElementById('chatMessages');
     _input    = document.getElementById('chatInput');
@@ -415,9 +440,31 @@ const CHAT = (() => {
 
   function init() { _buildDOM(); _loadDynamicStarters(); }
 
+  /**
+   * Clear the conversation.
+   *
+   * The panel keeps every previous exchange and sends the last six turns as
+   * history, so a second, unrelated question inherits the first one's context
+   * and can be answered about the wrong service. This is the way out.
+   */
+  function startFresh() {
+    _messages.length = 0;
+    if (_resume) _resume.hidden = true;
+    if (_newBtn) _newBtn.hidden = true;
+    _render();
+    _scrollBottom();
+  }
+
+  /** Ask once, on reopening, whether this is a new question or a follow-up. */
+  function _maybeOfferFreshStart() {
+    const has = _messages.length > 0;
+    if (_newBtn) _newBtn.hidden = !has;
+    if (_resume) _resume.hidden = !has;
+  }
+
   // Imperative open/close for the view-mode controller (chat-first user view).
   function open()  { if (!_open) toggle(); }
   function close() { if (_open) toggle(); }
 
-  return { init, onNavigate, toggle, open, close };
+  return { init, onNavigate, toggle, open, close, startFresh };
 })();

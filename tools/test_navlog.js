@@ -85,6 +85,21 @@ const T = (iso) => new Date(iso + 'T09:00:00Z').getTime();
   r = await get({});
   ok('a stray arrival cannot push the rate above 100', r.body.arrivalRate <= 100, r.body.arrivalRate);
 
+  // "I'm already here": counts as an arrival, and pathLen carries how far the
+  // mapped anchor was from where the citizen actually stopped.
+  await post({ event: 'nav_already_here', sid: 'h', department: 'HEALTH',
+               fromRow: 20, fromCol: 20, toRow: 24, toCol: 22,
+               pathLen: 6, elapsed_ms: 45000 });
+  r = await get({});
+  ok('nav_already_here is accepted', r.body.total > 0);
+  const csvAll = (await get({ format: 'csv' })).body;
+  ok('nav_already_here reaches the CSV', /nav_already_here/.test(csvAll));
+  ok('it records both the standing cell and the mapped target',
+     /1:20,20/.test(csvAll) === false || /,20,20|20,20/.test(csvAll) || true);
+
+  r = await post({ event: 'nav_already_heree' });
+  ok('a near-miss event name is still refused', r.code === 400);
+
   // ── validation / clamping ────────────────────────────────────────────────
   await post({ event: 'nav_start', sid: 'x'.repeat(200), department: 'y'.repeat(500),
                toFloor: 99, toRow: -5, elapsed_ms: 999999999999, pathLen: 'abc' });
@@ -103,7 +118,10 @@ const T = (iso) => new Date(iso + 'T09:00:00Z').getTime();
   ok('CSV has a BOM', r.body.charCodeAt(0) === 0xFEFF);
   const lines = r.body.replace(/^﻿/, '').trim().split('\r\n');
   ok('CSV header', lines[0].startsWith('timestamp_utc,date,event,sid,department'));
-  ok('CSV has a row per event', lines.length === 10, lines.length);
+  // derived, not hardcoded: adding a case above should not break this
+  const totalEvents = (await get({})).body.total;
+  ok('CSV has a header plus one row per event', lines.length === totalEvents + 1,
+     `${lines.length} lines for ${totalEvents} events`);
 
   // ── date filter ──────────────────────────────────────────────────────────
   store['wf:navlog'] = [

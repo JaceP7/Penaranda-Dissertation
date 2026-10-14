@@ -15,6 +15,8 @@
  *   nav_arrive   the arrival prompt fired        (carries elapsed_ms)
  *   nav_abandon  the route was closed first      (carries elapsed_ms)
  *   qr_rescan    the user re-anchored mid-route  (a disorientation proxy)
+ *   nav_already_here  the user says they found it before the route ended;
+ *                     pathLen carries how many cells off the mapped anchor was
  *
  * Privacy (RA 10173): `sid` is a random token held in sessionStorage for the
  * tab's lifetime, used only to pair a start with its arrival. It is not tied
@@ -35,7 +37,8 @@ const KEY         = 'wf:navlog';
 const CAP         = 50000;
 const CHUNK       = 2500;
 
-const EVENTS = new Set(['nav_start', 'nav_arrive', 'nav_abandon', 'qr_rescan']);
+const EVENTS = new Set(['nav_start', 'nav_arrive', 'nav_abandon', 'qr_rescan',
+                        'nav_already_here']);
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 async function redis(cmd) {

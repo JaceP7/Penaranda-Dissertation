@@ -353,6 +353,7 @@ const DOM = {
   manualLocMsg:    $('manualLocMsg'),
   navRescanBtn:    $('navRescanBtn'),
   navStairBtn:     $('navStairBtn'),
+  navHereBtn:      $('navHereBtn'),
   // QR camera overlay
   qrOverlay:       $('qrOverlay'),
   qrVideo:         $('qrVideo'),
@@ -824,7 +825,12 @@ let _navWrongStreak = 0;      // consecutive steps the route has grown
 let _lastMeCell     = null;   // previous ME cell, for movement-based facing
 const NAV_WRONG_WAY_STEPS = 2; // warn only after this many growth steps (PDR-drift tolerance)
 
-function _navStepReset() { _navPrevPathLen = null; _navWrongStreak = 0; }
+function _navStepReset() {
+  _navPrevPathLen = null;
+  _navWrongStreak = 0;
+  // a fresh route gets the "already here" option back
+  if (DOM.navHereBtn) DOM.navHereBtn.hidden = false;
+}
 
 function _hideNavStep() {
   const el = document.getElementById('navStepPrompt');
@@ -1294,6 +1300,7 @@ document.addEventListener('DOMContentLoaded', () => {
   DOM.qrCloseBtn.addEventListener('click', () => {
     navStopQRScan();
     DOM.qrOverlay.style.display = 'none';
+    _restoreLandingIfIdle();
     _resumePendingNav();   // cancelled the scan → still route (from default/current)
   });
 
@@ -1452,6 +1459,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // "I'm already here": the citizen found the office without following the route
+  // to its last cell. Records the tile they were standing on, which is the only
+  // ground truth available for how close the mapped anchor actually is.
+  if (DOM.navHereBtn) {
+    DOM.navHereBtn.addEventListener('click', _markAlreadyHere);
+  }
+
   if (DOM.navRescanBtn) DOM.navRescanBtn.addEventListener('click', () => {
     _openQrScan(() => {
       _navStepReset();
@@ -1571,12 +1585,27 @@ function _resetQrPrompt() {
  * the overlay and runs `onDone` afterwards. Used by both the initial prompt and
  * the mid-walk re-anchor button.
  */
+/**
+ * The landing card hides itself whenever `chat-showing` is on <body>. Opening
+ * the scanner from the chat leaves that class behind if the panel closes
+ * without toggling, so the citizen comes back from a scan to an empty screen
+ * with no way to ask anything. Restore it whenever nothing else is on top.
+ */
+function _restoreLandingIfIdle() {
+  if (STATE.viewMode !== 'user') return;
+  if (document.body.classList.contains('route-active')) return;
+  const panel = document.getElementById('chatPanel');
+  const chatOpen = panel && panel.classList.contains('chat-open');
+  if (!chatOpen) document.body.classList.remove('chat-showing');
+}
+
 function _openQrScan(onDone) {
   DOM.qrOverlay.style.display = 'flex';
   navStartQRScan(DOM.qrVideo, DOM.qrCanvas, () => {
     NAV._stepsSinceQR = 0;
     updateDriftIndicator();
     DOM.qrOverlay.style.display = 'none';
+    _restoreLandingIfIdle();
     if (onDone) onDone();
   });
 }
@@ -2494,6 +2523,46 @@ function _hideStairConfirm() {
 }
 
 // ── Arrival prompt ────────────────────────────────────────────────────────────
+
+/**
+ * The citizen says they have arrived before the route ran out.
+ *
+ * Logged with the cell they were standing on and the cell the route was aiming
+ * at. The gap between those two is the only field measurement of how far a
+ * mapped office anchor sits from where people actually stop, which is what
+ * decides whether an anchor needs re-capturing.
+ */
+function _markAlreadyHere() {
+  const at = NAV.position || { row: null, col: null };
+  let want = { row: null, col: null };
+  if (STATE.endId) {
+    const [r, c] = STATE.endId.split(',').map(Number);
+    want = { row: r, col: c };
+  }
+  const offBy = (at.row != null && want.row != null)
+    ? Math.abs(at.row - want.row) + Math.abs(at.col - want.col) : null;
+
+  _navLog('nav_already_here', {
+    department: _navTrip ? _navTrip.department : null,
+    subservice: _navTrip ? _navTrip.subservice : null,
+    fromFloor: STATE.currentFloor, fromRow: at.row, fromCol: at.col,
+    toFloor: STATE.currentFloor,  toRow: want.row, toCol: want.col,
+    pathLen: offBy,
+    elapsed_ms: _navTrip ? Date.now() - _navTrip.startedAt : null,
+    rescans: _navTrip ? _navTrip.rescans : 0,
+  });
+
+  // Counts as a completed trip: they got where they were going.
+  _navTripArrive();
+  _hideNavStep();
+  if (DOM.navHereBtn) DOM.navHereBtn.hidden = true;
+  _renderArrivalReminder();
+  const el = document.getElementById('arrivalPrompt');
+  if (el) {
+    el.style.display = 'flex';
+    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+  }
+}
 
 function _showArrivalPrompt() {
   const el = document.getElementById('arrivalPrompt');
