@@ -250,7 +250,8 @@ def main():
         w.writerows(index)
 
     print(f"\n{made} signs generated, {moved} moved off a wall, {skipped} skipped")
-    print(f"{len(pages)} page PDF -> qr_anchors/QR_Anchor_Signs.pdf")
+    print(f"{len(pages)} page PDF -> "
+          f"{os.path.relpath(os.path.join(OUTDIR, 'QR_Anchor_Signs.pdf'), ROOT)}")
 
 
 if __name__ == "__main__":
