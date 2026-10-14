@@ -115,7 +115,20 @@ const ENTRANCE = { floor: 1, row: 38, col: 71 };
         const m = Math.abs(((i / N) | 0) - o.row) + Math.abs((i % N) - o.col);
         if (m < gm) { gm = m; greedy = i; }
       }
-      const dTo = _bfsDistances(dest, best.row, best.col);
+      // Distances must be measured FROM THE OFFICE, snapped off any wall the
+      // anchor sits on - the same snap _bestStairFor does internally. BFS'ing
+      // from the chosen stair instead measures stair-to-stair, which makes the
+      // comparison meaningless.
+      let sr = o.row, sc = o.col;
+      if (dest[sr * N + sc] === 'wall') {
+        let bd = Infinity;
+        for (let i = 0; i < N * N; i++) {
+          if (dest[i] === 'wall') continue;
+          const d = Math.abs(((i / N) | 0) - o.row) + Math.abs((i % N) - o.col);
+          if (d < bd) { bd = d; sr = (i / N) | 0; sc = i % N; }
+        }
+      }
+      const dTo = _bfsDistances(dest, sr, sc);
       const gTotal = (greedy !== null && dFrom[greedy] >= 0 && dTo[greedy] >= 0)
         ? dFrom[greedy] + dTo[greedy] : Infinity;
       if (best.total < gTotal) { better++; if (gTotal !== Infinity) saved += gTotal - best.total; }
@@ -127,6 +140,9 @@ const ENTRANCE = { floor: 1, row: 38, col: 71 };
     console.log(`  floor ${f}: ${perFloor[f].ok}/${perFloor[f].total} offices reachable via a shared stair`);
   }
   ok('never picks a worse stair than the rule it replaces', worse === 0, worse);
+  console.log(`  beats the old rule on ${better} of ${routable} routes` +
+              (better ? `, saving ${(saved / better).toFixed(1)} cells on average ` +
+                        `(${(0.6 * saved / better).toFixed(1)} m)` : ''));
   ok('returns null where no shared stair is reachable, so the caller falls back',
      blocked > 0 || routable > 0);
   console.log(`  two-leg routing currently possible for ${routable} of ${routable + blocked} ` +
