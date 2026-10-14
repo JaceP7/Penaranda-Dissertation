@@ -246,7 +246,12 @@ class GridRenderer {
             ctx.fillText('S', x + cs / 2, y + cs / 2);
           }
 
-          // Coordinate label (top-left corner, shown when zoomed in enough)
+          // Coordinate label (top-left corner, shown when zoomed in enough).
+          // row,col - the same order as the node ids, the QR deep links, the
+          // printed signs and the manual-location box. This used to print
+          // col,row, so anyone reading a cell off the map got the reverse of
+          // what they had to type back in, which read as a transposition bug.
+          // The map is the thing people trust, so the map had to change.
           if (ct === 'open' && cs >= 32) {
             const coordSize = Math.max(8, Math.floor(cs * 0.17));
             ctx.fillStyle    = onPath || isStart || isEnd
@@ -254,7 +259,7 @@ class GridRenderer {
             ctx.font         = `${coordSize}px system-ui, sans-serif`;
             ctx.textAlign    = 'left';
             ctx.textBaseline = 'top';
-            ctx.fillText(`${c},${r}`, x + pad + 3, y + pad + 2);
+            ctx.fillText(`${r},${c}`, x + pad + 3, y + pad + 2);
           }
 
         }
