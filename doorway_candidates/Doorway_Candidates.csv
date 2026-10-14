@@ -1,0 +1,4 @@
+﻿floor,down_row,across_col,cells_in_this_doorway,offices_unlocked,offices
+0,13,33,1,11,Agriculture Office; COMELEC (partner); City Health Services; City Legal / Prosecutor; City Social Services; City Treasury Annex; Cooperatives & Livelihood; Housing Office; Investment & Employment; Landbank (partner); PWD Affairs Office
+2,13,33,1,11,City Accounting; City Budget Office; City Planning & Dev't; City Population Office; DILG (partner); Engineering Services; Environment / CENRO; Human Resources; MOEA; Sectoral Affairs; VMO Extension
+3,13,33,1,10,CCEMPC; City Administration; Councillors' Offices (E); Councillors' Offices (NW); Councillors' Offices (S); Councillors' Offices (SE); Councillors' Offices (W); Office of the Vice Mayor; Population (Annex); Sangguniang Bayan Secretariat

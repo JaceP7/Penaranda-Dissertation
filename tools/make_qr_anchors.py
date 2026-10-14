@@ -181,7 +181,7 @@ def make_sign(name, floor, r, c, url):
     # Label the axes. A bare "38,71" reads as across,down to most people,
     # which is the reverse of the row,col the deep link carries - so an admin
     # copying it into the app would land somewhere else entirely.
-    d.text((qx, SIGN_H - 62), f"Floor {floor + 1}  ·  across {c}  ·  down {r}",
+    d.text((qx, SIGN_H - 62), f"Floor {floor + 1}  ·  down {r}  ·  across {c}",
            font=font(19), fill="#888888")
     d.text((qx, SIGN_H - 36), url, font=font(17), fill="#aaaaaa")
     d.line([(0, SIGN_H - 1), (SIGN_W, SIGN_H - 1)], fill="#dddddd", width=1)
