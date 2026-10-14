@@ -1113,7 +1113,7 @@ body.view-admin .ask-again-btn { display: none !important; }
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 1400;
 }
 
 .qr-overlay-box {
@@ -1186,7 +1186,7 @@ body.view-admin .ask-again-btn { display: none !important; }
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 1350;
 }
 
 .qr-gen-box {
@@ -2279,3 +2279,17 @@ body.view-admin .temp-admin-entry { display: none !important; }
 @media (max-width: 480px) {
   .nav-here-btn { font-size: 0.72rem; padding: 6px 9px; margin-left: 6px; }
 }
+
+/* While the camera is open, nothing else should be on top of it. Raising the
+   overlay's z-index is the fix, but the landing card, the chat bubble and the
+   step bar are all large opaque blocks that were covering the viewfinder, so
+   they are also taken out of the way — a half-covered camera makes it
+   impossible to line up a QR code. */
+body.scanning .landing-cta,
+body.scanning .chat-toggle-btn,
+body.scanning .chat-panel,
+body.scanning .ask-again-btn,
+body.scanning .nav-step-prompt,
+body.scanning .admin-toggle,
+body.scanning .arrival-prompt,
+body.scanning .stair-prompt { display: none !important; }

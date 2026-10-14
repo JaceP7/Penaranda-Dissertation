@@ -1300,6 +1300,7 @@ document.addEventListener('DOMContentLoaded', () => {
   DOM.qrCloseBtn.addEventListener('click', () => {
     navStopQRScan();
     DOM.qrOverlay.style.display = 'none';
+    document.body.classList.remove('scanning');
     _restoreLandingIfIdle();
     _resumePendingNav();   // cancelled the scan → still route (from default/current)
   });
@@ -1600,11 +1601,16 @@ function _restoreLandingIfIdle() {
 }
 
 function _openQrScan(onDone) {
+  // `scanning` pulls the landing card, the chat bubble and the step bar out of
+  // the way. They are large opaque blocks that sat over the viewfinder, and a
+  // half-covered camera makes a QR code impossible to line up.
+  document.body.classList.add('scanning');
   DOM.qrOverlay.style.display = 'flex';
   navStartQRScan(DOM.qrVideo, DOM.qrCanvas, () => {
     NAV._stepsSinceQR = 0;
     updateDriftIndicator();
     DOM.qrOverlay.style.display = 'none';
+    document.body.classList.remove('scanning');
     _restoreLandingIfIdle();
     if (onDone) onDone();
   });
