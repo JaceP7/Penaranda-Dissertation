@@ -61,7 +61,15 @@ FLOORS_WANTED = {0, 1, 2, 3}
 
 SPOTS = [
     # (floor, row, col, name, tier)
-    (1, 38, 72, "Main Entrance / Public Assistance", 1),
+    # Tier 1 - the building's four perimeter doors on the Ground floor. The
+    # MAIN one is the bottom-centre opening (74,36-39, four cells wide, with
+    # entrance steps below it at rows 71-73); the other three are single-cell
+    # side doors. Each sign's cell is the walkable cell just INSIDE the door,
+    # which is where someone scanning it actually stands.
+    (1, 73, 37, "Main Entrance / Lobby",  1),
+    (1, 38, 71, "East Side Entrance",     1),
+    (1, 36,  4, "West Side Entrance",     1),
+    (1,  4, 38, "North Side Entrance",    1),
     (1, 54,  7, "Civil Registry (CCRO)",             3),
     (1, 54, 65, "Business Permits (BPATFO)",         3),
 ]

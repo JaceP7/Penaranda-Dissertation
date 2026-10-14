@@ -23,7 +23,7 @@
 - Citizen view is **chat-first** over the **Calamba eGov hero** (`calamba_hero.html`, iframe background) until "Take me there" → route-active reveals the grid. All editing chrome hidden; header hidden.
 - Admin via fixed 🔧 → **PIN** (`ADMIN_PIN` in app.js, currently '2024' — ships in client JS, weak gate). View mode NOT persisted (kiosk-safe; resets to user each reload).
 - **Floor rename**: ✏️ beside floor selector (admin) → bundled `FLOOR_NAMES` in floor_presets.js, deploys via Export/Deploy Floors.
-- **Default start tile**: navInit → Ground (idx 1) cell (38,72); `SERVICE_DEFAULT_ENTRANCE` matched. On Take-me-there in user view: `renderer.navActive=true` + `focusOnCell(start, 2.2)` shows "you are here" centered, no Capture needed.
+- **Default start tile**: navInit → Ground (idx 1) cell (73,37), just inside the main public door (the four-cell-wide south opening at 74,36-39); `SERVICE_DEFAULT_ENTRANCE` matched. Was (38,72)/(38,71), which is the east SIDE door — 53 m from the Lobby desk against 20 m from here. On Take-me-there in user view: `renderer.navActive=true` + `focusOnCell(start, 2.2)` shows "you are here" centered, no Capture needed.
 - **Zoom/follow-cam**: `renderer._minScale=1` (fit-to-grid is the zoom-out limit); `focusOnCell()` added; PDR steps re-center via `onPositionChange` (follow-cam, manual pan still allowed).
 
 **Also**: `rag_demo.html` (standalone figure), Services-labeled chat button, ← Home button.

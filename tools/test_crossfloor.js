@@ -61,7 +61,7 @@ vm.runInContext([lift('_floorCellTypes'), lift('_bfsDistances'), lift('_bestStai
 const { _bfsDistances, _bestStairFor } = sb.API;
 
 const types = (f) => FLOOR_PRESETS[f].map((v) => v || 'open');
-const ENTRANCE = { floor: 1, row: 38, col: 71 };
+const ENTRANCE = { floor: 1, row: 73, col: 37 };   // just inside the main south door
 
 (async () => {
   console.log('\n--- stair selection on the real Calamba layouts ---');

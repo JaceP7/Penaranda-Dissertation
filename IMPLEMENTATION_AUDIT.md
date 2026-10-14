@@ -389,7 +389,7 @@ All deployed to Vercel; live + working end-to-end on the website.
 - [x] **H3** — **Live retrieval eval** (`eval/run_upstash_eval.py`): **MRR 0.762 / P@1 0.750**, beating the local e5-large+bge-reranker baseline (0.714/0.607) with dense-only retrieval. Scopus-backed rationale: `UPSTASH_EVAL_AND_RATIONALE.md`. ⚠️ Different embedding model → report Upstash numbers as the live system's (supersedes B2 for the deployed system).
 - [x] **H4** — **Live-site analytics** (supersedes part of C): `api/chat.js` → Upstash Redis (`wf:querylog`); `api/analytics.js` reads it for `/admin.html`. Verified end-to-end. (Still TODO from C: navigation analytics, CSV/PDF export, audit trail.)
 - [x] **H5** — **Floors swapped 0↔1** (LG=idx0/UI1, Ground=idx1/UI2). Presets v8, stamps v2.
-- [x] **H6** — **User/Admin view separation**. Citizen chat-first view over the Calamba eGov hero (`calamba_hero.html` iframe); admin via PIN-gated 🔧 (kiosk-safe, not persisted). Floor rename (bundled `FLOOR_NAMES`). Default start tile (38,72) Ground; "you are here" + follow-cam on route (no Capture needed); zoom clamped to fit-grid.
+- [x] **H6** — **User/Admin view separation**. Citizen chat-first view over the Calamba eGov hero (`calamba_hero.html` iframe); admin via PIN-gated 🔧 (kiosk-safe, not persisted). Floor rename (bundled `FLOOR_NAMES`). Default start tile (73,37) Ground — just inside the main south door; "you are here" + follow-cam on route (no Capture needed); zoom clamped to fit-grid.
 - [⏸] **H7** — bge-m3 index comparison (optional; text-embedding-3-small already wins). Needs a new Upstash index.
 
 ### Open items still blocking dissertation-complete

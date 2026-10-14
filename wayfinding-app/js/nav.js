@@ -89,15 +89,22 @@ const NAV = {
 
 function navInit() {
   // Default starting tile until a QR scan or real-coordinate fix arrives:
-  // the Ground Floor (internal floor 1) east public entrance (38,72), beside
-  // the MOPAC counter. A placeholder "you're at the entrance" position; the
-  // on-load QR prompt nudges the citizen to scan for a precise fix. Routing
-  // snaps to the nearest walkable cell if this sits on the outer wall.
-  // Ground floor, main public entrance. 38,71 not 38,72: the latter is the
-  // east outer wall, so the ME marker rendered on a wall until the first
-  // route snapped it here anyway. This is also the cell the posted entrance
-  // QR encodes, so the default and the anchor now agree.
-  NAV.position = { row: 38, col: 71 };
+  // just inside the MAIN public door on the Ground Floor (internal floor 1).
+  //
+  // That door is the bottom-centre opening. Row 74 carries four adjacent door
+  // cells at cols 36-39 - the only doorway in the whole plan more than one cell
+  // wide - flanked by single doors at 74,32 and 74,43, and approached by
+  // entrance steps at rows 71-73, cols 29 and 46. Those stair cells exist on
+  // the Ground floor and on no other floor, which is what an external flight up
+  // to a lobby looks like. Cols 37-38 then run inward as a two-cell corridor.
+  //
+  // The Lobby / Information desk (down 60, across 37) confirms it: 20 m from
+  // here, against 53 m from the old default at 38,71 - which was a single-cell
+  // door on the EAST wall, i.e. a side entrance. Mean walk to the eight
+  // Ground-floor offices is 37.3 m from here and was 58.6 m from there.
+  //
+  // The on-load QR prompt still nudges the citizen to scan for a precise fix.
+  NAV.position = { row: 73, col: 37 };
 }
 
 // ── Deep-link / QR payload parsing ──────────────────────────────────────────

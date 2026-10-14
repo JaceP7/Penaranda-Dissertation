@@ -23,9 +23,10 @@ Generate each QR in-app: admin view → Navigate → **🏷 Gen QR** → enter f
 
 | Location | Deep link | Reasoning |
 |---|---|---|
-| Ground-floor main entrance / MOPAC public-assistance counter | `?qr=1:38,72` | Every visitor enters here; it's the configured default start and sits in the MOPAC cluster next to the Citizen's Charter board (21,68). This is the origin for everyone who doesn't scan elsewhere first. |
+| Ground-floor main entrance / lobby | `?qr=1:73,37` | The main public door. Row 74 carries a four-cell-wide opening at cols 36-39 — the only doorway in the plan wider than one cell — with entrance steps at rows 71-73, cols 29 and 46 that exist on the Ground floor and no other. The Lobby / Information desk (60,37) is 20 m straight up the centre axis. This is the configured default start and the origin for everyone who doesn't scan elsewhere first. |
+| Ground-floor east side entrance | `?qr=1:38,71` | A single-cell door on the east wall, beside the MOPAC counter and the Citizen's Charter board (21,68). **This was wrongly treated as the main entrance** until the geometry was checked: it is 53 m from the Lobby desk and 72 m from MOPAC itself — a 10x detour — because it opens into the far end of the east wing. Still worth a sign, just not the default. |
 
-*(If the real main public door is the bottom-center lobby, also anchor `?qr=1:72,29` and `?qr=1:72,46` — those bottom stair/door cells exist only on the Ground floor, which usually signals the main entrance lobby. Confirm on-site.)*
+*(Resolved: it **is** the bottom-centre lobby. The cells at rows 71-73, cols 29 and 46 are Ground-floor-only stair cells — the external steps up to the doors — and the four-cell-wide opening at 74,36-39 is the doorway itself. Signs for the west (`?qr=1:36,4`) and north (`?qr=1:4,38`) side doors are generated too. Still confirm on-site which of the four the public is actually routed through; some may be staff-only or kept closed.)*
 
 ---
 
@@ -69,7 +70,7 @@ If any wing is longer than ~one anchor-spacing, add a QR at the corridor interse
 
 ## Minimum viable set (if you only print a few)
 
-1. `?qr=1:38,72` (main entrance) — **must have.**
+1. `?qr=1:73,37` (main entrance, bottom-centre) — **must have.**
 2. The five Ground-floor landings (Tier 2, floor 1).
 3. One QR at each landing on every other floor you expect visitors to use.
 
@@ -96,6 +97,7 @@ Corrections it applied to the table above:
 | Planned | Actual | Why |
 |---|---|---|
 | `1:38,72` | `1:38,71` | 38,72 is the east outer wall; the app snaps here at runtime anyway |
+| `1:38,71` (as the *main* entrance) | `1:73,37` | the east door is a side entrance; the main public door is the wide south opening |
 | `1:54,7` | `1:53,7` | 54,7 is a wall cell |
 | `3:26,72` | *skipped* | no east stair on the 3rd floor |
 

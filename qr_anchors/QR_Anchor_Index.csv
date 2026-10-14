@@ -1,5 +1,8 @@
 ﻿floor,planned_row,planned_col,location,tier,actual_cell,note,url
-1,38,72,Main Entrance / Public Assistance,1,"38,71","moved off wall to 38,71 (1 cell)","https://penaranda-dissertation.vercel.app/?qr=1:38,71"
+1,73,37,Main Entrance / Lobby,1,"73,37",ok,"https://penaranda-dissertation.vercel.app/?qr=1:73,37"
+1,38,71,East Side Entrance,1,"38,71",ok,"https://penaranda-dissertation.vercel.app/?qr=1:38,71"
+1,36,4,West Side Entrance,1,"36,4",ok,"https://penaranda-dissertation.vercel.app/?qr=1:36,4"
+1,4,38,North Side Entrance,1,"4,38",ok,"https://penaranda-dissertation.vercel.app/?qr=1:4,38"
 0,12,33,North-center stairs,2,"12,33",ok,"https://penaranda-dissertation.vercel.app/?qr=0:12,33"
 0,26,72,East stairs,2,"26,72",ok,"https://penaranda-dissertation.vercel.app/?qr=0:26,72"
 0,26,3,West stairs,2,"26,3",ok,"https://penaranda-dissertation.vercel.app/?qr=0:26,3"

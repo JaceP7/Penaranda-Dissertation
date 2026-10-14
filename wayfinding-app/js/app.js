@@ -737,9 +737,10 @@ function navigateToDepartment(deptName, subservice, answerText) {
   } else {
     startCell = { row: from.row, col: from.col };
   }
-  // Safety: the default entrance (38,72) sits on the outer wall — a route can't
-  // start on a wall. Snap to the nearest walkable cell so navigation works even
-  // before the user repositions via QR.
+  // Safety: a route can't start on a wall, and plenty of starts are walls -
+  // most office anchors are, and a mistyped manual coordinate can be. Snap to
+  // the nearest walkable cell so navigation works regardless. (The default
+  // entrance 73,37 is itself walkable, so this no longer concerns the default.)
   const _startNode = NODE_MAP[nodeId(startCell.row, startCell.col)];
   if (_startNode && _startNode.wall) {
     startCell = _nearestOpenCell(startCell.row, startCell.col) || startCell;

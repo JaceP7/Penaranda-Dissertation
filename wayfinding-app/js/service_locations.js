@@ -65,7 +65,7 @@ const SERVICE_FALLBACK_STAMP = "MOPAC";   // Mayor's Office Public Assistance Ce
 
 // ── Default building entrance (used when the user has no PDR fix yet) ──────
 // Ground Floor is now internal index 1 (Lower Ground = 0). Entrance is on Ground.
-const SERVICE_DEFAULT_ENTRANCE = { floor: 1, row: 38, col: 71 };  // Ground floor, east public entrance beside MOPAC. Walkable; matches the posted entrance QR (?qr=1:38,71).
+const SERVICE_DEFAULT_ENTRANCE = { floor: 1, row: 73, col: 37 };  // Ground floor, just inside the main public door (the four-cell-wide south opening at 74,36-39). Walkable; matches the posted entrance QR (?qr=1:73,37). 38,71 - the old value - is the east SIDE door.
 
 // ── Normalised lookup (build once) ────────────────────────────────────────
 function _svcNorm(s) {
