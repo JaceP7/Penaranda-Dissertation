@@ -78,7 +78,7 @@ const CHAT = (() => {
   }
 
   // ── Add message ───────────────────────────────────────────────────────
-  function _addMessage(role, text, department, subservice, options, rateLimited) {
+  function _addMessage(role, text, department, subservice, options, rateLimited, navLabel) {
     _messages.push({
       role,
       text,
@@ -86,6 +86,7 @@ const CHAT = (() => {
       subservice:   subservice   || null,
       options:      options      || [],
       rateLimited:  !!rateLimited,
+      navLabel:     navLabel     || null,   // what the button really leads to, when not `department`
     });
     _renderMessages();
     _scrollBottom();
@@ -200,7 +201,7 @@ const CHAT = (() => {
 
         const deptLabel = document.createElement('span');
         deptLabel.className = 'chat-dept-label';
-        deptLabel.textContent = msg.department;
+        deptLabel.textContent = msg.navLabel || msg.department;
         loc.appendChild(deptLabel);
 
         const navBtn = document.createElement('button');
@@ -268,6 +269,12 @@ const CHAT = (() => {
       if (data.rate_limited) {
         // Show a retryable "busy" notice — not a hard error
         _addMessage('bot', data.answer, null, null, [], true);
+      } else if (data.kind === 'location' && data.office &&
+                 typeof describeOfficeLocation === 'function') {
+        // "Where is [office]?" — say where it is from the map this device
+        // holds, which the server cannot see (the editor can republish it).
+        const where = describeOfficeLocation(data.office, data.lang);
+        _addMessage('bot', where.text, where.navDept, null, [], false, where.navLabel);
       } else {
         const opts = (data.options && data.options.length)
           ? data.options
