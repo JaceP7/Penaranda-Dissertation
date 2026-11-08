@@ -148,6 +148,11 @@ const searched = () => calls.some((u) => u.startsWith('https://vector.fake') || 
   ok('"which you can get" mid-sentence keeps the top result',
      r.body.department === 'CITY ADMINISTRATION OFFICE' && r.body.needsContext === false, JSON.stringify(r.body));
 
+  r = await ask('banner permit', 'Depending on what kind of event you are holding, bring:\n' +
+                                 '1. Valid ID\n2. Request form');
+  ok('"what kind of" mid-sentence keeps the top result',
+     r.body.department === 'CITY ADMINISTRATION OFFICE' && r.body.needsContext === false, JSON.stringify(r.body));
+
   r = await ask('banner permit', 'Requirements:\n1. Valid ID\n2. Request form\nMay iba ka pa bang tanong?');
   ok('a closing courtesy question keeps the top result',
      r.body.department === 'CITY ADMINISTRATION OFFICE' && r.body.needsContext === false, JSON.stringify(r.body));

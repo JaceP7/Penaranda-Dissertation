@@ -121,7 +121,7 @@ async function callGroq(messages, attempt = 0) {
 // An answer asking the citizen to choose between services (prompt rule 4).
 // Only explicit choice wording counts: a bare closing "?" is often a courtesy
 // ("May iba ka pa bang tanong?") on an answer that did resolve.
-const CLARIFY = /\b(which one|which of (these|the following|them)|which (service|permit|certificate|document|type|kind)|what (kind|type) of|alin|tukuyin|could you specify|can you specify|please specify|please clarify|anong (serbisyo|klase|uri))\b/i;
+const CLARIFY = /\b(which one|which of (these|the following|them)|which (service|permit|certificate|document|type|kind)|alin|tukuyin|could you specify|can you specify|please specify|please clarify|anong (serbisyo|klase|uri))\b/i;
 // An answer that found nothing (prompt rule 5).
 const NOT_FOUND = /\b(could not|couldn['’]?t|cannot|can['’]?t|unable to) find\b|\bnot (in|found in) the (provided|given)\b|\bhindi (ko )?(mahanap|makita|nakita)\b|\bwala(ng)? (akong )?(nakitang|impormasyon)\b|\binformation desk\b/i;
 

@@ -60,6 +60,10 @@ console.log('\n--- a bare office name is a location question ---');
 ok('BPLO', dept('BPLO') === BPLO);
 ok('bplo po', dept('bplo po') === BPLO);
 ok('Treasury office?', dept('Treasury office?') === CTMO);
+ok('"how do I get to the BPLO" is still a location question (get to is a cue)',
+   dept('how do I get to the BPLO') === BPLO, dept('how do I get to the BPLO'));
+ok('"where is the budget office" still finds the office', dept('where is the budget office') ===
+   'CITY BUDGET MANAGEMENT OFFICE', dept('where is the budget office'));
 
 console.log('\n--- service questions stay with the assistant ---');
 for (const q of ['where do I get a health certificate',
@@ -68,7 +72,14 @@ for (const q of ['where do I get a health certificate',
                  'San Pedro',
                  'how much is the fee at the assessor',
                  'business permit renewal',
-                 'where can I pay real property tax']) {
+                 'where can I pay real property tax',
+                 // topic words are not office names
+                 'where is the budget hearing',
+                 'where can senior citizens get their ID',
+                 'saan ang tourism spots sa calamba',
+                 'where can I avail of social services',
+                 'saan magpa notaryo sa legal office',
+                 'where do I submit documents to the treasury']) {
   ok(`not caught: "${q}"`, F.findOfficeQuestion(q) === null, JSON.stringify(F.findOfficeQuestion(q)));
 }
 
