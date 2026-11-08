@@ -26,6 +26,8 @@
 - **Default start tile**: navInit → Ground (idx 1) cell (73,37), just inside the main public door (the four-cell-wide south opening at 74,36-39); `SERVICE_DEFAULT_ENTRANCE` matched. Was (38,72)/(38,71), which is the east SIDE door — 53 m from the Lobby desk against 20 m from here. On Take-me-there in user view: `renderer.navActive=true` + `focusOnCell(start, 2.2)` shows "you are here" centered, no Capture needed.
 - **Zoom/follow-cam**: `renderer._minScale=1` (fit-to-grid is the zoom-out limit); `focusOnCell()` added; PDR steps re-center via `onPositionChange` (follow-cam, manual pan still allowed).
 
+**Office finder (2026-11-09)**: `api/chat.js` answers "where is [office]?" from `lib/office_finder.js` before any vector or Groq call (reply `kind: 'location'`, `office: {dept, name, abbr}`, `lang`); `chat.js` replaces the text with `describeOfficeLocation()` from `service_locations.js` (floor, side and depth facing in from the main entrance, window count). New pseudo-department `MAYOR'S OFFICE PUBLIC ASSISTANCE CENTER` → stamp `MOPAC`. `resolveDept()` now returns `{dept, needsContext}`: clarifying answers set `needsContext`, not-found answers get no office.
+
 **Also**: `rag_demo.html` (standalone figure), Services-labeled chat button, ← Home button.
 
 ### Session 5 (2026-06-08 to 2026-06-22) — PDR improvements + publishing workflow + floor remap

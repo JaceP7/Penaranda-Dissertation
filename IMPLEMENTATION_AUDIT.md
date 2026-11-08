@@ -40,6 +40,8 @@ The paper describes a 6-stage pipeline that "runs entirely on local hardware, re
 - [x] **Stage 6** — Coordinate resolution → `app.js` `handleCellTap(row, col)` after RAG answer
 - [x] Multilingual support (Filipino/Taglish) verified working
 - [~] "Runs entirely on local hardware" — **DRIFTS:** we added Groq/Gemini cloud routing in May 2026 for SUS-evaluation concurrency. Needs reconciliation in methodology.
+- [x] **Office finder (2026-11-09)** — "where is [office]?" is answered before retrieval by `lib/office_finder.js` (32 offices with their abbreviations and older names: BPLO, PESO, CSWDO, OBO...). The client writes the floor and side from the live map (`describeOfficeLocation` in `service_locations.js`). Offices not on the map (CDRRMD, GSO, OSCA, POSO) point to the Public Assistance Center; "CAO" and "CHSD" ask which office. Logged with `kind: 'location'`. Before this, BPLO routed to Housing, PESO and POSO to the Treasury, and all six tested "where is" questions were told the office could not be found.
+- [!] **Clarification rate read 0% from 2026-09-28 to 2026-11-09.** Commit `2af3a7c` made `resolveDept()` fall back to the top search result whenever the answer had no "Go to:" line, so `needsContext` (computed as `!dept && ...`) could never be true: all 37 live queries in that window logged `needsContext: false`, and clarifying answers showed a "Take me there" to a guessed office. Fixed 2026-11-09 (explicit choice wording now sets `needsContext`; "could not find" answers get no office). **Any SOP 4.2.4 clarification figure from that window is not usable**; measure from 2026-11-09 on.
 - [?] Knowledge base is "2024–2025 Citizen's Charter" — `services.json` exists (60 services) but NOT YET VERIFIED to derive from the official Charter PDF.
 
 ---

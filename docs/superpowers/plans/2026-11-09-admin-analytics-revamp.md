@@ -402,6 +402,7 @@ This lets Claude confirm that Jace's environment variables are set, without expo
       - p95 is nearest-rank, `sorted[ceil(0.95 n) - 1]`;
     - `languages: { lang, count }[]`;
     - `clarification: { count, of }`, which keeps `ambiguityRate` as-is;
+    - `kinds: { service, location }`, counting rows by `kind` (missing means `service`), from the office finder (2026-11-09);
     - `rangeLabel`, for example `"Oct 1 – Oct 31, 2026 (Manila time)"`, or `"All time (Manila time)"`.
   - **`today` and `queriesPerDay`** use Manila days.
   - **The CSV** gains `timestamp_manila` right after `timestamp_utc`, and `date` becomes the Manila date.
@@ -443,6 +444,7 @@ This lets Claude confirm that Jace's environment variables are set, without expo
   - `q` is a case-insensitive substring match on `query`.
   - `office` is an exact `department` match.
   - `lang` is `en` or `fil`.
+  - `kind` is `service` or `location`; rows carry `kind`, defaulting to `service`.
   - `offices` lists the distinct departments in the range, sorted.
 
 - [ ] **Step 1:** Write the tests, over 120 fake rows:
@@ -597,7 +599,7 @@ Before writing CSS or markup, load the `ui-ux-pro-max` skill (Jace asked for it)
   - **Questions:**
     - top services, top offices, the language split, and the clarification rate shown as `ofText(count, of)`;
     - search, office and language filters;
-    - the paged list: 50 rows a page, with Previous and Next. Columns: time (Manila), the question, office, service, answer time, language, and "Asked to clarify" (Yes or blank). Below 640 px the rows are stacked: the question first, then time, office and answer time.
+    - the paged list: 50 rows a page, with Previous and Next. Columns: time (Manila), the question, office, service, answer time, language, and "Asked to clarify" (Yes or blank). Location questions carry a "Location question" tag, and the filters include a kind choice. Below 640 px the rows are stacked: the question first, then time, office and answer time.
   - **Hot times:** the full heatmap (sideways below 640 px, using `matchMedia`), the ten busiest slots ranked, and questions per day.
   - **Speed:** median, p95 and the histogram; time to arrive as median and mean with its n.
   - **Routes:** the outcome bar, top destinations, re-scans and "I'm already here" reports.
