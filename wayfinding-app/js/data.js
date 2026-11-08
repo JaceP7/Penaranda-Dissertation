@@ -13,6 +13,24 @@
 const GRID_ROWS = 75;
 const GRID_COLS = 75;
 
+// ── Floor names ───────────────────────────────────────────────────────────────
+// Every floor a person reads about is called by its name, never "Floor 1-4":
+// internal index 0 is the Lower Ground and 1 the Ground (the main entrance),
+// so a number was always one off from what people call the floor.
+// FLOOR_NAMES (floor_presets.js, loaded later) carries deployed renames.
+function floorName(f) {
+  const n = Number(f);
+  const named = (typeof FLOOR_NAMES !== 'undefined' && FLOOR_NAMES) &&
+                (FLOOR_NAMES[n] || FLOOR_NAMES[String(n)]);
+  if (named) return named;
+  if (n === 0) return 'Lower Ground Floor';
+  if (n === 1) return 'Ground Floor';
+  const tens = n % 100;
+  const suffix = (tens >= 11 && tens <= 13) ? 'th'
+               : ({ 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] || 'th');
+  return `${n}${suffix} Floor`;
+}
+
 // ── Generate nodes ────────────────────────────────────────────────────────────
 const NODES = [];
 for (let r = 0; r < GRID_ROWS; r++) {

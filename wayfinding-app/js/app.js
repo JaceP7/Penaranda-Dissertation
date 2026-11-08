@@ -104,7 +104,20 @@ function _loadFloorNames() {
   } catch (_) {}
 }
 function _floorLabel(f) {
-  return _floorNames[f] || `Floor ${f + 1}`;
+  return _floorNames[f] || floorName(f);
+}
+
+/** Fill a <select> with every floor by name; option values are internal indexes. */
+function _fillFloorSelect(sel, selected, top) {
+  const last = Math.max(3, top || 0, selected || 0);
+  sel.innerHTML = '';
+  for (let f = 0; f <= last; f++) {
+    const o = document.createElement('option');
+    o.value = String(f);
+    o.textContent = _floorLabel(f);
+    if (f === selected) o.selected = true;
+    sel.appendChild(o);
+  }
 }
 function renameCurrentFloor() {
   const cur = _floorLabel(STATE.currentFloor);
@@ -409,8 +422,7 @@ async function _loadDepartments() {
 
 // Human floor names for routing messages.
 function _floorName(f) {
-  return ({ 0: "the Lower Ground Floor", 1: "the Ground Floor",
-            2: "the 2nd Floor", 3: "the 3rd Floor" }[f]) || `Floor ${f + 1}`;
+  return `the ${_floorLabel(f)}`;
 }
 
 // Nearest 'stair' cell on the CURRENT floor to (row,col), or null if none.
@@ -1280,22 +1292,22 @@ document.addEventListener('DOMContentLoaded', () => {
   DOM.genQRBtn.addEventListener('click', () => {
     const hover = renderer._hoverCell;
     const def   = hover || NAV.position || { row: 0, col: 0 };
-    // Input shows 1-indexed floor (Floor 1 = ground) to match what users expect
-    DOM.qrGenFloorInput.value = STATE.currentFloor + 1;
+    // Floors are picked by name; option values are the internal indexes.
+    _fillFloorSelect(DOM.qrGenFloorInput, STATE.currentFloor);
     DOM.qrGenRowInput.value   = def.row;
     DOM.qrGenColInput.value   = def.col;
-    DOM.qrGenLabel.textContent = `${def.row},${def.col} · Floor ${STATE.currentFloor + 1}`;
+    DOM.qrGenLabel.textContent = `${def.row},${def.col} · ${_floorLabel(STATE.currentFloor)}`;
     navGenerateQR(STATE.currentFloor, def.row, def.col, DOM.qrGenCanvas);
     DOM.qrGenModal.style.display = 'flex';
   });
 
   DOM.qrGenGoBtn.addEventListener('click', () => {
-    const fDisp = parseInt(DOM.qrGenFloorInput.value);  // 1-indexed display value
+    const f     = parseInt(DOM.qrGenFloorInput.value, 10);  // internal index
     const r     = parseInt(DOM.qrGenRowInput.value);
     const c     = parseInt(DOM.qrGenColInput.value);
-    if (isNaN(r) || isNaN(c) || isNaN(fDisp)) return;
-    DOM.qrGenLabel.textContent = `${r},${c} · Floor ${fDisp}`;
-    navGenerateQR(fDisp - 1, r, c, DOM.qrGenCanvas);  // convert to 0-indexed internally
+    if (isNaN(r) || isNaN(c) || isNaN(f)) return;
+    DOM.qrGenLabel.textContent = `${r},${c} · ${_floorLabel(f)}`;
+    navGenerateQR(f, r, c, DOM.qrGenCanvas);
   });
 
   DOM.qrSaveBtn.addEventListener('click', () => {
@@ -2490,8 +2502,8 @@ function _showStairPrompt(downFloor, upFloor) {
   const stayBtn   = document.getElementById('stairStayBtn');
   if (!prompt) return;
 
-  upLabel.textContent   = `Floor ${upFloor + 1}`;
-  downLabel.textContent = `Floor ${downFloor + 1}`;
+  upLabel.textContent   = _floorLabel(upFloor);
+  downLabel.textContent = _floorLabel(downFloor);
 
   // Wire buttons — use one-time handlers by cloning nodes to remove old listeners
   const newUp   = upBtn.cloneNode(true);
@@ -2501,18 +2513,18 @@ function _showStairPrompt(downFloor, upFloor) {
   downBtn.replaceWith(newDown);
   stayBtn.replaceWith(newStay);
 
-  newUp.querySelector('span').textContent   = `Floor ${upFloor + 1}`;
-  newDown.querySelector('span').textContent = `Floor ${downFloor + 1}`;
+  newUp.querySelector('span').textContent   = _floorLabel(upFloor);
+  newDown.querySelector('span').textContent = _floorLabel(downFloor);
 
   newUp.addEventListener('click', () => {
     _hideStairPrompt();
     switchFloor(upFloor);
-    _showStairToast(`🪜 Floor ${upFloor + 1}`);
+    _showStairToast(`🪜 ${_floorLabel(upFloor)}`);
   });
   newDown.addEventListener('click', () => {
     _hideStairPrompt();
     switchFloor(downFloor);
-    _showStairToast(`🪜 Floor ${downFloor + 1}`);
+    _showStairToast(`🪜 ${_floorLabel(downFloor)}`);
   });
   newStay.addEventListener('click', _hideStairPrompt);
 
@@ -2542,7 +2554,7 @@ function _showStairConfirm(targetFloor) {
   let   noBtn  = document.getElementById('stairConfirmNoBtn');
   if (!prompt) return;
 
-  label.textContent = `Climbed to Floor ${targetFloor + 1}?`;
+  label.textContent = `Reached the ${_floorLabel(targetFloor)}?`;
 
   // Clone to remove any old listeners
   const newYes = yesBtn.cloneNode(true);
@@ -2558,7 +2570,7 @@ function _showStairConfirm(targetFloor) {
       return;
     }
     switchFloor(targetFloor);
-    _showStairToast(`🪜 Floor ${targetFloor + 1}`);
+    _showStairToast(`🪜 ${_floorLabel(targetFloor)}`);
   });
   newNo.addEventListener('click', _hideStairConfirm);
 
@@ -2766,19 +2778,26 @@ function duplicateCurrentFloor() {
   while (suggested <= 9 && occupied.has(suggested)) suggested++;
   if (suggested > 9) suggested = sourceFloor + 1;
 
+  // A prompt can only take typed text, so the floors are a numbered menu of
+  // names; the number is the menu choice, never the floor's label.
+  const lastListed = Math.min(9, Math.max(3, suggested, ...occupied));
+  const menu = [];
+  for (let f = 0; f <= lastListed; f++) {
+    const note = f === sourceFloor ? '  (this floor)' : occupied.has(f) ? '' : '  (empty)';
+    menu.push(`  ${f + 1}   ${_floorLabel(f)}${note}`);
+  }
   const targetStr = window.prompt(
-    `Duplicate Floor ${sourceFloor + 1}'s layout to which floor?\n\n` +
-    `Enter a floor number (1 – 10). Current floor stays unchanged; the\n` +
-    `target floor's walls / doors / stairs will be overwritten.\n\n` +
-    `Current:    Floor ${sourceFloor + 1}\n` +
-    `Suggested:  Floor ${suggested + 1}`,
+    `Copy the ${_floorLabel(sourceFloor)}'s walls, doors and stairs to which floor?\n\n` +
+    `Type the number beside it. That floor's walls / doors / stairs will be\n` +
+    `overwritten; the ${_floorLabel(sourceFloor)} stays unchanged.\n\n` +
+    menu.join('\n'),
     String(suggested + 1)
   );
   if (targetStr === null) return;  // cancelled
 
-  const target = parseInt(targetStr, 10) - 1;  // UI 1-indexed → internal 0-indexed
+  const target = parseInt(targetStr, 10) - 1;  // menu choice → internal index
   if (isNaN(target) || target < 0 || target > 9) {
-    alert('Invalid floor number. Must be between 1 and 10.');
+    alert(`Type one of the numbers in the list (1 – ${lastListed + 1}).`);
     return;
   }
   if (target === sourceFloor) {
@@ -2790,7 +2809,7 @@ function duplicateCurrentFloor() {
   const existing = FLOOR_WALLS[target];
   if (Array.isArray(existing) && existing.some(v => v && v !== 'open')) {
     const ok = window.confirm(
-      `Floor ${target + 1} already has content. Overwrite it with Floor ${sourceFloor + 1}?\n\n` +
+      `The ${_floorLabel(target)} already has content. Overwrite it with the ${_floorLabel(sourceFloor)}?\n\n` +
       `Use Undo (Ctrl+Z) to restore.`
     );
     if (!ok) return;
@@ -2808,8 +2827,8 @@ function duplicateCurrentFloor() {
   } catch (_) {}
 
   alert(
-    `Duplicated Floor ${sourceFloor + 1} → Floor ${target + 1}.\n\n` +
-    `Use the floor arrows (▼ / ▲) to switch to Floor ${target + 1} and edit ` +
+    `Copied the ${_floorLabel(sourceFloor)} → the ${_floorLabel(target)}.\n\n` +
+    `Use the floor arrows (▼ / ▲) to switch to the ${_floorLabel(target)} and edit ` +
     `the interior. Click Deploy Floors / Export Floors when ready to ship.`
   );
 

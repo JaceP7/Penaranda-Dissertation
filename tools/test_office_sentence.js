@@ -94,7 +94,7 @@ const chat = read('wayfinding-app/js/chat.js');
 ok('chat.js describes location replies from the map', /describeOfficeLocation\(/.test(chat));
 ok('chat.js labels the button with navLabel when there is one', /msg\.navLabel/.test(chat));
 const html = read('wayfinding-app/index.html');
-ok('index.html loads service_locations.js?v=8', /service_locations\.js\?v=8"/.test(html));
+ok('index.html loads service_locations.js?v=9', /service_locations\.js\?v=9"/.test(html));
 ok('index.html loads chat.js?v=41', /chat\.js\?v=41"/.test(html));
 
 console.log(`\n${pass} passed, ${fail} failed`);

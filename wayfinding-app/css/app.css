@@ -582,8 +582,12 @@ body {
 }
 .btn-stair-stay:hover { background: #334155; color: #F1F5F9; }
 @media (max-width: 640px) {
-  .stair-prompt { gap: 7px; padding: 8px 10px; }
-  .btn-stair-dir, .btn-stair-stay { min-height: 40px; }
+  /* Floors are named ("Lower Ground Floor"), so on a phone the buttons wrap
+     under the label instead of running off the right edge. */
+  .stair-prompt { gap: 7px; padding: 8px 10px; width: max-content; max-width: calc(100vw - 20px);
+                  flex-wrap: wrap; justify-content: center; white-space: normal; }
+  .stair-prompt-btns { flex-wrap: wrap; justify-content: center; }
+  .btn-stair-dir, .btn-stair-stay { min-height: 44px; }
 }
 
 /* ── Arrival celebration prompt ─────────────────────────────────── */

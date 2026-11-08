@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=52" />
+  <link rel="stylesheet" href="css/app.css?v=53" />
 </head>
 <body class="view-user">
 
@@ -95,7 +95,7 @@
       <a href="admin.html" class="btn btn-ghost btn-admin" title="Service Inquiry Analytics Dashboard" target="_blank">📊</a>
       <div class="floor-selector">
         <button id="floorDown" class="btn btn-ghost btn-floor-step" title="Go to lower floor">▼</button>
-        <span   id="floorDisplay" class="floor-label">Floor 1</span>
+        <span   id="floorDisplay" class="floor-label">Ground Floor</span>
         <button id="floorUp"   class="btn btn-ghost btn-floor-step" title="Go to upper floor">▲</button>
         <button id="renameFloorBtn" class="btn btn-ghost btn-floor-step btn-rename-floor" title="Rename this floor (admin)">✏️</button>
       </div>
@@ -258,8 +258,8 @@
       <span class="stair-prompt-icon">🪜</span>
       <span id="stairPromptLabel" class="stair-prompt-label">Stair detected</span>
       <div class="stair-prompt-btns">
-        <button id="stairUpBtn"   class="btn-stair-dir">⬆ <span id="stairUpLabel">Floor ?</span></button>
-        <button id="stairDownBtn" class="btn-stair-dir">⬇ <span id="stairDownLabel">Floor ?</span></button>
+        <button id="stairUpBtn"   class="btn-stair-dir">⬆ <span id="stairUpLabel">Upper floor</span></button>
+        <button id="stairDownBtn" class="btn-stair-dir">⬇ <span id="stairDownLabel">Lower floor</span></button>
         <button id="stairStayBtn" class="btn-stair-stay">Not yet</button>
       </div>
     </div>
@@ -267,7 +267,7 @@
     <!-- Stair climb confirmation (single-direction stair) -->
     <div id="stairConfirmPrompt" class="stair-prompt" style="display:none">
       <span class="stair-prompt-icon">🪜</span>
-      <span id="stairConfirmLabel" class="stair-prompt-label">Climbed to Floor?</span>
+      <span id="stairConfirmLabel" class="stair-prompt-label">Reached the floor?</span>
       <div class="stair-prompt-btns">
         <button id="stairConfirmYesBtn" class="btn-stair-dir">✓ Yes</button>
         <button id="stairConfirmNoBtn"  class="btn-stair-stay">Not yet</button>
@@ -352,10 +352,10 @@
             <label class="manual-loc-field">
               <span>Floor</span>
               <select id="manualLocFloor">
-                <option value="1">1 — Lower Ground</option>
-                <option value="2" selected>2 — Ground</option>
-                <option value="3">3 — 2nd Floor</option>
-                <option value="4">4 — 3rd Floor</option>
+                <option value="1">Lower Ground Floor</option>
+                <option value="2" selected>Ground Floor</option>
+                <option value="3">2nd Floor</option>
+                <option value="4">3rd Floor</option>
               </select>
             </label>
             <label class="manual-loc-field">
@@ -393,7 +393,7 @@
     <div class="qr-gen-box">
       <p class="qr-gen-title">Generate QR for cell <span id="qrGenLabel"></span></p>
       <div class="qr-gen-inputs">
-        <label>Floor <input id="qrGenFloorInput" type="number" min="1" max="10" value="1" title="1 = ground floor" /></label>
+        <label>Floor <select id="qrGenFloorInput"></select></label>
         <label>Row <input id="qrGenRowInput" type="number" min="0" max="74" value="0" /></label>
         <label>Col <input id="qrGenColInput" type="number" min="0" max="74" value="0" /></label>
         <button id="qrGenGoBtn" class="btn-nav">▶ Generate</button>
@@ -412,15 +412,15 @@
   <script src="js/lib/jsQR.js"></script>
   <script src="js/lib/qrcode.min.js"></script>
 
-  <script src="js/data.js?v=32"></script>
+  <script src="js/data.js?v=33"></script>
   <script src="js/floor_presets.js?v=34"></script>
   <script src="js/stamp_presets.js?v=2"></script>
-  <script src="js/service_locations.js?v=8"></script>
+  <script src="js/service_locations.js?v=9"></script>
   <script src="js/dijkstra.js?v=30"></script>
-  <script src="js/renderer.js?v=34"></script>
+  <script src="js/renderer.js?v=35"></script>
   <script src="js/compass.js?v=31"></script>
   <script src="js/nav.js?v=39"></script>
-  <script src="js/app.js?v=78"></script>
+  <script src="js/app.js?v=79"></script>
   <script src="js/chat.js?v=41"></script>
 
 </body>

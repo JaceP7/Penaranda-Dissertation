@@ -183,7 +183,7 @@ const OFFICE_HELP_LABEL = "Public Assistance Center";
 
 function _officeFloorName(f) {
   const names = (typeof FLOOR_NAMES !== "undefined") ? FLOOR_NAMES : {};
-  return names[f] || names[String(f)] || `Floor ${f + 1}`;
+  return names[f] || names[String(f)] || floorName(f);
 }
 
 /** "the Lower Ground Floor (one floor below the main entrance)" */

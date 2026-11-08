@@ -476,7 +476,8 @@ class GridRenderer {
     ctx.fillStyle    = 'rgba(100,116,139,0.30)';
     ctx.textAlign    = 'left';
     ctx.textBaseline = 'top';
-    ctx.fillText(`Floor ${this.currentFloor + 1}`, this._tx + 6, this._ty + 4);
+    const fname = (typeof _floorLabel === 'function') ? _floorLabel(this.currentFloor) : floorName(this.currentFloor);
+    ctx.fillText(fname, this._tx + 6, this._ty + 4);
     ctx.restore();
 
     // ── Selection overlays ───────────────────────────────────────────────────

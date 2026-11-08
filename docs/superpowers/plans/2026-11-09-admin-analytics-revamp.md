@@ -291,7 +291,7 @@ This lets Claude confirm that Jace's environment variables are set, without expo
   - remove `_adminPinAccepted`, `_ensurePublishToken`, the `PUBLISH_TOKEN_SS_KEY` uses and the `_adminName` prompt;
   - change `_enterAdminWithPin` to `_enterAdmin`;
   - change the publish and rollback fetches.
-- Modify `wayfinding-app/index.html`: bump `app.js?v=79` and `chat.js?v=41`.
+- Modify `wayfinding-app/index.html`: bump `app.js` and `chat.js` one past their current versions (the office finder and floor names already used v=79 and v=41).
 - Delete `api/adminauth.js`.
 - Modify `ADMIN_GUIDE.md`:
   - replace the PIN section with sign-in and the People page;
@@ -319,7 +319,7 @@ This lets Claude confirm that Jace's environment variables are set, without expo
   - `both entry buttons call _enterAdmin`.
   - `?editor=1 handled`.
   - `chat.js reads view=starters and never bare /api/analytics`.
-  - `index.html loads app.js?v=79 and chat.js?v=41`.
+  - `index.html loads the bumped app.js and chat.js versions`.
 - [ ] **Step 2:** Run it. Expected: FAIL.
 - [ ] **Step 3:** Make the changes.
 - [ ] **Step 4:** Run the full suite. `test_admin_publishing.js` still lifts the `app.js` helpers. Expected: all pass.
