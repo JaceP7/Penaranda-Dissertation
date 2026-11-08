@@ -180,6 +180,33 @@ How routes ended: arrived, closed early, and no ending recorded, as one stacked 
 
 The access list: owners first (marked, not removable), then everyone else, each with who added them and when. Add by email. Remove with a confirmation. The recent changes log underneath.
 
+### Data page: backup, remove and reset (Jace's request, 2026-11-09)
+
+Jace asked for:
+- a way to save the current analytics;
+- a button to remove one entry;
+- a button to reset everything for testing, with a confirmation before it actually resets.
+
+The menu gains **Data**, after People. Everything on it requires sign-in like the rest. **None of it ships before the Phase 1 gate**: on today's open dashboard, a reset button would let anyone wipe the logs.
+
+- **Download backup:** one JSON file holding both logs in full, every row including health checks, named `calamba-analytics-backup-YYYY-MM-DD-HHMM.json` in Manila time. The two CSV downloads stay on the filter bar.
+- **Remove one question:** each row on the Questions page has a Remove button.
+  - It opens an in-page dialog that quotes the question and its time, with Cancel and Remove.
+  - Only that row leaves `wf:querylog`.
+  - The data log records who removed it and when, with the question's time but not its text.
+  - Navigation events aren't listed one by one, so they have no per-row remove; Reset covers them.
+- **Reset analytics** shows the current counts ("37 questions, 41 route events"). The dialog:
+  1. downloads the backup first, automatically;
+  2. needs `RESET` typed before the button enables;
+  3. on Reset, **moves** both logs into a server archive instead of deleting them. It uses a Redis `RENAME`: instant, nothing copied, nothing lost.
+- **Archives:**
+  - The page lists the last 5 resets, each with its date, who reset it and the counts.
+  - Each has **Download** and **Restore**. Restore is confirmed, and it archives the current logs first, so a restore never loses data either.
+  - A sixth reset deletes the oldest archive, and the reset dialog says so.
+- **Phone:** the dialogs go full width, with 44 px buttons.
+
+Claude's calls here: archive-not-delete, the typed `RESET`, keeping 5 archives, the automatic backup before reset, and no per-row remove for navigation events.
+
 ### Small numbers and empty states
 
 - Any rate or median computed from fewer than 30 events carries a "Small sample" tag. (30 is Claude's call: a common rule of thumb; easy to change.)
@@ -248,3 +275,4 @@ Each phase ships only with its tests passing and is checked against the live sit
 12. Office hours are 8 AM to 5 PM on the heatmap (confirm City Hall's actual hours).
 13. Two-phase rollout, with the Google setup done first.
 14. Phone layout: drawer menu and range sheet below 900 px, sideways heatmap and stacked table rows below 640 px, 360 px minimum width.
+15. Data page: reset moves the logs into an archive (5 kept) instead of deleting them, needs `RESET` typed, and downloads a backup first. Single questions can be removed from the Questions page.

@@ -443,6 +443,7 @@ This lets Claude confirm that Jace's environment variables are set, without expo
   - `page` is clamped to 1–`pages`.
   - `q` is a case-insensitive substring match on `query`.
   - `office` is an exact `department` match.
+  - Every row carries `id`, the first 16 hex characters of the SHA-256 of its raw stored JSON string. Task 15b removes rows by it.
   - `lang` is `en` or `fil`.
   - `kind` is `service` or `location`; rows carry `kind`, defaulting to `service`.
   - `offices` lists the distinct departments in the range, sorted.
@@ -640,6 +641,66 @@ Before writing CSS or markup, load the `ui-ux-pro-max` skill (Jace asked for it)
 - [ ] **Step 3:** Implement the page.
 - [ ] **Step 4:** Run the full suite. Expected: all pass.
 - [ ] **Step 5:** Commit: `Add the People page for managing who can sign in`.
+
+### Task 15b: Data page (backup, remove one question, reset with archive, restore)
+
+**Files:**
+- Create: `api/data.js`
+- Modify:
+  - `wayfinding-app/js/admin_pages.js`: add `ADMIN_PAGES.data`, and a Remove button on each Questions row;
+  - `wayfinding-app/js/admin.js`: add the menu item `data`, and `parseViewState` accepts it.
+- Test: `tools/test_data_api.js` (new; the fake Redis supports `RENAME`, `LREM`, `DEL`, `EXISTS` and `LLEN`), and extend `tools/test_admin_pages.js`.
+
+**Interfaces:**
+- Consumes: `requireUser` and `requireJson` (Task 2), and the row `id` (Task 10).
+- Produces (all use `requireUser`; POST uses `requireJson`; no CORS):
+  - **`GET /api/data?view=backup`** → `{ exportedAt, exportedBy, questions: object[], navigation: object[] }`, with `Content-Disposition: attachment; filename="calamba-analytics-backup-<YYYY-MM-DD-HHMM Manila>.json"`.
+  - **`GET /api/data?view=archives`** → `{ current: { questions, navigation }, archives: { id, at, by, questions, navigation }[], log: { action, by, at, detail }[] }`.
+  - **`POST { action: 'remove', id }`:**
+    - finds the `wf:querylog` element whose hash matches, and runs `LREM wf:querylog 1 <raw>`;
+    - 404 when no element matches;
+    - logs `{action: 'remove', detail: <row ts>}`.
+  - **`POST { action: 'reset', confirm: 'RESET' }`:**
+    - 400 unless `confirm === 'RESET'`;
+    - `id = Date.now()`;
+    - `RENAME wf:querylog wf:archive:<id>:querylog` and the same for `wf:navlog`, skipping a key that doesn't exist;
+    - `LPUSH wf:archives` with the metadata, then `LTRIM 0 4`. `DEL` the keys of any archive that falls off.
+  - **`POST { action: 'restore', id, confirm: 'RESTORE' }`:**
+    - 400 unless `confirm === 'RESTORE'`;
+    - 404 for an unknown archive;
+    - archives the current logs first, exactly as a reset does, then `RENAME`s the archive keys back to the live keys and drops that archive's entry.
+  - **The data log** is `wf:data:log`: LPUSH, then LTRIM to 100.
+- **UI:**
+  - The **Data page** has three sections: "Save a copy" (Download backup), "Reset analytics", and "Earlier resets" (Download, Restore).
+  - The **Reset dialog:**
+    - names the counts and that it keeps the last 5 resets;
+    - downloads the backup before enabling the input;
+    - enables Reset only when the input equals `RESET`.
+  - **Remove** on a Questions row opens a dialog quoting the question (escaped) and its Manila time. After removal the page reloads its list.
+
+- [ ] **Step 1:** Write `tools/test_data_api.js`. Tests:
+  - `every action 401 without a session`.
+  - `backup has both logs in full, including synthetic rows, as an attachment`.
+  - `remove by id deletes exactly that row`.
+  - `remove with an unknown id → 404, nothing deleted`.
+  - `reset without confirm → 400, nothing moved`.
+  - `reset moves both logs into an archive; the live logs are now empty; archive counts are right`.
+  - `reset with an empty navlog still archives the querylog`.
+  - `sixth reset drops the oldest archive and deletes its keys`.
+  - `restore archives the current logs first, then brings the archive back`.
+  - `restore without confirm → 400`.
+  - `data log records remove, reset and restore with who`.
+- [ ] **Step 2:** Run it. Expected: FAIL, `api/data.js` is missing.
+- [ ] **Step 3:** Implement `api/data.js`.
+- [ ] **Step 4:** Extend `tools/test_admin_pages.js`:
+  - `Reset button disabled until RESET typed`.
+  - `backup download requested before reset is enabled`.
+  - `Remove dialog quotes the question escaped`.
+  - `data page lists archives with Restore`.
+- [ ] **Step 5:** Run it. Expected: FAIL.
+- [ ] **Step 6:** Implement the page.
+- [ ] **Step 7:** Run the full suite. Expected: all pass.
+- [ ] **Step 8:** Commit: `Add backup, remove and archive-based reset to the dashboard`.
 
 ### Task 16: Phone, theme and accessibility check; deploy Phase 2
 
