@@ -121,7 +121,9 @@ These are what a panel will probe. Know them cold.
 | `_navQRLoop()`     | 304  | Per-frame jsQR decode; parses `GRID:floor:row,col`              |
 | `navGenerateQR()`  | 361  | Encodes a cell as a printable QR                                |
 
-**Defense soundbite:** _"Step detection uses zero-crossing of the accelerometer magnitude (Jiménez et al., 2010), which is phone-orientation invariant; QR anchors reset accumulated drift to zero (`_stepsSinceQR`)."_
+**Defense soundbite:** _"Step detection uses zero-crossing of the accelerometer magnitude (Jiménez et al., 2010), which is phone-orientation invariant. The magnitude is low-pass filtered and centred on a one-second mean; a step needs a swing above an adaptive threshold that starts at 0.32 m/s² and resets when walking stops; and a lone bump only counts once a second step follows at a walking pace. QR anchors reset accumulated drift to zero (`_stepsSinceQR`)."_
+
+**Why it changed (2026-11-09):** the first version gated on an unfiltered 1.2 m/s² swing and retuned upward every 20 steps. Hand-held walking rarely cleared it, so testers had to tug the phone; the June walks moved the dot about 1.2 cells a second against a 1.7–2 steps-a-second cadence. `tools/test_step_detector.js` reproduces this on simulated signals: hand-held detection went from 11% to 100%, and gentle walking from 0% to 97%, with no steps while standing still.
 
 ### 3. `wayfinding-app/js/dijkstra.js` — pathfinding
 

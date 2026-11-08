@@ -57,7 +57,7 @@ The paper specifies a vanilla-JS single-page app served over HTTPS, 4 sub-module
 - [x] `renderer.js` — Canvas drawing: grid, path, overlays, ghost previews
 - [x] `data.js` — Node graph, stamp patterns, presets, localStorage
 - [x] Cell types match paper's Table 2: `open` (white), `wall` (dark slate), `door` (amber), `stair` (violet)
-- [x] PDR with zero-crossing step detection (Jiménez et al., 2010)
+- [x] PDR with zero-crossing step detection (Jiménez et al., 2010). **Retuned 2026-11-09:** low-pass filter, 0.32 m/s² adaptive threshold that resets when walking stops, and a two-step walking check, because hand-held steps were missed and testers had to tug the phone. Validated on simulated signals only (`tools/test_step_detector.js`); confirm with a recorded walk on site.
 - [x] Compass EMA with α=0.4 (Harle, 2013)
 - [x] QR code initialization — format `GRID:floor:row,col`
 - [x] QR code periodic correction (rescan resets position)

@@ -19,7 +19,11 @@
  *   the amplitude of the preceding positive half-cycle.  This is invariant to
  *   phone position (hand, pocket, bag), unlike pure peak-threshold methods
  *   (Kim et al., 2004; Brajdic & Harle, 2013).
- *   Initial threshold: 1.2 m/s² above mean; adapts silently every 20 steps.
+ *   The magnitude is low-pass filtered first and centred on a ~1 s mean, the
+ *   threshold starts at 0.32 m/s² and follows the last few steps, and a step
+ *   only counts once a second one follows at a walking pace (2026-11-09: the
+ *   old unfiltered 1.2 m/s² gate missed most hand-held steps, so citizens had
+ *   to tug the phone; see tools/test_step_detector.js).
  *
  * Steps are suppressed until the compass delivers its first heading reading to
  *   avoid North-biased initial steps (Harle, 2013 §IV-B).
@@ -54,13 +58,19 @@ const NAV = {
   _compassReady: false, // true once first heading reading arrives (A3)
 
   // ── Step detection (zero-crossing, Jiménez et al. 2010) ──────────────────
-  _threshold: 1.2, // m/s² above mean — initial value; adapts after 20 steps
-  _debounce: 400, // ms — minimum time between detected steps
-  _adaptBuf: [], // half-cycle amplitudes of last 20 steps (recalibration)
-  _lastStepTime: 0,
-  _stepBuffer: [], // sliding window of raw magnitudes (~300 ms @ 50 Hz)
-  _prevSign: 0, // sign of (mag − mean) from previous sample: +1 or -1
-  _cyclePeak: 0, // peak (mag − mean) of the current positive half-cycle
+  // All of these are (re)set by navRecalibrate(); see _navOnMotion.
+  _threshold: 0.32,   // m/s² — current gate on a half-cycle's peak above the mean
+  _lp: null,          // low-passed |a|
+  _mean: null,        // slow (~1 s) mean of |a|: gravity plus posture
+  _lastSample: 0,     // ms, previous devicemotion sample
+  _prevSign: 0,       // sign of (lp − mean) at the previous sample: +1 or -1
+  _cyclePeak: 0,      // peak (lp − mean) of the current positive half-cycle
+  _lastCandidate: 0,  // ms, last zero-crossing that passed the threshold
+  _lastStepTime: 0,   // ms, last step actually counted
+  _pending: 0,        // ms, a first step waiting for a second to confirm walking
+  _pendingPeak: 0,
+  _walking: false,    // true while steps keep arriving at a walking pace
+  _peaks: [],         // peaks of the last few counted steps (adaptive threshold)
 
   // ── Drift / fix tracking ──────────────────────────────────────────────────
   _stepsSinceQR: 0, // steps taken since last QR fix
@@ -272,10 +282,16 @@ function navStartPDR() {
   }
 
   const _bindMotion = () => {
-    NAV._lastStepTime = 0;
-    NAV._stepBuffer = [];
+    // Fresh filter state each time PDR starts; the threshold carries over.
+    NAV._lp = null;
+    NAV._mean = null;
+    NAV._lastSample = 0;
     NAV._prevSign = 0;
     NAV._cyclePeak = 0;
+    NAV._lastCandidate = 0;
+    NAV._lastStepTime = 0;
+    NAV._pending = 0;
+    NAV._walking = false;
     NAV.pdrActive = true;
     window.addEventListener("devicemotion", _navOnMotion);
   };
@@ -308,14 +324,36 @@ function navStopPDR() {
  * No calibration walk required — one tap from the ⟳ Recal button.
  */
 function navRecalibrate() {
-  NAV._adaptBuf = [];
-  NAV._threshold = 1.2; // initial zero-crossing amplitude threshold
-  NAV._debounce = 400;
+  NAV._threshold = STEP_TUNING.baseThreshold;
+  NAV._peaks = [];
+  NAV._lp = null;
+  NAV._mean = null;
+  NAV._lastSample = 0;
   NAV._prevSign = 0;
   NAV._cyclePeak = 0;
+  NAV._lastCandidate = 0;
+  NAV._lastStepTime = 0;
+  NAV._pending = 0;
+  NAV._pendingPeak = 0;
+  NAV._walking = false;
 }
 
 // ── Step detection — zero-crossing (Jiménez et al., 2010) ─────────────────────
+
+// Tuned against tools/test_step_detector.js (simulated 60 Hz hand-held,
+// pocket, standing and tugging signals). Thresholds are the swing of the
+// filtered |a| above its mean, in m/s².
+const STEP_TUNING = Object.freeze({
+  baseThreshold: 0.32, // where every walk starts: low enough for a gentle hand-held step,
+                       // high enough that a very shaky hand standing still adds none
+  maxThreshold:  1.0,  // the most the threshold can climb, however hard the steps
+  adaptRatio:    0.5,  // threshold = this x the median of the recent step peaks
+  adaptSteps:    8,    // how many recent steps that median covers
+  smoothMs:      50,   // low-pass time constant (about 3 Hz): steps pass, tremor does not
+  meanMs:        1000, // the mean the swing is measured from: longer than a stride
+  minStepMs:     280,  // no two steps closer than this (about 3.5 steps a second)
+  maxStepMs:     1300, // a stride longer than this means walking has stopped
+});
 
 /**
  * Zero-crossing step detector.
@@ -333,48 +371,71 @@ function navRecalibrate() {
 function _navOnMotion(e) {
   const acc = e.accelerationIncludingGravity || e.acceleration;
   if (!acc || acc.x == null) return;
+  const T = STEP_TUNING;
 
   const mag = Math.sqrt(acc.x ** 2 + acc.y ** 2 + acc.z ** 2);
   const now = Date.now();
+  const dt = NAV._lastSample ? Math.min(100, Math.max(1, now - NAV._lastSample)) : 16;
+  NAV._lastSample = now;
 
-  // Sliding window — mean of ~300 ms of samples at ~50 Hz
-  NAV._stepBuffer.push(mag);
-  if (NAV._stepBuffer.length > 15) NAV._stepBuffer.shift();
-  const mean =
-    NAV._stepBuffer.reduce((a, b) => a + b, 0) / NAV._stepBuffer.length;
+  // Low-pass the magnitude (removes hand tremor and sensor noise above the
+  // step band), and centre it on a slow mean so a held phone's small swing is
+  // measured against gravity rather than against itself.
+  if (NAV._lp === null) { NAV._lp = mag; NAV._mean = mag; }
+  NAV._lp   += (1 - Math.exp(-dt / T.smoothMs)) * (mag - NAV._lp);
+  NAV._mean += (1 - Math.exp(-dt / T.meanMs))   * (mag - NAV._mean);
 
-  const centered = mag - mean;
+  const centered = NAV._lp - NAV._mean;
   const sign = centered >= 0 ? 1 : -1;
-
-  // Track peak of the current positive half-cycle
   if (sign === 1) NAV._cyclePeak = Math.max(NAV._cyclePeak, centered);
 
-  // Step fires at negative zero crossing (positive → negative),
-  // gated by amplitude of the just-completed positive half-cycle
-  if (
-    NAV._prevSign === 1 &&
-    sign === -1 &&
-    NAV._cyclePeak > NAV._threshold &&
-    now - NAV._lastStepTime > NAV._debounce
-  ) {
-    NAV._lastStepTime = now;
+  // Walking stopped: forget how hard the last steps were, so the threshold
+  // starts low again. Otherwise tugging would teach it to need tugs.
+  if (NAV._walking && now - NAV._lastStepTime > T.maxStepMs) {
+    NAV._walking = false;
+    NAV._peaks = [];
+    NAV._threshold = T.baseThreshold;
+  }
+  if (NAV._pending && now - NAV._pending > T.maxStepMs) NAV._pending = 0;
 
-    // Silent re-calibration: threshold = 85 % of mean cycle amplitude
-    NAV._adaptBuf.push(NAV._cyclePeak);
-    if (NAV._adaptBuf.length > 20) NAV._adaptBuf.shift();
-    if (NAV._adaptBuf.length === 20) {
-      const adaptMean = NAV._adaptBuf.reduce((a, b) => a + b, 0) / 20;
-      NAV._threshold = Math.max(0.5, adaptMean * 0.85);
+  // A candidate step: the positive half-cycle just ended (negative zero
+  // crossing), it was tall enough, and it is not the tail of the last one.
+  if (NAV._prevSign === 1 && sign === -1 &&
+      NAV._cyclePeak > NAV._threshold &&
+      now - NAV._lastCandidate >= T.minStepMs) {
+    NAV._lastCandidate = now;
+    const peak = NAV._cyclePeak;
+
+    if (NAV._walking) {
+      _navCountSteps(1, now, [peak]);
+    } else if (NAV._pending) {
+      // Second step at a walking pace: it was a walk after all. Count both.
+      NAV._walking = true;
+      _navCountSteps(2, now, [NAV._pendingPeak, peak]);
+      NAV._pending = 0;
+    } else {
+      // A lone bump (lifting the phone, a tug) is not a step until another
+      // follows within a stride.
+      NAV._pending = now;
+      NAV._pendingPeak = peak;
     }
-
-    NAV._cyclePeak = 0;
-    _navStep();
   }
 
-  // Reset peak accumulator at the start of each new positive half-cycle
   if (NAV._prevSign === -1 && sign === 1) NAV._cyclePeak = 0;
-
   NAV._prevSign = sign;
+}
+
+/** Count n steps and let the threshold follow how hard they were. */
+function _navCountSteps(n, now, peaks) {
+  const T = STEP_TUNING;
+  NAV._lastStepTime = now;
+  NAV._peaks.push(...peaks);
+  while (NAV._peaks.length > T.adaptSteps) NAV._peaks.shift();
+  const sorted = NAV._peaks.slice().sort((a, b) => a - b);
+  const median = sorted[Math.floor(sorted.length / 2)];
+  NAV._threshold = Math.min(T.maxThreshold,
+                            Math.max(T.baseThreshold, median * T.adaptRatio));
+  for (let i = 0; i < n; i++) _navStep();
 }
 
 function _navStep() {
