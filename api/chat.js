@@ -22,6 +22,8 @@
  * "Take me there" button, and service_locations.js routing keep working.
  */
 
+const { findOfficeQuestion } = require('../lib/office_finder');
+
 const GROQ_URL    = 'https://api.groq.com/openai/v1/chat/completions';
 const MODEL       = 'openai/gpt-oss-120b';       // llama-3.3-70b went Groq-enterprise-only
                                                   // on 2026-08-16; this is the self-serve
@@ -115,6 +117,15 @@ async function callGroq(messages, attempt = 0) {
 }
 
 // ── Department resolution from the answer's "Go to:" line ─────────────────────
+
+// An answer asking the citizen to choose between services (prompt rule 4).
+// Only explicit choice wording counts: a bare closing "?" is often a courtesy
+// ("May iba ka pa bang tanong?") on an answer that did resolve.
+const CLARIFY = /\b(which one|which of (these|the following|them)|which (service|permit|certificate|document|type|kind)|what (kind|type) of|alin|tukuyin|could you specify|can you specify|please specify|please clarify|anong (serbisyo|klase|uri))\b/i;
+// An answer that found nothing (prompt rule 5).
+const NOT_FOUND = /\b(could not|couldn['’]?t|cannot|can['’]?t|unable to) find\b|\bnot (in|found in) the (provided|given)\b|\bhindi (ko )?(mahanap|makita|nakita)\b|\bwala(ng)? (akong )?(nakitang|impormasyon)\b|\binformation desk\b/i;
+
+/** @returns {{ dept: string|null, needsContext: boolean }} */
 function resolveDept(answer, results) {
   const m = answer.match(/Go to:\s*(.+?)\s*$/im);
   const depts = [...new Set(results.map(r => r.department).filter(Boolean))];
@@ -122,16 +133,52 @@ function resolveDept(answer, results) {
     const name = m[1].trim().replace(/[.*_`]+$/g, '').trim();
     const up = name.toUpperCase();
     const exact = depts.find(d => d.toUpperCase() === up);
-    if (exact) return exact;
+    if (exact) return { dept: exact, needsContext: false };
     const partial = depts.find(d => up.includes(d.toUpperCase()) || d.toUpperCase().includes(up));
-    if (partial) return partial;
-    return name;   // LLM named a dept not in results — pass through verbatim
+    if (partial) return { dept: partial, needsContext: false };
+    return { dept: name, needsContext: false };   // LLM named a dept not in results — pass through verbatim
   }
-  // No "Go to:" line. The model omits it fairly often (more so on reasoning
-  // models), and returning null here would drop the "Take me there" button
-  // entirely. Fall back to the top-ranked retrieval result, which is a far
-  // more dependable signal than the model's formatting (P@1 = 0.750).
-  return depts[0] || null;
+  // No "Go to:" line. A question back to the citizen, or an answer that found
+  // nothing, must not carry a "Take me there" to a guessed office. Until
+  // 2026-11-09 both did, and needsContext could never be true.
+  if (CLARIFY.test(answer))   return { dept: null, needsContext: true };
+  if (NOT_FOUND.test(answer)) return { dept: null, needsContext: false };
+  // Otherwise the model resolved the service but dropped its "Go to:" line,
+  // which it does fairly often (more so on reasoning models). Fall back to the
+  // top-ranked retrieval result, which is a far more dependable signal than
+  // the model's formatting (P@1 = 0.750).
+  return { dept: depts[0] || null, needsContext: false };
+}
+
+// ── "Where is [office]?" ─────────────────────────────────────────────────────
+// Answered from lib/office_finder.js before any search or model call. The
+// client rewrites `answer` from its live map (describeOfficeLocation in
+// service_locations.js); the sentence here is what an older cached client shows.
+
+// Filipino location words that langTag() does not catch ("nasaan ang PESO?").
+const _FIL_WHERE = /\b(nasaan|nasaang|nasan|asan|saang|san|nasa|papunta|pumunta|punta|dalhin|ang|yung|ung)\b/i;
+function locationLang(q) { return langTag(q) === 'fil' || _FIL_WHERE.test(q || '') ? 'fil' : 'en'; }
+
+function locationReply(found, lang) {
+  if (found.clash) {
+    const { alias, offices } = found.clash;
+    return {
+      answer: lang === 'fil'
+        ? `Higit sa isang office ang tinatawag na ${alias}. Alin ang kailangan mo?`
+        : `${alias} can mean more than one office. Which one do you need?`,
+      department: null, needsContext: true,
+      options: offices.map(o => (lang === 'fil' ? `Nasaan ang ${o.name}?` : `Where is the ${o.name}?`)),
+      office: null,
+    };
+  }
+  const o = found.office;
+  const who = o.abbr ? `${o.abbr} (${o.name})` : o.name;
+  return {
+    answer: lang === 'fil'
+      ? `${who}. I-tap ang Take me there at ituturo ko ang daan.`
+      : `${who}. Tap Take me there and I'll show you the way.`,
+    department: o.dept, needsContext: false, options: [], office: o,
+  };
 }
 
 const SYSTEM_PROMPT = `You are the Calamba City Hall services assistant. Use ONLY the provided context.
@@ -153,13 +200,6 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST')   return res.status(405).json({ error: 'Method not allowed' });
 
-  if (!UPSTASH_URL || !UPSTASH_TOKEN) {
-    return res.status(500).json({
-      error: 'Vector store not configured',
-      detail: 'Set UPSTASH_VECTOR_REST_URL and UPSTASH_VECTOR_REST_TOKEN in the Vercel project.',
-    });
-  }
-
   const t0 = Date.now();
   const { query, history = [] } = req.body || {};
   // Automated checks (tools/verify_stack.py) send this header so their traffic
@@ -168,6 +208,28 @@ module.exports = async function handler(req, res) {
   const synthetic = String(req.headers['x-health-check'] || '') === '1' || undefined;
   if (!query || typeof query !== 'string') {
     return res.status(400).json({ error: 'query is required' });
+  }
+
+  // 0. "Where is [office]?" — answered from the office list, no search needed.
+  const found = findOfficeQuestion(query);
+  if (found) {
+    const lang = locationLang(query);
+    const r = locationReply(found, lang);
+    await logQuery({ ts: Date.now(), query, department: r.department, subservice: null,
+                     needsContext: r.needsContext, latency_ms: Date.now() - t0, lang,
+                     kind: 'location', synthetic });
+    return res.status(200).json({
+      answer: r.answer, department: r.department, subservice: null,
+      needsContext: r.needsContext, options: r.options, rate_limited: false,
+      kind: 'location', lang, office: r.office,
+    });
+  }
+
+  if (!UPSTASH_URL || !UPSTASH_TOKEN) {
+    return res.status(500).json({
+      error: 'Vector store not configured',
+      detail: 'Set UPSTASH_VECTOR_REST_URL and UPSTASH_VECTOR_REST_TOKEN in the Vercel project.',
+    });
   }
 
   // 1. Retrieve from Upstash Vector
@@ -215,9 +277,7 @@ module.exports = async function handler(req, res) {
   const answer = raw.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
 
   // 3. Resolve department / clarification
-  const dept = resolveDept(answer, results);
-  const needsContext = !dept &&
-    /which|alin|anong serbisyo|could you specify|please clarify|specify/i.test(answer);
+  const { dept, needsContext } = resolveDept(answer, results);
   const options = needsContext
     ? [...new Set(results.map(r => r.subservice).filter(Boolean))].slice(0, 6)
     : [];
