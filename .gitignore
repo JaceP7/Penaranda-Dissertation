@@ -85,3 +85,6 @@ eval/log_backups/
 
 # ── Brainstorm mockups (can hold real citizen queries; the repo is public) ───
 .superpowers/
+
+# Analytics backups hold real citizen questions: never commit them
+analytics_backups/
