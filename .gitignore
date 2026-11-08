@@ -82,3 +82,6 @@ figures/try/
 
 # ── Pre-clear dumps of the runtime query log (data, not source) ───────────────
 eval/log_backups/
+
+# ── Brainstorm mockups (can hold real citizen queries; the repo is public) ───
+.superpowers/
