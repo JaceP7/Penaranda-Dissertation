@@ -1,7 +1,7 @@
 # Admin analytics revamp and Google sign-in — design
 
 Date: 2026-11-08
-Status: draft, awaiting approval
+Status: approved by Jace 2026-11-09 ("revamp the analytics first, make sure it is mobile friendly"). The phone requirements below were added with that approval.
 Scope: the analytics dashboard (`wayfinding-app/admin.html`) and the sign-in that gates it and the map editor. The map editor's own redesign is a separate design.
 
 ## Why
@@ -132,7 +132,25 @@ The `prompt()` asking for `MAP_ADMIN_TOKEN` is removed from the normal publish p
 - **Left side menu:** Overview, Questions, Hot times, Speed, Routes, People, then a divider and Map editor. The signed-in person's name, and Sign out, sit at the bottom.
 - **Filter bar** across the top of every analytics page: 7 days, 30 days, All time, Custom (from/to dates), the active range spelled out in Manila time, and **Download CSV**.
 - Deep links: each page and the active range are in the URL, so a link opens the same view.
-- At narrow widths the side menu collapses behind a menu button, and the dashboard stays usable on a phone.
+- At narrow widths the side menu collapses behind a menu button, and the dashboard stays usable on a phone (next section).
+
+### Phone layout (Jace's requirement, 2026-11-09)
+
+The dashboard must work on a phone as well as on a desktop and a projector. Breakpoints and layout rules below are Claude's calls.
+
+- Works from **360 px wide** up. No page ever scrolls sideways. Checked at 360×740, 390×844, 768×1024 and desktop.
+- **Below 900 px:** the side menu becomes a top bar (page title, menu button). The menu button opens a drawer with the same items, the signed-in name and Sign out. The drawer closes when an item is picked, on the backdrop, and on Escape.
+- **Below 900 px:** the filter bar becomes one button naming the active range (for example "Last 7 days"). It opens a sheet with the range choices, the custom dates and Download CSV.
+- **Below 640 px:**
+  - Tiles go two per row, and the fifth spans the row.
+  - Panels stack in one column, in the overview order.
+  - **The heatmap turns sideways:** 24 hour rows by 7 weekday columns. Each cell is then wide enough to print its count, and the office-hours band runs across rows.
+  - **Tables become stacked rows:** the question text first, then time, office and answer time on a second line.
+- **Touch and input:**
+  - Every tap target is at least 44×44 px.
+  - Form inputs use 16 px text, so iOS does not zoom.
+  - The layout respects the phone's safe-area insets.
+- **Confirmations:** removing a person is confirmed in an in-page dialog, not a browser `confirm()`.
 
 ### Overview page (the approved mockup)
 
@@ -229,3 +247,4 @@ Each phase ships only with its tests passing and is checked against the live sit
 11. "Small sample" below 30 events.
 12. Office hours are 8 AM to 5 PM on the heatmap (confirm City Hall's actual hours).
 13. Two-phase rollout, with the Google setup done first.
+14. Phone layout: drawer menu and range sheet below 900 px, sideways heatmap and stacked table rows below 640 px, 360 px minimum width.
