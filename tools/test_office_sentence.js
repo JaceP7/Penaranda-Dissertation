@@ -94,8 +94,13 @@ const chat = read('wayfinding-app/js/chat.js');
 ok('chat.js describes location replies from the map', /describeOfficeLocation\(/.test(chat));
 ok('chat.js labels the button with navLabel when there is one', /msg\.navLabel/.test(chat));
 const html = read('wayfinding-app/index.html');
-ok('index.html loads service_locations.js?v=9', /service_locations\.js\?v=9"/.test(html));
-ok('index.html loads chat.js?v=41', /chat\.js\?v=41"/.test(html));
+// At least the versions that shipped the office finder; later releases bump them further.
+const ver = (f) => {
+  const i = html.indexOf('js/' + f + '?v=');
+  return i < 0 ? 0 : parseInt(html.slice(i + f.length + 6), 10) || 0;
+};
+ok('index.html loads service_locations.js v9 or later', ver('service_locations.js') >= 9, ver('service_locations.js'));
+ok('index.html loads chat.js v41 or later', ver('chat.js') >= 41, ver('chat.js'));
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

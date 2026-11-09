@@ -22,13 +22,14 @@ const CHAT = (() => {
   //    certificate" were removed because the City Civil Registry and Treasury
   //    publish no services in the online Citizen's Charter, so those queries
   //    mis-routed (marriage certificate landed on the Senior Citizens office). ──
+  // Shown until the live analytics has enough asked services to pick the top
+  // five itself. Each was tried on the live assistant (tools/test_chips.js).
   const STARTERS = [
-    { label: 'Business permit',    query: 'How do I get a business permit?' },
-    { label: 'Building permit',    query: 'How do I get a building permit?' },
-    { label: 'PWD ID',             query: 'How do I apply for a PWD ID?' },
-    { label: 'Solo parent ID',     query: 'How do I get a Solo Parent ID?' },
-    { label: 'Tax declaration',    query: 'How do I request a copy of my tax declaration?' },
-    { label: 'Medical assistance', query: 'How do I request medical or hospitalization assistance?' },
+    { label: 'Birth certificate', query: 'How do I get a certified copy of my birth certificate?' },
+    { label: 'Cedula',            query: 'How do I get a cedula (community tax certificate)?' },
+    { label: 'Real property tax', query: 'How do I pay my real property tax at City Hall?' },
+    { label: "Mayor's clearance", query: "How do I get a Mayor's Clearance?" },
+    { label: 'Where is BPLO?',    query: 'Where is BPLO?' },
   ];
 
   // ── DOM refs ─────────────────────────────────────────────────────────
