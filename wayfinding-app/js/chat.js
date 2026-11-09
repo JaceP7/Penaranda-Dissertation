@@ -299,11 +299,11 @@ const CHAT = (() => {
     _toggleBtn.className = 'chat-toggle-btn';
     _toggleBtn.setAttribute('aria-label', 'Ask about city services');
     _toggleBtn.setAttribute('aria-expanded', 'false');
-    // Labeled pill: "City Services Assistant" to the left of the 💬 icon.
+    // Labeled pill: "City Services Assistant" to the left of a chat icon.
     // Collapses to just the icon while the panel is open (see app.css).
     _toggleBtn.innerHTML =
       '<span class="chat-toggle-label">City Services Assistant</span>' +
-      '<span class="chat-toggle-icon">💬</span>';
+      '<span class="chat-toggle-icon">' + (typeof uiIcon === 'function' ? uiIcon('message') : '') + '</span>';
 
     _badge = document.createElement('span');
     _badge.className = 'chat-badge';
@@ -317,7 +317,7 @@ const CHAT = (() => {
     _panel.setAttribute('aria-hidden', 'true');
     _panel.innerHTML = `
       <div class="chat-header">
-        <span class="chat-header-icon">🏛️</span>
+        <span class="chat-header-icon">${typeof uiIcon === 'function' ? uiIcon('map-pin') : ''}</span>
         <span class="chat-header-title">City Services Assistant</span>
         <button class="chat-new-btn" id="chatNewBtn" hidden
                 title="Clear this conversation and ask something unrelated">↻ New</button>
@@ -334,7 +334,7 @@ const CHAT = (() => {
       <div class="chat-starters" id="chatStarters">
         <div class="chat-starters-label">Common requests — tap one:</div>
         <div class="chat-starters-chips" id="chatStartersChips"></div>
-        <div class="chat-qr-hint">📷 Already inside City Hall? <strong>Scan the QR posted near you</strong> to set your location for accurate directions.</div>
+        <div class="chat-qr-hint">${typeof uiIcon === 'function' ? uiIcon('camera') : ''} Already inside City Hall? <strong>Scan the QR posted near you</strong> to set your location for accurate directions.</div>
       </div>
       <div class="chat-messages" id="chatMessages"></div>
       <div class="chat-input-row">
@@ -396,10 +396,15 @@ const CHAT = (() => {
   }
 
   // Tidy a raw service name into a short chip label (drop trailing parentheticals).
+  // Most-asked chips carry the Charter's full service names, some of which
+  // repeat themselves ("... (Cedula) Pagkolekta mula sa ... (Cedula)"). Cut at a
+  // word within 52 characters; the chip itself wraps to two lines.
   function _starterLabel(name) {
-    let s = String(name).replace(/\s*[-–—]\s*\(.*?\)\s*$/, '').replace(/\s*\(.*?\)\s*$/, '').trim();
-    if (s.length > 30) s = s.slice(0, 28).trim() + '…';
-    return s || String(name).slice(0, 30);
+    const s = String(name).replace(/\s+/g, ' ').trim();
+    if (s.length <= 52) return s;
+    const cut = s.slice(0, 51);
+    const at = s[51] === ' ' ? 51 : cut.lastIndexOf(' ');
+    return (at > 20 ? cut.slice(0, at) : cut).replace(/[\s,;:–—-]+$/, '') + '…';
   }
 
   // Replace the default chips with the top-5 most-asked services from the live

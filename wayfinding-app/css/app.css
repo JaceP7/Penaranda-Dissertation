@@ -507,31 +507,38 @@ body {
 /* ── Stair floor-change toast ───────────────────────────────────── */
 .stair-toast {
   position: fixed;
-  bottom: 56px;        /* sits just above the info bar */
+  bottom: calc(84px + env(safe-area-inset-bottom, 0px));   /* above "Ask again" */
   left: 50%;
   transform: translateX(-50%) translateY(12px);
+  width: max-content;
+  max-width: min(440px, calc(100vw - 24px));
   background: #1E293B;
   color: #F8FAFC;
-  font-size: 0.82rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  padding: 8px 18px;
-  border-radius: 20px;
+  line-height: 1.4;
+  text-align: left;
+  padding: 10px 16px;
+  border-radius: 14px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.25);
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.25s ease, transform 0.25s ease;
   z-index: 999;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 .stair-toast.visible {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+  pointer-events: auto;   /* tap to dismiss */
+  cursor: pointer;
 }
 
 /* ── Stair direction prompt ─────────────────────────────────────── */
 .stair-prompt {
   position: fixed;
-  bottom: 56px;
+  bottom: calc(84px + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%) translateY(16px);
   background: #1E293B;
@@ -554,7 +561,10 @@ body {
   pointer-events: auto;
 }
 .stair-prompt-icon { font-size: 1.2rem; flex-shrink: 0; }
-.stair-prompt-label { font-size: 0.78rem; font-weight: 600; flex-shrink: 0; }
+.stair-prompt-label { font-size: 0.95rem; font-weight: 700; flex-shrink: 0; }
+.stair-prompt-text { display: flex; flex-direction: column; gap: 1px; }
+.stair-prompt-sub { font-size: 0.82rem; font-weight: 500; opacity: 0.85; }
+.stair-prompt-icon .ui-icon { width: 24px; height: 24px; }
 .stair-prompt-btns { display: flex; gap: 6px; }
 .btn-stair-dir {
   background: #7C3AED;
@@ -616,7 +626,9 @@ body {
   transform: translate(-50%, -50%) scale(1);
   pointer-events: auto;
 }
-.arrival-icon { font-size: 2rem; flex-shrink: 0; }
+.arrival-icon { flex-shrink: 0; line-height: 0; }
+.arrival-icon .ui-icon { width: 40px; height: 40px; }
+.arrival-sub { font-size: 0.9rem; opacity: 0.9; margin-top: -4px; }
 .arrival-text { font-size: 1.05rem; font-weight: 700; }
 .arrival-actions {
   display: flex;
@@ -626,6 +638,11 @@ body {
   justify-content: center;
 }
 .btn-arrival-action {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   background: rgba(255,255,255,0.16);
   color: #ECFDF5;
   border: 1px solid rgba(255,255,255,0.32);
@@ -646,14 +663,14 @@ body {
 .btn-arrival-action.primary:hover { background: #ffffff; }
 .btn-arrival-close {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 6px;
+  right: 6px;
   background: rgba(255,255,255,0.18);
   color: #ECFDF5;
   border: 1px solid rgba(255,255,255,0.30);
   border-radius: 50%;
-  width: 26px;
-  height: 26px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -976,16 +993,21 @@ body.view-admin .ask-again-btn { display: none !important; }
 
 /* ── Single live walking instruction (citizen view) ────────────────────── */
 .nav-step-prompt {
-  position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
-  z-index: 1150; width: min(440px, calc(100vw - 20px));
-  display: flex; align-items: center; gap: 11px;
-  padding: 13px 18px; background: #1E40AF; color: #fff;
+  position: fixed; top: calc(8px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%);
+  z-index: 1150; width: min(480px, calc(100vw - 16px));
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 12px 14px; background: #1E40AF; color: #fff;
   border-radius: 14px; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
-  font-size: 1rem; font-weight: 700; line-height: 1.3;
+  font-weight: 700; line-height: 1.3;
 }
 .nav-step-prompt.wrong-way { background: #B91C1C; }   /* red when off-route */
-.nav-step-icon { flex-shrink: 0; font-size: 1.5rem; line-height: 1; }
-.nav-step-text { flex: 1; }
+.nav-step-main { display: flex; align-items: center; gap: 10px; }
+.nav-step-icon { flex-shrink: 0; width: 28px; height: 28px; line-height: 0; }
+.nav-step-icon .ui-icon { width: 28px; height: 28px; }
+.nav-step-text { flex: 1; font-size: 1.125rem; }
+.nav-step-meta { font-size: 0.875rem; font-weight: 600; opacity: 0.92; padding-left: 38px; }
+.nav-step-meta:empty { display: none; }
+.nav-step-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 /* Re-anchor: scan a fresh QR to correct accumulated PDR drift mid-walk. */
 .nav-rescan-btn {
   flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%;
@@ -1589,12 +1611,20 @@ body.view-admin .ask-again-btn { display: none !important; }
   gap: 6px;
 }
 .chat-starter-chip {
-  font-size: 0.78rem;
+  /* Long Charter service names wrap to two lines instead of being cut off. */
+  min-height: 44px;
+  font-size: 0.875rem;
+  line-height: 1.3;
+  text-align: left;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   color: #1E40AF;
   background: #EFF6FF;
   border: 1.5px solid #BFDBFE;
-  border-radius: 20px;
-  padding: 6px 13px;
+  border-radius: 14px;
+  padding: 8px 14px;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
 }
@@ -2315,3 +2345,66 @@ body.scanning .nav-step-prompt,
 body.scanning .admin-toggle,
 body.scanning .arrival-prompt,
 body.scanning .stair-prompt { display: none !important; }
+
+
+/* ══ Citizen route view, prompts and messages (ui-ux-pro-max audit, 2026-11-09) ══
+   Every control fits a 320 px phone: the step-bar actions wrap onto their own
+   row, all tap targets are 44 px+, and icons are SVG with a text label. */
+.ui-icon { width: 1.2em; height: 1.2em; flex-shrink: 0; vertical-align: middle; }
+.nav-act {
+  min-height: 44px; font-size: 0.95rem; font-weight: 700;
+  padding: 8px 14px; border-radius: 12px; border: none; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  flex: 1 1 auto; line-height: 1.2; margin: 0;
+}
+.nav-step-actions .nav-act { width: auto; height: auto; }
+.nav-step-actions .nav-stair-btn  { background: #FDE68A; color: #78350F; }
+.nav-step-actions .nav-here-btn   { background: #DCFCE7; color: #14532D; }
+.nav-step-actions .nav-motion-btn { background: #F59E0B; color: #1F2937; }
+.nav-step-actions .nav-rescan-btn {
+  background: rgba(255, 255, 255, 0.18); color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.45); border-radius: 12px;
+}
+.nav-act[hidden] { display: none; }
+.nav-act .ui-icon { width: 18px; height: 18px; }
+.nav-act:focus-visible, .btn-stair-dir:focus-visible, .btn-stair-stay:focus-visible,
+.btn-arrival-action:focus-visible, .btn-qr-prompt:focus-visible {
+  outline: 3px solid #FDE047; outline-offset: 2px;
+}
+
+/* The step count moved into the step bar's second line. */
+body.view-user #infoSteps { display: none !important; }
+
+.btn-stair-dir, .btn-stair-stay {
+  min-height: 44px; font-size: 0.9rem;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-stair-dir .ui-icon { width: 18px; height: 18px; }
+
+.ask-again-btn { gap: 8px; }   /* display stays with the route-active rule */
+.ask-again-btn .ui-icon { width: 20px; height: 20px; }
+
+.qr-prompt-icon { color: #DC2626; line-height: 0; }
+.qr-prompt-icon .ui-icon { width: 40px; height: 40px; }
+.qr-prompt-title { margin-bottom: 2px; }
+.qr-prompt-subtitle { font-size: 0.95rem; font-weight: 600; color: #475569; margin: 0 0 10px; }
+.qr-prompt-en { color: #64748B; }
+.btn-qr-prompt {
+  min-height: 48px; display: inline-flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 2px;
+}
+.btn-qr-prompt-scan { flex-direction: row; gap: 8px; }
+.btn-qr-prompt .btn-sub { font-size: 0.8rem; font-weight: 500; opacity: 0.85; }
+
+.chat-toggle-icon { line-height: 0; }
+.chat-toggle-icon .ui-icon { width: 22px; height: 22px; }
+.chat-header-icon { line-height: 0; }
+.chat-qr-hint .ui-icon { width: 16px; height: 16px; margin-right: 2px; }
+
+
+@media (max-width: 640px) {
+  body.chat-showing .chat-toggle-btn { display: none; }   /* it covered the send button */
+}
+@media (prefers-reduced-motion: reduce) {
+  .stair-toast, .stair-prompt, .arrival-prompt { transition: none; }
+}

@@ -96,6 +96,7 @@ const NAV = {
   onPositionChange: null,
   /** Called when a scanned QR specifies a different floor: (floor) => void */
   onFloorChange: null,
+  onScanUnavailable: null, // (reason) => void - the camera could not open; app shows manual entry
   /** Called whenever the heading updates: (degrees) => void */
   onHeadingChange: null,
   /** Called when position lands on a stair cell: (row, col) => void */
@@ -489,22 +490,12 @@ function navAlignForward() {
  * Decodes "GRID:floor:row,col" (new) and "GRID:row,col" (legacy, floor 0).
  */
 async function navStartQRScan(videoEl, canvasEl, onFound) {
+  // No camera (plain http, no permission, no device): hand over to the app's
+  // on-page "type the sign's numbers" panel. This used to open a browser
+  // pop-up asking for "row,col", which citizens could not make sense of.
+  const unavailable = (why) => { if (NAV.onScanUnavailable) NAV.onScanUnavailable(why); };
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    const input = prompt(
-      "Camera needs HTTPS.\nEnter cell as  row,col  (e.g. 5,10) to jump manually:",
-    );
-    if (input) {
-      const parts = input
-        .replace(/^GRID:\d+:/, "")
-        .replace(/^GRID:/, "")
-        .split(",")
-        .map((s) => parseInt(s.trim(), 10));
-      if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
-        onFound(parts[0], parts[1]);
-      } else {
-        alert("Invalid format. Use  row,col  e.g. 5,10");
-      }
-    }
+    unavailable("no-camera-api");
     return;
   }
   try {
@@ -519,17 +510,7 @@ async function navStartQRScan(videoEl, canvasEl, onFound) {
     await videoEl.play().catch(() => {});
     _navQRLoop(videoEl, canvasEl, onFound);
   } catch (err) {
-    const input = prompt(
-      "Camera unavailable (" +
-        err.message +
-        ").\nEnter cell as  row,col  to jump manually:",
-    );
-    if (input) {
-      const parts = input.split(",").map((s) => parseInt(s.trim(), 10));
-      if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
-        onFound(parts[0], parts[1]);
-      }
-    }
+    unavailable(err && err.name ? err.name : "camera-error");
   }
 }
 

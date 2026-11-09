@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=53" />
+  <link rel="stylesheet" href="css/app.css?v=55" />
 </head>
 <body class="view-user">
 
@@ -110,7 +110,7 @@
   <!-- Admin toggle: PIN-gated entry to the full editor; tap again to exit. -->
   <button id="adminToggleBtn" class="admin-toggle" title="Staff / admin access">🔧</button>
   <!-- User-view "ask again": reopens the Services chat after a route is shown. -->
-  <button id="askAgainBtn" class="ask-again-btn" title="Ask the assistant again">💬 Ask again</button>
+  <button id="askAgainBtn" class="ask-again-btn" title="Ask the assistant again"><span data-icon="message"></span>Ask again</button>
 
   <!-- ═══ MAIN ══════════════════════════════════════════════════════════ -->
   <main class="app-body">
@@ -251,51 +251,60 @@
     </div>
 
     <!-- Stair floor-change toast (simple confirmation) -->
-    <div id="stairToast" class="stair-toast"></div>
+    <div id="stairToast" class="stair-toast" role="status" aria-live="polite"></div>
 
     <!-- Stair direction prompt (shown when both up+down are possible) -->
     <div id="stairPrompt" class="stair-prompt" style="display:none">
-      <span class="stair-prompt-icon">🪜</span>
-      <span id="stairPromptLabel" class="stair-prompt-label">Stair detected</span>
+      <span class="stair-prompt-icon" data-icon="stairs"></span>
+      <span id="stairPromptLabel" class="stair-prompt-label">Stairs: which floor?</span>
       <div class="stair-prompt-btns">
-        <button id="stairUpBtn"   class="btn-stair-dir">⬆ <span id="stairUpLabel">Upper floor</span></button>
-        <button id="stairDownBtn" class="btn-stair-dir">⬇ <span id="stairDownLabel">Lower floor</span></button>
+        <button id="stairUpBtn"   class="btn-stair-dir"><span data-icon="up"></span><span id="stairUpLabel">Upper floor</span></button>
+        <button id="stairDownBtn" class="btn-stair-dir"><span data-icon="down"></span><span id="stairDownLabel">Lower floor</span></button>
         <button id="stairStayBtn" class="btn-stair-stay">Not yet</button>
       </div>
     </div>
 
     <!-- Stair climb confirmation (single-direction stair) -->
     <div id="stairConfirmPrompt" class="stair-prompt" style="display:none">
-      <span class="stair-prompt-icon">🪜</span>
-      <span id="stairConfirmLabel" class="stair-prompt-label">Reached the floor?</span>
+      <span class="stair-prompt-icon" data-icon="stairs"></span>
+      <span class="stair-prompt-text">
+        <span id="stairConfirmLabel" class="stair-prompt-label">Reached the floor?</span>
+        <span id="stairConfirmSub" class="stair-prompt-sub">Nasa palapag ka na ba?</span>
+      </span>
       <div class="stair-prompt-btns">
-        <button id="stairConfirmYesBtn" class="btn-stair-dir">✓ Yes</button>
+        <button id="stairConfirmYesBtn" class="btn-stair-dir"><span data-icon="check"></span>Yes</button>
         <button id="stairConfirmNoBtn"  class="btn-stair-stay">Not yet</button>
       </div>
     </div>
 
     <!-- Arrival celebration prompt -->
     <div id="arrivalPrompt" class="arrival-prompt" style="display:none">
-      <button id="arrivalCloseBtn" class="btn-arrival-close" title="Dismiss">✕</button>
-      <span class="arrival-icon">🎉</span>
-      <strong class="arrival-text">You have arrived!</strong>
+      <button id="arrivalCloseBtn" class="btn-arrival-close" aria-label="Close" title="Close and keep the map"><span data-icon="x"></span></button>
+      <span class="arrival-icon" data-icon="flag"></span>
+      <strong class="arrival-text" id="arrivalText">You have arrived</strong>
+      <span class="arrival-sub" id="arrivalSub">Nandito ka na</span>
       <!-- What to hand over at the counter. Filled from the chat answer, which
            is closed by the time the citizen gets here. -->
       <div id="arrivalReminder" class="arrival-reminder" hidden></div>
       <div class="arrival-actions">
-        <button id="arrivalAskAgainBtn" class="btn-arrival-action primary">💬 Ask again</button>
-        <button id="arrivalHomeBtn" class="btn-arrival-action">🏠 Back home</button>
+        <button id="arrivalAskAgainBtn" class="btn-arrival-action primary"><span data-icon="message"></span>Ask again</button>
+        <button id="arrivalHomeBtn" class="btn-arrival-action"><span data-icon="home"></span>Back home</button>
       </div>
     </div>
 
     <!-- One live walking instruction at a time (citizen view) -->
-    <div id="navStepPrompt" class="nav-step-prompt" style="display:none">
-      <span class="nav-step-icon" id="navStepIcon">➡️</span>
-      <span class="nav-step-text" id="navStepText">—</span>
-      <button id="navStairBtn" class="nav-stair-btn" hidden title="Tap when you reach the stairs, then go to the destination floor">🪜 I’m at the stairs</button>
-      <button id="navHereBtn" class="nav-here-btn" title="Tap if you have already found the office — records where you were standing">✅ I’m already here</button>
-      <button id="navMotionBtn" class="nav-motion-btn" hidden title="Allow motion access so the map follows you as you walk">🚶 Paganahin ang motion</button>
-      <button id="navRescanBtn" class="nav-rescan-btn" title="Scan a nearby QR to re-fix your location">📷</button>
+    <div id="navStepPrompt" class="nav-step-prompt" style="display:none" role="status" aria-live="polite">
+      <div class="nav-step-main">
+        <span class="nav-step-icon" id="navStepIcon"></span>
+        <span class="nav-step-text" id="navStepText">—</span>
+      </div>
+      <div class="nav-step-meta" id="navStepMeta"></div>
+      <div class="nav-step-actions">
+        <button id="navStairBtn" class="nav-act nav-stair-btn" hidden title="Tap when you reach the stairs, then go to the destination floor"><span data-icon="stairs"></span>At the stairs</button>
+        <button id="navHereBtn" class="nav-act nav-here-btn" title="Tap if you have already found the office — records where you were standing"><span data-icon="check"></span>I’m here</button>
+        <button id="navMotionBtn" class="nav-act nav-motion-btn" hidden title="Paganahin ang motion: allow motion access so the map follows you as you walk"><span data-icon="walk"></span>Turn on walking</button>
+        <button id="navRescanBtn" class="nav-act nav-rescan-btn" title="Scan a nearby QR to re-fix your location"><span data-icon="camera"></span>Scan QR</button>
+      </div>
     </div>
 
     <!-- Info bar -->
@@ -327,12 +336,13 @@
   <!-- ═══ QR LOCATION PROMPT (on load, citizen view) ═══════════════════ -->
   <div id="qrPromptModal" class="qr-prompt-modal" style="display:none">
     <div class="qr-prompt-box">
-      <span class="qr-prompt-icon">📍</span>
-      <p class="qr-prompt-title">Set your location</p>
-      <p class="qr-prompt-text">Scan the QR code posted near you so we can give you accurate directions. No QR nearby? You can skip for now.</p>
+      <span class="qr-prompt-icon" data-icon="map-pin"></span>
+      <p class="qr-prompt-title">Saan ka ngayon?</p>
+      <p class="qr-prompt-subtitle">Set your location</p>
+      <p class="qr-prompt-text">I-scan ang QR code na nakapaskil malapit sa iyo para tama ang direksyon.<br><span class="qr-prompt-en">Scan the QR code posted near you for accurate directions.</span></p>
       <div class="qr-prompt-actions">
-        <button id="qrPromptScanBtn" class="btn-qr-prompt btn-qr-prompt-scan">📷 Scan QR</button>
-        <button id="qrPromptSkipBtn" class="btn-qr-prompt btn-qr-prompt-skip">Skip (for testing)</button>
+        <button id="qrPromptScanBtn" class="btn-qr-prompt btn-qr-prompt-scan"><span data-icon="camera"></span>Scan QR</button>
+        <button id="qrPromptSkipBtn" class="btn-qr-prompt btn-qr-prompt-skip">Magsimula sa main entrance<span class="btn-sub">Start from the main entrance</span></button>
       </div>
 
       <!-- ╔══ TEMPORARY — REMOVE BEFORE PUBLIC USE ════════════════════════╗
@@ -345,7 +355,7 @@
            ╚════════════════════════════════════════════════════════════════╝ -->
       <div class="manual-loc">
         <button id="manualLocToggle" class="manual-loc-toggle" aria-expanded="false">
-          QR not working? Enter location manually
+          Hindi ma-scan? Ilagay ang numero sa sign · Enter the sign's numbers
         </button>
         <div id="manualLocPanel" class="manual-loc-panel" hidden>
           <div class="manual-loc-row">
@@ -368,7 +378,7 @@
             </label>
           </div>
           <button id="manualLocGo" class="btn-qr-prompt btn-qr-prompt-scan">Set my location</button>
-          <p id="manualLocMsg" class="manual-loc-msg">Type the two numbers printed on the sign, <strong>down first, then across</strong>. The main entrance is <strong>down 73, across 37</strong> on Floor 2 — Ground.</p>
+          <p id="manualLocMsg" class="manual-loc-msg">Type the two numbers printed on the sign, <strong>down first, then across</strong>. The main entrance is <strong>down 73, across 37</strong> on the Ground Floor.</p>
         </div>
       </div>
     </div>
@@ -412,6 +422,7 @@
   <script src="js/lib/jsQR.js"></script>
   <script src="js/lib/qrcode.min.js"></script>
 
+  <script src="js/ui_icons.js?v=1"></script>
   <script src="js/data.js?v=33"></script>
   <script src="js/floor_presets.js?v=34"></script>
   <script src="js/stamp_presets.js?v=2"></script>
@@ -419,9 +430,9 @@
   <script src="js/dijkstra.js?v=30"></script>
   <script src="js/renderer.js?v=35"></script>
   <script src="js/compass.js?v=31"></script>
-  <script src="js/nav.js?v=41"></script>
-  <script src="js/app.js?v=80"></script>
-  <script src="js/chat.js?v=42"></script>
+  <script src="js/nav.js?v=42"></script>
+  <script src="js/app.js?v=82"></script>
+  <script src="js/chat.js?v=43"></script>
 
 </body>
 </html>

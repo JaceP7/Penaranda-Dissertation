@@ -492,6 +492,7 @@ function _nearestReachableCell(targetRow, targetCol, startId) {
 // against the real layouts — worst case 157 cells walked where 59 would do.
 
 let _crossFloorTrip = null;   // { leg, stair, destFloor, destCell, dept, subservice, answerText }
+let _navDestLabel = '';     // the office the current route goes to, as people read it
 
 /** cellType array for a floor. The active floor lives in NODES, the rest in FLOOR_WALLS. */
 function _floorCellTypes(floor) {
@@ -623,7 +624,7 @@ function _startCrossFloorLegTwo() {
 
   _navStepReset();
   _updateNavInstruction();
-  _showStairToast(`🪜 ${_floorName(t.destFloor)} — follow the route to ${t.label || 'your office'}.`);
+  _showStairToast(`You're on ${_floorName(t.destFloor)}. Follow the blue line to ${_officeTitle(t.label || 'your office')}.`);
 }
 
 // ── Navigation telemetry ─────────────────────────────────────────────────────
@@ -723,7 +724,7 @@ window.addEventListener('pagehide', () => {
  */
 function navigateToDepartment(deptName, subservice, answerText) {
   if (typeof resolveServiceLocation !== "function") {
-    alert(`Location for "${deptName}" has not been mapped yet.\nPlease ask at the Information desk.`);
+    _showStairToast("The map isn't ready yet. Please ask at the Public Assistance Center on the Ground Floor.");
     return;
   }
 
@@ -735,13 +736,15 @@ function navigateToDepartment(deptName, subservice, answerText) {
   const loc = resolveServiceLocation(deptName, subservice, from);
 
   if (!loc) {
-    alert(`Location for "${deptName}" isn't mapped yet.\nPlease ask at the Information desk.`);
+    _showStairToast(`${_officeTitle(deptName)} isn't on the map yet. Please ask at the Public Assistance Center on the Ground Floor.`);
     return;
   }
   if (loc.separateCampus) {
-    _showStairToast(`📍 ${deptName} is at a separate campus, not inside City Hall.`);
+    _showStairToast(`${_officeTitle(deptName)} has its own campus. It isn't inside City Hall.`);
     return;
   }
+  // Named on the arrival card and in the messages below.
+  _navDestLabel = _officeTitle(loc.label || deptName);
 
   const crossFloor = loc.floor !== STATE.currentFloor;
 
@@ -839,21 +842,21 @@ function navigateToDepartment(deptName, subservice, answerText) {
 
   // Tell the user what's happening.
   if (loc.fallback) {
-    _showStairToast(`📍 ${deptName} isn't pinned yet — routing to the Information desk. Please ask there.`);
+    _showStairToast(`${_officeTitle(deptName)} isn't on the map yet, so this goes to the Public Assistance Center. Please ask there.`);
   } else if (reachGap > 6) {
     // Couldn't get near the office — the floor map is probably missing a
     // doorway between regions. Guide as close as possible and say so.
-    _showStairToast(`📍 Couldn't map a full path to ${loc.label} (a doorway may be missing on the map). Guiding you as close as possible — please ask at the desk.`);
+    _showStairToast(`The map can't reach ${_navDestLabel} exactly (a doorway may be missing), so this takes you as close as it can. Please ask nearby.`);
   } else if (_crossFloorTrip && _crossFloorTrip.leg === 1) {
     const mpc = (typeof NAV !== 'undefined' && NAV.metresPerCell) ? NAV.metresPerCell : 1;
     const m   = Math.max(1, Math.round(_crossFloorTrip.stair.legOne * mpc));
-    _showStairToast(`📍 ${loc.label} is on ${_floorName(loc.floor)}. First walk about ${m} m ` +
-                    `to the stairs — the route shows the way.`);
+    _showStairToast(`${_navDestLabel} is on ${_floorName(loc.floor)}. First walk about ${m} m ` +
+                    `to the stairs; the blue line shows the way.`);
     if (DOM.navStairBtn) DOM.navStairBtn.hidden = false;
   } else if (crossFloor) {
-    _showStairToast(`📍 ${loc.label} is on ${_floorName(loc.floor)}. Take the stairs/elevator, then follow the route.`);
+    _showStairToast(`${_navDestLabel} is on ${_floorName(loc.floor)}. Take the stairs, then follow the blue line.`);
   } else {
-    _showStairToast(`📍 Routing to ${loc.label}.`);
+    _showStairToast(`Follow the blue line to ${_navDestLabel}.`);
   }
 }
 
@@ -874,6 +877,12 @@ function _navStepReset() {
   _navWrongStreak = 0;
   // a fresh route gets the "already here" option back
   if (DOM.navHereBtn) DOM.navHereBtn.hidden = false;
+}
+
+/** Fill the step bar's floor-and-distance line. */
+function _setNavMeta(cellsLeft) {
+  const meta = document.getElementById('navStepMeta');
+  if (meta) meta.textContent = _navMetaLine(Math.max(0, cellsLeft));
 }
 
 function _hideNavStep() {
@@ -926,8 +935,9 @@ function _updateNavInstruction() {
 
   if (_navWrongStreak >= NAV_WRONG_WAY_STEPS) {
     el.classList.add('wrong-way');
-    icon.textContent = '⚠️';
-    text.textContent = 'Wrong way — turn around and head back to the blue line';
+    icon.innerHTML = uiIcon('alert');
+    text.textContent = 'Wrong way. Turn around and head back to the blue line.';
+    _setNavMeta(remLen);
     el.style.display = '';
     return;
   }
@@ -950,28 +960,29 @@ function _updateNavInstruction() {
   const s0  = segs[0];
 
   if (segs.length === 1) {
-    icon.textContent = '🏁';
+    icon.innerHTML = uiIcon('flag');
     text.textContent = s0.len <= 2
-      ? 'Almost there — your destination is just ahead'
+      ? 'Almost there. Your destination is just ahead.'
       : `Walk about ${m(s0.len)} m to your destination`;
   } else {
     const s1    = segs[1];
     const cross = s0.dc * s1.dr - s0.dr * s1.dc;   // >0 right, <0 left (y-down)
     const dot   = s0.dc * s1.dc + s0.dr * s1.dr;
-    let tword = 'turn', ticon = '➡️';
-    if (dot < 0)        { tword = 'make a U-turn'; ticon = '↩️'; }
-    else if (cross > 0) { tword = 'turn right';    ticon = '➡️'; }
-    else if (cross < 0) { tword = 'turn left';     ticon = '⬅️'; }
+    let tword = 'turn', ticon = 'arrow-right';
+    if (dot < 0)        { tword = 'make a U-turn'; ticon = 'u-turn'; }
+    else if (cross > 0) { tword = 'turn right';    ticon = 'arrow-right'; }
+    else if (cross < 0) { tword = 'turn left';     ticon = 'arrow-left'; }
 
     if (s0.len <= 2) {
       // At the corner → the user's requested phrasing.
-      icon.textContent = ticon;
+      icon.innerHTML = uiIcon(ticon);
       text.textContent = `${_cap(tword)}, then walk about ${m(s1.len)} m`;
     } else {
-      icon.textContent = '🚶';
+      icon.innerHTML = uiIcon('arrow-up');
       text.textContent = `Walk about ${m(s0.len)} m, then ${tword}`;
     }
   }
+  _setNavMeta(remLen - 1);
   el.style.display = '';
 }
 
@@ -1065,46 +1076,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   NAV.onFloorChange = (floor) => { switchFloor(floor); };
 
-  // Stair detection: when user lands on a stair cell, show a direction prompt
-  // if both floors are reachable, or auto-switch if only one direction is possible.
-  // Cooldown prevents re-firing while standing on the same cell.
-  let _stairCooldown = false;
-  NAV.onStairCell = (row, col) => {
-    if (_stairCooldown) return;
-    _stairCooldown = true;
-    setTimeout(() => { _stairCooldown = false; }, 2000);
-
-    const f   = STATE.currentFloor;
-    const idx = row * GRID_COLS + col;
-
-    // Returns true if the given floor has a stair at (row, col)
-    function _hasStairAt(floor) {
-      if (floor < 0 || floor > 9) return false;
-      if (floor === f) return true;
-      const data = FLOOR_WALLS[floor];
-      if (!data) return false;
-      return data[idx] === 'stair';
-    }
-
-    const upOk   = _hasStairAt(f + 1);
-    const downOk = _hasStairAt(f - 1);
-
-    if (!upOk && !downOk) {
-      // Isolated stair — no matching stair on any adjacent floor
-      _showStairToast('🪜 Stair — no connected floor found');
-      return;
-    }
-
-    if (upOk && !downOk) {
-      // One direction — ask if user has already climbed before switching
-      _showStairConfirm(f + 1);
-    } else if (downOk && !upOk) {
-      _showStairConfirm(f - 1);
-    } else {
-      // Both directions possible — ask the user which floor
-      _showStairPrompt(f - 1, f + 1);
+  // The camera could not open (no permission, no camera, plain http). Close the
+  // viewfinder and open the on-page "type the sign's numbers" panel instead of
+  // a browser prompt. A pending "Take me there" resumes after they set it.
+  NAV.onScanUnavailable = () => {
+    navStopQRScan();
+    if (DOM.qrOverlay) DOM.qrOverlay.style.display = 'none';
+    document.body.classList.remove('scanning');
+    if (!DOM.qrPromptModal) return;
+    DOM.qrPromptModal.style.display = 'flex';
+    if (DOM.manualLocPanel) DOM.manualLocPanel.hidden = false;
+    if (DOM.manualLocToggle) DOM.manualLocToggle.setAttribute('aria-expanded', 'true');
+    if (DOM.manualLocMsg) {
+      DOM.manualLocMsg.textContent = "The camera didn't open. Type the two numbers printed on the sign: " +
+                                     'down first, then across. Hindi bumukas ang camera; i-type ang numero sa sign.';
+      DOM.manualLocMsg.classList.remove('bad');
     }
   };
+
+  // Stair detection lives in _onStairCell (top level, testable): it asks which
+  // floor when there is no route, and stays quiet while a route is active.
+  NAV.onStairCell = _onStairCell;
 
   NAV.onHeadingChange = (h) => {
     DOM.compassNeedle.style.transform = `rotate(${h}deg)`;
@@ -1544,9 +1536,9 @@ document.addEventListener('DOMContentLoaded', () => {
             DOM.pdrToggleBtn.textContent = '🚶 PDR: On';
             DOM.pdrToggleBtn.classList.add('active');
           }
-          _showStairToast('🚶 Motion on — the dot follows you now.');
+          _showStairToast('Walking is on. The dot follows you now.');
         } else {
-          _showStairToast('Motion is off. iPhone: Settings → Apps → Safari → Motion & Orientation Access.');
+          _showStairToast('Walking is still off. On iPhone: Settings → Apps → Safari → Motion & Orientation Access, then tap Turn on walking again.');
         }
       });
     });
@@ -1636,7 +1628,7 @@ function _applyStartupDeepLink() {
   NAV._hasQRFix     = true;                  // treat as a real fix (A2)
   NAV._stepsSinceQR = 0;
   if (typeof updateDriftIndicator === 'function') updateDriftIndicator();
-  _showStairToast(`📍 Location set from QR — you're on ${_floorName(f)}.`);
+  _showStairToast(`Location set from the QR sign. You're on ${_floorName(f)}.`);
   return true;
 }
 
@@ -2517,8 +2509,104 @@ function _showStairToast(msg) {
   _hideStairPrompt();
   el.textContent = msg;
   el.classList.add('visible');
+  el.onclick = _hideStairToast;          // tap to dismiss
   clearTimeout(_stairToastTimer);
-  _stairToastTimer = setTimeout(() => el.classList.remove('visible'), 2500);
+  _stairToastTimer = setTimeout(_hideStairToast, _toastMs(msg));
+}
+
+function _hideStairToast() {
+  clearTimeout(_stairToastTimer);
+  const el = document.getElementById('stairToast');
+  if (el) el.classList.remove('visible');
+}
+
+/**
+ * How long a toast stays: 3 s, plus time to read longer messages, at most 8 s.
+ * A fixed 2.5 s gave a two-sentence routing message no chance to be read.
+ */
+function _toastMs(msg) {
+  const words = String(msg || '').trim().split(/\s+/).filter(Boolean).length;
+  return Math.min(8000, Math.max(3000, 1200 + words * 260));
+}
+
+/**
+ * "CITY HEALTH SERVICES DEPARTMENT" -> "City Health Services Department".
+ * Office names arrive in the Charter's capitals; shouted in a toast they read
+ * as an error. Names already in mixed case are left as they are.
+ */
+function _officeTitle(name) {
+  const s = String(name || '');
+  if (/[a-z]/.test(s)) return s;
+  const SMALL = ['and', 'of', 'the', 'for', 'with', 'a', 'an', 'in', 'on', 'to', 'at', 'ng', 'sa'];
+  const KEEP = ['MO', 'PWD', 'SP', 'BPLO', 'PESO', 'POSO', 'OSCA'];
+  return s.split(' ').map((w, i) => {
+    if (KEEP.includes(w)) return w;
+    const lower = w.toLowerCase();
+    if (i > 0 && SMALL.includes(lower)) return lower;
+    return lower.replace(/(^|[-'’])([a-z])/g, (m, p, c) => (p === "'" || p === '’' ? m : p + c.toUpperCase()));
+  }).join(' ');
+}
+
+/**
+ * Is a citizen route on screen? A multi-floor trip counts even while
+ * switchFloor() has the destination cleared - that is exactly when leg two
+ * puts the dot on the stair cell.
+ */
+function _routeActive() {
+  const trip = (typeof _crossFloorTrip !== 'undefined') && _crossFloorTrip;
+  return (!!STATE.endId || !!trip) && document.body.classList.contains('route-active');
+}
+
+/**
+ * Stair cell reached. With no route, ask which floor (or switch). During a
+ * route, say nothing: leg one ends at the stairs with its own question, and
+ * leg two STARTS on a stair cell - asking there produced "Reached the Ground
+ * Floor?" right after leaving the Ground Floor. A same-floor route that merely
+ * passes over a stair cell must not be interrupted either.
+ */
+let _stairCooldown = false;
+function _onStairCell(row, col) {
+  if (_routeActive()) return;
+  if (_stairCooldown) return;
+  _stairCooldown = true;
+  setTimeout(() => { _stairCooldown = false; }, 2000);
+
+  const f   = STATE.currentFloor;
+  const idx = row * GRID_COLS + col;
+
+  // Returns true if the given floor has a stair at (row, col)
+  function _hasStairAt(floor) {
+    if (floor < 0 || floor > 9) return false;
+    if (floor === f) return true;
+    const data = FLOOR_WALLS[floor];
+    if (!data) return false;
+    return data[idx] === 'stair';
+  }
+
+  const upOk   = _hasStairAt(f + 1);
+  const downOk = _hasStairAt(f - 1);
+
+  if (!upOk && !downOk) {
+    _showStairToast('These stairs don’t connect to another floor on the map.');
+    return;
+  }
+  if (upOk && !downOk)      _showStairConfirm(f + 1);
+  else if (downOk && !upOk) _showStairConfirm(f - 1);
+  else                      _showStairPrompt(f - 1, f + 1);
+}
+
+/**
+ * The step bar's second line: where you are, where you're heading, how far.
+ * @param {number} cellsLeft  remaining route length in cells
+ */
+function _navMetaLine(cellsLeft) {
+  const mpc = (typeof NAV !== 'undefined' && NAV.metresPerCell) ? NAV.metresPerCell : 1;
+  const m = Math.max(1, Math.round(cellsLeft * mpc));
+  const trip = (typeof _crossFloorTrip !== 'undefined') ? _crossFloorTrip : null;
+  if (trip && trip.leg === 1) {
+    return `${_floorLabel(STATE.currentFloor)} → ${_floorLabel(trip.destFloor)} · about ${m} m to the stairs`;
+  }
+  return `${_floorLabel(STATE.currentFloor)} · about ${m} m to go`;
 }
 
 /** Direction prompt — shown when both up and down are possible.
@@ -2543,18 +2631,18 @@ function _showStairPrompt(downFloor, upFloor) {
   downBtn.replaceWith(newDown);
   stayBtn.replaceWith(newStay);
 
-  newUp.querySelector('span').textContent   = _floorLabel(upFloor);
-  newDown.querySelector('span').textContent = _floorLabel(downFloor);
+  newUp.querySelector('#stairUpLabel').textContent     = _floorLabel(upFloor);
+  newDown.querySelector('#stairDownLabel').textContent = _floorLabel(downFloor);
 
   newUp.addEventListener('click', () => {
     _hideStairPrompt();
     switchFloor(upFloor);
-    _showStairToast(`🪜 ${_floorLabel(upFloor)}`);
+    _showStairToast(`You're on the ${_floorLabel(upFloor)}.`);
   });
   newDown.addEventListener('click', () => {
     _hideStairPrompt();
     switchFloor(downFloor);
-    _showStairToast(`🪜 ${_floorLabel(downFloor)}`);
+    _showStairToast(`You're on the ${_floorLabel(downFloor)}.`);
   });
   newStay.addEventListener('click', _hideStairPrompt);
 
@@ -2585,6 +2673,9 @@ function _showStairConfirm(targetFloor) {
   if (!prompt) return;
 
   label.textContent = `Reached the ${_floorLabel(targetFloor)}?`;
+  const sub = document.getElementById('stairConfirmSub');
+  if (sub) sub.textContent = `Nasa ${_floorLabel(targetFloor)} ka na ba?`;
+  _hideStairToast();   // one message at a time in the bottom slot
 
   // Clone to remove any old listeners
   const newYes = yesBtn.cloneNode(true);
@@ -2600,7 +2691,7 @@ function _showStairConfirm(targetFloor) {
       return;
     }
     switchFloor(targetFloor);
-    _showStairToast(`🪜 ${_floorLabel(targetFloor)}`);
+    _showStairToast(`You're on the ${_floorLabel(targetFloor)}.`);
   });
   newNo.addEventListener('click', _hideStairConfirm);
 
@@ -2666,6 +2757,13 @@ function _showArrivalPrompt() {
   if (!el) return;
   _navTripArrive();            // the trip completed — record time on task
   _renderArrivalReminder();    // show what to hand over at the counter
+  // Say WHERE they arrived: "You have arrived!" alone left people unsure
+  // whether this was the right door.
+  const arrivalText = document.getElementById('arrivalText');
+  const arrivalSub  = document.getElementById('arrivalSub');
+  if (arrivalText) arrivalText.textContent = _navDestLabel ? `You've reached the ${_navDestLabel.replace(/^the /i, '')}` : 'You have arrived';
+  if (arrivalSub)  arrivalSub.textContent  = 'Nandito ka na';
+  _hideStairToast();           // one message at a time
   el.style.display = 'flex';
   // No auto-dismiss: the prompt now offers "Ask again" / "Back home" actions,
   // so it stays until the citizen chooses one (or taps ✕ to keep viewing the map).
