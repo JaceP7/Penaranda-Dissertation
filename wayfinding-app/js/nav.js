@@ -555,8 +555,10 @@ function _navQRLoop(videoEl, canvasEl, onFound) {
         const loc = navParseDeepLink(code.data);
         if (loc) {
           navStopQRScan();
-          if (loc.floor !== NAV._currentFloor && NAV.onFloorChange)
-            NAV.onFloorChange(loc.floor);
+          // Always ask: switchFloor() does nothing on the same floor, and
+          // NAV._currentFloor is only a copy of the app's floor that can be
+          // stale - checking it let a sign's floor be ignored.
+          if (NAV.onFloorChange) NAV.onFloorChange(loc.floor);
           navSetPosition(loc.row, loc.col);
           NAV._hasQRFix = true; // A2: first real fix recorded
           if (onFound) onFound(loc.row, loc.col);

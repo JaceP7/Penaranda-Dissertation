@@ -91,6 +91,48 @@ const ENTRANCE = { floor: 1, row: 73, col: 37 };   // just inside the main south
        wallDest.total === wallDest.legOne + wallDest.legTwo);
   }
 
+  // ── every office window the app routes to, from the main entrance ─────────
+  // Snapping a wall anchor to the FIRST nearest open cell can pick a cell
+  // outside the building's outer wall: City Health (LG 43,2) snapped to 43,0,
+  // which reaches no stairs, so the router fell back to switching the map to
+  // the Lower Ground while the citizen's dot stayed at Ground Floor
+  // coordinates. Seven of the 28 cross-floor windows did this (2026-11-09).
+  console.log('\n--- every office window on another floor, from the main entrance ---');
+  {
+    const ss = { console, localStorage: { getItem() { return null; }, setItem() {} }, window: {} };
+    vm.createContext(ss);
+    vm.runInContext(fs.readFileSync(path.resolve(ROOT, 'wayfinding-app/js/stamp_presets.js'), 'utf8') +
+                    ';var STAMP_PLACEMENTS = STAMP_PLACEMENTS_BUNDLED;', ss);
+    vm.runInContext(fs.readFileSync(path.resolve(ROOT, 'wayfinding-app/js/service_locations.js'), 'utf8') +
+                    ';this.DEPTS = DEPT_STAMP_NAMES;', ss);
+    const missing = [];
+    let n = 0;
+    for (const names of Object.values(ss.DEPTS)) {
+      for (const p of ss.STAMP_PLACEMENTS.filter((x) => names.includes(x.name))) {
+        if (p.floor === ENTRANCE.floor) continue;
+        n++;
+        if (!_bestStairFor(1, ENTRANCE.row, ENTRANCE.col, p.floor, p.row, p.col)) {
+          missing.push(`${p.name} (floor ${p.floor} ${p.row},${p.col})`);
+        }
+      }
+    }
+    ok(`all ${n} office windows on other floors get a stair from the main entrance`,
+       missing.length === 0, missing.join('; '));
+    // From inside the wall (43,4, the open cell next to the anchor) the best
+    // trip is known exactly; the chooser must find that one, not give up.
+    const health = _bestStairFor(1, ENTRANCE.row, ENTRANCE.col, 0, 43, 2);
+    const g = types(1), lg = types(0);
+    const dIn = _bfsDistances(g, ENTRANCE.row, ENTRANCE.col), dOut = _bfsDistances(lg, 43, 4);
+    let expect = Infinity;
+    for (let i = 0; i < N * N; i++) {
+      if (g[i] === 'stair' && lg[i] === 'stair' && dIn[i] >= 0 && dOut[i] >= 0) {
+        expect = Math.min(expect, dIn[i] + dOut[i]);
+      }
+    }
+    ok('City Health (a wall anchor on the outer wall) is measured from inside the building',
+       !!health && health.total === expect, `${JSON.stringify(health)} vs shortest ${expect}`);
+  }
+
   // ── coverage: how much of the building can the two-leg route describe? ────
   console.log('\n--- coverage against the baked layout ---');
   let routable = 0, blocked = 0, better = 0, saved = 0, worse = 0;

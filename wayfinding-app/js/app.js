@@ -536,15 +536,42 @@ function _bestStairFor(fromFloor, fromRow, fromCol, toFloor, toRow, toCol) {
   const b = _floorCellTypes(toFloor);
   if (!a || !b) return null;
 
+  // The stairwells this trip can use: stair cells on BOTH floors.
+  const shared = [];
+  for (let i = 0; i < a.length; i++) if (a[i] === 'stair' && b[i] === 'stair') shared.push(i);
+  if (!shared.length) return null;
+
   // Office stamp anchors are frequently wall cells — 7 of the 11 on the 3rd
-  // floor are. Measuring the second leg from a wall would make every BFS come
-  // back empty and quietly disable two-leg routing for most offices, so snap
-  // both ends onto walkable ground first.
+  // floor are — so both ends are snapped onto walkable ground first. The snap
+  // must land on ground CONNECTED TO THE STAIRS, not merely the nearest open
+  // cell: for an office on the outer wall the nearest open cell can be outside
+  // the building. City Health (LG 43,2) snapped to 43,0, which reaches no
+  // stair, so the trip came back null and the caller switched the map to the
+  // Lower Ground with the citizen's dot still at Ground Floor coordinates.
+  const linkedToStairs = (types) => {
+    const seen = new Uint8Array(types.length);
+    const queue = [];
+    for (const i of shared) if (types[i] !== 'wall') { seen[i] = 1; queue.push(i); }
+    for (let head = 0; head < queue.length; head++) {
+      const u = queue[head];
+      const ur = (u / GRID_COLS) | 0, uc = u % GRID_COLS;
+      for (const [dr, dc] of [[0, 1], [0, -1], [1, 0], [-1, 0]]) {
+        const nr = ur + dr, nc = uc + dc;
+        if (nr < 0 || nc < 0 || nr >= GRID_ROWS || nc >= GRID_COLS) continue;
+        const v = nr * GRID_COLS + nc;
+        if (seen[v] || types[v] === 'wall') continue;
+        seen[v] = 1;
+        queue.push(v);
+      }
+    }
+    return seen;
+  };
   const snap = (types, row, col) => {
-    if (types[row * GRID_COLS + col] !== 'wall') return { row, col };
+    const linked = linkedToStairs(types);
+    if (linked[row * GRID_COLS + col]) return { row, col };
     let best = null, bd = Infinity;
     for (let i = 0; i < types.length; i++) {
-      if (types[i] === 'wall') continue;
+      if (!linked[i]) continue;
       const d = Math.abs(((i / GRID_COLS) | 0) - row) + Math.abs((i % GRID_COLS) - col);
       if (d < bd) { bd = d; best = { row: (i / GRID_COLS) | 0, col: i % GRID_COLS }; }
     }
@@ -747,6 +774,9 @@ function navigateToDepartment(deptName, subservice, answerText) {
   let startCell;
   if (crossFloor && !stair) {
     startCell = _nearestStairOnCurrentFloor(loc.row, loc.col) || { row: loc.row, col: loc.col };
+    // The map is now the destination floor; leaving the dot at the old
+    // floor's cell drew it at the right coordinates on the wrong floor.
+    if (NAV.position) NAV.position = { row: startCell.row, col: startCell.col };
   } else {
     startCell = { row: from.row, col: from.col };
   }
@@ -3700,6 +3730,7 @@ function loadGridState() {
       const n = applyFloorPresets();
       if (n > 0) {
         const floor = STATE.currentFloor || 0;
+        NAV._currentFloor = floor;   // the other branches sync it; first run did not
         const walls = FLOOR_WALLS[floor];
         if (walls) NODES.forEach((nd, i) => {
           nd.cellType = walls[i] || 'open';
