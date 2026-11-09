@@ -106,6 +106,17 @@ def check_note_endpoint(base, path, label):
         return record(label, False, str(e)[:120])
 
 
+def check_gated(base, path, label):
+    """A staff-only endpoint must answer 401 (or 503 while ADMIN_PIN is unset)."""
+    try:
+        status, _ = _req(base + path)
+        return record(label, False, f"answered {status} without a session")
+    except urllib.error.HTTPError as e:
+        return record(label, e.code in (401, 503), f"HTTP {e.code}")
+    except Exception as e:
+        return record(label, False, str(e)[:120])
+
+
 def _expected_vector_count():
     """Number of services in the corpus the index is seeded from.
 
@@ -160,7 +171,10 @@ def main():
     check_ping(base)
     check_vector_direct()
     check_chat(base)
-    check_note_endpoint(base, "/api/analytics", "/api/analytics (Redis)")
+    # Since 2026-11-09 the analytics summary needs the staff session; only the
+    # citizen chips view is open. Check both halves of that.
+    check_note_endpoint(base, "/api/analytics?view=chips", "/api/analytics chips view (public)")
+    check_gated(base, "/api/analytics", "/api/analytics summary refuses anonymous reads")
     check_note_endpoint(base, "/api/mapstate", "/api/mapstate (Redis)")
 
     passed = sum(1 for _, ok, _ in results if ok)

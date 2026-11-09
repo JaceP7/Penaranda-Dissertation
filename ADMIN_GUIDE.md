@@ -79,9 +79,22 @@ Tap **Revert** inside the amber badge. Your device reloads the live map and your
 
 ## 4. Check analytics
 
-- From admin: tap **📊** (or open `/admin.html` directly — share this URL with admins).
-- Shows live website usage from the query log (Upstash Redis): total & today's queries, ambiguity rate, average latency, top departments, top sub-services, queries-per-day (7-day), and recent queries.
-- Read-only; safe to open on any device.
+**One-time setup (developer): set `ADMIN_PIN` in Vercel.** Go to Project, then Settings, then Environment Variables, add `ADMIN_PIN` with a PIN of 6 or more digits, then redeploy. Until you do, the dashboard stays locked and says so. The old default PIN was once in the public source, so it never opens the dashboard.
+
+- Open **`https://penaranda-dissertation.vercel.app/admin.html`** on a phone or a computer, and enter the staff PIN. Sign-in lasts 8 hours on that browser. **Sign out** is at the bottom of the menu.
+- After 10 wrong PINs from one connection, it waits 15 minutes before accepting another try.
+- All times are **Manila time**. Pick the range at the top: 7 days, 30 days, All time or Custom. On a phone, tap the range button. **Questions CSV** and **Routes CSV** download the rows in that range.
+- **Pages:**
+  - **Overview:** questions asked (typed vs chip taps), the median answer time, routes that arrived, the median time to arrive, the busiest time, a weekday-by-hour heatmap, the top offices, recent questions and answer times.
+  - **Questions:** every question, newest first, searchable and filterable by office, language and kind of answer (service, where-is, out of scope, didn't understand). It also shows how often the assistant asked to clarify. **Remove** takes one question out of the log.
+  - **Hot times:** the full heatmap, the 10 busiest slots and questions per day.
+  - **Speed:** answer times (median, 95th percentile, histogram) and time to arrive.
+  - **Routes:** how routes ended (arrived, closed early, no ending recorded), the top destinations, re-scans and "I'm already here".
+  - **Data:**
+    - **Download backup** saves both logs as a JSON file.
+    - **Reset analytics** downloads a backup first, then asks you to type `RESET`. It moves the logs into an archive; nothing is deleted. The last 5 resets are kept, each with Download and Restore.
+- Any figure from fewer than 30 events is tagged **Small sample**.
+- The citizen chat's suggested chips come from a public view that holds service names and counts only. Everything else needs the PIN.
 
 ---
 

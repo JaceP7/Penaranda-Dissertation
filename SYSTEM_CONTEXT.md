@@ -15,7 +15,17 @@
 **Serverless RAG live on Vercel (Upstash Vector + Groq)**
 - `api/chat.js` rewritten: query → Upstash Vector `/query-data` (server-side `text-embedding-3-small`, 1536-dim — NOT bge-m3; the user's index used it and it WON, so kept) → Groq openai/gpt-oss-120b grounds the Taglish answer + "Go to:" dept. Response contract unchanged. Seed via `tools/upstash_seed.py`. Setup: `UPSTASH_RAG_SETUP.md`.
 - **Live retrieval eval** (`eval/run_upstash_eval.py`): MRR **0.762** / P@1 **0.750** / NDCG@1 0.750 — beats the local e5-large+bge-reranker baseline (0.714 / 0.607) with dense retrieval only (no reranker). Scopus-backed rationale in `UPSTASH_EVAL_AND_RATIONALE.md` (6 decisions). ⚠️ Different embedding model than the local pipeline → report the Upstash numbers as the live system's.
-- **Live-site analytics**: `api/chat.js` logs each query to Upstash **Redis** (`wf:querylog`, capped 5000); `api/analytics.js` reads it for `/admin.html`. Verified end-to-end. Env vars: `UPSTASH_VECTOR_REST_URL/TOKEN`, `UPSTASH_REDIS_REST_URL/TOKEN`, `GROQ_API_KEY` (all on Vercel).
+- **Live-site analytics**: `api/chat.js` logs each query to Upstash **Redis** (`wf:querylog`, capped 50000); `api/analytics.js` reads it for `/admin.html`. Verified end-to-end. Env vars: `UPSTASH_VECTOR_REST_URL/TOKEN`, `UPSTASH_REDIS_REST_URL/TOKEN`, `GROQ_API_KEY` (all on Vercel).
+- **Analytics revamp (2026-11-09), plan `docs/superpowers/plans/2026-11-09-admin-analytics-revamp.md` + its PIN addendum:**
+  - **Before:** `/api/analytics` was open to anyone (the 20 newest citizen questions), and `ADMIN_PIN` was unset.
+  - **Session:** a correct, configured staff PIN on `POST /api/adminauth` sets an 8-hour HMAC cookie `wf_admin` (`lib/session.js`, key from `SESSION_SECRET` or the Redis token, bound to the PIN).
+  - **Gate:** `lib/gate.js` checks the cookie and **fails closed** (503) while `ADMIN_PIN` is unset. Ten wrong PINs per IP in 15 minutes → 429.
+  - **Gated:** `/api/analytics` (except `?view=chips`, the citizen chips: names and counts only), `GET /api/navlog`, and `/api/data` (backup, remove one, reset into an archive, restore; last 5 archives).
+  - **Manila time:** all figures use Asia/Manila (`lib/manila.js`).
+  - **Dashboard:**
+    - `admin.html` + `css/admin.css` + `js/admin.js` (shell, PIN screen) + `js/admin_charts.js` (pure HTML builders) + `js/admin_pages.js` (Overview, Questions, Hot times, Speed, Routes, Data).
+    - On localhost, `admin.html?fixture=1` runs on invented data (`js/admin_fixture.js`).
+    - Phone layout: drawer and range sheet below 900 px; two tiles a row, sideways heatmap and stacked rows below 640 px.
 
 **Floors swapped 0↔1**: Lower Ground is now internal idx 0 (UI Floor 1), Ground idx 1 (UI Floor 2) — physically correct. All data + code swapped; `FLOOR_PRESETS_VERSION`→8, `STAMP_PRESETS_VERSION`→2.
 
