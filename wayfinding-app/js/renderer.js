@@ -145,6 +145,9 @@ class GridRenderer {
     this.onCellTap   = null;
     /** Callback: (r1, c1, r2, c2) → void — fired when drag-select finishes. */
     this.onSelectRect = null;
+    /** Callback: () → void — the citizen dragged, pinched or scrolled the map
+     *  (used to stop following them while they look around). */
+    this.onUserMove = null;
     /** Callback: () → void — fired on every pointer-up (used by app for undo gesture tracking) */
     this.onPointerUp = null;
 
@@ -862,6 +865,8 @@ class GridRenderer {
         this._tx += e.clientX - prev.x;
         this._ty += e.clientY - prev.y;
         this._draw();
+        // A real drag, not the jitter of a tap (taps drop pins).
+        if (this.onUserMove && this._movedEnough(e)) this.onUserMove();
       }
     } else if (ids.length === 2) {
       this._lastPointers[e.pointerId] = { x: e.clientX, y: e.clientY };
@@ -869,6 +874,7 @@ class GridRenderer {
       if (this._lastPinchDist) {
         const centre = this._pinchCentre();
         this._zoom(dist / this._lastPinchDist, centre.x, centre.y);
+        if (this.onUserMove) this.onUserMove();
       }
       this._lastPinchDist = dist;
     }
@@ -925,8 +931,16 @@ class GridRenderer {
     if (this.onPointerUp) this.onPointerUp();
   }
 
+  /** True once the pointer is 8 px or more from where it went down: the tap
+   *  threshold _onPointerUp uses, so a tap never counts as moving the map. */
+  _movedEnough(e) {
+    const s = this._pointerStart;
+    return !!s && Math.hypot(e.clientX - s.x, e.clientY - s.y) >= 8;
+  }
+
   _onWheel(e) {
     e.preventDefault();
+    if (this.onUserMove) this.onUserMove();
     const rect   = this.canvas.getBoundingClientRect();
     const factor = e.deltaY < 0 ? 1.13 : 0.88;
     this._zoom(factor, e.clientX - rect.left, e.clientY - rect.top);

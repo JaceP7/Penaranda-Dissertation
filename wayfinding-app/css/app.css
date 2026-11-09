@@ -2395,6 +2395,22 @@ body.view-user .info-bar { display: none !important; }
 .chat-goto .ui-icon { width: 14px; height: 14px; vertical-align: -2px; }
 .chat-followup-chip:focus-visible, .chat-action-btn:focus-visible { outline: 3px solid #FDE047; outline-offset: 2px; }
 
+/* ── Re-center (shown once the citizen moves the map while navigating) ────
+   Bottom-left, level with "Ask again" on the right. */
+.nav-recenter-btn {
+  position: fixed; left: 16px; bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  z-index: 1200; display: none; align-items: center; gap: 8px;
+  min-height: 44px; height: 52px; padding: 0 16px; border-radius: 26px;
+  border: 1.5px solid #BFDBFE; background: #FFFFFF; color: #1E40AF;
+  font-size: 0.9rem; font-weight: 700; cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+}
+.nav-recenter-btn .ui-icon { width: 20px; height: 20px; }
+.nav-recenter-btn:focus-visible { outline: 3px solid #FDE047; outline-offset: 2px; }
+body.view-user.route-active.nav-free .nav-recenter-btn { display: inline-flex; }
+body.staff-entry .nav-recenter-btn { bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }  /* above the staff wrench */
+body.scanning .nav-recenter-btn, body.chat-showing .nav-recenter-btn { display: none !important; }
+
 /* ── Pin menu (tap the citizen map) ──────────────────────────────────────
    Sits in the same bottom slot as the stairs prompt, above "Ask again". */
 .pin-menu {

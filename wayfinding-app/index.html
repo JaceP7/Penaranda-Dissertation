@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=58" />
+  <link rel="stylesheet" href="css/app.css?v=59" />
 </head>
 <body class="view-user">
 
@@ -101,6 +101,8 @@
   <button id="adminToggleBtn" class="admin-toggle" title="Staff / admin access" aria-label="Staff map editor">🔧</button>
   <!-- User-view "ask again": reopens the Services chat after a route is shown. -->
   <button id="askAgainBtn" class="ask-again-btn" title="Ask the assistant again"><span data-icon="message"></span>Ask again</button>
+  <!-- Shown after the citizen drags or pinches the map; brings the view back to them. -->
+  <button id="navRecenterBtn" class="nav-recenter-btn" aria-label="Re-center the map on where I am"><span data-icon="locate"></span>Re-center</button>
 
   <!-- ═══ MAIN ══════════════════════════════════════════════════════════ -->
   <main class="app-body">
@@ -425,16 +427,16 @@
   <script src="js/lib/jsQR.js"></script>
   <script src="js/lib/qrcode.min.js"></script>
 
-  <script src="js/ui_icons.js?v=1"></script>
+  <script src="js/ui_icons.js?v=2"></script>
   <script src="js/data.js?v=33"></script>
   <script src="js/floor_presets.js?v=35"></script>
   <script src="js/stamp_presets.js?v=2"></script>
   <script src="js/service_locations.js?v=11"></script>
   <script src="js/dijkstra.js?v=30"></script>
-  <script src="js/renderer.js?v=39"></script>
+  <script src="js/renderer.js?v=40"></script>
   <script src="js/compass.js?v=31"></script>
   <script src="js/nav.js?v=42"></script>
-  <script src="js/app.js?v=86"></script>
+  <script src="js/app.js?v=87"></script>
   <script src="js/chat.js?v=45"></script>
 
 </body>

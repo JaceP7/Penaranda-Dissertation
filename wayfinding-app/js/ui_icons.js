@@ -31,6 +31,7 @@ const UI_ICON_PATHS = {
   "alert":       '<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/>',
   "up":          '<path d="M12 20V4M5 11l7-7 7 7"/>',
   "down":        '<path d="M12 4v16M5 13l7 7 7-7"/>',
+  "locate":      '<circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>',
 };
 
 function uiIcon(name, extraClass) {

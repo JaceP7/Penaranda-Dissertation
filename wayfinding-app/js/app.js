@@ -722,7 +722,7 @@ function _visibleMapBox() {
   const full = { left: 0, top: 0, right: cv.clientWidth, bottom: cv.clientHeight };
   const cr = cv.getBoundingClientRect();
   let box = full;
-  for (const id of ['navStepPrompt', 'askAgainBtn', 'stairToast']) {
+  for (const id of ['navStepPrompt', 'askAgainBtn', 'navRecenterBtn', 'stairToast']) {
     const el = document.getElementById(id);
     if (!el) continue;
     if (id === 'stairToast' && !el.classList.contains('visible')) continue;   // faded out, still laid out
@@ -758,7 +758,55 @@ function _frameRoute() {
 /** Window resized or phone turned: refit the canvas, then the route if one is up. */
 function _onMapResize() {
   renderer.resize();
-  _frameRoute();
+  if (_followMode && _citizenRoute()) _frameAhead(); else _frameRoute();
+}
+
+// ── Follow mode: auto-zoom while walking, and Re-center (Jace, 2026-11-09) ──
+// The route was framed once at the start; each step then only re-centred at
+// that first zoom, so a long route stayed zoomed out for the whole walk, and a
+// drag left no way back. While following, each step frames the dot and the
+// next stretch of the route, zooming in as it gets short. Moving the map stops
+// following and shows "Re-center".
+const AHEAD_CELLS = 15;      // about 15 m of route ahead of the dot
+let _followMode = true;
+
+function _citizenRoute() {
+  return STATE.viewMode === 'user' && document.body.classList.contains('route-active');
+}
+
+function _setFollow(on) {
+  _followMode = !!on;
+  document.body.classList.toggle('nav-free', !on);
+}
+
+/** The cells from the dot (startId) to n cells further along `path`. */
+function _aheadCells(path, startId, n) {
+  if (!Array.isArray(path) || !path.length) return [];
+  let i = path.indexOf(startId);
+  if (i < 0) i = 0;
+  return path.slice(i, i + n + 1).map(id => {
+    const [row, col] = String(id).split(',').map(Number);
+    return { row, col };
+  });
+}
+
+/** Fit the dot and the stretch ahead into the visible map (the auto-zoom). */
+function _frameAhead() {
+  if (!_citizenRoute()) return false;
+  const cells = _aheadCells(renderer._path, STATE.startId, AHEAD_CELLS);
+  if (!cells.length && STATE.startId) {
+    const [row, col] = String(STATE.startId).split(',').map(Number);
+    cells.push({ row, col });
+  }
+  if (!cells.length) return false;
+  renderer.fitCells(cells, _visibleMapBox(), ROUTE_FIT_MAX_CELL_PX, 3);
+  return true;
+}
+
+/** "Re-center": follow the citizen again. */
+function _recenterNav() {
+  _setFollow(true);
+  _frameAhead();
 }
 
 /** Begin the second leg: cross to the destination floor and route to the office. */
@@ -786,6 +834,7 @@ function _startCrossFloorLegTwo() {
 
   _navStepReset();
   _updateNavInstruction();
+  _setFollow(true);
   _frameRoute();               // after the step bar is up, so it can be avoided
   _showStairToast(`You're on ${_floorName(t.destFloor)}. Follow the blue line to ${_officeTitle(t.label || 'your office')}.`);
 }
@@ -924,6 +973,7 @@ function navigateToDepartment(deptName, subservice, answerText, presetLoc) {
   // not just proximity to the office.
   _crossFloorTrip = null;
   if (DOM.navStairBtn) DOM.navStairBtn.hidden = true;   // shown again below for a stairs leg
+  _setFollow(true);                                      // a new route follows the citizen
   let stair = null;
   if (crossFloor) {
     stair = _bestStairFor(STATE.currentFloor, from.row, from.col, loc.floor, loc.row, loc.col);
@@ -1229,9 +1279,15 @@ document.addEventListener('DOMContentLoaded', () => {
       if (card) renderer.meFacing = card;
     }
     _lastMeCell = { row, col };
-    renderer.centerOnCell(row, col, _visibleMapBox());   // centre of what is visible, not under the step bar
     updateDriftIndicator();
-    recompute();
+    recompute();                     // the route from the new spot, before framing it
+    if (_citizenRoute()) {
+      // Following: frame the dot and the stretch ahead (auto-zoom). Not
+      // following (they moved the map): leave the view; "Re-center" is up.
+      if (_followMode) _frameAhead();
+    } else {
+      renderer.centerOnCell(row, col, _visibleMapBox());   // editor: centre of what is visible
+    }
     renderer._draw();
     // Arrival detection. On leg one of a cross-floor trip the "destination" is
     // the stairwell, so reaching it starts the climb rather than celebrating.
@@ -1269,6 +1325,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Stair detection lives in _onStairCell (top level, testable): it asks which
   // floor when there is no route, and stays quiet while a route is active.
   NAV.onStairCell = _onStairCell;
+  // Dragging, pinching or scrolling the citizen map stops following them.
+  renderer.onUserMove = () => { if (_citizenRoute() && _followMode) _setFollow(false); };
 
   NAV.onHeadingChange = (h) => {
     DOM.compassNeedle.style.transform = `rotate(${h}deg)`;
@@ -1393,6 +1451,7 @@ document.addEventListener('DOMContentLoaded', () => {
   _pinBtn('pinHereBtn',  _pinSetHere);
   _pinBtn('pinGoBtn',    _pinGoHere);
   _pinBtn('pinCloseBtn', _closePinMenu);
+  _pinBtn('navRecenterBtn', _recenterNav);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && _pinCell) _closePinMenu(); });
 
   DOM.exportStampsBtn.addEventListener('click', exportStampPresetsFile);
