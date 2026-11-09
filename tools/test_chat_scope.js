@@ -48,6 +48,9 @@ process.env.UPSTASH_VECTOR_REST_TOKEN = 'vtoken';
 process.env.UPSTASH_REDIS_REST_URL    = 'https://redis.fake';
 process.env.UPSTASH_REDIS_REST_TOKEN  = 'rtoken';
 process.env.GROQ_API_KEY              = 'gtoken';
+// Dashboard reads need the staff session since 2026-11-09 (lib/gate.js).
+process.env.ADMIN_PIN = process.env.ADMIN_PIN || 'test-pin-4821';
+const COOKIE = 'wf_admin=' + require(require('path').resolve(process.argv[2] || '.', 'lib/session.js')).signSession();
 
 const SERVICES = JSON.parse(read('wayfinding-app/data/services.json'));
 const MAYORS = SERVICES.find((s) => /Mayor.s Clearance/.test(s.subservice));
@@ -201,7 +204,7 @@ const usedLLM = () => calls.some((u) => u.includes('api.groq.com'));
   const P = path.resolve(ROOT, 'api/analytics.js');
   delete require.cache[P];
   const res = mockRes();
-  await require(P)({ method: 'GET', query: {}, headers: {} }, res);
+  await require(P)({ method: 'GET', query: {}, headers: { cookie: COOKIE } }, res);
   const typed = res.body.typedSubservices || [];
   ok('typedSubservices leaves out chip taps, old and new', typed.length === 1 && typed[0].name === 'Cedula Service' && typed[0].count === 2,
      JSON.stringify(typed));

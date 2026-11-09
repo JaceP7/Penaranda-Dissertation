@@ -1,29 +1,40 @@
 /**
- * api/adminauth.js — server-side check for the staff PIN that opens the editor UI.
+ * api/adminauth.js — the staff PIN, server-side.
  *
- * Why this exists: the PIN used to be a literal in js/app.js, so anyone could read
- * it with View Source. Moving the comparison server-side means the PIN is no longer
- * shipped to the browser.
+ * Two jobs:
  *
- * What this is NOT: a security boundary. The admin/citizen split is a client-side
- * class on <body>, so someone determined can still flip it in devtools and see the
- * editor. That buys them nothing on its own — every write to the shared map goes
- * through api/mapstate.js, which verifies MAP_ADMIN_TOKEN server-side and never
- * sends it to the client. This endpoint raises the bar from "read the source" to
- * "open devtools"; the publish token is what actually protects the data.
+ * 1. The map editor's PIN prompt (unchanged behaviour). The PIN used to be a
+ *    literal in js/app.js; comparing it here keeps it out of the page source.
+ *    For the editor this is not a security boundary (the admin/citizen split
+ *    is a class on <body>); every write to the shared map goes through
+ *    api/mapstate.js, which checks MAP_ADMIN_TOKEN. So for the editor it stays
+ *    fail-open: with ADMIN_PIN unset, the old default PIN still works and the
+ *    response says configured:false.
  *
- * Fail-open, deliberately: if ADMIN_PIN is unset the legacy PIN still works and the
- * response carries configured:false so the UI can show a setup notice. Failing
- * closed would lock the operator out of their own deployment the moment this ships,
- * to protect a gate that is already not a real control. Set ADMIN_PIN in Vercel to
- * turn the notice off.
+ * 2. The analytics dashboard's sign-in (2026-11-09). A correct PIN also sets
+ *    the `wf_admin` session cookie (lib/session.js), which the dashboard's data
+ *    endpoints require. This part FAILS CLOSED: no cookie is issued while
+ *    ADMIN_PIN is unset, because the old default was once in the public source
+ *    and the dashboard holds citizens' questions.
  *
- * Env:
- *   ADMIN_PIN   staff PIN for opening the editor (optional but recommended)
+ *   GET  /api/adminauth                       → { configured, signedIn }
+ *   POST /api/adminauth  { pin }              → { ok, configured } (+ cookie)
+ *   POST /api/adminauth  { action:'signout' } → { ok:true }, cookie cleared
+ *
+ * Brute force: 10 wrong PINs from one address within 15 minutes answer 429
+ * until the window ends (Redis key wf:pinfail:<ip>). A 4-digit PIN has only
+ * 10,000 values; use a longer one.
+ *
+ * Env: ADMIN_PIN (set it), SESSION_SECRET (optional; see lib/session.js).
  */
+'use strict';
+const { redis, redisConfigured } = require('../lib/redis');
+const { sessionConfig, signSession, verifySession, readSessionToken,
+        setSessionCookie, clearSessionCookie } = require('../lib/session');
 
-const ADMIN_PIN  = String(process.env.ADMIN_PIN || '').trim();
-const LEGACY_PIN = '2024';   // pre-existing value, kept only as the unconfigured fallback
+const LEGACY_PIN   = '2024';     // pre-existing value, the editor's unconfigured fallback only
+const MAX_FAILS    = 10;
+const WINDOW_S     = 15 * 60;
 
 /** Comparison that does not short-circuit on the first differing character. */
 function sameSecret(a, b) {
@@ -37,26 +48,71 @@ function sameSecret(a, b) {
   return diff === 0;
 }
 
+function clientIp(req) {
+  const h = (req.headers && (req.headers['x-forwarded-for'] || req.headers['x-real-ip'])) || '';
+  const ip = String(h).split(',')[0].trim() || (req.socket && req.socket.remoteAddress) || 'unknown';
+  return ip.replace(/[^0-9a-fA-F:.]/g, '').slice(0, 64) || 'unknown';
+}
+
+// The limiter never blocks on its own failure: if Redis is down, the PIN
+// check still applies, only the counting is skipped.
+async function failures(ip) {
+  if (!redisConfigured()) return 0;
+  try { return Number(await redis(['GET', 'wf:pinfail:' + ip])) || 0; } catch (_) { return 0; }
+}
+async function recordFailure(ip) {
+  if (!redisConfigured()) return;
+  try {
+    const n = await redis(['INCR', 'wf:pinfail:' + ip]);
+    if (Number(n) === 1) await redis(['EXPIRE', 'wf:pinfail:' + ip, String(WINDOW_S)]);
+  } catch (_) { /* best effort */ }
+}
+async function clearFailures(ip) {
+  if (!redisConfigured()) return;
+  try { await redis(['DEL', 'wf:pinfail:' + ip]); } catch (_) { /* best effort */ }
+}
+
 module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin',  '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Cache-Control', 'no-store');
   if (req.method === 'OPTIONS') return res.status(204).end();
-  if (req.method !== 'POST')    return res.status(405).json({ error: 'Method not allowed.' });
+
+  const cfg = sessionConfig();
+  const adminPin = String(process.env.ADMIN_PIN || '').trim();
+  const configured = adminPin.length > 0;
+
+  if (req.method === 'GET') {
+    return res.status(200).json({
+      configured: cfg.configured,
+      signedIn: cfg.configured && Boolean(verifySession(readSessionToken(req))),
+    });
+  }
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed.' });
 
   let body = req.body;
   if (typeof body === 'string') {
     try { body = JSON.parse(body); } catch { return res.status(400).json({ error: 'Bad JSON body.' }); }
   }
+
+  if (body && body.action === 'signout') {
+    clearSessionCookie(res);
+    return res.status(200).json({ ok: true });
+  }
+
   const pin = String((body && body.pin) || '').trim();
   if (!pin) return res.status(400).json({ error: 'Missing pin.' });
 
-  const configured = ADMIN_PIN.length > 0;
-  const expected   = configured ? ADMIN_PIN : LEGACY_PIN;
+  const ip = clientIp(req);
+  if ((await failures(ip)) >= MAX_FAILS) {
+    return res.status(429).json({ ok: false, configured, error: 'Too many tries. Wait 15 minutes.' });
+  }
 
+  const expected = configured ? adminPin : LEGACY_PIN;
   if (!sameSecret(pin, expected)) {
+    await recordFailure(ip);
     return res.status(401).json({ ok: false, configured, error: 'Incorrect PIN.' });
   }
-  return res.status(200).json({ ok: true, configured });
+  await clearFailures(ip);
+  // The dashboard session only for the real, configured PIN.
+  if (cfg.configured) setSessionCookie(res, signSession());
+  return res.status(200).json({ ok: true, configured, session: cfg.configured });
 };

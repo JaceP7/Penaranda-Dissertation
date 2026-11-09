@@ -26,6 +26,7 @@
 const REDIS_URL   = (process.env.UPSTASH_REDIS_REST_URL || '').replace(/\/$/, '');
 const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || '';
 const LOG_KEY     = 'wf:querylog';
+const { requireAdmin } = require('../lib/gate');
 
 // The log holds up to LOG_CAP entries (see api/chat.js). Reading them in one
 // LRANGE would be a single multi-megabyte response, so page through instead.
@@ -113,10 +114,31 @@ function csvCell(v) {
   return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
 }
 
-module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+/**
+ * GET /api/analytics?view=chips — open. The citizen chat's suggested chips:
+ * the five services most asked by TYPED questions (chip taps and health
+ * checks left out), names and counts only. Nothing a citizen typed is in it.
+ */
+async function chipsView(res) {
+  res.setHeader('Cache-Control', 'public, max-age=300');
+  if (!REDIS_URL || !REDIS_TOKEN) return res.status(200).json({ chips: [] });
+  let rows = [];
+  try { ({ rows } = await readLog()); } catch (_) { return res.status(200).json({ chips: [] }); }
+  const counter = {};
+  for (const e of rows) {
+    if (e.synthetic || !e.subservice || isChipRow(e)) continue;
+    counter[e.subservice] = (counter[e.subservice] || 0) + 1;
+  }
+  return res.status(200).json({ chips: topN(counter, 5) });
+}
 
+module.exports = async function handler(req, res) {
   const q      = req.query || {};
+  if (String(q.view || '') === 'chips') return chipsView(res);
+  // Everything else holds citizens' questions: staff session only
+  // (lib/gate.js). Until 2026-11-09 this was open to anyone.
+  if (!(await requireAdmin(req, res))) return;
+
   const isCsv  = String(q.format || '').toLowerCase() === 'csv';
   const from   = DATE_RE.test(String(q.from || '')) ? String(q.from) : '';
   const to     = DATE_RE.test(String(q.to   || '')) ? String(q.to)   : '';

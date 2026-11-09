@@ -16,6 +16,9 @@ const ok = (name, cond, extra) => {
 
 process.env.UPSTASH_REDIS_REST_URL   = 'https://fake.local';
 process.env.UPSTASH_REDIS_REST_TOKEN = 'faketoken';
+// Dashboard reads need the staff session since 2026-11-09 (lib/gate.js).
+process.env.ADMIN_PIN = process.env.ADMIN_PIN || 'test-pin-4821';
+const COOKIE = 'wf_admin=' + require(require('path').resolve(process.argv[2] || '.', 'lib/session.js')).signSession();
 
 // Newest first, as LPUSH leaves the list.
 const DAY = 86400000;
@@ -52,7 +55,7 @@ const P = path.resolve(ROOT, 'api/analytics.js');
 const load = () => { delete require.cache[P]; return require(P); };
 const call = async (query) => {
   const res = mockRes();
-  await load()({ method: 'GET', query, headers: {} }, res);
+  await load()({ method: 'GET', query, headers: { cookie: COOKIE } }, res);
   return res;
 };
 

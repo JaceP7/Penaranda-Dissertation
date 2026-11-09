@@ -34,6 +34,7 @@
 const REDIS_URL   = (process.env.UPSTASH_REDIS_REST_URL || '').replace(/\/$/, '');
 const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || '';
 const KEY         = 'wf:navlog';
+const { requireAdmin } = require('../lib/gate');
 const CAP         = 50000;
 const CHUNK       = 2500;
 
@@ -121,6 +122,10 @@ module.exports = async function handler(req, res) {
 
   // ── read ───────────────────────────────────────────────────────────────────
   if (req.method === 'GET') {
+    // Reading the events back is for staff only; writing stays open above.
+    if (res.removeHeader) res.removeHeader('Access-Control-Allow-Origin');
+    else res.setHeader('Access-Control-Allow-Origin', '');
+    if (!(await requireAdmin(req, res))) return;
     const q     = req.query || {};
     const isCsv = String(q.format || '').toLowerCase() === 'csv';
     let from = DATE_RE.test(String(q.from || '')) ? String(q.from) : '';

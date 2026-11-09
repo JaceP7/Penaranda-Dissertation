@@ -16,6 +16,9 @@ const ok = (name, cond, extra) => {
 
 process.env.UPSTASH_REDIS_REST_URL   = 'https://fake.local';
 process.env.UPSTASH_REDIS_REST_TOKEN = 'faketoken';
+// Dashboard reads need the staff session since 2026-11-09 (lib/gate.js).
+process.env.ADMIN_PIN = process.env.ADMIN_PIN || 'test-pin-4821';
+const COOKIE = 'wf_admin=' + require(require('path').resolve(process.argv[2] || '.', 'lib/session.js')).signSession();
 
 const store = {};
 global.fetch = async (_url, opts) => {
@@ -43,7 +46,7 @@ const NAV = path.resolve(ROOT, 'api/navlog.js');
 const ANA = path.resolve(ROOT, 'api/analytics.js');
 const load = (p) => { delete require.cache[p]; return require(p); };
 const post = async (body) => { const r = mockRes(); await load(NAV)({ method: 'POST', body, headers: {}, query: {} }, r); return r; };
-const get  = async (query) => { const r = mockRes(); await load(NAV)({ method: 'GET', query: query || {}, headers: {} }, r); return r; };
+const get  = async (query) => { const r = mockRes(); await load(NAV)({ method: 'GET', query: query || {}, headers: { cookie: COOKIE } }, r); return r; };
 
 const DAY = 86400000;
 const T = (iso) => new Date(iso + 'T09:00:00Z').getTime();
@@ -152,7 +155,7 @@ const T = (iso) => new Date(iso + 'T09:00:00Z').getTime();
     { ts: Date.now(), query: 'How do I get a business permit?', department: 'B', latency_ms: 850, synthetic: true },
   ].map((o) => JSON.stringify(o));
   const ares = mockRes();
-  await load(ANA)({ method: 'GET', query: {}, headers: {} }, ares);
+  await load(ANA)({ method: 'GET', query: {}, headers: { cookie: COOKIE } }, ares);
   ok('analytics hides health-check queries by default', ares.body.total === 1, ares.body.total);
   ok('analytics reports how many it withheld', ares.body.syntheticExcluded === 2, ares.body.syntheticExcluded);
   ok('the probe string is not the top department',
@@ -160,11 +163,11 @@ const T = (iso) => new Date(iso + 'T09:00:00Z').getTime();
      JSON.stringify(ares.body.topDepartments));
 
   const ares2 = mockRes();
-  await load(ANA)({ method: 'GET', query: { synthetic: '1' }, headers: {} }, ares2);
+  await load(ANA)({ method: 'GET', query: { synthetic: '1' }, headers: { cookie: COOKIE } }, ares2);
   ok('analytics can include them on request', ares2.body.total === 3, ares2.body.total);
 
   const acsv = mockRes();
-  await load(ANA)({ method: 'GET', query: { format: 'csv' }, headers: {} }, acsv);
+  await load(ANA)({ method: 'GET', query: { format: 'csv' }, headers: { cookie: COOKIE } }, acsv);
   ok('the CSV export excludes them too, matching the dashboard',
      acsv.body.replace(/^﻿/, '').trim().split('\r\n').length === 2,
      acsv.body.replace(/^﻿/, '').trim().split('\r\n').length);

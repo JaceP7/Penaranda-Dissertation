@@ -724,3 +724,54 @@ Before writing CSS or markup, load the `ui-ux-pro-max` skill (Jace asked for it)
 - [ ] **Step 2:** Request a whole-branch review (superpowers:requesting-code-review). Fix what survives verification.
 - [ ] **Step 3:** Merge to `main` and push. On the live site, signed in as Jace, check every page on a phone and on a desktop. The citizen starter chips must still load.
 - [ ] **Step 4:** Update `ADMIN_GUIDE.md` (the dashboard pages), `SYSTEM_CONTEXT.md` and `IMPLEMENTATION_AUDIT.md`. Commit and push.
+
+---
+
+## Addendum (2026-11-09): staff PIN instead of Google sign-in
+
+Jace chose to build the revamp now behind the staff PIN, with Google sign-in later. Phase 1 (Tasks 1 to 8) is replaced by Tasks P1 and P2 below. Phase 2 runs as written, except that the People page (Task 15) is dropped, because a PIN has no access list.
+
+**Found before starting:**
+- `ADMIN_PIN` is not set in Vercel. `POST /api/adminauth` reports `configured: false`, so the effective PIN is the old default, which was once in the public source.
+- `GET /api/analytics` is open to anyone and returns the 20 newest citizen questions.
+
+**Rules for the PIN gate:**
+- **Fails closed.**
+  - The dashboard and its data need a session cookie issued for the PIN.
+  - No session is issued while `ADMIN_PIN` is unset. The dashboard then says to set it, and every gated read answers 503.
+  - The map editor keeps its existing fail-open PIN check (unchanged; that decision is in `api/adminauth.js`).
+- **Session:**
+  - The cookie `wf_admin` is `HttpOnly; Secure; SameSite=Lax; Path=/` and lasts 8 hours.
+  - Its value is `base64url(JSON {x}) + '.' + HMAC-SHA256`.
+  - The HMAC key comes from `SESSION_SECRET` if set, or else from `UPSTASH_REDIS_REST_TOKEN`, and is bound to the current `ADMIN_PIN`. Changing the PIN ends every session.
+- **Brute force:** 10 wrong PINs from one IP in 15 minutes answer 429 until the window ends (Redis `INCR`/`EXPIRE`, key `wf:pinfail:<ip>`).
+- **Public chips read:** `GET /api/analytics?view=chips` returns only `{ chips: [{name, count}] }`, the top 5 typed services. Everything else on `/api/analytics`, the `GET` on `/api/navlog`, and all of `/api/data` need the session. `POST /api/navlog`, `POST /api/chat` and `GET /api/mapstate` stay open.
+
+### Task P1: session and gate modules; PIN sign-in on `/api/adminauth`
+- **Create:**
+  - `lib/redis.js`: `redisConfigured()` and `redis(cmd)`.
+  - `lib/session.js`: `SESSION_COOKIE = 'wf_admin'`, `SESSION_TTL_MS = 28800000`, `sessionConfig() → {configured, missing}`, `signSession(now)`, `verifySession(token, now)`, `readSessionToken(req)`, `setSessionCookie(res, token)`, `clearSessionCookie(res)`.
+  - `lib/gate.js`: `requireAdmin(req, res) → boolean` (503 when not configured, 401 without a valid session, always `Cache-Control: no-store`), and `requireJson(req, res)`.
+- **`/api/adminauth`:**
+  - `GET` → `{ configured, signedIn }`.
+  - `POST {pin}` sets the cookie when the PIN is right and configured. The response keeps `{ok, configured}` for the editor.
+  - `POST {action:'signout'}` clears the cookie.
+  - After 10 failures in 15 minutes → 429.
+- **Test:** `tools/test_admin_gate.js`.
+
+### Task P2: gate the reads; public chips
+- **`api/analytics.js`:** `view=chips` is public. Everything else goes through `requireAdmin`, and the `Access-Control-Allow-Origin` header is dropped.
+- **`api/navlog.js`:** `GET` goes through `requireAdmin`. `POST` keeps `Access-Control-Allow-Origin: *`.
+- **`wayfinding-app/js/chat.js`:** reads `/api/analytics?view=chips`.
+- **Existing tests:** `test_analytics_range.js` and `test_navlog.js` send a session cookie, and their assertions don't change.
+- **Test:** `tools/test_admin_gate.js`.
+
+### Changes to Phase 2
+- **Task 9** also returns:
+  - `sources: {typed, chip}`;
+  - `kinds: {service, location, scope, unclear}`;
+  - `scopeTopics: [{name, count}]`, with the out-of-scope topics from `lib/scope_guard.js`.
+- **Task 12:**
+  - The sign-in screen is a PIN form. A 429 shows "Too many tries. Wait 15 minutes."
+  - The menu drops People, and Map editor links to `/?staff=1`.
+- **Task 15b:** the data log records `by: 'staff PIN'`.

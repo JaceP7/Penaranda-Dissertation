@@ -500,12 +500,15 @@ const CHAT = (() => {
   // isn't enough real data yet (or analytics isn't reachable).
   async function _loadDynamicStarters() {
     try {
-      const res = await fetch('/api/analytics');
+      const res = await fetch('/api/analytics?view=chips');
       if (!res.ok) return;
       const data = await res.json();
       // Ranked from TYPED questions. Chip taps are 61% of all questions (2026-11-09),
       // so ranking the chips by everything made them rank themselves.
-      const top = Array.isArray(data.typedSubservices) ? data.typedSubservices : [];
+      // The hosted site answers { chips }; the laptop server still sends the
+      // whole summary, so fall back to its typedSubservices.
+      const top = Array.isArray(data.chips) ? data.chips
+                : Array.isArray(data.typedSubservices) ? data.typedSubservices : [];
       if (top.length < 3) return;                       // not enough signal — keep defaults
       const chips = top.slice(0, 5)
         .filter(x => x && x.name)
