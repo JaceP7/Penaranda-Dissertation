@@ -119,7 +119,8 @@ const missing = canon.filter((d) => !listed.has(d));
 ok(`every one of the ${canon.length} departments in services.json has an entry`,
    missing.length === 0, missing.join('; '));
 ok('plus the Public Assistance Center', listed.has(PAC));
-ok('32 entries in all', F.OFFICES.length === 32, F.OFFICES.length);
+ok('plus COMELEC, which has an office in the building (2026-11-09)', listed.has('COMMISSION ON ELECTIONS'));
+ok('33 entries in all', F.OFFICES.length === 33, F.OFFICES.length);
 const unfindable = F.OFFICES.filter((o) => dept('where is the ' + o.name) !== o.dept)
                             .map((o) => `${o.name} -> ${dept('where is the ' + o.name)}`);
 ok('every display name finds its own office', unfindable.length === 0, unfindable.join('; '));

@@ -42,6 +42,34 @@ The paper describes a 6-stage pipeline that "runs entirely on local hardware, re
 - [~] "Runs entirely on local hardware" — **DRIFTS:** we added Groq/Gemini cloud routing in May 2026 for SUS-evaluation concurrency. Needs reconciliation in methodology.
 - [x] **Office finder (2026-11-09)** — "where is [office]?" is answered before retrieval by `lib/office_finder.js` (32 offices with their abbreviations and older names: BPLO, PESO, CSWDO, OBO...). The client writes the floor and side from the live map (`describeOfficeLocation` in `service_locations.js`). Offices not on the map (CDRRMD, GSO, OSCA, POSO) point to the Public Assistance Center; "CAO" and "CHSD" ask which office. Logged with `kind: 'location'`. Before this, BPLO routed to Housing, PESO and POSO to the Treasury, and all six tested "where is" questions were told the office could not be found.
 - [!] **Clarification rate read 0% from 2026-09-28 to 2026-11-09.** Commit `2af3a7c` made `resolveDept()` fall back to the top search result whenever the answer had no "Go to:" line, so `needsContext` (computed as `!dept && ...`) could never be true: all 37 live queries in that window logged `needsContext: false`, and clarifying answers showed a "Take me there" to a guessed office. Fixed 2026-11-09 (explicit choice wording now sets `needsContext`; "could not find" answers get no office). **Any SOP 4.2.4 clarification figure from that window is not usable**; measure from 2026-11-09 on.
+- [x] **Test-day review and fixes (2026-11-09).** 198 questions and 173 routes from the day's test session. The full review is private, in the git-ignored `analytics_backups/`. Findings, and the change each one led to:
+  - **Chips were 121 of 198 questions (61%), and the "most asked" chips were ranked from those same taps, so they ranked themselves.**
+    - Chip taps are now logged `source: 'chip'`.
+    - The citizen chips are ranked from `typedSubservices`, which counts typed questions only. Older taps are recognised as a question that is exactly a service name.
+    - A chip that names a service is answered from the Charter record (`lib/service_lookup.js`), with no search and no LLM. The hospitalization chip had come back as a clarifying question three times.
+  - **Of the 77 typed questions, 13 (17%) found nothing,** mostly facilities, other agencies and officials. Several more were confidently misrouted:
+    - "exit" went to the City College exit clearance;
+    - "voter's ID" went to the Senior Citizens office;
+    - "4P's" went to City Administration;
+    - a nonsense word went to Veterinary.
+
+    `lib/scope_guard.js` now answers:
+    - facilities, other agencies and officials, with one sentence and the Public Assistance Center;
+    - the building exit, with the nearest exit;
+    - small talk;
+    - questions about the assistant itself.
+
+    It only does so when the question is about that thing; "photocopy" appears in 44 requirement lists.
+    - A top search score below 0.625 is treated as not understood. On the day, every genuine question scored at least 0.630, and nonsense scored at most 0.622.
+    - The office finder gained TUPAD, 4Ps and COMELEC (LG 19).
+  - **37 of 173 routes (21%) for offices not on the map (CDRRMD, OSCA) were silently sent to the Public Assistance Center.**
+    - `resolveServiceLocation` now returns `{unmapped: true}`.
+    - The chat says the office may be outside City Hall and offers "Public Assistance Center" and "Nearest exit" (`BUILDING_EXITS`, `navigateToNearestExit`).
+  - **Routes:**
+    - Only 55 of 173 reached the office (32%), and 132 started from the assumed entrance with no QR scan.
+    - Citizens can now tap the map: "Nandito ako" sets their position, and "Pumunta dito" routes there.
+  - **Map legibility:** citizens now see "Stairs" and "Exit" labels, doors drawn as gaps in the wall, and a pin at the destination, instead of S, D and E.
+  - **The centre (Jace, #6):** no route passes through the centre octagon any more. The door at down 13, across 33 on every floor and the one at down 60, across 27 on the Ground Floor are now walls, which affected 19 Ground Floor routes. All 95 offices are still reachable (`tools/test_centre_closed.js`).
 - [?] Knowledge base is "2024–2025 Citizen's Charter" — `services.json` exists (60 services) but NOT YET VERIFIED to derive from the official Charter PDF.
 
 ---

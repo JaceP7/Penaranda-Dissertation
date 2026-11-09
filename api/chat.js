@@ -23,6 +23,14 @@
  */
 
 const { findOfficeQuestion } = require('../lib/office_finder');
+const { classifyScope, scopeReply, unclearReply } = require('../lib/scope_guard');
+const { findService, relatedServices, serviceAnswer } = require('../lib/service_lookup');
+
+// Below this top search score the match is treated as not understood rather
+// than answered. Calibrated on 2026-11-09: every genuine typed question that
+// day scored 0.630 or more; nonsense words and an off-topic request
+// scored 0.581-0.622 (a nonsense word had been sent to Veterinary).
+const MIN_SCORE = 0.625;
 
 const GROQ_URL    = 'https://api.groq.com/openai/v1/chat/completions';
 const MODEL       = 'openai/gpt-oss-120b';       // llama-3.3-70b went Groq-enterprise-only
@@ -74,7 +82,9 @@ async function upstashQuery(text, topK = TOP_K) {
   });
   if (!r.ok) throw new Error(`Upstash query ${r.status}: ${(await r.text()).slice(0, 200)}`);
   const d = await r.json();
-  return (d.result || []).map(x => x.metadata || {}).filter(m => m.subservice);
+  // _score rides along on the metadata so the handler can refuse a weak match.
+  return (d.result || []).map(x => Object.assign({}, x.metadata || {}, { _score: x.score }))
+    .filter(m => m.subservice);
 }
 
 function buildContext(results) {
@@ -202,6 +212,9 @@ module.exports = async function handler(req, res) {
 
   const t0 = Date.now();
   const { query, history = [] } = req.body || {};
+  // A tapped chip, not typed text. Logged as such so the "most asked" chips
+  // can be ranked from typed questions only (they were feeding themselves).
+  const source = (req.body && req.body.source === 'chip') ? 'chip' : undefined;
   // Automated checks (tools/verify_stack.py) send this header so their traffic
   // can be excluded from analytics. Without it the health-check string becomes
   // the top "citizen" query and the demand ranking measures our own testing.
@@ -210,14 +223,44 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'query is required' });
   }
 
-  // 0. "Where is [office]?" — answered from the office list, no search needed.
+  // 0a. A chip that names a service: answer from the Charter record itself.
+  if (source === 'chip') {
+    const svc = findService(query);
+    if (svc) {
+      const lang = langTag(query);
+      await logQuery({ ts: Date.now(), query, department: svc.department, subservice: svc.subservice,
+                       needsContext: false, latency_ms: Date.now() - t0, lang,
+                       kind: 'service', source, synthetic });
+      return res.status(200).json({
+        answer: serviceAnswer(svc, lang), department: svc.department, subservice: svc.subservice,
+        needsContext: false, options: [], rate_limited: false, kind: 'service', lang,
+        related: relatedServices(svc.department, svc.subservice),
+      });
+    }
+  }
+
+  // 0b. Out of scope: facilities, other agencies, officials, the exit, small
+  //     talk. A short explanation and the help desk (Jace, 2026-11-09).
+  const scope = classifyScope(query);
+  if (scope) {
+    const lang = locationLang(query);
+    const r = scopeReply(scope, lang);
+    await logQuery({ ts: Date.now(), query, department: null, subservice: null, needsContext: false,
+                     latency_ms: Date.now() - t0, lang, kind: 'scope', topic: scope.topic, source, synthetic });
+    return res.status(200).json({
+      answer: r.answer, department: null, subservice: null, needsContext: false, options: [],
+      rate_limited: false, kind: 'scope', topic: scope.topic, actions: r.actions, lang,
+    });
+  }
+
+  // 0c. "Where is [office]?" — answered from the office list, no search needed.
   const found = findOfficeQuestion(query);
   if (found) {
     const lang = locationLang(query);
     const r = locationReply(found, lang);
     await logQuery({ ts: Date.now(), query, department: r.department, subservice: null,
                      needsContext: r.needsContext, latency_ms: Date.now() - t0, lang,
-                     kind: 'location', synthetic });
+                     kind: 'location', source, synthetic });
     return res.status(200).json({
       answer: r.answer, department: r.department, subservice: null,
       needsContext: r.needsContext, options: r.options, rate_limited: false,
@@ -239,10 +282,23 @@ module.exports = async function handler(req, res) {
   } catch (err) {
     return res.status(502).json({ error: 'Vector search failed', detail: err.message });
   }
+  // A match this weak is a guess (a nonsense word went to Veterinary on
+  // 2026-11-09). Ask the citizen to rephrase instead of answering it.
+  if (results.length && typeof results[0]._score === 'number' && results[0]._score < MIN_SCORE) {
+    const lang = locationLang(query);
+    const r = unclearReply(lang);
+    await logQuery({ ts: Date.now(), query, department: null, subservice: null, needsContext: false,
+                     latency_ms: Date.now() - t0, lang, kind: 'unclear', score: results[0]._score,
+                     source, synthetic });
+    return res.status(200).json({
+      answer: r.answer, department: null, subservice: null, needsContext: false, options: [],
+      rate_limited: false, kind: 'unclear', actions: r.actions, lang,
+    });
+  }
   if (!results.length) {
     await logQuery({ ts: Date.now(), query, department: null, subservice: null,
                      needsContext: false, latency_ms: Date.now() - t0, lang: langTag(query),
-                     synthetic });
+                     source, synthetic });
     return res.status(200).json({
       answer: "I couldn't find that in the Calamba City Hall services. Please ask at the Information desk.",
       department: null, subservice: null, needsContext: false, options: [], rate_limited: false,
@@ -290,7 +346,7 @@ module.exports = async function handler(req, res) {
 
   await logQuery({ ts: Date.now(), query, department: dept || null, subservice,
                    needsContext, latency_ms: Date.now() - t0, lang: langTag(query),
-                   synthetic });
+                   source, synthetic });
 
   return res.status(200).json({
     answer,
@@ -299,5 +355,7 @@ module.exports = async function handler(req, res) {
     needsContext,
     options,
     rate_limited: false,
+    // Other services at the same office, offered as chips after the answer.
+    related: dept ? relatedServices(dept, subservice) : [],
   });
 };

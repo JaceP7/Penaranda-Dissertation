@@ -35,7 +35,7 @@ const MAX_DAYS = 400;       // guard on the per-day series for a silly date rang
 
 const EMPTY = {
   total: 0, today: 0, ambiguityRate: 0, avgLatency: 0,
-  topDepartments: [], topSubservices: [], queriesPerDay: [], recentQueries: [],
+  topDepartments: [], topSubservices: [], typedSubservices: [], queriesPerDay: [], recentQueries: [],
 };
 
 async function redisLRange(key, start, stop) {
@@ -64,6 +64,18 @@ async function readLog() {
     if (start >= MAX_SCAN) { capped = true; break; }
   }
   return { rows, capped };
+}
+
+/**
+ * A chip tap, not a typed question. New rows say so (source: 'chip'); older
+ * ones are recognised by the question being exactly the service name, which is
+ * what the most-asked chips send. On 2026-11-09, 121 of 198 questions were
+ * chip taps, and ranking the chips from them made the chips feed themselves.
+ */
+function isChipRow(e) {
+  if (e.source === 'chip') return true;
+  const n = (x) => String(x || '').toLowerCase().replace(/\s+/g, ' ').trim();
+  return Boolean(e.subservice) && n(e.query) === n(e.subservice);
 }
 
 function topN(counter, n) {
@@ -191,7 +203,7 @@ module.exports = async function handler(req, res) {
   const now = new Date();
   const todayStr = now.toISOString().slice(0, 10);   // UTC date
   let ambiguous = 0, latencySum = 0, latencyN = 0, todayCount = 0;
-  const deptCounter = {}, subCounter = {}, dayCounter = {};
+  const deptCounter = {}, subCounter = {}, typedCounter = {}, dayCounter = {};
 
   for (const e of rows) {
     const date = dayOf(e);
@@ -203,6 +215,7 @@ module.exports = async function handler(req, res) {
     if (typeof e.latency_ms === 'number') { latencySum += e.latency_ms; latencyN++; }
     if (e.department) deptCounter[e.department] = (deptCounter[e.department] || 0) + 1;
     if (e.subservice) subCounter[e.subservice] = (subCounter[e.subservice] || 0) + 1;
+    if (e.subservice && !isChipRow(e)) typedCounter[e.subservice] = (typedCounter[e.subservice] || 0) + 1;
   }
 
   // Per-day series: the chosen window when one is set, else the last 7 days.
@@ -240,6 +253,7 @@ module.exports = async function handler(req, res) {
     avgLatency:     latencyN ? Math.round(latencySum / latencyN) : 0,
     topDepartments: topN(deptCounter, 10),
     topSubservices: topN(subCounter, 10),
+    typedSubservices: topN(typedCounter, 10),   // demand from typed questions; the citizen chips use this
     queriesPerDay:  days,
     recentQueries,
     range:   { from: lo, to: hi, applied },

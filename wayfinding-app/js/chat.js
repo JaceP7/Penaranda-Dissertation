@@ -24,6 +24,9 @@ const CHAT = (() => {
   //    mis-routed (marriage certificate landed on the Senior Citizens office). ──
   // Shown until the live analytics has enough asked services to pick the top
   // five itself. Each was tried on the live assistant (tools/test_chips.js).
+  // The help desk the out-of-scope and not-on-the-map answers point to.
+  const HELP_DESK_DEPT = "MAYOR'S OFFICE PUBLIC ASSISTANCE CENTER";
+
   const STARTERS = [
     { label: 'Birth certificate', query: 'How do I get a certified copy of my birth certificate?' },
     { label: 'Cedula',            query: 'How do I get a cedula (community tax certificate)?' },
@@ -79,7 +82,8 @@ const CHAT = (() => {
   }
 
   // ── Add message ───────────────────────────────────────────────────────
-  function _addMessage(role, text, department, subservice, options, rateLimited, navLabel) {
+  function _addMessage(role, text, department, subservice, options, rateLimited, navLabel, extra) {
+    const x = extra || {};
     _messages.push({
       role,
       text,
@@ -88,6 +92,9 @@ const CHAT = (() => {
       options:      options      || [],
       rateLimited:  !!rateLimited,
       navLabel:     navLabel     || null,   // what the button really leads to, when not `department`
+      related:      x.related    || [],     // other services at the same office (follow-up chips)
+      actions:      x.actions    || [],     // 'help' (Public Assistance Center) and/or 'exit'
+      place:        x.place      || null,   // 'outside' | 'unmapped' for a "where is" answer
     });
     _renderMessages();
     _scrollBottom();
@@ -149,7 +156,8 @@ const CHAT = (() => {
         // keep any open list intact (blank line = spacing only)
       } else if (/^go to:/i.test(trimmed)) {
         closeTop();
-        html += `<div class="chat-goto">📍 ${inline(trimmed.replace(/^go to:\s*/i, ''))}</div>`;
+        const pin = typeof uiIcon === 'function' ? uiIcon('map-pin') : '';
+        html += `<div class="chat-goto">${pin} ${inline(trimmed.replace(/^go to:\s*/i, ''))}</div>`;
       } else {
         closeTop();
         html += `<p class="chat-para">${inline(trimmed)}</p>`;
@@ -188,15 +196,44 @@ const CHAT = (() => {
           chip.addEventListener('click', () => {
             if (_loading) return;
             _input.value = opt;
-            send();
+            send({ source: 'chip' });      // the options are service names
           });
           chips.appendChild(chip);
         });
         _msgList.appendChild(chips);
       }
 
+      // Not on the map / not in the building / out of scope: a sentence (for
+      // a service answer) and the help-desk and exit buttons, no route there.
+      const place = (msg.role === 'bot' && msg.department) ? _placeActions(msg.department) : null;
+      const actions = msg.role !== 'bot' ? []
+        : (place && !place.go) ? place.actions
+        : (msg.place ? ['help', 'exit'] : msg.actions);
+      if (place && !place.go) {
+        const note = document.createElement('p');
+        note.className = 'chat-place-note';
+        note.textContent = place.note;
+        _msgList.appendChild(note);
+      }
+      if (actions.length) {
+        const row = document.createElement('div');
+        row.className = 'chat-actions';
+        actions.forEach(a => {
+          const b = document.createElement('button');
+          b.className = a === 'exit' ? 'chat-action-btn chat-action-exit' : 'chat-action-btn';
+          b.textContent = a === 'exit' ? 'Nearest exit' : 'Public Assistance Center';
+          b.addEventListener('click', () => {
+            if (a === 'exit') { if (typeof navigateToNearestExit === 'function') navigateToNearestExit(); }
+            else if (_onNavigate) _onNavigate(HELP_DESK_DEPT, null, null);
+            if (_open) toggle();
+          });
+          row.appendChild(b);
+        });
+        _msgList.appendChild(row);
+      }
+
       // "Take me there" button
-      if (msg.role === 'bot' && msg.department) {
+      if (msg.role === 'bot' && msg.department && (!place || place.go)) {
         const loc = document.createElement('div');
         loc.className = 'chat-location';
 
@@ -236,7 +273,8 @@ const CHAT = (() => {
   }
 
   // ── Send ──────────────────────────────────────────────────────────────
-  async function send() {
+  async function send(opts) {
+    const source = opts && opts.source === 'chip' ? 'chip' : undefined;
     const query = _input.value.trim();
     if (!query || _loading) return;
 
@@ -258,7 +296,7 @@ const CHAT = (() => {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query, history })
+        body: JSON.stringify({ query, history, source })
       });
 
       if (!res.ok) {
@@ -275,12 +313,13 @@ const CHAT = (() => {
         // "Where is [office]?" — say where it is from the map this device
         // holds, which the server cannot see (the editor can republish it).
         const where = describeOfficeLocation(data.office, data.lang);
-        _addMessage('bot', where.text, where.navDept, null, [], false, where.navLabel);
+        _addMessage('bot', where.text, where.navDept, null, [], false, where.navLabel, { place: where.place });
       } else {
         const opts = (data.options && data.options.length)
           ? data.options
           : (data.needsContext ? _extractOptions(data.answer) : []);
-        _addMessage('bot', data.answer, data.department, data.subservice, opts);
+        _addMessage('bot', data.answer, data.department, data.subservice, opts, false, null,
+                    { related: data.related, actions: data.actions });
       }
     } catch (err) {
       _addMessage('bot', `Could not reach the assistant. Check your connection and try again.`);
@@ -337,6 +376,10 @@ const CHAT = (() => {
         <div class="chat-qr-hint">${typeof uiIcon === 'function' ? uiIcon('camera') : ''} Already inside City Hall? <strong>Scan the QR posted near you</strong> to set your location for accurate directions.</div>
       </div>
       <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-followups" id="chatFollowups" hidden>
+        <div class="chat-followups-label">Iba pang tanong · More questions</div>
+        <div class="chat-followups-chips" id="chatFollowupChips"></div>
+      </div>
       <div class="chat-input-row">
         <input  class="chat-input"  id="chatInput"  type="text"
                 placeholder="e.g. How do I get a business permit?" maxlength="200" />
@@ -364,7 +407,7 @@ const CHAT = (() => {
     _renderStarterChips(STARTERS);
 
     _panel.querySelector('.chat-close-btn').addEventListener('click', toggle);
-    _sendBtn.addEventListener('click', send);
+    _sendBtn.addEventListener('click', () => send());   // not send(event): typed text is never a chip
     _input.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
 
     // Mobile: when the input is focused the keyboard opens — keep the field and
@@ -377,22 +420,67 @@ const CHAT = (() => {
   }
 
   // ── Starter chips ──────────────────────────────────────────────────────
+  let _currentStarters = STARTERS;
+
+  /** A chip button. Its text goes to the server marked as a chip, so a
+   *  service name is answered straight from the Charter (no search, no LLM)
+   *  and the tap is not counted as a typed question. */
+  function _chipButton(s, cls) {
+    const chip = document.createElement('button');
+    chip.className = cls;
+    chip.textContent = s.label;
+    chip.title = s.query;
+    chip.addEventListener('click', () => {
+      if (_loading) return;
+      _input.value = s.query;
+      send({ source: 'chip' });
+    });
+    return chip;
+  }
+
   function _renderStarterChips(list) {
+    _currentStarters = list;
     const wrap = document.getElementById('chatStartersChips');
     if (!wrap) return;
     wrap.innerHTML = '';
-    list.forEach(s => {
-      const chip = document.createElement('button');
-      chip.className = 'chat-starter-chip';
-      chip.textContent = s.label;
-      chip.title = s.query;
-      chip.addEventListener('click', () => {
-        if (_loading) return;
-        _input.value = s.query;
-        send();
-      });
-      wrap.appendChild(chip);
-    });
+    list.forEach(s => wrap.appendChild(_chipButton(s, 'chat-starter-chip')));
+    if (_messages.length) _updateStarters();
+  }
+
+  /**
+   * Chips to show after an answer: other services at the same office first
+   * (from the answer's `related`), then the top chips, without repeats or the
+   * service just answered. At most five.
+   */
+  function _followupChips(lastBot, starters) {
+    const out = [], seen = new Set();
+    const skip = lastBot && lastBot.subservice ? String(lastBot.subservice).toLowerCase() : '';
+    const add = (c) => {
+      const k = String(c.query).toLowerCase();
+      if (out.length >= 5 || seen.has(k) || k === skip) return;
+      seen.add(k); out.push(c);
+    };
+    const short = (n) => { const s = String(n); return s.length <= 52 ? s : s.slice(0, s.lastIndexOf(' ', 51) > 20 ? s.lastIndexOf(' ', 51) : 51) + '…'; };
+    ((lastBot && lastBot.related) || []).forEach(n => add({ label: short(n), query: n }));
+    (starters || []).forEach(add);
+    return out;
+  }
+
+  /**
+   * What the chat offers for an office (Jace, 2026-11-09, #5): "Take me there"
+   * when it is on the map; otherwise a sentence saying so, the Public
+   * Assistance Center, and the nearest exit. Never a silent route elsewhere.
+   */
+  function _placeActions(dept) {
+    const status = (typeof serviceLocationStatus === 'function') ? serviceLocationStatus(dept) : 'mapped';
+    if (status === 'mapped') return { go: true, actions: [], note: '' };
+    return {
+      go: false,
+      actions: ['help', 'exit'],
+      note: status === 'outside'
+        ? "This office isn't inside City Hall. The Public Assistance Center can direct you."
+        : "This office isn't on this map; it may be outside City Hall. The Public Assistance Center can direct you.",
+    };
   }
 
   // Tidy a raw service name into a short chip label (drop trailing parentheticals).
@@ -415,7 +503,9 @@ const CHAT = (() => {
       const res = await fetch('/api/analytics');
       if (!res.ok) return;
       const data = await res.json();
-      const top = Array.isArray(data.topSubservices) ? data.topSubservices : [];
+      // Ranked from TYPED questions. Chip taps are 61% of all questions (2026-11-09),
+      // so ranking the chips by everything made them rank themselves.
+      const top = Array.isArray(data.typedSubservices) ? data.typedSubservices : [];
       if (top.length < 3) return;                       // not enough signal — keep defaults
       const chips = top.slice(0, 5)
         .filter(x => x && x.name)
@@ -449,6 +539,17 @@ const CHAT = (() => {
   // conversation begins so they don't clutter the thread.
   function _updateStarters() {
     if (_starters) _starters.style.display = _messages.length === 0 ? '' : 'none';
+    // After the first message the chips stay, as one scrolling row above the
+    // input (testers kept wanting them back, 2026-11-09).
+    const box = document.getElementById('chatFollowups');
+    const wrap = document.getElementById('chatFollowupChips');
+    if (!box || !wrap) return;
+    if (!_messages.length || _loading) { box.hidden = true; return; }
+    const lastBot = [..._messages].reverse().find(m => m.role === 'bot') || null;
+    const chips = _followupChips(lastBot, _currentStarters);
+    wrap.innerHTML = '';
+    chips.forEach(c => wrap.appendChild(_chipButton(c, 'chat-followup-chip')));
+    box.hidden = chips.length === 0;
   }
 
   function init() { _buildDOM(); _loadDynamicStarters(); }

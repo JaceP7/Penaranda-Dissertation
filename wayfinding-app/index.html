@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=56" />
+  <link rel="stylesheet" href="css/app.css?v=58" />
 </head>
 <body class="view-user">
 
@@ -267,6 +267,19 @@
       </div>
     </div>
 
+    <!-- Pin menu: a tap on the citizen map drops a pin and asks what it is for -->
+    <div id="pinMenu" class="pin-menu" role="dialog" aria-label="Pin on the map" hidden>
+      <div class="pin-menu-head">
+        <span class="pin-menu-icon" data-icon="map-pin"></span>
+        <span class="pin-menu-title">Pin sa <span id="pinMenuWhere">mapa</span></span>
+        <button id="pinCloseBtn" class="pin-menu-close" aria-label="Alisin ang pin / Remove pin"><span data-icon="x"></span></button>
+      </div>
+      <div class="pin-menu-btns">
+        <button id="pinHereBtn" class="pin-menu-here"><span class="pin-menu-main">Nandito ako</span><span class="pin-menu-sub">Set me here</span></button>
+        <button id="pinGoBtn"   class="pin-menu-go"><span class="pin-menu-main">Pumunta dito</span><span class="pin-menu-sub">Go here</span></button>
+      </div>
+    </div><!-- /pinMenu -->
+
     <!-- Arrival celebration prompt -->
     <div id="arrivalPrompt" class="arrival-prompt" style="display:none">
       <button id="arrivalCloseBtn" class="btn-arrival-close" aria-label="Close" title="Close and keep the map"><span data-icon="x"></span></button>
@@ -414,15 +427,15 @@
 
   <script src="js/ui_icons.js?v=1"></script>
   <script src="js/data.js?v=33"></script>
-  <script src="js/floor_presets.js?v=34"></script>
+  <script src="js/floor_presets.js?v=35"></script>
   <script src="js/stamp_presets.js?v=2"></script>
-  <script src="js/service_locations.js?v=9"></script>
+  <script src="js/service_locations.js?v=11"></script>
   <script src="js/dijkstra.js?v=30"></script>
-  <script src="js/renderer.js?v=36"></script>
+  <script src="js/renderer.js?v=39"></script>
   <script src="js/compass.js?v=31"></script>
   <script src="js/nav.js?v=42"></script>
-  <script src="js/app.js?v=83"></script>
-  <script src="js/chat.js?v=43"></script>
+  <script src="js/app.js?v=86"></script>
+  <script src="js/chat.js?v=45"></script>
 
 </body>
 </html>

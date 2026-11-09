@@ -49,6 +49,36 @@ function fitCellsTransform(bounds, box, baseCell, minScale, maxScale) {
   };
 }
 
+/**
+ * The stairwells on a floor: groups of touching 'stair' cells, each with its
+ * centre ({row, col} may be fractional) and size. `cells` is the floor's
+ * cell-type array, row-major, `n` cells wide.
+ */
+function stairClusters(cells, n) {
+  const seen = new Uint8Array(cells.length);
+  const out = [];
+  for (let s = 0; s < cells.length; s++) {
+    if (cells[s] !== 'stair' || seen[s]) continue;
+    const q = [s]; seen[s] = 1;
+    let rs = 0, cs = 0;
+    for (let h = 0; h < q.length; h++) {
+      const k = q[h], r = Math.floor(k / n), c = k % n;
+      rs += r; cs += c;
+      // 8 neighbours: the diagonal flights (60,26 / 61,25) are one stairwell.
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          const rr = r + dr, cc = c + dc;
+          if ((!dr && !dc) || rr < 0 || cc < 0 || cc >= n || rr * n + cc >= cells.length) continue;
+          const v = rr * n + cc;
+          if (!seen[v] && cells[v] === 'stair') { seen[v] = 1; q.push(v); }
+        }
+      }
+    }
+    out.push({ row: rs / q.length, col: cs / q.length, size: q.length });
+  }
+  return out;
+}
+
 /** A path step number is drawn only when it fits inside its cell; on a phone's
  *  zoomed-out map the numbers otherwise run together ("2120 19"). */
 function stepLabelFits(textWidth, cellPx) {
@@ -97,6 +127,12 @@ class GridRenderer {
     this.captureActive = false;
     /** Current floor index — shown as a watermark on the canvas. */
     this.currentFloor = 0;
+    /** Citizen view: words and pins instead of the editor's S / D / E letters. */
+    this.citizenView = false;
+    /** Doors out of the building [{floor,row,col,name}], labelled "Exit". */
+    this.exits = [];
+    /** A pin the citizen dropped by tapping the map, or null. */
+    this.pin = null;
 
     /** Fixed selection rectangle { r1,c1,r2,c2 } or null. */
     this.selectionRect   = null;
@@ -233,7 +269,9 @@ class GridRenderer {
         // Fill colour
         const ct = node.cellType || (node.wall ? 'wall' : 'open');
         let fill;
-        if (ct === 'wall')        fill = COLORS.wall;
+        // Citizens see a door as a gap in the wall (open floor, amber edge).
+        if (this.citizenView && ct === 'door') fill = COLORS.empty;
+        else if (ct === 'wall')   fill = COLORS.wall;
         else if (ct === 'door')   fill = COLORS.door;
         else if (ct === 'stair')  fill = COLORS.stair;
         else if (isStart)         fill = COLORS.start;
@@ -271,7 +309,7 @@ class GridRenderer {
             ctx.font         = `bold ${fontSize}px system-ui, sans-serif`;
             ctx.textAlign    = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('E', x + cs / 2, y + cs / 2);
+            ctx.fillText(this.citizenView ? '' : 'E', x + cs / 2, y + cs / 2);   // citizens get a pin
 
           } else if (onPath) {
             ctx.font = `bold ${fontSize}px system-ui, sans-serif`;
@@ -285,13 +323,13 @@ class GridRenderer {
           }
 
           // Door / Stair labels
-          if (ct === 'door' && cs >= 10) {
+          if (ct === 'door' && cs >= 10 && !this.citizenView) {
             ctx.fillStyle    = COLORS.doorBorder;
             ctx.font         = `bold ${Math.max(8, Math.floor(cs * 0.30))}px system-ui, sans-serif`;
             ctx.textAlign    = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText('D', x + cs / 2, y + cs / 2);
-          } else if (ct === 'stair' && cs >= 10) {
+          } else if (ct === 'stair' && cs >= 10 && !this.citizenView) {
             ctx.fillStyle    = COLORS.stairBorder;
             ctx.font         = `bold ${Math.max(8, Math.floor(cs * 0.30))}px system-ui, sans-serif`;
             ctx.textAlign    = 'center';
@@ -653,6 +691,86 @@ class GridRenderer {
       }
       ctx.restore();
     }
+
+    if (this.citizenView) this._drawCitizenMarks(cs);
+  }
+
+  /**
+   * Citizen view: say what things are in words and pins, not the editor's
+   * letters (Jace, 2026-11-09: "the S and D are not self explanatory").
+   * "Stairs" on every stairwell, "Exit" on the doors out, a red pin on the
+   * destination and an orange pin where the citizen tapped.
+   */
+  _drawCitizenMarks(cs) {
+    const ctx = this.ctx;
+    const at  = (row, col) => ({ x: this._tx + (col + 0.5) * cs, y: this._ty + (row + 0.5) * cs });
+    if (cs >= 6) {
+      const types = NODES.map(n => n.cellType || (n.wall ? 'wall' : 'open'));
+      const end = this._endId ? this._endId.split(',').map(Number) : null;
+      for (const s of stairClusters(types, GRID_COLS)) {
+        // On the way to the stairs the destination pin stands on this
+        // stairwell; put its label underneath so the pin doesn't hide it.
+        const under = end && Math.abs(end[0] - s.row) <= 2 && Math.abs(end[1] - s.col) <= 2;
+        const p = at(s.row + (under ? 1.6 : 0), s.col);
+        this._pill('Stairs', p.x, p.y, '#5B21B6', '#FFFFFF', cs);
+      }
+      for (const e of this.exits || []) {
+        if (e.floor !== this.currentFloor) continue;
+        // One and a half cells out toward the building edge, over the doorway
+        // itself: the cell inside the main door is where citizens start, and a
+        // label there hid the "you are here" dot.
+        const edges = [[e.row, -1, 0], [GRID_ROWS - 1 - e.row, 1, 0], [e.col, 0, -1], [GRID_COLS - 1 - e.col, 0, 1]];
+        const [, dr, dc] = edges.sort((a, b) => a[0] - b[0])[0];
+        const p = at(e.row + dr * 1.5, e.col + dc * 1.5);
+        this._pill('Exit', p.x, p.y, '#15803D', '#FFFFFF', cs);
+      }
+    }
+    if (this._endId) {
+      const [r, c] = this._endId.split(',').map(Number);
+      const p = at(r, c);
+      this._drawPin(p.x, p.y + cs * 0.3, Math.max(14, cs * 1.3), '#DC2626');
+    }
+    if (this.pin) {
+      const p = at(this.pin.row, this.pin.col);
+      this._drawPin(p.x, p.y + cs * 0.3, Math.max(16, cs * 1.4), '#EA580C');
+    }
+  }
+
+  /** A rounded label, the same style as the office names. */
+  _pill(text, cx, cy, bg, fg, cs) {
+    const ctx = this.ctx;
+    ctx.save();
+    const fontPx = Math.max(10, Math.min(14, Math.floor(cs * 0.6)));
+    ctx.font = `700 ${fontPx}px system-ui, -apple-system, "Segoe UI", sans-serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const w = ctx.measureText(text).width + 10, h = fontPx + 6;
+    ctx.fillStyle = bg;
+    ctx.beginPath();
+    if (typeof ctx.roundRect === 'function') ctx.roundRect(cx - w / 2, cy - h / 2, w, h, h / 2);
+    else ctx.rect(cx - w / 2, cy - h / 2, w, h);
+    ctx.fill();
+    ctx.lineWidth = 1.5; ctx.strokeStyle = '#FFFFFF'; ctx.stroke();
+    ctx.fillStyle = fg;
+    ctx.fillText(text, cx, cy + 0.5);
+    ctx.restore();
+  }
+
+  /** A map pin whose point touches (x, y); `h` is its height in px. */
+  _drawPin(x, y, h, color) {
+    const ctx = this.ctx;
+    const r = h * 0.36, cy = y - h + r;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.bezierCurveTo(x - r * 0.6, cy + r * 1.1, x - r, cy + r * 0.4, x - r, cy);
+    ctx.arc(x, cy, r, Math.PI, 0);
+    ctx.bezierCurveTo(x + r, cy + r * 0.4, x + r * 0.6, cy + r * 1.1, x, y);
+    ctx.closePath();
+    ctx.fillStyle = color; ctx.fill();
+    ctx.lineWidth = 2; ctx.strokeStyle = '#FFFFFF'; ctx.stroke();
+    ctx.beginPath(); ctx.arc(x, cy, r * 0.4, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFFFFF'; ctx.fill();
+    ctx.restore();
   }
 
   // ── Pointer / touch events ─────────────────────────────────────────────────

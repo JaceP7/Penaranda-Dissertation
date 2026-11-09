@@ -70,13 +70,15 @@ ok('  and the button routes there', sb.resolve(PAC) && sb.resolve(PAC).stampName
 
 console.log('\n--- an office not on the map yet ---');
 d = sb.describe({ dept: 'PUBLIC ORDER AND SAFETY OFFICE', name: 'Public Order and Safety Office', abbr: 'POSO' }, 'en');
-ok('POSO says so plainly', d.text.startsWith("POSO (Public Order and Safety Office) isn't on the map yet"), d.text);
-ok('  and points to the Public Assistance Center', /Public Assistance Center/.test(d.text) &&
-   /Ground Floor/.test(d.text), d.text);
-ok('  with a button that says where it really goes',
-   d.navLabel === 'Public Assistance Center' && d.navDept === PAC, JSON.stringify([d.navDept, d.navLabel]));
+// 2026-11-09 (Jace, #5): no silent re-pointing to the help desk. The chat
+// offers the Public Assistance Center and the nearest exit as buttons (place).
+ok('POSO says so plainly', d.text.startsWith("POSO (Public Order and Safety Office) isn't on this map; it may be outside City Hall"), d.text);
+ok('  and names the Public Assistance Center and the nearest exit', /Public Assistance Center/.test(d.text) &&
+   /nearest exit/.test(d.text), d.text);
+ok('  with no route of its own, marked unmapped for the chat buttons',
+   d.navDept === null && d.place === 'unmapped', JSON.stringify([d.navDept, d.place]));
 d = sb.describe({ dept: 'PUBLIC ORDER AND SAFETY OFFICE', name: 'Public Order and Safety Office', abbr: 'POSO' }, 'fil');
-ok('  and in Filipino', d.text.startsWith('Wala pa sa mapa ang POSO'), d.text);
+ok('  and in Filipino', d.text.startsWith('Wala sa mapang ito ang POSO'), d.text);
 
 console.log('\n--- outside City Hall ---');
 d = sb.describe({ dept: 'CITY COLLEGE OF CALAMBA', name: 'City College of Calamba', abbr: null }, 'en');
@@ -87,7 +89,7 @@ console.log('\n--- a republished map without the office ---');
 sb.STAMP_PLACEMENTS = sb.STAMP_PLACEMENTS.filter((p) => !/BPATFO/.test(p.name));
 d = sb.describe(BPLO, 'en');
 ok('BPLO with its stamps removed gets the not-on-map sentence',
-   /isn't on the map yet/.test(d.text) && d.navDept === PAC, d.text);
+   /isn't on this map/.test(d.text) && d.place === 'unmapped', d.text);
 
 console.log('\n--- wired into the chat and the page ---');
 const chat = read('wayfinding-app/js/chat.js');

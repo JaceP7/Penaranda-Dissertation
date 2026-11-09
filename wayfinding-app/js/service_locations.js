@@ -12,7 +12,7 @@
 
 "use strict";
 
-const SERVICE_LOCATIONS_VERSION = 2;   // + Public Assistance Center, describeOfficeLocation
+const SERVICE_LOCATIONS_VERSION = 4;   // + COMELEC (LG 19); unmapped offices reported, not re-pointed; BUILDING_EXITS
 
 // ── Canonical RAG department  →  stamp placement name(s) ──────────────────
 // Keys are the canonical department strings the RAG answers resolve to.
@@ -50,6 +50,9 @@ const DEPT_STAMP_NAMES = {
   // Not a Charter department: the office finder answers "where is the
   // information desk?" with it, and sends offices not on the map here.
   "MAYOR'S OFFICE PUBLIC ASSISTANCE CENTER":                        ["MOPAC"],
+  // Not a Charter department: COMELEC's office (door reads "Commission on
+  // Elections"; stamped LG 19 COA). Answers where-is questions for COMELEC and voter's IDs.
+  "COMMISSION ON ELECTIONS":                                        ["LG 19 COA"],
 };
 
 // ── Service-specific overrides (subservice → stamp) ───────────────────────
@@ -61,10 +64,31 @@ const SEPARATE_CAMPUS = new Set([
   "CITY COLLEGE OF CALAMBA",
 ]);
 
-// ── Departments in City Hall but not yet stamped → fall back to Info desk ─
-// (CDRRMD-MO, OSCA, City General Services, Public Order & Safety — pending
-//  the colleague's floor confirmation.)
-const SERVICE_FALLBACK_STAMP = "MOPAC";   // Mayor's Office Public Assistance Center
+// ── Departments with no stamp (CDRRMD-MO, OSCA, City General Services, POSO) ─
+// They may be outside the building; nobody has confirmed. Until 2026-11-09 they
+// were silently routed to the Public Assistance Center (37 of 173 trips that
+// day). Now they are reported as "not on this map", with the help desk and the
+// nearest exit offered as choices (resolveServiceLocation → {unmapped: true}).
+
+// ── The four Ground Floor doors (cell to stand on, just inside) ───────────
+// From the plan's geometry, not yet confirmed on site as public doors.
+const BUILDING_EXITS = [
+  { floor: 1, row: 73, col: 37, name: "Main entrance" },
+  { floor: 1, row: 36, col: 4,  name: "West side door" },
+  { floor: 1, row: 4,  col: 38, name: "North side door" },
+  { floor: 1, row: 38, col: 71, name: "East side door" },
+];
+
+/** The exit with the smallest dist(from, exit). dist defaults to grid steps. */
+function nearestExit(from, exits, dist) {
+  const d = dist || ((a, b) => Math.abs(a.row - b.row) + Math.abs(a.col - b.col));
+  let best = null, bestD = Infinity;
+  for (const e of exits || []) {
+    const v = d(from, e);
+    if (v < bestD) { best = e; bestD = v; }
+  }
+  return best;
+}
 
 // ── Default building entrance (used when the user has no PDR fix yet) ──────
 // Ground Floor is now internal index 1 (Lower Ground = 0). Entrance is on Ground.
@@ -140,14 +164,12 @@ function resolveServiceLocation(deptName, subservice, fromCell) {
   // 3. Department → stamp names (exact then fuzzy)
   if (!stampNames) stampNames = _DEPT_NORM[nd] || _svcTokenMatch(nd);
 
-  // 4. Gather candidate cells; fall back to the info desk if none
+  // 4. Gather candidate cells. None: say so; the caller offers the help desk
+  //    and the nearest exit instead of routing somewhere else silently.
   let cells = [];
   if (stampNames) stampNames.forEach(sn => { cells = cells.concat(_svcStampCells(sn)); });
-  let isFallback = false;
   if (!cells.length) {
-    cells = _svcStampCells(SERVICE_FALLBACK_STAMP);
-    isFallback = true;
-    if (!cells.length) return null;   // not even the info desk is placed
+    return { unmapped: true, label: deptName, floor: null, row: null, col: null, stampName: null };
   }
 
   // 5. Pick nearest to the user (decision #2): prefer same-floor candidates,
@@ -165,8 +187,17 @@ function resolveServiceLocation(deptName, subservice, fromCell) {
   const pick = pool[0];
   return {
     floor: pick.floor, row: pick.row, col: pick.col,
-    stampName: pick.name, label: deptName, fallback: isFallback,
+    stampName: pick.name, label: deptName,
   };
+}
+
+/** 'mapped' (routable), 'outside' (own campus) or 'unmapped' (no stamp yet). */
+function serviceLocationStatus(deptName) {
+  const nd = _svcNorm(deptName);
+  if (_CAMPUS_NORM.has(nd)) return "outside";
+  const names = _DEPT_NORM[nd] || _svcTokenMatch(nd);
+  const has = names && names.some(sn => _svcStampCells(sn).length);
+  return has ? "mapped" : "unmapped";
 }
 
 // ── "Where is [office]?" sentence ──────────────────────────────────────────
@@ -246,28 +277,23 @@ function describeOfficeLocation(office, lang) {
   const fil = lang === "fil";
   const who = office.abbr ? `${office.abbr} (${office.name})` : office.name;
 
+  // Not in the building, or not on the map: say so, and let the chat offer the
+  // help desk and the nearest exit (`place`), never a route to the office.
   if (_CAMPUS_NORM.has(_svcNorm(office.dept))) {
     return {
       text: fil ? `May sariling campus ang ${who}. Wala ito sa loob ng City Hall.`
                 : `${office.abbr ? who : "The " + who} has its own campus. It isn't inside City Hall.`,
-      navDept: null, navLabel: null,
+      navDept: null, navLabel: null, place: "outside",
     };
   }
 
   const cells = _officeCells(office.dept);
   if (!cells.length) {
-    const help = _officeCells(OFFICE_HELP_DEPT);
-    if (!help.length) {
-      return { text: fil ? `Wala pa sa mapa ang ${who}. Magtanong sa entrance.`
-                         : `${who} isn't on the map yet. Please ask at the entrance.`,
-               navDept: null, navLabel: null };
-    }
-    const h = help[0];
     return {
       text: fil
-        ? `Wala pa sa mapa ang ${who}. Magtanong sa ${OFFICE_HELP_LABEL}: nasa ${_officeFloorPhrase(h.floor, true)}, ${_officePosition(h, true)}.`
-        : `${who} isn't on the map yet. Ask at the ${OFFICE_HELP_LABEL}: ${_officeFloorPhrase(h.floor, false).replace(/^the /, "")}, ${_officePosition(h, false)}.`,
-      navDept: OFFICE_HELP_DEPT, navLabel: OFFICE_HELP_LABEL,
+        ? `Wala sa mapang ito ang ${who}; maaaring nasa labas ito ng City Hall. Makakatulong ang ${OFFICE_HELP_LABEL}, o dumaan sa pinakamalapit na exit.`
+        : `${who} isn't on this map; it may be outside City Hall. The ${OFFICE_HELP_LABEL} can direct you, or take the nearest exit.`,
+      navDept: null, navLabel: null, place: "unmapped",
     };
   }
 

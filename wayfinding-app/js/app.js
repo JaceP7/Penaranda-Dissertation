@@ -107,7 +107,13 @@ function setViewMode(mode) {
   // Citizen view starts collapsed: the Calamba hero shows with the labeled
   // "City Services Assistant 💬" button as the call-to-action. Tapping it opens
   // the assistant. (No auto-open — the button is the entry point.)
-  if (typeof renderer !== 'undefined' && renderer && renderer.resize) renderer.resize();
+  if (typeof renderer !== 'undefined' && renderer) {
+    // Citizens get words and pins on the map instead of the editor's S / D / E.
+    renderer.citizenView = (STATE.viewMode === 'user');
+    renderer.exits = (typeof BUILDING_EXITS !== 'undefined') ? BUILDING_EXITS : [];
+    if (STATE.viewMode === 'admin') renderer.pin = null;
+    if (renderer.resize) renderer.resize();
+  }
 }
 
 // ── Floor display names (bundled FLOOR_NAMES + per-device override) ──────────
@@ -614,6 +620,72 @@ function _bestStairFor(fromFloor, fromRow, fromCol, toFloor, toRow, toCol) {
   return best;
 }
 
+// ── Nearest exit (offered for offices outside the building or not mapped) ──
+function navigateToNearestExit() {
+  if (typeof BUILDING_EXITS === 'undefined' || typeof nearestExit !== 'function') return;
+  const from = NAV.position
+    ? { floor: STATE.currentFloor, row: NAV.position.row, col: NAV.position.col }
+    : SERVICE_DEFAULT_ENTRANCE;
+  // Walking distance: on the exits' floor a flood fill; elsewhere the whole
+  // journey through the best stairwell. Grid steps if neither can be measured.
+  let dist = null;
+  if (from.floor === 1) {
+    const d = _bfsDistances(_floorCellTypes(1), from.row, from.col);
+    dist = (a, e) => { const v = d[e.row * GRID_COLS + e.col]; return v < 0 ? Infinity : v; };
+  } else {
+    dist = (a, e) => {
+      const s = _bestStairFor(a.floor, a.row, a.col, e.floor, e.row, e.col);
+      return s ? s.total : Infinity;
+    };
+  }
+  const exit = nearestExit(from, BUILDING_EXITS, dist) || BUILDING_EXITS[0];
+  navigateToDepartment('Exit', null, null,
+    { floor: exit.floor, row: exit.row, col: exit.col, label: `the nearest exit (${exit.name.toLowerCase()})` });
+}
+
+// ── Pins (citizen view): tap the map, then "Nandito ako" or "Pumunta dito" ──
+let _pinCell = null;   // { floor, row, col } while the pin menu is open
+
+function _onCitizenMapTap(row, col) {
+  if (!document.body.classList.contains('route-active')) return;   // map not on screen
+  _pinCell = { floor: STATE.currentFloor, row, col };
+  renderer.pin = { row, col };
+  renderer._draw();
+  const menu = document.getElementById('pinMenu');
+  if (menu) {
+    const where = document.getElementById('pinMenuWhere');
+    if (where) where.textContent = _floorName(STATE.currentFloor).replace(/^the /i, '');
+    menu.hidden = false;
+  }
+}
+
+function _closePinMenu() {
+  _pinCell = null;
+  if (renderer) { renderer.pin = null; renderer._draw(); }
+  const menu = document.getElementById('pinMenu');
+  if (menu) menu.hidden = true;
+}
+
+/** "Nandito ako": put the citizen at the pin, like scanning a sign there. */
+function _pinSetHere() {
+  const p = _pinCell;
+  _closePinMenu();
+  if (!p) return;
+  const res = _applyManualLocation(p.floor, p.row, p.col);
+  if (res && res.ok === false) { _showStairToast(res.message); return; }
+  if (STATE.endId) { recompute(); _updateNavInstruction(); _frameRoute(); }
+  _showStairToast(`Location set on ${_floorName(p.floor)}. The blue line now starts from your pin.`);
+}
+
+/** "Pumunta dito": route from where the citizen is to the pin. */
+function _pinGoHere() {
+  const p = _pinCell;
+  _closePinMenu();
+  if (!p) return;
+  navigateToDepartment('Pinned spot', null, null,
+    { floor: p.floor, row: p.row, col: p.col, label: 'the pinned spot' });
+}
+
 // ── Framing the route on a phone ─────────────────────────────────────────────
 // The step bar covers the top of the map (the left side when a phone is turned
 // sideways) and "Ask again" sits in a bottom corner, so the route is fitted
@@ -813,8 +885,12 @@ window.addEventListener('pagehide', () => {
  * @param {string} deptName    - canonical department from the RAG "Go to:" line
  * @param {string} [subservice] - the specific service (enables overrides)
  */
-function navigateToDepartment(deptName, subservice, answerText) {
-  if (typeof resolveServiceLocation !== "function") {
+/**
+ * Route the citizen to an office, or to `presetLoc` ({floor, row, col, label})
+ * when given: a dropped pin, the nearest exit.
+ */
+function navigateToDepartment(deptName, subservice, answerText, presetLoc) {
+  if (!presetLoc && typeof resolveServiceLocation !== "function") {
     _showStairToast("The map isn't ready yet. Please ask at the Public Assistance Center on the Ground Floor.");
     return;
   }
@@ -824,10 +900,13 @@ function navigateToDepartment(deptName, subservice, answerText) {
     ? { floor: STATE.currentFloor, row: NAV.position.row, col: NAV.position.col }
     : SERVICE_DEFAULT_ENTRANCE;
 
-  const loc = resolveServiceLocation(deptName, subservice, from);
+  const loc = presetLoc || resolveServiceLocation(deptName, subservice, from);
 
-  if (!loc) {
-    _showStairToast(`${_officeTitle(deptName)} isn't on the map yet. Please ask at the Public Assistance Center on the Ground Floor.`);
+  // Not on the map, or not in the building: say so and stop. The chat already
+  // offered the help desk and the nearest exit as buttons; routing somewhere
+  // else without saying so is what 37 trips did on 2026-11-09.
+  if (!loc || loc.unmapped) {
+    _showStairToast(`${_officeTitle(deptName)} isn't on this map; it may be outside City Hall. Ask at the Public Assistance Center, or take the nearest exit.`);
     return;
   }
   if (loc.separateCampus) {
@@ -844,6 +923,7 @@ function navigateToDepartment(deptName, subservice, answerText) {
   // they confirm they have changed floors. The stair is picked over both legs,
   // not just proximity to the office.
   _crossFloorTrip = null;
+  if (DOM.navStairBtn) DOM.navStairBtn.hidden = true;   // shown again below for a stairs leg
   let stair = null;
   if (crossFloor) {
     stair = _bestStairFor(STATE.currentFloor, from.row, from.col, loc.floor, loc.row, loc.col);
@@ -932,20 +1012,18 @@ function navigateToDepartment(deptName, subservice, answerText) {
   );
 
   // Tell the user what's happening.
-  if (loc.fallback) {
-    _showStairToast(`${_officeTitle(deptName)} isn't on the map yet, so this goes to the Public Assistance Center. Please ask there.`);
-  } else if (reachGap > 6) {
+  if (reachGap > 6) {
     // Couldn't get near the office — the floor map is probably missing a
     // doorway between regions. Guide as close as possible and say so.
     _showStairToast(`The map can't reach ${_navDestLabel} exactly (a doorway may be missing), so this takes you as close as it can. Please ask nearby.`);
   } else if (_crossFloorTrip && _crossFloorTrip.leg === 1) {
     const mpc = (typeof NAV !== 'undefined' && NAV.metresPerCell) ? NAV.metresPerCell : 1;
     const m   = Math.max(1, Math.round(_crossFloorTrip.stair.legOne * mpc));
-    _showStairToast(`${_navDestLabel} is on ${_floorName(loc.floor)}. First walk about ${m} m ` +
+    _showStairToast(`${_cap(_navDestLabel)} is on ${_floorName(loc.floor)}. First walk about ${m} m ` +
                     `to the stairs; the blue line shows the way.`);
     if (DOM.navStairBtn) DOM.navStairBtn.hidden = false;
   } else if (crossFloor) {
-    _showStairToast(`${_navDestLabel} is on ${_floorName(loc.floor)}. Take the stairs, then follow the blue line.`);
+    _showStairToast(`${_cap(_navDestLabel)} is on ${_floorName(loc.floor)}. Take the stairs, then follow the blue line.`);
   } else {
     _showStairToast(`Follow the blue line to ${_navDestLabel}.`);
   }
@@ -1306,8 +1384,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // arrival prompt's own "Ask again" does.
     _clearFinishedRoute();
     _hideNavStep();
+    _closePinMenu();
     if (typeof CHAT !== 'undefined' && CHAT.open) CHAT.open();
   });
+
+  // Pin menu (citizen map). Escape closes it, like the other prompts.
+  const _pinBtn = (id, fn) => { const b = document.getElementById(id); if (b) b.addEventListener('click', fn); };
+  _pinBtn('pinHereBtn',  _pinSetHere);
+  _pinBtn('pinGoBtn',    _pinGoHere);
+  _pinBtn('pinCloseBtn', _closePinMenu);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && _pinCell) _closePinMenu(); });
 
   DOM.exportStampsBtn.addEventListener('click', exportStampPresetsFile);
   DOM.deployStampsBtn.addEventListener('click', deployStampPresetsToGit);
@@ -1872,9 +1958,9 @@ function _renderArrivalReminder() {
 
 // ── Cell interaction ──────────────────────────────────────────────────────────
 function handleCellTap(row, col) {
-  // Citizen (user) view: the map is read-only. The destination is set only by
-  // the chat's "Take me there" — tapping the grid must NOT move the end tile.
-  if (STATE.viewMode === 'user') return;
+  // Citizen (user) view: a tap drops a pin and asks what it means (Jace,
+  // 2026-11-09). It never moves the end tile by itself.
+  if (STATE.viewMode === 'user') { _onCitizenMapTap(row, col); return; }
 
   const id   = nodeId(row, col);
   const node = NODE_MAP[id];
