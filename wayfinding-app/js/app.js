@@ -289,7 +289,43 @@ function _afterWallRestore() {
   saveGridState();
 }
 
+/** Which bottom-bar tool is on: 'paint' | 'select' | 'stamp' | 'move'. */
+function _dockTool(state) {
+  if (state.wallMode)   return 'paint';
+  if (state.selectMode) return 'select';
+  if (state.stampMode)  return 'stamp';
+  return 'move';
+}
+
+/** Keep the phone tool bar (#editorDock) in step with the editor state. */
+function _syncDock() {
+  const tool = _dockTool(STATE);
+  for (const [id, t] of [['dockMove', 'move'], ['dockPaint', 'paint'], ['dockSelect', 'select'], ['dockStamp', 'stamp']]) {
+    const b = document.getElementById(id);
+    if (!b) continue;
+    b.classList.toggle('active', tool === t);
+    b.setAttribute('aria-pressed', String(tool === t));
+  }
+  const u = document.getElementById('dockUndo'), r = document.getElementById('dockRedo');
+  if (u) u.disabled = undoStack.length === 0;
+  if (r) r.disabled = redoStack.length === 0;
+}
+
+/** Open or close the editor's "..." menu. On a phone the menu floats over the
+ *  map (body.editor-menu-open) instead of pushing it down. */
+function _setEditorMenu(open) {
+  if (!DOM.headerSecondary) return;
+  DOM.headerSecondary.classList.toggle('open', !!open);
+  document.body.classList.toggle('editor-menu-open', !!open);
+  if (DOM.mobileMenuBtn) {
+    DOM.mobileMenuBtn.textContent = open ? '✕' : '⋯';
+    DOM.mobileMenuBtn.title = open ? 'Close the menu' : 'More: publish, floors, navigate, reset';
+    DOM.mobileMenuBtn.setAttribute('aria-expanded', String(!!open));
+  }
+}
+
 function _updateUndoRedoBtns() {
+  if (typeof _syncDock === 'function') _syncDock();
   DOM.undoBtn.disabled = undoStack.length === 0;
   DOM.redoBtn.disabled = redoStack.length === 0;
 }
@@ -757,6 +793,8 @@ function _frameRoute() {
 
 /** Window resized or phone turned: refit the canvas, then the route if one is up. */
 function _onMapResize() {
+  // The editor keeps its zoom through a rotation or a phone's URL bar sliding.
+  if (STATE.viewMode === 'admin') { renderer.resize(true); return; }
   renderer.resize();
   if (_followMode && _citizenRoute()) _frameAhead(); else _frameRoute();
 }
@@ -1494,17 +1532,45 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(() => { clearTimeout(tid); _hideDevOnlyButtons(); });
   })();
   DOM.mobileMenuBtn.addEventListener('click', () => {
-    const open = DOM.headerSecondary.classList.toggle('open');
-    DOM.mobileMenuBtn.textContent = open ? '✕' : '⋯';
-    DOM.mobileMenuBtn.title = open ? 'Close map tools' : 'Map editing tools';
+    _setEditorMenu(!document.body.classList.contains('editor-menu-open'));
   });
-  // Close the overflow menu whenever a mode button inside it is tapped
+  // Close the menu whenever a button inside it is picked (but not the
+  // Floors toggle, which opens its own list inside the menu).
   DOM.headerSecondary.addEventListener('click', e => {
-    if (e.target.closest('.btn')) {
-      DOM.headerSecondary.classList.remove('open');
-      DOM.mobileMenuBtn.textContent = '⋯';
-    }
+    if (e.target.closest('.btn')) _setEditorMenu(false);
   });
+  for (const id of ['navModeBtn', 'captureModeBtn', 'syncBtn', 'homeBtn', 'renameFloorBtn']) {
+    const b = document.getElementById(id);
+    if (b) b.addEventListener('click', () => _setEditorMenu(false));
+  }
+  DOM.canvas.addEventListener('pointerdown', () => _setEditorMenu(false));
+
+  // Phone tool bar: the same tools as the header, within thumb reach.
+  const _dock = (id, fn) => { const b = document.getElementById(id); if (b) b.addEventListener('click', fn); };
+  _dock('dockMove', () => {
+    if (STATE.wallMode)   setWallMode(false);
+    if (STATE.selectMode) setSelectMode(false);
+    if (STATE.panelOpen)  setToolsPanel(false);
+    _syncDock();
+  });
+  _dock('dockPaint',  () => setWallMode(!STATE.wallMode));
+  _dock('dockSelect', () => setSelectMode(!STATE.selectMode));
+  _dock('dockStamp',  () => setToolsPanel(!STATE.panelOpen));
+  _dock('dockUndo',   undo);
+  _dock('dockRedo',   redo);
+
+  // Zoom buttons (editor): one tap is about a third closer.
+  _dock('zoomInBtn',  () => renderer.zoomBy(1.4));
+  _dock('zoomOutBtn', () => renderer.zoomBy(1 / 1.4));
+  _dock('zoomFitBtn', () => renderer.fitAll());
+
+  // The stamp sheet folds down to its handle so the map can be tapped.
+  _dock('toolsPanelHandle', () => {
+    const folded = DOM.toolsPanel.classList.toggle('collapsed');
+    const h = document.getElementById('toolsPanelHandle');
+    if (h) h.setAttribute('aria-expanded', String(!folded));
+  });
+  _syncDock();
 
   DOM.floorDown.addEventListener('click', () => switchFloor(STATE.currentFloor - 1));
   DOM.floorUp.addEventListener('click',   () => switchFloor(STATE.currentFloor + 1));
@@ -2185,6 +2251,7 @@ function setWallMode(active) {
   DOM.wallBtn.setAttribute('aria-pressed', active);
   DOM.paintTypeBar.style.display = active ? 'flex' : 'none';
   updateCursorAndHint();
+  _syncDock();
 }
 
 /** Set the active paint type and update both toolbar sets (header bar + stamp panel). */
@@ -2230,8 +2297,11 @@ function setToolsPanel(open) {
   DOM.stampBtn.setAttribute('aria-pressed', open);
   DOM.toolsPanel.style.display = open ? '' : 'none';
   if (!open) renderer._draw();
-  requestAnimationFrame(() => renderer.resize());
+  // Keep the zoom: on a phone the panel is a sheet over the map, and on a
+  // laptop the map only narrows.
+  requestAnimationFrame(() => renderer.resize(true));
   updateCursorAndHint();
+  _syncDock();
 }
 
 // ── Navigate mode ─────────────────────────────────────────────────────────────
@@ -2278,6 +2348,7 @@ function setNavMode(active) {
   recompute();
   renderer._draw();
   updateCursorAndHint();
+  _syncDock();
 }
 
 // ── Capture mode (fieldwork coordinate capture) ───────────────────────────────
@@ -2301,6 +2372,7 @@ function setCaptureMode(active) {
   DOM.captureBar.style.display = active ? 'flex' : 'none';
   renderer._draw();
   updateCursorAndHint();
+  _syncDock();
 }
 
 /**
@@ -2639,6 +2711,7 @@ function setSelectMode(active) {
   _showSelToolbar(false);
   renderer._draw();
   updateCursorAndHint();
+  _syncDock();
 }
 
 function _showSelToolbar(visible) {
@@ -4198,11 +4271,20 @@ function drawStampEditor() {
   ctx.strokeRect(0, 0, canvas.width, canvas.height);
 }
 
+/** The pattern square under (x, y), measured in the canvas as it is shown
+ *  (shownW x shownH CSS px), which the panel may stretch. */
+function _stampCellAt(x, y, shownW, shownH, size) {
+  const clamp = v => Math.max(0, Math.min(size - 1, v));
+  return {
+    col: clamp(Math.floor(x / (shownW / size))),
+    row: clamp(Math.floor(y / (shownH / size))),
+  };
+}
+
 function stampEditorTap(e) {
   const rect = DOM.stampCanvas.getBoundingClientRect();
-  const cs   = Math.max(4, Math.floor(STAMP_EDITOR_PX / STAMP_SIZE));
-  const col  = Math.floor((e.clientX - rect.left) / cs);
-  const row  = Math.floor((e.clientY - rect.top)  / cs);
+  const { row, col } = _stampCellAt(e.clientX - rect.left, e.clientY - rect.top,
+                                    rect.width, rect.height, STAMP_SIZE);
   paintStampCell(row, col, STATE.paintType);
   drawStampEditor();
   if (STATE.stampMode) renderer._draw();
@@ -4353,6 +4435,38 @@ function escHtml(str) {
 }
 
 // ── Cursor + hint ─────────────────────────────────────────────────────────────
+/**
+ * The editor's one-line hint for a tool. `touch` is true on a phone or tablet,
+ * where the words are tap / one finger / two fingers instead of click / Escape
+ * (Jace, 2026-11-10: make the map editor easier to use on phones).
+ */
+function _editorHint(mode, touch) {
+  const T = {
+    stamp:   'Tap the map to <strong>place the stamp</strong>. Two fingers move or zoom the map.',
+    capture: '🎯 <strong>Capture:</strong> pick an office, then <strong>tap its location</strong> (or use <strong>📍 My position</strong>). Re-anchor at the atrium/stairs to reset drift.',
+    wall:    'Tap or <strong>drag one finger</strong> to paint. Tap a wall again to erase it. <strong>Two fingers</strong> move or zoom the map.',
+    float:   '<strong>Tap</strong> the map to drop the selection. Two fingers move or zoom the map.',
+    select:  '<strong>Drag one finger</strong> to select an area, then rotate, move or delete it. Two fingers move or zoom the map.',
+    nav:     '<strong>Tap</strong> any cell to set a destination from your position, or <strong>Scan QR</strong> to jump to an anchor.',
+    move:    'Drag to move the map, pinch to zoom. Pick <strong>Paint</strong>, <strong>Select</strong> or <strong>Stamp</strong> below to edit.',
+  };
+  const M = {
+    stamp:   'Click the grid to <strong>place the stamp</strong>. Name it in the panel to save it to the catalogue.',
+    capture: T.capture,
+    wall:    'Click or <strong>drag</strong> to paint walls. Click a wall again to erase it.',
+    float:   '<strong>Click</strong> on the grid to drop the selection. Press <strong>Escape</strong> to cancel.',
+    select:  '<strong>Drag</strong> on the grid to select an area, then rotate, move, or delete it.',
+    nav:     '<strong>Tap</strong> any cell to set destination from your position. Use <strong>arrow keys</strong> to move, or <strong>Scan QR</strong> to jump to an anchor.',
+    move:    'Tap any cell to route from <strong>(0,0)</strong> &rarr; that cell. Enable <strong>Wall Mode</strong> to place obstacles.',
+  };
+  return (touch ? T : M)[mode] || (touch ? T : M).move;
+}
+
+function _isTouchUI() {
+  // A finger, or a phone-width screen (where the tool bar is shown).
+  try { return window.matchMedia('(pointer: coarse), (max-width: 640px)').matches; } catch (_) { return false; }
+}
+
 function updateCursorAndHint() {
   if (STATE.stampMode)        DOM.canvas.style.cursor = 'copy';
   else if (STATE.wallMode)    DOM.canvas.style.cursor = 'cell';
@@ -4360,21 +4474,13 @@ function updateCursorAndHint() {
   else if (STATE.selectMode)  DOM.canvas.style.cursor = floatingData ? 'copy' : 'crosshair';
   else                        DOM.canvas.style.cursor = 'crosshair';
 
-  if (STATE.stampMode) {
-    DOM.hintBar.innerHTML = 'Click the grid to <strong>place the stamp</strong>. Name it in the panel to save it to the catalogue.';
-  } else if (STATE.captureMode) {
-    DOM.hintBar.innerHTML = '🎯 <strong>Capture:</strong> pick an office, then <strong>tap its location</strong> on the grid (or use <strong>📍 My position</strong>). Re-anchor at the atrium/stairs to reset drift.';
-  } else if (STATE.wallMode) {
-    DOM.hintBar.innerHTML = 'Click or <strong>drag</strong> to paint walls. Click a wall again to erase it.';
-  } else if (STATE.selectMode && floatingData) {
-    DOM.hintBar.innerHTML = '<strong>Click</strong> on the grid to drop the selection. Press <strong>Escape</strong> to cancel.';
-  } else if (STATE.selectMode) {
-    DOM.hintBar.innerHTML = '<strong>Drag</strong> on the grid to select an area, then rotate, move, or delete it.';
-  } else if (STATE.navMode) {
-    DOM.hintBar.innerHTML = '<strong>Tap</strong> any cell to set destination from your position. Use <strong>arrow keys</strong> to move, or <strong>Scan QR</strong> to jump to an anchor.';
-  } else {
-    DOM.hintBar.innerHTML = 'Tap any cell to route from <strong>(0,0)</strong> &rarr; that cell. Enable <strong>Wall Mode</strong> to place obstacles.';
-  }
+  const mode = STATE.stampMode ? 'stamp'
+             : STATE.captureMode ? 'capture'
+             : STATE.wallMode ? 'wall'
+             : (STATE.selectMode && floatingData) ? 'float'
+             : STATE.selectMode ? 'select'
+             : STATE.navMode ? 'nav' : 'move';
+  DOM.hintBar.innerHTML = _editorHint(mode, _isTouchUI());
 }
 
 // ── Info bar ──────────────────────────────────────────────────────────────────

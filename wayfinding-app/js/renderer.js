@@ -50,6 +50,33 @@ function fitCellsTransform(bounds, box, baseCell, minScale, maxScale) {
 }
 
 /**
+ * The view after a two-finger move: the fingers went from prevA/prevB to
+ * curA/curB (canvas px). The map pans with the midpoint and zooms by the change
+ * in finger spread, about the midpoint, with the scale held in [minScale,
+ * maxScale]. `view` is {scale, tx, ty}. Pure, so it can be tested.
+ */
+function twoFingerTransform(prevA, prevB, curA, curB, view, minScale, maxScale) {
+  const d0 = Math.hypot(prevB.x - prevA.x, prevB.y - prevA.y) || 1;
+  const d1 = Math.hypot(curB.x - curA.x, curB.y - curA.y) || d0;
+  const scale = Math.min(maxScale, Math.max(minScale, view.scale * d1 / d0));
+  const k = scale / view.scale;
+  const m0x = (prevA.x + prevB.x) / 2, m0y = (prevA.y + prevB.y) / 2;
+  const m1x = (curA.x + curB.x) / 2,   m1y = (curA.y + curB.y) / 2;
+  return { scale, tx: m1x - (m0x - view.tx) * k, ty: m1y - (m0y - view.ty) * k };
+}
+
+/**
+ * Whether a one-pointer drag may start painting. A mouse or pen paints at
+ * once; a finger waits until it has been down a moment or has clearly moved,
+ * so the first finger of a pinch does not leave a wall behind.
+ */
+function touchPaintReady(pointerType, movedPx, heldMs, pointerCount) {
+  if (pointerCount !== 1) return false;
+  if (pointerType !== 'touch') return true;
+  return heldMs >= 120 || movedPx >= 16;
+}
+
+/**
  * The stairwells on a floor: groups of touching 'stair' cells, each with its
  * centre ({row, col} may be fractional) and size. `cells` is the floor's
  * cell-type array, row-major, `n` cells wide.
@@ -102,6 +129,11 @@ class GridRenderer {
     this._lastPointers  = {};
     this._lastPinchDist = null;
     this._pointerStart  = null;
+    this._pointerType   = 'mouse';
+    this._downTime      = 0;
+    /** True from a second finger landing until every finger is up: the touch
+     *  is moving or zooming the map, so it never paints, taps or selects. */
+    this._gesture       = false;
 
     this._hoverCell    = null;   // { row, col }
     this._path         = null;   // string[] of node IDs
@@ -203,7 +235,35 @@ class GridRenderer {
     this.centerOnCell(row, col);
     this._draw();
   }
-  resize()      { this._fitToCanvas(); this._draw(); }
+  /** Refit to the canvas size. With keepView, the editor keeps its zoom and
+   *  the cell at the centre (a phone's URL bar or rotation otherwise threw
+   *  the staff member back to the whole floor). */
+  resize(keepView) {
+    if (keepView && this.canvas.clientWidth) {
+      const cs = this._cs();
+      const gx = (this.canvas.clientWidth / 2 - this._tx) / cs;
+      const gy = (this.canvas.clientHeight / 2 - this._ty) / cs;
+      const wasZoomed = this._scale > this._minScale;
+      this._fitToCanvas();
+      if (wasZoomed) {
+        this._scale = Math.min(this._maxScale, Math.max(this._minScale, cs / this._baseCell));
+        const ncs = this._cs();
+        this._tx = this.canvas.clientWidth / 2 - gx * ncs;
+        this._ty = this.canvas.clientHeight / 2 - gy * ncs;
+      }
+    } else {
+      this._fitToCanvas();
+    }
+    this._draw();
+  }
+
+  /** Zoom in (factor > 1) or out about the centre of the canvas. */
+  zoomBy(factor) {
+    this._zoom(factor, this.canvas.clientWidth / 2, this.canvas.clientHeight / 2);
+  }
+
+  /** Show the whole floor again. */
+  fitAll() { this._fitToCanvas(); this._draw(); }
 
   // ── Fit grid to canvas on load / resize ────────────────────────────────────
   _fitToCanvas() {
@@ -793,7 +853,25 @@ class GridRenderer {
   _onPointerDown(e) {
     this.canvas.setPointerCapture(e.pointerId);
     this._lastPointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+
+    // ── A second finger: move / zoom the map, in every tool ──────────────────
+    if (Object.keys(this._lastPointers).length >= 2) {
+      this._gesture       = true;
+      this._dragging      = false;
+      this._lastPinchDist = this._pinchDist();
+      // A selection box the first finger had started is dropped, not kept.
+      if (this._selectStart || this.dragRect) {
+        this._selectStart = null;
+        this.dragRect     = null;
+        this._draw();
+      }
+      return;
+    }
+
+    this._gesture       = false;
     this._pointerStart  = { x: e.clientX, y: e.clientY };
+    this._pointerType   = e.pointerType || 'mouse';
+    this._downTime      = Date.now();
     this._lastDragCell  = null;
 
     // ── Select mode: begin rubber-band (only when not floating a pattern) ──
@@ -810,13 +888,8 @@ class GridRenderer {
       return;
     }
 
-    if (Object.keys(this._lastPointers).length === 1) {
-      this._dragging      = true;
-      this._lastPinchDist = null;
-    } else {
-      this._dragging      = false;
-      this._lastPinchDist = this._pinchDist();
-    }
+    this._dragging      = true;
+    this._lastPinchDist = null;
   }
 
   _onPointerMove(e) {
@@ -827,6 +900,31 @@ class GridRenderer {
     const newHover  = inBounds ? { row, col } : null;
     const hoverChanged = JSON.stringify(newHover) !== JSON.stringify(this._hoverCell);
     if (hoverChanged) this._hoverCell = newHover;
+
+    // ── Two fingers: pan with the midpoint, zoom with the spread ─────────────
+    const held = Object.keys(this._lastPointers);
+    if (held.length === 2 && (e.pointerId in this._lastPointers)) {
+      const [a, b] = held;
+      const rel = p => ({ x: p.x - rect.left, y: p.y - rect.top });
+      const now = { x: e.clientX, y: e.clientY };
+      const curA = String(e.pointerId) === a ? now : this._lastPointers[a];
+      const curB = String(e.pointerId) === b ? now : this._lastPointers[b];
+      const t = twoFingerTransform(rel(this._lastPointers[a]), rel(this._lastPointers[b]),
+                                   rel(curA), rel(curB),
+                                   { scale: this._scale, tx: this._tx, ty: this._ty },
+                                   this._minScale, this._maxScale);
+      this._scale = t.scale; this._tx = t.tx; this._ty = t.ty;
+      this._lastPointers[e.pointerId] = now;
+      this._draw();
+      if (this.onUserMove) this.onUserMove();
+      return;
+    }
+    if (this._gesture) {
+      // One finger still down after a pinch: it does nothing until lifted.
+      if (e.pointerId in this._lastPointers) this._lastPointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+      if (hoverChanged) this._draw();
+      return;
+    }
 
     // ── Select mode rubber-band ──────────────────────────────────────────────
     if (this.selectMode && this._selectStart && (e.pointerId in this._lastPointers)) {
@@ -852,7 +950,23 @@ class GridRenderer {
 
     if (ids.length === 1 && this._dragging) {
       if (this.wallMode) {
-        // Wall Mode: drag paints / erases cells instead of panning
+        // Wall Mode: drag paints / erases cells instead of panning. A finger
+        // waits a moment first (touchPaintReady), then fills in the cell it
+        // started on, so a pinch never paints and a slow drag misses nothing.
+        const s = this._pointerStart || prev;
+        const moved = Math.hypot(e.clientX - s.x, e.clientY - s.y);
+        if (!touchPaintReady(this._pointerType, moved, Date.now() - this._downTime, ids.length)) {
+          this._lastPointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+          return;
+        }
+        if (this._lastDragCell === null && this._pointerType === 'touch') {
+          const c0 = this._screenToCell(s.x - rect.left, s.y - rect.top);
+          if (c0.row >= 0 && c0.row < GRID_ROWS && c0.col >= 0 && c0.col < GRID_COLS &&
+              (c0.row !== row || c0.col !== col)) {
+            this._lastDragCell = `${c0.row},${c0.col}`;
+            if (this.onCellTap) this.onCellTap(c0.row, c0.col);
+          }
+        }
         if (inBounds) {
           const key = `${row},${col}`;
           if (key !== this._lastDragCell) {
@@ -868,20 +982,20 @@ class GridRenderer {
         // A real drag, not the jitter of a tap (taps drop pins).
         if (this.onUserMove && this._movedEnough(e)) this.onUserMove();
       }
-    } else if (ids.length === 2) {
-      this._lastPointers[e.pointerId] = { x: e.clientX, y: e.clientY };
-      const dist = this._pinchDist();
-      if (this._lastPinchDist) {
-        const centre = this._pinchCentre();
-        this._zoom(dist / this._lastPinchDist, centre.x, centre.y);
-        if (this.onUserMove) this.onUserMove();
-      }
-      this._lastPinchDist = dist;
     }
     this._lastPointers[e.pointerId] = { x: e.clientX, y: e.clientY };
   }
 
   _onPointerUp(e) {
+    // ── The end of a two-finger move: no tap, no paint, no selection ─────────
+    if (this._gesture) {
+      delete this._lastPointers[e.pointerId];
+      if (Object.keys(this._lastPointers).length === 0) {
+        this._gesture = false; this._dragging = false; this._lastPinchDist = null;
+        if (this.onPointerUp) this.onPointerUp();
+      }
+      return;
+    }
     const start = this._pointerStart;
     const dx    = e.clientX - (start?.x ?? e.clientX);
     const dy    = e.clientY - (start?.y ?? e.clientY);

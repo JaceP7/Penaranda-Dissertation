@@ -2515,3 +2515,181 @@ body.scanning .pin-menu, body.view-admin .pin-menu { display: none !important; }
 @media (prefers-reduced-motion: reduce) {
   .stair-toast, .stair-prompt, .arrival-prompt { transition: none; }
 }
+
+/* ═══ Map editor: zoom buttons, tool bar, stamp sheet ═══════════════
+   Jace, 2026-11-10: "revamp the map editor pane, make it easier to use on
+   phones". The tool bar and the sheet handle exist only on a phone; the zoom
+   buttons help with a mouse too. */
+.zoom-ctrls {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  z-index: 41; display: flex; flex-direction: column; gap: 8px;
+}
+body.view-user .zoom-ctrls { display: none !important; }
+.zoom-btn {
+  width: 44px; height: 44px; border-radius: 12px;
+  border: 1px solid #CBD5E1; background: #FFFFFF; color: #1E293B;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.18);
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.zoom-btn:hover { background: #F1F5F9; }
+.zoom-btn:active { transform: scale(0.95); }
+.zoom-btn:focus-visible, .dock-btn:focus-visible, .tp-handle:focus-visible {
+  outline: 3px solid #93C5FD; outline-offset: 2px;
+}
+.zoom-btn .ui-icon { width: 22px; height: 22px; }
+
+.editor-dock { display: none; }
+.tp-handle { display: none; }
+.dock-btn {
+  flex: 1 1 0; min-width: 0; min-height: 52px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  border: none; border-radius: 10px; background: transparent; color: #CBD5E1;
+  font: inherit; font-size: 0.72rem; font-weight: 600; cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.dock-btn .ui-icon { width: 22px; height: 22px; }
+.dock-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.dock-btn.active                { background: #F8FAFC; color: #0F172A; }
+#dockPaint.active               { background: #F59E0B; color: #1C1917; }
+#dockSelect.active              { background: #2563EB; color: #FFFFFF; }
+#dockStamp.active               { background: #7C3AED; color: #FFFFFF; }
+.dock-hist { flex: 0 0 58px; }
+.dock-sep { flex: 0 0 1px; background: rgba(255, 255, 255, 0.16); margin: 8px 2px; }
+
+/* ── Map editor on a phone ──────────────────────────────────────────
+   One short top bar (wrench, floor, unpublished badge, "..." menu); the
+   editing tools along the bottom; the menu and the stamp sheet float over the
+   map so opening them never resizes or re-zooms it. */
+@media (max-width: 640px), (orientation: landscape) and (max-height: 500px) {
+  /* From the general phone header rules, so a phone on its side gets them too. */
+  body.view-admin .btn-mobile-menu { display: inline-flex; }
+  body.view-admin .header-secondary { display: none; width: 100%; flex-wrap: wrap; gap: 6px; padding-top: 6px; border-top: 1px solid rgba(255, 255, 255, 0.15); }
+  body.view-admin .header-secondary.open { display: flex; }
+  body.view-admin .app-header .btn { min-height: 40px; }
+  body.view-admin .app-header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1150;
+    min-height: 56px; max-height: 100dvh; overflow-y: auto;
+    padding: calc(6px + env(safe-area-inset-top, 0px)) 8px 6px 60px;
+    flex-wrap: wrap; gap: 6px;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.25);
+  }
+  body.view-admin .app-body { padding-top: calc(56px + env(safe-area-inset-top, 0px)); }
+  body.view-admin .app-header h1 { display: none; }
+  body.view-admin .header-actions { width: 100%; flex-wrap: wrap; gap: 6px; }
+
+  /* The wrench (leave the editor) sits at the left of the top bar. */
+  body.view-admin .admin-toggle {
+    top: calc(6px + env(safe-area-inset-top, 0px)); bottom: auto; left: 8px;
+    width: 44px; height: 44px; border-radius: 12px; box-shadow: none;
+  }
+
+  /* Closed: floor, badge and the menu button only. */
+  body.view-admin .floor-selector { order: 1; flex: 1 1 0; min-width: 0; margin-left: 0; justify-content: space-between; min-height: 44px; }
+  body.view-admin .floor-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 0.8rem; }
+  body.view-admin .btn-floor-step { min-width: 40px; min-height: 40px; }
+  body.view-admin .draft-badge { order: 2; }
+  body.view-admin .draft-badge #draftBadgeText { max-width: 82px; overflow: hidden; text-overflow: ellipsis; }
+  body.view-admin #mobileMenuBtn { order: 3; margin-left: 0; min-width: 44px; min-height: 44px; justify-content: center; }
+  body.view-admin .header-actions > #homeBtn,
+  body.view-admin .header-actions > #navModeBtn,
+  body.view-admin .header-actions > #captureModeBtn,
+  body.view-admin .header-actions > #syncBtn,
+  body.view-admin .header-actions > .floor-actions-dropdown,
+  body.view-admin .header-actions > .btn-admin { display: none; }
+
+  /* Tools that live in the bottom bar are not repeated in the menu. */
+  body.view-admin #undoBtn,
+  body.view-admin #redoBtn,
+  body.view-admin #wallModeBtn,
+  body.view-admin #selectModeBtn,
+  body.view-admin #stampModeBtn { display: none; }
+
+  /* Open: a two-column list of everything else, over the map. */
+  body.view-admin.editor-menu-open .header-actions > #homeBtn,
+  body.view-admin.editor-menu-open .header-actions > #navModeBtn,
+  body.view-admin.editor-menu-open .header-actions > #captureModeBtn,
+  body.view-admin.editor-menu-open .header-actions > #syncBtn,
+  body.view-admin.editor-menu-open .header-actions > .btn-admin {
+    display: inline-flex; order: 50; flex: 1 1 calc(50% - 6px); justify-content: center;
+  }
+  body.view-admin.editor-menu-open .header-actions > .floor-actions-dropdown { display: block; order: 55; flex: 1 1 100%; }
+  body.view-admin.editor-menu-open .header-actions .btn,
+  body.view-admin.editor-menu-open .floor-action-item { min-height: 44px; font-size: 0.85rem; }
+  body.view-admin.editor-menu-open #floorActionsBtn { width: 100%; justify-content: center; border: 1px solid rgba(255,255,255,0.22); }
+  body.view-admin .floor-actions-menu { position: static; width: 100%; margin-top: 6px; box-shadow: none; }
+  body.view-admin .floor-action-item { white-space: normal; }
+  body.view-admin .header-secondary { order: 60; }
+  body.view-admin .header-secondary.open .btn { flex: 1 1 calc(33% - 6px); justify-content: center; }
+
+  /* Nothing of the citizen view floats over the editor. */
+  body.view-admin .chat-toggle-btn { display: none !important; }
+  body.view-admin .info-bar { display: none; }
+
+  /* The tool bar. */
+  body.view-admin .editor-dock {
+    display: flex; flex-shrink: 0; align-items: stretch; gap: 4px;
+    padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+    background: #1E293B; border-top: 1px solid #0F172A; z-index: 1100;
+  }
+
+  /* Hint at the top; paint / selection / capture bars just above the tool bar. */
+  body.view-admin .overlay-bars { bottom: 0; }
+  body.view-admin .hint-bar { font-size: 0.74rem; padding: 6px 10px; }
+  body.view-admin #paintTypeBar,
+  body.view-admin #captureBar,
+  body.view-admin #selToolbar {
+    margin-top: auto; padding: 8px; gap: 6px; justify-content: center;
+    border-bottom: none; border-top: 1px solid #E2E8F0; box-shadow: 0 -4px 12px rgba(15, 23, 42, 0.08);
+  }
+  body.view-admin .paint-type-bar .ptype-label,
+  body.view-admin .sel-toolbar-label { display: none; }
+  body.view-admin #paintTypeBar .btn-ptype,
+  body.view-admin #selToolbar .btn-sel { flex: 1 1 0; min-width: 0; min-height: 44px; justify-content: center; font-size: 0.8rem; }
+  body.view-admin .zoom-ctrls { right: 10px; }
+
+  /* Stamps: a sheet from the bottom instead of a side panel. */
+  body.view-admin .tools-panel {
+    position: absolute; left: 0; right: 0; bottom: 0; width: auto; max-height: 58%;
+    z-index: 45; border-left: none; border-top: 1px solid #E2E8F0;
+    border-radius: 16px 16px 0 0; box-shadow: 0 -6px 24px rgba(15, 23, 42, 0.18);
+    overflow-y: auto; overscroll-behavior: contain;
+  }
+  body.view-admin .tools-panel.collapsed { max-height: 52px; overflow: hidden; }
+  body.view-admin .tp-handle {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    position: sticky; top: 0; z-index: 1; flex-shrink: 0;
+    width: 100%; min-height: 48px; border: none; background: #FFFFFF; cursor: pointer;
+    font: inherit; font-size: 0.8rem; font-weight: 700; color: #1E293B;
+    border-bottom: 1px solid #F1F5F9;
+  }
+  .tp-handle-bar { width: 40px; height: 4px; border-radius: 2px; background: #CBD5E1; }
+  body.view-admin .tools-panel .btn-stamp-sm,
+  body.view-admin .tools-panel .btn-ptype { min-height: 44px; }
+  body.view-admin .stamp-size-row input[type=number] { min-height: 40px; width: 64px; font-size: 1rem; }
+  body.view-admin .stamp-name-input { min-height: 44px; font-size: 1rem; }  /* 16 px: no iOS zoom on focus */
+}
+@media (max-width: 640px), (orientation: landscape) and (max-height: 500px) {
+  body.view-admin #stampCanvas { align-self: center; width: min(240px, 100%); }
+  /* The open stamp sheet covers the lower map; the zoom buttons would peek out of it. */
+  body.view-admin .canvas-wrap:has(.tools-panel:not(.collapsed):not([style*="none"])) .zoom-ctrls { display: none; }
+}
+/* Words shown only inside the phone menu, where icon-only buttons are unclear. */
+.menu-only-lbl { display: none; }
+@media (max-width: 640px), (orientation: landscape) and (max-height: 500px) {
+  body.view-admin.editor-menu-open .menu-only-lbl { display: inline; }
+}
+/* Laptop: keep the zoom buttons on the map, left of the open stamp side panel. */
+@media (min-width: 641px) and (min-height: 501px) {
+  .canvas-wrap:has(.tools-panel:not([style*="none"])) .zoom-ctrls { right: 252px; }
+}
+/* The narrowest phones: the floor arrows give a little so the menu button stays on the row. */
+@media (max-width: 360px) {
+  body.view-admin .btn-floor-step { min-width: 34px; padding: 2px 4px; }
+}
+/* A phone on its side: every pixel of height counts. Icon beside the word in
+   the tool bar, and no hint line (the tools are labelled). */
+@media (orientation: landscape) and (max-height: 500px) {
+  body.view-admin .editor-dock { padding-top: 4px; padding-bottom: calc(4px + env(safe-area-inset-bottom, 0px)); }
+  body.view-admin .dock-btn { flex-direction: row; gap: 6px; min-height: 48px; }
+  body.view-admin .hint-bar { display: none; }
+}

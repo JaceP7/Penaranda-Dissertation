@@ -32,6 +32,17 @@ const UI_ICON_PATHS = {
   "up":          '<path d="M12 20V4M5 11l7-7 7 7"/>',
   "down":        '<path d="M12 4v16M5 13l7 7 7-7"/>',
   "locate":      '<circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>',
+  // Map editor tool bar (2026-11-10)
+  "move":        '<path d="M12 2v20M2 12h20M12 2l-3 3M12 2l3 3M12 22l-3-3M12 22l3-3M2 12l3-3M2 12l3 3M22 12l-3-3M22 12l-3 3"/>',
+  "brush":       '<path d="M14 4l6 6-8 8H6v-6z"/><path d="M11 7l6 6M4 21h7"/>',
+  "select":      '<path d="M4 7V4h3M10 4h4M17 4h3v3M20 10v4M20 17v3h-3M14 20h-4M7 20H4v-3M4 14v-4"/>',
+  "stamp":       '<path d="M9 3h6v6l-1 3h5v4H5v-4h5L9 9z"/><path d="M5 20h14"/>',
+  "undo":        '<path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>',
+  "redo":        '<path d="M15 14l5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h3"/>',
+  "plus":        '<path d="M12 5v14M5 12h14"/>',
+  "minus":       '<path d="M5 12h14"/>',
+  "fit":         '<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/>',
+  "more":        '<circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/>',
 };
 
 function uiIcon(name, extraClass) {

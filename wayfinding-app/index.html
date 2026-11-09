@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=61" />
+  <link rel="stylesheet" href="css/app.css?v=68" />
 </head>
 <body class="view-user">
 
@@ -60,7 +60,7 @@
       <button id="captureModeBtn" class="btn btn-capture" aria-pressed="false" title="Fieldwork: capture office coordinates">🎯 Capture</button>
       <button id="syncBtn"       class="btn btn-ghost btn-sync" title="Pull latest map from server (shares across devices)">☁ Sync</button>
       <div id="floorActionsDropdown" class="floor-actions-dropdown">
-        <button id="floorActionsBtn" class="btn btn-ghost btn-floor-actions" aria-haspopup="true" aria-expanded="false" title="Duplicate / Export / Deploy floor plans">Floors ▾</button>
+        <button id="floorActionsBtn" class="btn btn-ghost btn-floor-actions" aria-haspopup="true" aria-expanded="false" title="Publish, preview, history, duplicate / export floor plans">Floors<span class="menu-only-lbl"> &amp; publish</span> ▾</button>
         <div id="floorActionsMenu" class="floor-actions-menu" hidden>
           <button id="publishCloudBtn" class="floor-action-item floor-action-publish" title="Push the current floors, rooms, and labels to ALL devices via the cloud. Shows what will change before it asks you to confirm. Requires the publish token (MAP_ADMIN_TOKEN).">☁ Publish to all devices</button>
           <button id="previewCitizenBtn" class="floor-action-item" title="See exactly what a visitor sees, without leaving the editor. Your unpublished edits are included, so you can check them before publishing.">👁 Preview as citizen</button>
@@ -80,7 +80,7 @@
         <span id="draftBadgeText">Unpublished changes</span>
         <button id="revertDraftBtn" class="draft-revert" title="Discard the unpublished changes on this device and reload the live map">Revert</button>
       </div>
-      <a href="admin.html" class="btn btn-ghost btn-admin" title="Service Inquiry Analytics Dashboard" target="_blank">📊</a>
+      <a href="admin.html" class="btn btn-ghost btn-admin" title="Service Inquiry Analytics Dashboard" aria-label="Analytics dashboard" target="_blank">📊<span class="menu-only-lbl"> Analytics</span></a>
       <div class="floor-selector">
         <button id="floorDown" class="btn btn-ghost btn-floor-step" title="Go to lower floor">▼</button>
         <span   id="floorDisplay" class="floor-label">Ground Floor</span>
@@ -89,7 +89,7 @@
       </div>
 
       <!-- ── Mobile overflow toggle (hidden on desktop) ───────────── -->
-      <button id="mobileMenuBtn" class="btn btn-ghost btn-mobile-menu" title="Map editing tools">⋯</button>
+      <button id="mobileMenuBtn" class="btn btn-ghost btn-mobile-menu" title="More: publish, floors, navigate, reset" aria-label="More editor actions" aria-expanded="false">⋯</button>
 
     </div>
   </header>
@@ -182,8 +182,19 @@
         aria-label="75×75 pathfinding grid. Tap a cell to set destination.">
       </canvas>
 
-      <!-- Combined tools panel -->
+      <!-- Editor zoom: one tap is about a third closer; Fit shows the whole floor. -->
+      <div class="zoom-ctrls" role="group" aria-label="Zoom the map">
+        <button id="zoomInBtn"  class="zoom-btn" aria-label="Zoom in" title="Zoom in"><span data-icon="plus"></span></button>
+        <button id="zoomOutBtn" class="zoom-btn" aria-label="Zoom out" title="Zoom out"><span data-icon="minus"></span></button>
+        <button id="zoomFitBtn" class="zoom-btn zoom-fit" aria-label="Show the whole floor" title="Show the whole floor"><span data-icon="fit"></span></button>
+      </div>
+
+      <!-- Combined tools panel (a sheet from the bottom on a phone) -->
       <div id="toolsPanel" class="tools-panel" style="display:none">
+        <button id="toolsPanelHandle" class="tp-handle" aria-expanded="true" aria-controls="toolsPanel">
+          <span class="tp-handle-bar" aria-hidden="true"></span>
+          <span class="tp-handle-text">Stamp tools</span>
+        </button>
 
         <!-- ── Stamp Editor section ── -->
         <div class="tp-section">
@@ -324,6 +335,19 @@
 
   </main>
 
+  <!-- ═══ EDITOR TOOL BAR (phones only) ════════════════════════════════
+       The editing tools along the bottom, within thumb reach, instead of
+       behind the "..." menu. Same actions as the header buttons. -->
+  <nav id="editorDock" class="editor-dock" aria-label="Map editing tools">
+    <button id="dockMove"   class="dock-btn" aria-pressed="true"><span class="dock-ico" data-icon="move"></span><span class="dock-lbl">Move</span></button>
+    <button id="dockPaint"  class="dock-btn" aria-pressed="false"><span class="dock-ico" data-icon="brush"></span><span class="dock-lbl">Paint</span></button>
+    <button id="dockSelect" class="dock-btn" aria-pressed="false"><span class="dock-ico" data-icon="select"></span><span class="dock-lbl">Select</span></button>
+    <button id="dockStamp"  class="dock-btn" aria-pressed="false"><span class="dock-ico" data-icon="stamp"></span><span class="dock-lbl">Stamp</span></button>
+    <span class="dock-sep" aria-hidden="true"></span>
+    <button id="dockUndo"   class="dock-btn dock-hist" disabled aria-label="Undo"><span class="dock-ico" data-icon="undo"></span><span class="dock-lbl">Undo</span></button>
+    <button id="dockRedo"   class="dock-btn dock-hist" disabled aria-label="Redo"><span class="dock-ico" data-icon="redo"></span><span class="dock-lbl">Redo</span></button>
+  </nav>
+
   <!-- ═══ ADMIN: EXIT CITIZEN PREVIEW ══════════════════════════════════
        Floats above the citizen view while an admin is previewing, so they can
        return to the editor without a second PIN prompt. -->
@@ -429,16 +453,16 @@
   <script src="js/lib/jsQR.js"></script>
   <script src="js/lib/qrcode.min.js"></script>
 
-  <script src="js/ui_icons.js?v=2"></script>
+  <script src="js/ui_icons.js?v=3"></script>
   <script src="js/data.js?v=33"></script>
   <script src="js/floor_presets.js?v=35"></script>
   <script src="js/stamp_presets.js?v=2"></script>
   <script src="js/service_locations.js?v=11"></script>
   <script src="js/dijkstra.js?v=30"></script>
-  <script src="js/renderer.js?v=40"></script>
+  <script src="js/renderer.js?v=41"></script>
   <script src="js/compass.js?v=31"></script>
   <script src="js/nav.js?v=42"></script>
-  <script src="js/app.js?v=90"></script>
+  <script src="js/app.js?v=92"></script>
   <script src="js/chat.js?v=46"></script>
 
 </body>

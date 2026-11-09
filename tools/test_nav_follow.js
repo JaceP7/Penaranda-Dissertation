@@ -67,7 +67,9 @@ console.log('\n--- auto-zoom: the dot and the stretch ahead ---');
 console.log('\n--- moving the map stops following ---');
 {
   ok('the renderer reports a drag of 8 px or more', /Math\.hypot\([^)]*_pointerStart[^)]*\)[^;]*>= 8[^;]*\)\s*this\.onUserMove\(\)|_movedEnough\(e\)\) this\.onUserMove\(\)/.test(rend));
-  ok('  a pinch', /this\._zoom\(dist \/ this\._lastPinchDist[^;]*\);\s*\n\s*if \(this\.onUserMove\) this\.onUserMove\(\);/.test(rend));
+  // A two-finger move (pinch or pan) goes through twoFingerTransform since the
+  // editor revamp (2026-11-10) and still reports the move.
+  ok('  a pinch', /twoFingerTransform\([\s\S]{0,700}?this\._draw\(\);\s*\r?\n\s*if \(this\.onUserMove\) this\.onUserMove\(\);/.test(rend));
   ok('  and the mouse wheel', /_onWheel\(e\) \{[\s\S]{0,300}this\.onUserMove/.test(rend));
   ok('the app turns following off on it', /renderer\.onUserMove = \(\) => \{[^}]*_setFollow\(false\)/.test(app));
   const sf = lift(app, '_setFollow') || '';
