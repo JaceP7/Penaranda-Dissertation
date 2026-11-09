@@ -263,5 +263,13 @@ console.log('\n--- Ask again only during a route ---');
 console.log('\n--- no pop-ups for citizens ---');
 ok('routing never calls alert()', !/alert\(/.test(lift(app, 'navigateToDepartment') || 'alert('));
 
+console.log('\n--- the arrival card stands alone (Jace, 2026-11-09) ---');
+ok('showing it hides the walking steps first', /_hideNavStep\(\);[\s\S]{0,80}classList\.add\('arrived'\)/.test(lift(app, '_showArrivalPrompt') || ''));
+ok('  and hiding it lets them come back', /classList\.remove\('arrived'\)/.test(lift(app, '_hideArrivalPrompt') || ''));
+ok('  nothing else floats over it while it is up',
+   /body\.arrived \.nav-step-prompt,\s*body\.arrived \.nav-recenter-btn,\s*body\.arrived \.pin-menu,\s*body\.arrived \.stair-toast\s*\{\s*display:\s*none !important/.test(css));
+ok('  it is wider: up to 460 px, never past the screen edge',
+   /\.arrival-prompt\s*\{[^}]*width:\s*min\(460px, calc\(100vw - 24px\)\)/.test(css));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

@@ -3004,6 +3004,11 @@ function _showArrivalPrompt() {
   if (arrivalText) arrivalText.textContent = _navDestLabel ? `You've reached the ${_navDestLabel.replace(/^the /i, '')}` : 'You have arrived';
   if (arrivalSub)  arrivalSub.textContent  = 'Nandito ka na';
   _hideStairToast();           // one message at a time
+  // The card stands alone: the "Turn left..." step bar sat on top of it.
+  // body.arrived keeps the steps (and Re-center, the pin menu, messages) off
+  // screen until the card closes, even if a late step tries to redraw them.
+  _hideNavStep();
+  document.body.classList.add('arrived');
   el.style.display = 'flex';
   // No auto-dismiss: the prompt now offers "Ask again" / "Back home" actions,
   // so it stays until the citizen chooses one (or taps ✕ to keep viewing the map).
@@ -3012,6 +3017,7 @@ function _showArrivalPrompt() {
 
 function _hideArrivalPrompt() {
   const el = document.getElementById('arrivalPrompt');
+  document.body.classList.remove('arrived');
   if (!el) return;
   el.classList.remove('visible');
   setTimeout(() => { if (!el.classList.contains('visible')) el.style.display = 'none'; }, 300);

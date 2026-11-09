@@ -606,6 +606,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.85);
+  width: min(460px, calc(100vw - 24px));   /* wider, as Jace asked (2026-11-09) */
   background: #065F46;
   color: #ECFDF5;
   border-radius: 20px;
@@ -621,6 +622,12 @@ body {
   transition: opacity 0.3s ease, transform 0.3s ease;
   text-align: center;
 }
+/* While the arrival card is up, nothing else floats over or beside it. */
+body.arrived .nav-step-prompt,
+body.arrived .nav-recenter-btn,
+body.arrived .pin-menu,
+body.arrived .stair-toast { display: none !important; }
+
 .arrival-prompt.visible {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
