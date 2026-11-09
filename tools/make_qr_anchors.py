@@ -135,7 +135,8 @@ PAGE_W, PAGE_H = 1240, 1754
 SIGN_W, SIGN_H = PAGE_W, PAGE_H // 2
 
 
-def make_sign(name, floor, r, c, url):
+def make_sign(name, floor, r, c, url, note=None):
+    """note: an optional small grey line under the floor (office signs use it for the window)."""
     img = Image.new("RGB", (SIGN_W, SIGN_H), "white")
     d = ImageDraw.Draw(img)
 
@@ -180,6 +181,9 @@ def make_sign(name, floor, r, c, url):
 
     d.text((tx, y), FLOOR_NAMES[floor], font=font(30), fill="#1E40AF")
     y += 46
+    if note:
+        d.text((tx, y - 6), note, font=font(21), fill="#666666")
+        y += 32
 
     d.text((tx, y), "Buksan ang camera at ituro dito.", font=font(22), fill="#555555")
     y += 30

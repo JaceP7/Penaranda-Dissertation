@@ -91,3 +91,6 @@ analytics_backups/
 
 # Office/entrance location sheets (tools/make_office_locations_pdf.py)
 office_locations/
+
+# Office QR signs (tools/make_office_qr_signs.py), regenerated from the map
+qr_anchors/offices/
