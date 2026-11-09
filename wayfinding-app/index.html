@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=55" />
+  <link rel="stylesheet" href="css/app.css?v=56" />
 </head>
 <body class="view-user">
 
@@ -27,21 +27,9 @@
     <p class="landing-cta-sub">Itanong ang kahit anong serbisyo &mdash; requirements, bayad, at kung saan pumunta. Tagalog o English.</p>
     <button id="landingCtaBtn" class="landing-cta-btn">Magtanong na &mdash; tap here</button>
     <p class="landing-cta-hint">Nasa loob ka na ng City Hall? I-scan ang QR na nakapaskil para sa tumpak na direksyon.</p>
-
-    <!-- ╔══ TEMPORARY — REMOVE BEFORE PUBLIC USE ════════════════════════╗
-         Obvious staff entry to the map editor, for testing and demos. The
-         permanent control is the dim 🔧 at the bottom-left, which is
-         deliberately hard for citizens to notice; this one is not, so it
-         does not belong on a screen real visitors use.
-
-         To remove: delete this block, the `.temp-admin-entry` rules in
-         css/app.css, and the `tempAdminBtn` lines in js/app.js. Nothing
-         else references it. It is still PIN-gated either way.
-         ╚════════════════════════════════════════════════════════════════╝ -->
-    <div class="temp-admin-entry">
-      <button id="tempAdminBtn" class="temp-admin-btn">🔧 Staff: open map editor</button>
-      <span class="temp-admin-note">temporary — for testing</span>
-    </div>
+    <!-- No staff control on the citizen screen. Staff open
+         /?staff=1 (or "Map editor" on the analytics page), which shows the
+         PIN-gated button in the corner for that tab. -->
   </section>
 
   <!-- ═══ HEADER ═══════════════════════════════════════════════════════ -->
@@ -107,8 +95,10 @@
   </header>
 
   <!-- ═══ VIEW-MODE CONTROLS (fixed; survive header hiding) ═══════════════ -->
-  <!-- Admin toggle: PIN-gated entry to the full editor; tap again to exit. -->
-  <button id="adminToggleBtn" class="admin-toggle" title="Staff / admin access">🔧</button>
+  <!-- Admin toggle: PIN-gated entry to the full editor; tap again to exit.
+       Hidden from citizens; shown in the editor and when the page was opened
+       with ?staff=1 (see _staffEntryFlag in js/app.js). -->
+  <button id="adminToggleBtn" class="admin-toggle" title="Staff / admin access" aria-label="Staff map editor">🔧</button>
   <!-- User-view "ask again": reopens the Services chat after a route is shown. -->
   <button id="askAgainBtn" class="ask-again-btn" title="Ask the assistant again"><span data-icon="message"></span>Ask again</button>
 
@@ -428,10 +418,10 @@
   <script src="js/stamp_presets.js?v=2"></script>
   <script src="js/service_locations.js?v=9"></script>
   <script src="js/dijkstra.js?v=30"></script>
-  <script src="js/renderer.js?v=35"></script>
+  <script src="js/renderer.js?v=36"></script>
   <script src="js/compass.js?v=31"></script>
   <script src="js/nav.js?v=42"></script>
-  <script src="js/app.js?v=82"></script>
+  <script src="js/app.js?v=83"></script>
   <script src="js/chat.js?v=43"></script>
 
 </body>

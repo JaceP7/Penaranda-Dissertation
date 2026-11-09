@@ -231,8 +231,8 @@ ok('the close button is labelled and 44 px', /id="arrivalCloseBtn"[^>]*aria-labe
 ok('arrival buttons are 48 px tall', /min-height:\s*48px/.test(rule('.btn-arrival-action')));
 
 console.log('\n--- chat ---');
-ok('the round chat button hides while the chat is open on a phone',
-   /@media \(max-width: 640px\)\s*\{[^}]*body\.chat-showing \.chat-toggle-btn\s*\{\s*display:\s*none/.test(css));
+ok('the round chat button hides while the chat is open (every width since 2026-11-09)',
+   /(^|\n)body\.chat-showing \.chat-toggle-btn\s*\{\s*display:\s*none/.test(css));
 {
   const fn = lift(chat, '_starterLabel');
   const sb = {};

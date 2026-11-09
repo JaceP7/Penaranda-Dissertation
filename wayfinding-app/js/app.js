@@ -74,6 +74,23 @@ async function _adminPinAccepted(pin) {
 // them to the editor without a second PIN prompt.
 let _previewingAsCitizen = false;
 
+/**
+ * Whether to show the staff 🔧 button on this tab. Citizens never see it.
+ * `?staff=1` turns it on and remembers that for the tab (so it survives a
+ * reload or a QR link opened in the same tab); `?staff=0` turns it off.
+ * `store` is sessionStorage, or null when the browser blocks it.
+ */
+function _staffEntryFlag(search, store) {
+  const KEY = 'wf-staff-entry';
+  const m = /[?&]staff(?:=([^&]*))?(?:&|$)/.exec(search || '');
+  if (m) {
+    const on = m[1] !== '0' && m[1] !== 'false';
+    try { if (store) { if (on) store.setItem(KEY, '1'); else store.removeItem(KEY); } } catch (_) {}
+    return on;
+  }
+  try { return !!store && store.getItem(KEY) === '1'; } catch (_) { return false; }
+}
+
 function setViewMode(mode) {
   STATE.viewMode = (mode === 'admin') ? 'admin' : 'user';
   document.body.classList.toggle('view-admin', STATE.viewMode === 'admin');
@@ -319,7 +336,6 @@ const DOM = {
   arrivalReminder: $('arrivalReminder'),
   askAgainBtn:     $('askAgainBtn'),
   landingCtaBtn:   $('landingCtaBtn'),
-  tempAdminBtn:    $('tempAdminBtn'),   // TEMPORARY — see index.html
 
   infoStart:       $('infoStart'),
   infoEnd:         $('infoEnd'),
@@ -598,6 +614,81 @@ function _bestStairFor(fromFloor, fromRow, fromCol, toFloor, toRow, toCol) {
   return best;
 }
 
+// ── Framing the route on a phone ─────────────────────────────────────────────
+// The step bar covers the top of the map (the left side when a phone is turned
+// sideways) and "Ask again" sits in a bottom corner, so the route is fitted
+// into the part of the map that is actually visible, not the whole canvas.
+// Zooming onto the start cell instead left half a portrait screen empty when
+// the citizen stood at the building's edge (the main entrance is row 73 of 75).
+
+const ROUTE_FIT_MAX_CELL_PX = 28;   // a short route is not blown up past this
+
+/** The largest part of `box` that `rect` does not cover (same pixel space). */
+function _mapBoxAround(box, rect) {
+  const L = Math.max(box.left, rect.left), R = Math.min(box.right, rect.right);
+  const T = Math.max(box.top, rect.top),   B = Math.min(box.bottom, rect.bottom);
+  if (L >= R || T >= B) return { left: box.left, top: box.top, right: box.right, bottom: box.bottom };
+  const sides = [
+    { left: box.left, top: B,       right: box.right, bottom: box.bottom },   // below it
+    { left: box.left, top: box.top, right: box.right, bottom: T },            // above it
+    { left: R,        top: box.top, right: box.right, bottom: box.bottom },   // right of it
+    { left: box.left, top: box.top, right: L,         bottom: box.bottom },   // left of it
+  ];
+  let best = sides[0], bestArea = -1;
+  for (const s of sides) {
+    const area = Math.max(0, s.right - s.left) * Math.max(0, s.bottom - s.top);
+    if (area > bestArea) { best = s; bestArea = area; }
+  }
+  return best;
+}
+
+/** The part of the map canvas not hidden by the step bar, "Ask again", or a
+ *  message that is showing (the opening message sat on the "you are here"
+ *  dot on a 320 x 640 phone). */
+function _visibleMapBox() {
+  const cv = renderer.canvas;
+  const full = { left: 0, top: 0, right: cv.clientWidth, bottom: cv.clientHeight };
+  const cr = cv.getBoundingClientRect();
+  let box = full;
+  for (const id of ['navStepPrompt', 'askAgainBtn', 'stairToast']) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    if (id === 'stairToast' && !el.classList.contains('visible')) continue;   // faded out, still laid out
+    const r = el.getBoundingClientRect();
+    if (!r.width || !r.height) continue;            // hidden
+    box = _mapBoxAround(box, { left: r.left - cr.left, top: r.top - cr.top,
+                               right: r.right - cr.left, bottom: r.bottom - cr.top });
+  }
+  const pad = 12;
+  box = { left: box.left + pad, top: box.top + pad, right: box.right - pad, bottom: box.bottom - pad };
+  // A sliver is worse than drawing under the bar: fall back to the whole map.
+  if (box.right - box.left < 120 || box.bottom - box.top < 120) return full;
+  return box;
+}
+
+/** Fit the whole route (you, the line, the destination) into the visible map. */
+function _frameRoute() {
+  if (STATE.viewMode !== 'user' || !document.body.classList.contains('route-active')) return false;
+  const cells = [];
+  const add = (id) => {
+    if (!id) return;
+    const [row, col] = String(id).split(',').map(Number);
+    if (Number.isFinite(row) && Number.isFinite(col)) cells.push({ row, col });
+  };
+  (renderer._path || []).forEach(add);
+  add(STATE.startId);
+  add(STATE.endId);
+  if (!cells.length) return false;
+  renderer.fitCells(cells, _visibleMapBox(), ROUTE_FIT_MAX_CELL_PX);
+  return true;
+}
+
+/** Window resized or phone turned: refit the canvas, then the route if one is up. */
+function _onMapResize() {
+  renderer.resize();
+  _frameRoute();
+}
+
 /** Begin the second leg: cross to the destination floor and route to the office. */
 function _startCrossFloorLegTwo() {
   const t = _crossFloorTrip;
@@ -618,12 +709,12 @@ function _startCrossFloorLegTwo() {
   recompute();
 
   renderer.navActive = true;
-  renderer.focusOnCell(t.stair.row, t.stair.col, 2.2);
   document.body.classList.add('route-active');
   if (DOM.navStairBtn) DOM.navStairBtn.hidden = true;
 
   _navStepReset();
   _updateNavInstruction();
+  _frameRoute();               // after the step bar is up, so it can be avoided
   _showStairToast(`You're on ${_floorName(t.destFloor)}. Follow the blue line to ${_officeTitle(t.label || 'your office')}.`);
 }
 
@@ -812,13 +903,13 @@ function navigateToDepartment(deptName, subservice, answerText) {
   renderer.setEnd(STATE.endId);
   recompute();
 
-  // User (chat-first) view: reveal the map, show the "you are here" marker at
-  // the (default or PDR) start tile, and focus/zoom on it for follow-cam — no
-  // Capture needed. Each PDR step re-centers via NAV.onPositionChange.
+  // User (chat-first) view: reveal the map and show the "you are here" marker
+  // at the (default or PDR) start tile — no Capture needed. The view is framed
+  // around the whole route at the end of this function, once the step bar has
+  // its final size. Each PDR step re-centers via NAV.onPositionChange.
   if (STATE.viewMode === 'user') {
     document.body.classList.add('route-active');
     renderer.navActive = true;                       // draw "ME" at the start tile
-    renderer.focusOnCell(startCell.row, startCell.col, 2.2);  // zoom in + center
     _ensurePdrOn();                                  // start step-tracking so the dot moves as they walk
   }
 
@@ -858,6 +949,9 @@ function navigateToDepartment(deptName, subservice, answerText) {
   } else {
     _showStairToast(`Follow the blue line to ${_navDestLabel}.`);
   }
+
+  // Last, because "At the stairs" (just above) changes the step bar's height.
+  _frameRoute();
 }
 
 // ── Live single-instruction turn-by-turn ────────────────────────────────────
@@ -1057,7 +1151,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (card) renderer.meFacing = card;
     }
     _lastMeCell = { row, col };
-    renderer.centerOnCell(row, col);
+    renderer.centerOnCell(row, col, _visibleMapBox());   // centre of what is visible, not under the step bar
     updateDriftIndicator();
     recompute();
     renderer._draw();
@@ -1163,8 +1257,8 @@ document.addEventListener('DOMContentLoaded', () => {
   DOM.dupFloorBtn.addEventListener('click', duplicateCurrentFloor);
   DOM.renameFloorBtn.addEventListener('click', renameCurrentFloor);
 
-  // View-mode controls. Shared by the permanent 🔧 toggle and the temporary
-  // landing-page button, so the PIN gate exists in exactly one place.
+  // View-mode controls. The 🔧 toggle is the only way in; citizens never see
+  // it (see _staffEntryFlag), and the PIN is checked server-side either way.
   async function _enterAdminWithPin(btn) {
     const pin = prompt('Enter staff PIN to access admin tools:');
     if (pin === null) return;
@@ -1191,11 +1285,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (STATE.viewMode === 'admin') { _leaveAdminView(); return; }   // exit needs no PIN
     _enterAdminWithPin(DOM.adminToggleBtn);
   });
-
-  // TEMPORARY — remove with the matching block in index.html and app.css.
-  if (DOM.tempAdminBtn) {
-    DOM.tempAdminBtn.addEventListener('click', () => _enterAdminWithPin(DOM.tempAdminBtn));
-  }
 
   // Admin safety rail: preview, revert, history
   if (DOM.previewCitizenBtn) DOM.previewCitizenBtn.addEventListener('click', enterCitizenPreview);
@@ -1427,7 +1516,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keyup',   _trackShift);
   window.addEventListener('blur',      () => { _shiftHeld = false; });
 
-  window.addEventListener('resize', () => renderer.resize());
+  window.addEventListener('resize', _onMapResize);
 
   drawStampEditor();
   renderCatalogue();
@@ -1437,6 +1526,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Default to the citizen (chat-first) view. Kiosk-safe: never starts in admin.
   setViewMode('user');
+
+  // Staff reach the editor from /?staff=1 (bookmark, or "Map editor" on the
+  // analytics page). Citizens never see the button.
+  let _staffStore = null;
+  try { _staffStore = window.sessionStorage; } catch (_) {}
+  document.body.classList.toggle('staff-entry', _staffEntryFlag(location.search, _staffStore));
 
   // Pull the cloud-published map (rooms/labels admins published) and apply it if
   // newer than this device's copy. Fire-and-forget — never blocks first paint.

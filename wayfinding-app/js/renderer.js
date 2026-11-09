@@ -28,6 +28,33 @@ const COLORS = {
   stepText:    '#1E40AF',
 };
 
+/**
+ * Scale and offset that fit the cell rectangle `bounds` ({r1, c1, r2, c2},
+ * inclusive) as large as possible inside the screen box `box` ({left, top,
+ * right, bottom}, canvas px), centred, with the scale held in [minScale,
+ * maxScale]. Pure, so the framing maths can be tested without a canvas.
+ */
+function fitCellsTransform(bounds, box, baseCell, minScale, maxScale) {
+  const cols = bounds.c2 - bounds.c1 + 1;
+  const rows = bounds.r2 - bounds.r1 + 1;
+  const bw   = Math.max(1, box.right - box.left);
+  const bh   = Math.max(1, box.bottom - box.top);
+  let scale  = Math.min(bw / (cols * baseCell), bh / (rows * baseCell));
+  scale      = Math.min(maxScale, Math.max(minScale, scale));
+  const cs   = baseCell * scale;
+  return {
+    scale,
+    tx: (box.left + box.right) / 2 - ((bounds.c1 + bounds.c2 + 1) / 2) * cs,
+    ty: (box.top + box.bottom) / 2 - ((bounds.r1 + bounds.r2 + 1) / 2) * cs,
+  };
+}
+
+/** A path step number is drawn only when it fits inside its cell; on a phone's
+ *  zoomed-out map the numbers otherwise run together ("2120 19"). */
+function stepLabelFits(textWidth, cellPx) {
+  return textWidth <= cellPx - 2;
+}
+
 // ── GridRenderer class ────────────────────────────────────────────────────────
 class GridRenderer {
   constructor(canvas) {
@@ -96,13 +123,36 @@ class GridRenderer {
   setEnd(id)    { this._endId = id;   this._draw(); }
   clearEnd()    { this._endId = null; this._draw(); }
 
-  /** Pan the view so that (row, col) is centred on screen. */
-  centerOnCell(row, col) {
-    const cs     = this._cs();
-    const cw     = this.canvas.clientWidth;
-    const ch     = this.canvas.clientHeight;
-    this._tx     = cw / 2 - (col + 0.5) * cs;
-    this._ty     = ch / 2 - (row + 0.5) * cs;
+  /** Pan the view so that (row, col) is centred on screen, or in `box`
+   *  ({left, top, right, bottom} in canvas px) when part of the screen is
+   *  covered, e.g. by the citizen's step bar. */
+  centerOnCell(row, col, box) {
+    const cs = this._cs();
+    const b  = box || { left: 0, top: 0, right: this.canvas.clientWidth, bottom: this.canvas.clientHeight };
+    this._tx = (b.left + b.right) / 2 - (col + 0.5) * cs;
+    this._ty = (b.top + b.bottom) / 2 - (row + 0.5) * cs;
+  }
+
+  /** Zoom and pan so every cell in `cells` ([{row, col}]) fits inside `box`,
+   *  with `margin` cells around them, never zoomed past `maxCellPx` per cell. */
+  fitCells(cells, box, maxCellPx, margin = 2) {
+    if (!cells || !cells.length) return;
+    let r1 = Infinity, c1 = Infinity, r2 = -Infinity, c2 = -Infinity;
+    for (const { row, col } of cells) {
+      r1 = Math.min(r1, row); r2 = Math.max(r2, row);
+      c1 = Math.min(c1, col); c2 = Math.max(c2, col);
+    }
+    const bounds = {
+      r1: Math.max(0, r1 - margin), c1: Math.max(0, c1 - margin),
+      r2: Math.min(GRID_ROWS - 1, r2 + margin), c2: Math.min(GRID_COLS - 1, c2 + margin),
+    };
+    const cap = Math.max(this._minScale,
+                         Math.min(this._maxScale, (maxCellPx || Infinity) / this._baseCell));
+    const t = fitCellsTransform(bounds, box, this._baseCell, this._minScale, cap);
+    this._scale = t.scale;
+    this._tx    = t.tx;
+    this._ty    = t.ty;
+    this._draw();
   }
 
   /** Zoom to `scale` (clamped) and centre on (row, col), then redraw.
@@ -224,11 +274,14 @@ class GridRenderer {
             ctx.fillText('E', x + cs / 2, y + cs / 2);
 
           } else if (onPath) {
-            ctx.fillStyle    = COLORS.stepText;
-            ctx.font         = `bold ${fontSize}px system-ui, sans-serif`;
-            ctx.textAlign    = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(pathStep.get(id), x + cs / 2, y + cs / 2);
+            ctx.font = `bold ${fontSize}px system-ui, sans-serif`;
+            const label = String(pathStep.get(id));
+            if (stepLabelFits(ctx.measureText(label).width, cs)) {
+              ctx.fillStyle    = COLORS.stepText;
+              ctx.textAlign    = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText(label, x + cs / 2, y + cs / 2);
+            }
           }
 
           // Door / Stair labels

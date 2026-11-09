@@ -6,7 +6,7 @@ This is how a City Hall staff member (not the developer) updates the map and rea
 
 ## 1. Enter admin mode
 
-1. Open the live site on any device.
+1. Open **`https://penaranda-dissertation.vercel.app/?staff=1`** (bookmark it), or tap **Map editor** at the top of the analytics page. Citizens never see a staff button; `?staff=1` shows it for that browser tab, even after a reload. `?staff=0` hides it again.
 2. Tap the **🔧** button (bottom-left).
 3. Enter the **staff PIN**. It is checked by the server (`api/adminauth.js`) and is no longer written into `app.js`, so it cannot be read from the page source.
 4. The full editor appears. Tap **🔧** again to return to the citizen view. (The view is never remembered — every reload returns to the citizen chat, which is kiosk-safe.)

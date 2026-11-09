@@ -1926,16 +1926,11 @@ body.view-user:not(.route-active):not(.chat-showing) .landing-cta { display: blo
   .landing-cta-title { font-size: 1.22rem; }
 }
 
-/* The staff control stays reachable but stops inviting taps from citizens
-   (it is PIN-gated, but a visible wrench gets poked during usability tests). */
-body.view-user .admin-toggle {
-  width: 30px; height: 30px;
-  font-size: 0.78rem;
-  opacity: 0.28;
-  box-shadow: none;
-}
-body.view-user .admin-toggle:hover,
-body.view-user .admin-toggle:focus { opacity: 1; }
+/* Citizens never see the staff control (Jace, 2026-11-09, option A). It shows
+   in the editor, and on a tab opened with /?staff=1, where it keeps out of the
+   way of the chat's text box. */
+body.view-user:not(.staff-entry) .admin-toggle { display: none !important; }
+body.chat-showing .admin-toggle { display: none !important; }
 
 /* Citizen view: hide editor chrome that leaked onto the public screen.
    The hint bar is author guidance ("Tap any cell to route from (0,0)... Enable
@@ -2075,46 +2070,6 @@ body.view-user .draft-badge { display: none !important; }
    Preview chip — the wrench would re-prompt for the PIN, which is pointless
    when the admin never actually left. */
 body.previewing .admin-toggle { display: none !important; }
-
-/* ╔══ TEMPORARY — REMOVE BEFORE PUBLIC USE ══════════════════════════════╗
-   Obvious staff entry on the landing page, for testing and demos. Styled as
-   a quiet secondary action so it never competes with the citizen's task
-   launcher, but plainly findable — unlike the permanent 🔧, which is dimmed
-   on purpose. Delete this block together with the matching ones in
-   index.html and js/app.js.
-   ╚══════════════════════════════════════════════════════════════════════╝ */
-.temp-admin-entry {
-  margin-top: 22px;
-  padding-top: 16px;
-  border-top: 1px dashed rgba(255, 255, 255, 0.28);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-}
-.temp-admin-btn {
-  padding: 9px 18px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  font-size: 0.84rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-.temp-admin-btn:hover,
-.temp-admin-btn:focus { background: rgba(255, 255, 255, 0.24); }
-.temp-admin-btn:disabled { opacity: 0.5; cursor: progress; }
-
-.temp-admin-note {
-  font-size: 0.68rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.62);
-}
-
-/* The editor replaces the landing page, so the button has no job there. */
-body.view-admin .temp-admin-entry { display: none !important; }
 
 /* ╔══ TEMPORARY — REMOVE BEFORE PUBLIC USE ══════════════════════════════╗
    Manual location entry inside the QR prompt, so a sign that will not scan
@@ -2402,8 +2357,42 @@ body.view-user #infoSteps { display: none !important; }
 .chat-qr-hint .ui-icon { width: 16px; height: 16px; margin-right: 2px; }
 
 
-@media (max-width: 640px) {
-  body.chat-showing .chat-toggle-btn { display: none; }   /* it covered the send button */
+/* The open chat has its own close button, so the round chat button goes away
+   at every width. Below 640 px it covered the send button; above, it sat
+   next to the panel as a second, confusing way to close it. */
+body.chat-showing .chat-toggle-btn { display: none !important; }
+
+/* ── The map on a phone ──────────────────────────────────────────────────
+   The citizen view hides every chip in the editor's info bar, which left an
+   empty 44 px white strip under the map. */
+body.view-user .info-bar { display: none !important; }
+
+/* A phone on its side is about 375 px tall; the step bar across the top
+   covered over 60% of it. It moves down the left edge instead and the route
+   is framed in the space to its right (_visibleMapBox in js/app.js). */
+@media (orientation: landscape) and (max-height: 500px) {
+  .nav-step-prompt {
+    top: calc(8px + env(safe-area-inset-top, 0px));
+    left: calc(8px + env(safe-area-inset-left, 0px));
+    transform: none;
+    width: min(340px, 44vw);
+    max-height: calc(100% - 16px);
+    overflow-y: auto;
+    padding: 10px 12px;
+    gap: 6px;
+  }
+  .nav-step-text { font-size: 1rem; }
+  .nav-step-meta { padding-left: 0; }
+  .nav-act { min-height: 44px; padding: 6px 10px; font-size: 0.875rem; }
+  /* Messages go under the step bar, in the same column, instead of across
+     the middle of the map where they covered the "you are here" dot. */
+  .stair-toast {
+    left: calc(8px + env(safe-area-inset-left, 0px));
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    max-width: min(340px, 44vw);
+    transform: translateY(12px);
+  }
+  .stair-toast.visible { transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
   .stair-toast, .stair-prompt, .arrival-prompt { transition: none; }
