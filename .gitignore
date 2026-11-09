@@ -88,3 +88,6 @@ eval/log_backups/
 
 # Analytics backups hold real citizen questions: never commit them
 analytics_backups/
+
+# Office/entrance location sheets (tools/make_office_locations_pdf.py)
+office_locations/
