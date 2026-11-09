@@ -35,6 +35,7 @@ const REDIS_URL   = (process.env.UPSTASH_REDIS_REST_URL || '').replace(/\/$/, ''
 const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || '';
 const KEY         = 'wf:navlog';
 const { requireAdmin } = require('../lib/gate');
+const { manilaDay, manilaStamp } = require('../lib/manila');
 const CAP         = 50000;
 const CHUNK       = 2500;
 
@@ -137,7 +138,8 @@ module.exports = async function handler(req, res) {
     try { rows = await readAll(); }
     catch (e) { return res.status(200).json({ ok: false, _note: `read failed: ${e.message}` }); }
 
-    const day = (e) => (Number.isFinite(Number(e.ts)) ? new Date(e.ts).toISOString().slice(0, 10) : '');
+    // Manila calendar days (UTC until 2026-11-09).
+    const day = (e) => manilaDay(e.ts);
     rows = rows.filter((e) => {
       if (!keepSynthetic && e.synthetic) return false;
       if (!from && !to) return true;
@@ -149,10 +151,10 @@ module.exports = async function handler(req, res) {
     });
 
     if (isCsv) {
-      const head = ['timestamp_utc', 'date', 'event', 'sid', 'department', 'subservice',
+      const head = ['timestamp_utc', 'timestamp_manila', 'date', 'event', 'sid', 'department', 'subservice',
                     'from', 'to', 'path_cells', 'elapsed_ms', 'rescans'];
       const body = rows.slice().reverse().map((e) => [
-        e.ts ? new Date(e.ts).toISOString() : '', day(e), e.event, e.sid || '',
+        e.ts ? new Date(e.ts).toISOString() : '', manilaStamp(e.ts), day(e), e.event, e.sid || '',
         e.department || '', e.subservice || '',
         e.fromFloor != null ? `${e.fromFloor}:${e.fromRow},${e.fromCol}` : '',
         e.toFloor != null ? `${e.toFloor}:${e.toRow},${e.toCol}` : '',
@@ -191,6 +193,11 @@ module.exports = async function handler(req, res) {
       arrived:   arrives.length,
       abandoned: abandons.length,
       rescans:   rescans.length,
+      // Started but never ended in the log (tab closed, still walking, or the
+      // route was replaced before it ended). Never negative.
+      noEnding:  Math.max(0, starts.length - arrives.length - abandons.length),
+      alreadyHere: rows.filter((e) => e.event === 'nav_already_here').length,
+      arrivalTimesN: times.length,
       // Of the routes whose outcome is known. Routes still open, or ended by a
       // closed tab, are in neither bucket and are excluded from the rate.
       arrivalRate: resolved ? Math.round((arrives.length / resolved) * 1000) / 10 : 0,

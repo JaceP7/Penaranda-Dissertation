@@ -111,8 +111,9 @@ const call = async (query) => {
 
   let lines = r.body.replace(/^﻿/, '').trim().split('\r\n');
   ok('CSV has a header plus one row per entry', lines.length === 6, String(lines.length));
-  ok('CSV header names the columns',
-     lines[0] === 'timestamp_utc,date,query,department,subservice,needs_context,latency_ms,lang');
+  ok('CSV header names the columns, with Manila time second (2026-11-09)',
+     lines[0] === 'timestamp_utc,timestamp_manila,date,query,department,subservice,needs_context,latency_ms,lang,kind,source',
+     lines[0]);
   ok('CSV is oldest-first', /2026-09-20/.test(lines[1]), lines[1]);
   ok('CSV quotes a field containing a comma', /"cedula, magkano po\?"/.test(r.body));
   ok('CSV doubles embedded quotes', /saan po ang ""office""\?/.test(r.body));
@@ -123,6 +124,46 @@ const call = async (query) => {
   ok('CSV honours the date range', lines.length === 3, String(lines.length));
   ok('ranged CSV names the window in the filename',
      /calamba-queries-2026-10-05_to_2026-10-05\.csv/.test(r.headers['content-disposition'] || ''));
+
+  // ── Manila time and the dashboard's new figures (revamp Task 9) ───────────
+  const T = (iso) => Date.parse(iso);
+  LOG = [
+    { ts: T('2026-10-05T16:30:00Z'), query: 'a', department: 'D1', subservice: 'S1', needsContext: false, latency_ms: 800, lang: 'en', kind: 'service' },
+    { ts: T('2026-10-05T15:30:00Z'), query: 'b', department: 'D1', subservice: 'S1', needsContext: true, latency_ms: 900, lang: 'fil' },
+    { ts: T('2026-10-04T02:00:00Z'), query: 'c', department: 'D2', subservice: 'S2', needsContext: false, latency_ms: 11000, lang: 'en', kind: 'location' },
+    { ts: T('2026-10-04T02:10:00Z'), query: 'S2', department: 'D2', subservice: 'S2', latency_ms: 100, lang: 'en', kind: 'service', source: 'chip' },
+    { ts: T('2026-10-04T02:20:00Z'), query: 'canteen', department: null, subservice: null, latency_ms: 2, lang: 'en', kind: 'scope', topic: 'amenity' },
+    { ts: T('2026-10-04T02:30:00Z'), query: 'zz', department: null, subservice: null, latency_ms: 300, lang: 'en', kind: 'unclear' },
+  ];
+  r = await call({ from: '2026-10-06', to: '2026-10-06' });
+  ok('a question at 2026-10-05T16:30Z counts on Manila 2026-10-06', r.body.total === 1, r.body.total);
+  r = await call({ from: '2026-10-05', to: '2026-10-05' });
+  ok('  and to=2026-10-05 leaves it out', r.body.total === 1 && r.body.recentQueries[0].query === 'b', JSON.stringify(r.body.recentQueries));
+  r = await call({ from: '2026-10-06', to: '2026-10-04' });
+  ok('a reversed range is swapped', r.body.total === 6, r.body.total);
+  ok('rangeLabel spells out the window', r.body.rangeLabel === 'Oct 4 – Oct 6, 2026 (Manila time)', r.body.rangeLabel);
+  r = await call({});
+  const S = r.body;
+  ok('all time is labelled', S.rangeLabel === 'All time (Manila time)', S.rangeLabel);
+  ok('hourWeekday is 7 x 24, Monday first', Array.isArray(S.hourWeekday) && S.hourWeekday.length === 7 && S.hourWeekday.every((x) => x.length === 24));
+  ok('  Tuesday 12 AM holds the 16:30Z question', S.hourWeekday && S.hourWeekday[1][0] === 1);
+  ok('  Monday 11 PM the 15:30Z one', S.hourWeekday && S.hourWeekday[0][23] === 1);
+  ok('busiest is Sunday 10 AM with 4', S.busiest && S.busiest.weekday === 6 && S.busiest.hour === 10 && S.busiest.count === 4, JSON.stringify(S.busiest));
+  const bin = (lo) => (S.latency.histogram.find((b) => b.lo === lo) || {}).count;
+  ok('latency histogram: 500-1000 ms holds 800 and 900', S.latency && bin(500) === 2, JSON.stringify(S.latency && S.latency.histogram.slice(0, 3)));
+  ok('  11000 ms lands in the 10 s+ bin', S.latency && S.latency.histogram[S.latency.histogram.length - 1].hi === null && bin(10000) === 1);
+  ok('kinds: service, location, out of scope, unclear', JSON.stringify(S.kinds) === JSON.stringify({ service: 3, location: 1, scope: 1, unclear: 1 }), JSON.stringify(S.kinds));
+  ok('sources: typed and chip', S.sources && S.sources.typed === 5 && S.sources.chip === 1, JSON.stringify(S.sources));
+  ok('out-of-scope topics', JSON.stringify(S.scopeTopics) === JSON.stringify([{ name: 'amenity', count: 1 }]), JSON.stringify(S.scopeTopics));
+  ok('languages', JSON.stringify(S.languages) === JSON.stringify([{ lang: 'en', count: 5 }, { lang: 'fil', count: 1 }]), JSON.stringify(S.languages));
+  ok('clarification as a count of a total', S.clarification && S.clarification.count === 1 && S.clarification.of === 6, JSON.stringify(S.clarification));
+  r = await call({ format: 'csv' });
+  ok('CSV date is the Manila date', /2026-10-05T16:30:00\.000Z,2026-10-06 00:30,2026-10-06,/.test(r.body), r.body.split('\r\n').slice(-3).join(' | '));
+  LOG = [];
+  for (let i = 1; i <= 20; i++) LOG.push({ ts: T('2026-10-04T02:00:00Z') + i, query: 'q' + i, latency_ms: i * 100, lang: 'en' });
+  r = await call({});
+  ok('p95 of 100..2000 step 100 is 1900, median 1050', r.body.latency.p95 === 1900 && r.body.latency.median === 1050 && r.body.latency.n === 20,
+     JSON.stringify([r.body.latency.p95, r.body.latency.median, r.body.latency.n]));
 
   // ── paging: more entries than one chunk ───────────────────────────────────
   const big = [];

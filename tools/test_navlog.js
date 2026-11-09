@@ -120,7 +120,7 @@ const T = (iso) => new Date(iso + 'T09:00:00Z').getTime();
   ok('CSV filename', /calamba-navigation-all-time\.csv/.test(r.headers['content-disposition'] || ''));
   ok('CSV has a BOM', r.body.charCodeAt(0) === 0xFEFF);
   const lines = r.body.replace(/^﻿/, '').trim().split('\r\n');
-  ok('CSV header', lines[0].startsWith('timestamp_utc,date,event,sid,department'));
+  ok('CSV header, with Manila time second', lines[0].startsWith('timestamp_utc,timestamp_manila,date,event,sid,department'), lines[0]);
   // derived, not hardcoded: adding a case above should not break this
   const totalEvents = (await get({})).body.total;
   ok('CSV has a header plus one row per event', lines.length === totalEvents + 1,
@@ -171,6 +171,28 @@ const T = (iso) => new Date(iso + 'T09:00:00Z').getTime();
   ok('the CSV export excludes them too, matching the dashboard',
      acsv.body.replace(/^﻿/, '').trim().split('\r\n').length === 2,
      acsv.body.replace(/^﻿/, '').trim().split('\r\n').length);
+
+  // ── how routes ended, in Manila time (revamp Task 11) ───────────────────
+  console.log('\n--- route outcomes ---');
+  const ev = (event, extra) => JSON.stringify(Object.assign({ ts: T('2026-10-10'), event, sid: 'z' }, extra));
+  store['wf:navlog'] = [
+    ...Array(10).fill(0).map(() => ev('nav_start')),
+    ev('nav_arrive', { elapsed_ms: 30000 }), ev('nav_arrive', { elapsed_ms: 40000 }), ev('nav_arrive'),
+    ev('nav_abandon', { elapsed_ms: 9000 }), ev('nav_abandon'),
+    ev('nav_already_here'), ev('nav_already_here'),
+  ];
+  r = await get({});
+  ok('noEnding = 10 started - 3 arrived - 2 closed = 5', r.body.noEnding === 5, r.body.noEnding);
+  ok('alreadyHere counted', r.body.alreadyHere === 2, r.body.alreadyHere);
+  ok('arrivalTimesN leaves out arrivals with no time', r.body.arrivalTimesN === 2, r.body.arrivalTimesN);
+  store['wf:navlog'] = [ev('nav_arrive'), ev('nav_arrive'), ev('nav_start')];
+  r = await get({});
+  ok('noEnding is never negative', r.body.noEnding === 0, r.body.noEnding);
+  store['wf:navlog'] = [JSON.stringify({ ts: Date.parse('2026-10-05T16:30:00Z'), event: 'nav_start', sid: 'm' })];
+  r = await get({ from: '2026-10-06', to: '2026-10-06' });
+  ok('a 16:30Z event counts on the next Manila day', r.body.started === 1, r.body.started);
+  r = await get({ format: 'csv' });
+  ok('  and the CSV shows its Manila time and date', /2026-10-06 00:30,2026-10-06,nav_start/.test(r.body), r.body.slice(0, 200));
 
   console.log(`\n${pass} passed, ${fail} failed`);
   process.exit(fail ? 1 : 0);

@@ -27,6 +27,7 @@ const REDIS_URL   = (process.env.UPSTASH_REDIS_REST_URL || '').replace(/\/$/, ''
 const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || '';
 const LOG_KEY     = 'wf:querylog';
 const { requireAdmin } = require('../lib/gate');
+const { manilaParts, manilaDay, manilaToday, manilaStamp } = require('../lib/manila');
 
 // The log holds up to LOG_CAP entries (see api/chat.js). Reading them in one
 // LRANGE would be a single multi-megabyte response, so page through instead.
@@ -37,6 +38,9 @@ const MAX_DAYS = 400;       // guard on the per-day series for a silly date rang
 const EMPTY = {
   total: 0, today: 0, ambiguityRate: 0, avgLatency: 0,
   topDepartments: [], topSubservices: [], typedSubservices: [], queriesPerDay: [], recentQueries: [],
+  hourWeekday: Array.from({ length: 7 }, () => new Array(24).fill(0)), busiest: null,
+  latency: { n: 0, median: 0, p95: 0, histogram: [] }, languages: [], clarification: { count: 0, of: 0 },
+  kinds: { service: 0, location: 0, scope: 0, unclear: 0 }, sources: { typed: 0, chip: 0 }, scopeTopics: [],
 };
 
 async function redisLRange(key, start, stop) {
@@ -58,7 +62,13 @@ async function readLog() {
   for (;;) {
     const raw = await redisLRange(LOG_KEY, start, start + CHUNK - 1);
     for (const s of raw) {
-      try { rows.push(JSON.parse(s)); } catch { /* skip a corrupt entry */ }
+      try {
+        const o = JSON.parse(s);
+        // The stored line, kept out of JSON output, so a row can be named by
+        // its hash (rowId) and removed exactly (api/data.js).
+        Object.defineProperty(o, '_raw', { value: s, enumerable: false });
+        rows.push(o);
+      } catch { /* skip a corrupt entry */ }
     }
     if (raw.length < CHUNK) break;          // reached the end of the list
     start += CHUNK;
@@ -87,12 +97,68 @@ function topN(counter, n) {
 }
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
-/** UTC calendar date of an entry, or '' when the timestamp is unusable. */
+/** Manila calendar date of an entry, or '' when the timestamp is unusable.
+ *  (UTC until 2026-11-09, which put anything before 8 AM on the day before.) */
 function dayOf(e) {
-  const t = Number(e && e.ts);
-  if (!Number.isFinite(t)) return '';
-  const d = new Date(t);
-  return Number.isNaN(d.getTime()) ? '' : d.toISOString().slice(0, 10);
+  return manilaDay(e && e.ts);
+}
+
+/** Answer times: n, median, nearest-rank p95, and 500 ms bins up to 10 s+. */
+function latencySummary(values) {
+  const s = values.slice().sort((a, b) => a - b);
+  const n = s.length;
+  const median = !n ? 0 : (n % 2 ? s[(n - 1) / 2] : Math.round((s[n / 2 - 1] + s[n / 2]) / 2));
+  const p95 = n ? s[Math.ceil(0.95 * n) - 1] : 0;
+  const histogram = [];
+  for (let lo = 0; lo < 10000; lo += 500) histogram.push({ lo, hi: lo + 500, count: 0 });
+  histogram.push({ lo: 10000, hi: null, count: 0 });
+  for (const v of s) histogram[Math.min(20, Math.max(0, Math.floor(v / 500)))].count++;
+  return { n, median, p95, histogram };
+}
+
+/** First 16 hex characters of the SHA-256 of a row's stored line. */
+function rowId(e) {
+  return require('crypto').createHash('sha256').update(e._raw || JSON.stringify(e)).digest('hex').slice(0, 16);
+}
+
+/**
+ * GET /api/analytics?view=questions&page=&size=&q=&office=&lang=&kind=&from=&to=
+ * The whole log, newest first, searched and paged here so the dashboard never
+ * downloads it all. size 1-200 (default 50); page clamped to the last page.
+ */
+function questionsView(rows, q, res) {
+  const size = Math.min(200, Math.max(1, parseInt(q.size, 10) || 50));
+  const needle = String(q.q || '').trim().toLowerCase();
+  const office = String(q.office || '');
+  const lang = String(q.lang || '');
+  const kind = String(q.kind || '');
+  const offices = [...new Set(rows.map((e) => e.department).filter(Boolean))].sort();
+  const hits = rows.filter((e) =>
+    (!needle || String(e.query || '').toLowerCase().includes(needle)) &&
+    (!office || e.department === office) &&
+    (!lang || e.lang === lang) &&
+    (!kind || (e.kind || 'service') === kind));
+  const pages = Math.max(1, Math.ceil(hits.length / size));
+  const page = Math.min(pages, Math.max(1, parseInt(q.page, 10) || 1));
+  const out = hits.slice((page - 1) * size, page * size).map((e) => ({
+    id: rowId(e), ts: e.ts || null, query: e.query || '', department: e.department || null,
+    subservice: e.subservice || null, needsContext: !!e.needsContext,
+    latency_ms: typeof e.latency_ms === 'number' ? e.latency_ms : null,
+    lang: e.lang || null, kind: e.kind || 'service', source: isChipRow(e) ? 'chip' : 'typed',
+  }));
+  return res.status(200).json({ rows: out, total: hits.length, page, pages, size, offices });
+}
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+/** "Oct 4 – Oct 6, 2026 (Manila time)", or "All time (Manila time)". */
+function rangeLabel(lo, hi) {
+  const md = (d) => `${MONTHS[Number(d.slice(5, 7)) - 1]} ${Number(d.slice(8, 10))}`;
+  const y = (d) => d.slice(0, 4);
+  if (!lo && !hi) return 'All time (Manila time)';
+  if (lo && !hi) return `From ${md(lo)}, ${y(lo)} (Manila time)`;
+  if (!lo && hi) return `Until ${md(hi)}, ${y(hi)} (Manila time)`;
+  if (y(lo) === y(hi)) return `${md(lo)} – ${md(hi)}, ${y(hi)} (Manila time)`;
+  return `${md(lo)}, ${y(lo)} – ${md(hi)}, ${y(hi)} (Manila time)`;
 }
 
 /** Inclusive list of YYYY-MM-DD between two dates. */
@@ -186,14 +252,17 @@ module.exports = async function handler(req, res) {
   });
   const syntheticExcluded = keepSynthetic ? 0 : all.filter((e) => e.synthetic).length;
 
+  if (String(q.view || '') === 'questions') return questionsView(rows, q, res);
+
   // ── CSV export ─────────────────────────────────────────────────────────────
   if (isCsv) {
-    const header = ['timestamp_utc', 'date', 'query', 'department', 'subservice',
-                    'needs_context', 'latency_ms', 'lang'];
+    const header = ['timestamp_utc', 'timestamp_manila', 'date', 'query', 'department', 'subservice',
+                    'needs_context', 'latency_ms', 'lang', 'kind', 'source'];
     // rows is already filtered, so the export matches what the dashboard shows
     // Oldest first reads naturally in a spreadsheet; the list is LPUSH'd newest-first.
     const body = rows.slice().reverse().map((e) => [
       e.ts ? new Date(e.ts).toISOString() : '',
+      manilaStamp(e.ts),
       dayOf(e),
       e.query || '',
       e.department || '',
@@ -201,6 +270,8 @@ module.exports = async function handler(req, res) {
       e.needsContext ? 'yes' : 'no',
       typeof e.latency_ms === 'number' ? e.latency_ms : '',
       e.lang || '',
+      e.kind || 'service',
+      isChipRow(e) ? 'chip' : 'typed',
     ].map(csvCell).join(','));
 
     const stamp = applied ? `${lo || 'start'}_to_${hi || 'now'}` : 'all-time';
@@ -218,27 +289,48 @@ module.exports = async function handler(req, res) {
       scanned: all.length,
       syntheticExcluded,
       capped,
+      rangeLabel: rangeLabel(lo, hi),
       _note: applied ? 'No queries in the selected date range.' : 'No website queries logged yet.',
     });
   }
 
   const now = new Date();
-  const todayStr = now.toISOString().slice(0, 10);   // UTC date
-  let ambiguous = 0, latencySum = 0, latencyN = 0, todayCount = 0;
+  const todayStr = manilaToday(now.getTime());       // Manila date
+  let ambiguous = 0, latencySum = 0, latencyN = 0, todayCount = 0, clarify = 0;
   const deptCounter = {}, subCounter = {}, typedCounter = {}, dayCounter = {};
+  const langCounter = {}, topicCounter = {};
+  const kinds = { service: 0, location: 0, scope: 0, unclear: 0 };
+  const sources = { typed: 0, chip: 0 };
+  const hourWeekday = Array.from({ length: 7 }, () => new Array(24).fill(0));
+  const latencies = [];
 
   for (const e of rows) {
-    const date = dayOf(e);
-    if (date) {
-      dayCounter[date] = (dayCounter[date] || 0) + 1;
-      if (date === todayStr) todayCount++;
+    const p = manilaParts(e.ts);
+    if (p) {
+      dayCounter[p.date] = (dayCounter[p.date] || 0) + 1;
+      if (p.date === todayStr) todayCount++;
+      hourWeekday[p.weekday][p.hour]++;
     }
     if (!e.department || e.needsContext) ambiguous++;
-    if (typeof e.latency_ms === 'number') { latencySum += e.latency_ms; latencyN++; }
+    if (e.needsContext) clarify++;
+    if (typeof e.latency_ms === 'number' && Number.isFinite(e.latency_ms)) {
+      latencySum += e.latency_ms; latencyN++; latencies.push(e.latency_ms);
+    }
     if (e.department) deptCounter[e.department] = (deptCounter[e.department] || 0) + 1;
     if (e.subservice) subCounter[e.subservice] = (subCounter[e.subservice] || 0) + 1;
     if (e.subservice && !isChipRow(e)) typedCounter[e.subservice] = (typedCounter[e.subservice] || 0) + 1;
+    if (e.lang) langCounter[e.lang] = (langCounter[e.lang] || 0) + 1;
+    const kind = Object.prototype.hasOwnProperty.call(kinds, e.kind) ? e.kind : 'service';
+    kinds[kind]++;
+    sources[isChipRow(e) ? 'chip' : 'typed']++;
+    if (kind === 'scope' && e.topic) topicCounter[e.topic] = (topicCounter[e.topic] || 0) + 1;
   }
+
+  // The busiest weekday-hour cell, or null when every cell is empty.
+  let busiest = null;
+  hourWeekday.forEach((row, w) => row.forEach((n, h) => {
+    if (n > 0 && (!busiest || n > busiest.count)) busiest = { weekday: w, hour: h, count: n };
+  }));
 
   // Per-day series: the chosen window when one is set, else the last 7 days.
   let days;
@@ -250,7 +342,7 @@ module.exports = async function handler(req, res) {
   } else {
     days = [];
     for (let i = 6; i >= 0; i--) {
-      const d = new Date(now.getTime() - i * 86400000).toISOString().slice(0, 10);
+      const d = manilaDay(now.getTime() - i * 86400000);
       days.push({ date: d, count: dayCounter[d] || 0 });
     }
   }
@@ -278,6 +370,16 @@ module.exports = async function handler(req, res) {
     typedSubservices: topN(typedCounter, 10),   // demand from typed questions; the citizen chips use this
     queriesPerDay:  days,
     recentQueries,
+    // Revamp figures (2026-11-09), all in Manila time.
+    hourWeekday,                                   // [weekday Mon..Sun][hour 0..23]
+    busiest,
+    latency:      latencySummary(latencies),
+    languages:    Object.entries(langCounter).sort((a, b) => b[1] - a[1]).map(([lang, count]) => ({ lang, count })),
+    clarification: { count: clarify, of: rows.length },
+    kinds,
+    sources,
+    scopeTopics:  topN(topicCounter, 10),
+    rangeLabel:   rangeLabel(lo, hi),
     range:   { from: lo, to: hi, applied },
     scanned: all.length,
     syntheticExcluded,
