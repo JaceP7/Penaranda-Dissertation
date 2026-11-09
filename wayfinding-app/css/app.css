@@ -2156,8 +2156,40 @@ body.previewing .admin-toggle { display: none !important; }
   text-align: left;
   max-height: 30vh;
   overflow-y: auto;
+  /* Keep the scrollbar on screen (Chrome, Android, desktop; iPhones ignore
+     this, so the "Scroll for more" line and the shadows below carry it). */
+  scrollbar-width: thin;
+  scrollbar-color: #64748B #E2E8F0;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+  /* Scroll shadows: a soft shade at whichever edge still has more. */
+  background:
+    linear-gradient(#F1F5F9 30%, rgba(241, 245, 249, 0)) center top,
+    linear-gradient(rgba(241, 245, 249, 0), #F1F5F9 70%) center bottom,
+    radial-gradient(farthest-side at 50% 0, rgba(15, 23, 42, 0.22), rgba(15, 23, 42, 0)) center top,
+    radial-gradient(farthest-side at 50% 100%, rgba(15, 23, 42, 0.22), rgba(15, 23, 42, 0)) center bottom;
+  background-color: #F1F5F9;
+  background-repeat: no-repeat;
+  background-size: 100% 36px, 100% 36px, 100% 14px, 100% 14px;
+  background-attachment: local, local, scroll, scroll;
 }
+.arrival-reminder::-webkit-scrollbar { width: 8px; }
+.arrival-reminder::-webkit-scrollbar-track { background: #E2E8F0; border-radius: 8px; }
+.arrival-reminder::-webkit-scrollbar-thumb { background: #64748B; border-radius: 8px; }
 .arrival-reminder[hidden] { display: none; }
+.arrival-more {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 44px; width: 100%; margin: 0; padding: 4px 10px;
+  border: none; border-radius: 10px; background: rgba(255, 255, 255, 0.14);
+  color: #ECFDF5; font: inherit; font-size: 0.85rem; font-weight: 700; cursor: pointer;
+}
+.arrival-more[hidden] { display: none; }
+.arrival-more .ui-icon { width: 18px; height: 18px; }
+.arrival-more:focus-visible { outline: 3px solid #FDE047; outline-offset: 2px; }
+@media (prefers-reduced-motion: no-preference) {
+  .arrival-more .ui-icon { animation: arrival-nudge 1.4s ease-in-out 3; }
+}
+@keyframes arrival-nudge { 50% { transform: translateY(3px); } }
 
 .arrival-service {
   margin: 0 0 7px;

@@ -62,8 +62,17 @@ const build = sb.f;
   r = build('Just a sentence with no list at all.\nGo to: X');
   ok('prose without a list yields no items', r.items.length === 0, JSON.stringify(r.items));
 
+  // 2026-11-09: the cap was 8, which silently dropped requirements. The list
+  // now scrolls inside the card (with a "Scroll for more" line), so every
+  // requirement is kept; 30 is only a guard against a runaway answer.
   r = build(Array.from({ length: 20 }, (_, i) => `${i + 1}. item ${i}`).join('\n'));
-  ok('caps the list at 8 so the prompt cannot overflow', r.items.length === 8, r.items.length);
+  ok('keeps every requirement (20 of 20)', r.items.length === 20, r.items.length);
+  r = build(Array.from({ length: 50 }, (_, i) => `${i + 1}. item ${i}`).join('\n'));
+  ok('  with a guard at 30 for a runaway answer', r.items.length === 30, r.items.length);
+  r = build('**Application for New Business Permit**\n\nRequirements:\n1. Barangay clearance (secure at: Barangay)\nGo to: X');
+  ok('a bold title line is not taken for a bullet', r.items.length === 1 && r.items[0].startsWith('Barangay clearance'), JSON.stringify(r.items));
+  r = build('* Valid ID\n- Cedula\n• Photo');
+  ok('  real "*", "-" and "•" bullets still count', r.items.length === 3, JSON.stringify(r.items));
 
   r = build('1.   spaced   out   \nGo to: X');
   ok('trims whitespace', r.items[0] === 'spaced   out', JSON.stringify(r.items[0]));

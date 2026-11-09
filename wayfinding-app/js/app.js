@@ -1511,6 +1511,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Arrival prompt close button
   document.getElementById('arrivalCloseBtn').addEventListener('click', _hideArrivalPrompt);
+  if (DOM.arrivalReminder) DOM.arrivalReminder.addEventListener('scroll', _updateArrivalMore, { passive: true });
+  const _moreBtn = document.getElementById('arrivalMore');
+  if (_moreBtn) _moreBtn.addEventListener('click', () => {
+    // Tapping the hint scrolls the list down a little, which also shows how.
+    const box = DOM.arrivalReminder;
+    if (box) box.scrollBy({ top: Math.round(box.clientHeight * 0.8), behavior: 'smooth' });
+  });
   document.getElementById('arrivalAskAgainBtn').addEventListener('click', _arrivalAskAgain);
   document.getElementById('arrivalHomeBtn').addEventListener('click', _arrivalGoHome);
 
@@ -1979,7 +1986,9 @@ function _buildArrivalReminder(answerText, dept, service) {
     const line = raw.trim();
     if (!line) continue;
     if (/^go to\s*:/i.test(line)) continue;               // routing directive
-    const m = line.match(/^(?:\d+[.)]|[-•*])\s*(.+)$/);   // 1. / 1) / - / •
+    // 1. / 1) / - / • / "* " - but not a **bold** title line, which every
+    // chip answer starts with and which used to show as "*Title**".
+    const m = line.match(/^(?:\d+[.)]\s*|[-•]\s*|\*\s+)(.+)$/);
     if (!m || !m[1].trim()) continue;
     // The model emits markdown emphasis. The reminder is rendered as escaped
     // text, so **bold** would otherwise show as literal asterisks.
@@ -1990,7 +1999,9 @@ function _buildArrivalReminder(answerText, dept, service) {
       .trim();
     if (text) items.push(text);
   }
-  return { dept: dept || null, service: service || null, items: items.slice(0, 8) };
+  // Every requirement: the list scrolls in the card and says when there is
+  // more. (A cap of 8 used to drop the rest silently.) 30 guards a runaway answer.
+  return { dept: dept || null, service: service || null, items: items.slice(0, 30) };
 }
 
 /** Render the reminder into the arrival prompt, or hide it if there is none. */
@@ -2006,13 +2017,35 @@ function _renderArrivalReminder() {
   let html = '';
   if (r.service) html += `<p class="arrival-service">${esc(r.service)}</p>`;
   if (r.items.length) {
-    html += '<p class="arrival-reminder-head">Ihanda / Have ready:</p><ul class="arrival-list">' +
+    // The count tells people how much there is before they scroll.
+    html += `<p class="arrival-reminder-head">Ihanda / Have ready (${r.items.length}):</p><ul class="arrival-list">` +
             r.items.map((i) => `<li>${esc(i)}</li>`).join('') + '</ul>';
   } else {
     html += '<p class="arrival-reminder-head">Ask at the counter for this service.</p>';
   }
   box.innerHTML = html;
   box.hidden = false;
+  box.scrollTop = 0;
+  // Measured once the card is laid out (it is still hidden at this point).
+  requestAnimationFrame(() => requestAnimationFrame(_updateArrivalMore));
+  _updateArrivalMore();
+}
+
+/** True while part of a scrolling box is still below its bottom edge. */
+function _hasMoreBelow(scrollTop, clientHeight, scrollHeight) {
+  return scrollHeight - (scrollTop + clientHeight) > 4;
+}
+
+/**
+ * Phones hide the scrollbar until you scroll, and iPhones ignore scrollbar
+ * styling, so testers didn't see that the reminder list scrolls and could miss
+ * the last requirements. Show a "Scroll for more" line until the end is seen.
+ */
+function _updateArrivalMore() {
+  const box = DOM.arrivalReminder;
+  const more = document.getElementById('arrivalMore');
+  if (!box || !more) return;
+  more.hidden = box.hidden || !_hasMoreBelow(box.scrollTop, box.clientHeight, box.scrollHeight);
 }
 
 // ── Cell interaction ──────────────────────────────────────────────────────────

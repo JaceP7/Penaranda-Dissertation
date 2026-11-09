@@ -268,6 +268,27 @@ ok('showing it hides the walking steps first', /_hideNavStep\(\);[\s\S]{0,80}cla
 ok('  and hiding it lets them come back', /classList\.remove\('arrived'\)/.test(lift(app, '_hideArrivalPrompt') || ''));
 ok('  nothing else floats over it while it is up',
    /body\.arrived \.nav-step-prompt,\s*body\.arrived \.nav-recenter-btn,\s*body\.arrived \.pin-menu,\s*body\.arrived \.stair-toast\s*\{\s*display:\s*none !important/.test(css));
+console.log('\n--- the reminder list shows that it scrolls (Jace, 2026-11-09) ---');
+{
+  const ctx2 = {}; vm.createContext(ctx2);
+  const src = lift(app, '_hasMoreBelow');
+  ok('app.js has _hasMoreBelow(scrollTop, clientHeight, scrollHeight)', !!src);
+  if (src) {
+    vm.runInContext(src, ctx2);
+    ok('  more below when the list is taller than its box', ctx2._hasMoreBelow(0, 200, 500) === true);
+    ok('  not at the end', ctx2._hasMoreBelow(300, 200, 500) === false);
+    ok('  not when it all fits', ctx2._hasMoreBelow(0, 200, 200) === false);
+  }
+  const rr = lift(app, '_renderArrivalReminder') || '';
+  ok('the heading says how many items there are', /Have ready \(\$\{r\.items\.length\}\)/.test(rr));
+  ok('  and the "scroll for more" line is updated on render and on scroll',
+     /_updateArrivalMore\(\)/.test(rr) && /addEventListener\('scroll', _updateArrivalMore/.test(app));
+  ok('a "Scroll for more" line sits under the list', /id="arrivalMore"[^>]*hidden/.test(html) && /Scroll for more/.test(html));
+  ok('the scrollbar stays visible where the phone allows it',
+     /\.arrival-reminder::-webkit-scrollbar\s*\{[^}]*width:\s*8px/.test(css) &&
+     /\.arrival-reminder::-webkit-scrollbar-thumb\s*\{/.test(css) && /scrollbar-color:/.test(rule('.arrival-reminder')));
+  ok('  with shadows at the edges that have more', /background-attachment:\s*local, local, scroll, scroll/.test(rule('.arrival-reminder')));
+}
 ok('  it is wider: up to 460 px, never past the screen edge',
    /\.arrival-prompt\s*\{[^}]*width:\s*min\(460px, calc\(100vw - 24px\)\)/.test(css));
 
