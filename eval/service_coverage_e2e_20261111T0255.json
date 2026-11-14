@@ -1,0 +1,396 @@
+{
+ "mode": "e2e",
+ "total": 104,
+ "tally": {
+  "right": 72,
+  "wrong": 4,
+  "asked": 10,
+  "office": 4,
+  "none": 14
+ },
+ "misses": [
+  {
+   "q": "Paano mag‑request ng certificate authentication?",
+   "lang": "fil",
+   "subservice": "Certificate Authentication and Verification (CAV)",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "grade": "wrong",
+   "got": {
+    "department": "CITY COLLEGE OF CALAMBA",
+    "subservice": "Authentication of Documents",
+    "needsContext": false,
+    "answer": "1. Request Form (secure at: Office of the College Registrar)  \n2. Original Copy of the Document (secure at: Kliyente)  \n3. Official Receipt (secure at: Cashier)"
+   }
+  },
+  {
+   "q": "How do I get the final electrical inspection certificate?",
+   "lang": "en",
+   "subservice": "Pag-iisyu ng Sertipiko ng Panghuling Inspeksiyon sa Kuryente (Certificate of Final Electrical Inspection)",
+   "department": "BUILDINGS REGULATORY SERVICES DEPARTMENT",
+   "grade": "asked",
+   "got": {
+    "department": null,
+    "subservice": null,
+    "needsContext": true,
+    "answer": "May dalawang serbisyo na nag-iisyu ng Sertipiko ng Panghuling Inspeksiyon sa Kuryente:\n\n1. **Pag‑iisyu ng Sertipiko ng Panghuling Inspeksiyon sa Kuryente** – pa"
+   }
+  },
+  {
+   "q": "How do I get a death certificate copy?",
+   "lang": "en",
+   "subservice": "Certified Death Certificate",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "grade": "asked",
+   "got": {
+    "department": null,
+    "subservice": null,
+    "needsContext": true,
+    "answer": "May dalawang posibleng serbisyo para sa iyong pangangailangan:\n\n1. **Certified Death Certificate** – para sa opisyal na sertipiko ng pagpanaw.  \n2. **Request fo"
+   }
+  },
+  {
+   "q": "How can I get a certified copy of my tax deed?",
+   "lang": "en",
+   "subservice": "Issuance of Certified True Copy of Tax Declaration / Certificate of Aggregate Land Holdings / Certificate of No Property",
+   "department": "CITY ASSESSMENT OFFICE",
+   "grade": "office",
+   "got": {
+    "department": "CITY ASSESSMENT OFFICE",
+    "subservice": "Issuance of Certified True Copy of Tax Map",
+    "needsContext": false,
+    "answer": "1. Authorization Letter with valid ID (secure at: Kliyente o Authorized Representative)  \n2. Tax Receipt or Land Title (secure at: City Treasury Office or Regis"
+   }
+  },
+  {
+   "q": "Paano mag-reserve ng City Hall para event?",
+   "lang": "fil",
+   "subservice": "Permit for Use of Public Facilities (City Hall, Banga, City Quadrangle, Jose Rizal Plaza, etc.)",
+   "department": "CITY ADMINISTRATION OFFICE",
+   "grade": "asked",
+   "got": {
+    "department": null,
+    "subservice": null,
+    "needsContext": true,
+    "answer": "May dalawang posibleng serbisyo para diyan:\n\n1. **Approval of the Request to Use City Hall Facilities**  \n2. **Permit for Use of Public Facilities (City Hall, B"
+   }
+  },
+  {
+   "q": "Where do I request a birth record correction?",
+   "lang": "en",
+   "subservice": "Request for Certificate (Cancellation / Verification / Late Birth Registration / No Record)",
+   "department": "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+   "grade": "wrong",
+   "got": {
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "subservice": "Request for Changes of Entries RA 10172 in Birth Certificate City Civil Registry Office - Civil Certification and",
+    "needsContext": false,
+    "answer": "1. Certified True Machine Copy of the Certificate or the page of the Registry Book containing the entry to be corrected **(secure at: the Philippine Statistics "
+   }
+  },
+  {
+   "q": "How do I get a social case study report?",
+   "lang": "en",
+   "subservice": "Request for the Preparation of a Comprehensive Social Case Study Report",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "grade": "asked",
+   "got": {
+    "department": null,
+    "subservice": null,
+    "needsContext": true,
+    "answer": "May ilang uri ng “social case study report” na pwedeng i‑request:\n\n1. **Request for the Conduct of a Social Case Study Report** – para sa simpleng pag‑interview"
+   }
+  },
+  {
+   "q": "Where do I take the competency assessment?",
+   "lang": "en",
+   "subservice": "Competency Assessment",
+   "department": "CITY ASSESSMENT OFFICE",
+   "grade": "asked",
+   "got": {
+    "department": null,
+    "subservice": null,
+    "needsContext": true,
+    "answer": "May dalawang department na nag-aalok ng Competency Assessment:\n\n1. **CITY SOCIAL SERVICES OFFICE**  \n2. **CITY ASSESSMENT OFFICE**\n\nAlin sa mga ito ang gusto mo"
+   }
+  },
+  {
+   "q": "Paano mag-apply ng shipping permit para sa hayop?",
+   "lang": "fil",
+   "subservice": "Authorization and Signing of Shipping Permits and Veterinary Health Certificates for Transported Animals",
+   "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+   "grade": "office",
+   "got": {
+    "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "subservice": "Application for Veterinary Health Certificate and Shipping Permit in Connection with Animal Transportation",
+    "needsContext": false,
+    "answer": "1. Shipping Permit (secure at: Kliyente)  \n2. Veterinary Health Certificates (secure at: City Veterinary Services Office)  \n\nGo to: CITY VETERINARY SERVICES AND"
+   }
+  },
+  {
+   "q": "When is the next waste management seminar?",
+   "lang": "en",
+   "subservice": "Request for a Seminar on Ecological Solid Waste Management",
+   "department": "CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT",
+   "grade": "none",
+   "got": {
+    "department": null,
+    "subservice": null,
+    "needsContext": false,
+    "answer": "I could not find that information. You may ask at the Information desk."
+   }
+  },
+  {
+   "q": "Paano mag‑reklamo para sa senior citizen?",
+   "lang": "fil",
+   "subservice": "Response to Complaints from Senior Citizens",
+   "department": "OFFICE OF THE MAYOR",
+   "grade": "wrong",
+   "got": {
+    "department": "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+    "subservice": "Addressing Complaints Concerning the Improper Implementation of Senior Citizen Discount Privileges",
+    "needsContext": false,
+    "answer": "1. Complaint Letter (secure at: Nagrereklamong Sr. Citizen)  \n2. Senior Citizens ID (Photocopy) (secure at: Kliyente)  \n\nGo to: OFFICE FOR THE SENIOR CITIZENS A"
+   }
+  },
+  {
+   "q": "When is the next pre‑marriage orientation seminar?",
+   "lang": "en",
+   "subservice": "Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar",
+   "department": "CITY POPULATION MANAGEMENT OFFICE",
+   "grade": "none",
+   "got": {
+    "department": null,
+    "subservice": null,
+    "needsContext": false,
+    "answer": "I could not find that information in the provided resources. You may ask at the Information desk for the schedule of the next pre‑marriage orientation seminar."
+   }
+  },
+  {
+   "q": "How can I get the completion form for my college program?",
+   "lang": "en",
+   "subservice": "Request for Completion Form",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "grade": "none",
+   "got": {
+    "answer": ""
+   }
+  },
+  {
+   "q": "Paano mag‑apply ng financial aid letter sa ospital?",
+   "lang": "fil",
+   "subservice": "Endorsement Letter / Guarantee Letter / Financial Assistance (Hospital or Medical)",
+   "department": "CITY ADMINISTRATION OFFICE",
+   "grade": "wrong",
+   "got": {
+    "department": "CITY SOCIAL SERVICES OFFICE",
+    "subservice": "Financial Assistance for Hospitalization Services",
+    "needsContext": false,
+    "answer": "**Requirements**  \n1. Barangay Certificate/Clearance *(secure at: Barangay Hall)*  \n2. Certificate of Indigency *(secure at: Barangay Hall)*  \n3. Orihinal / Cer"
+   }
+  },
+  {
+   "q": "Where can I get prenatal check‑ups for my baby?",
+   "lang": "en",
+   "subservice": "Pre-Natal Services at Birthing Facility",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "grade": "asked",
+   "got": {
+    "department": null,
+    "subservice": null,
+    "needsContext": true,
+    "answer": "May dalawang uri ng prenatal service na available:\n\n1. **Pre‑Natal Services at Birthing Facility**  \n2. **Services for Prenatal and Postnatal Care**  \n\nAlin sa "
+   }
+  },
+  {
+   "q": "Paano mag-apply para mag-ampon ng bata?",
+   "lang": "fil",
+   "subservice": "Application for Adoption (Regular Case)",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "grade": "asked",
+   "got": {
+    "department": null,
+    "subservice": null,
+    "needsContext": true,
+    "answer": "May dalawang klase ng aplikasyon para sa pag-aampon:\n\n1. **Application for Adoption (Regular Case)** – para sa mga hindi ka‑kapamilya ng bata.  \n2. **Adoption A"
+   }
+  },
+  {
+   "q": "Where can I ask for counseling and psychosocial help?",
+   "lang": "en",
+   "subservice": "Request for Assistance for Psychosocial Support",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "grade": "asked",
+   "got": {
+    "department": null,
+    "subservice": null,
+    "needsContext": true,
+    "answer": "May ilang options para sa counseling at psychosocial support:\n\n1. **Request for Assistance for Psychosocial Support** – sa **CITY SOCIAL SERVICES OFFICE** (para"
+   }
+  },
+  {
+   "q": "How can I get a damage certification for my crops?",
+   "lang": "en",
+   "subservice": "Pagkuha ng katunayan – Pagpapatunay ng antas ng pinsala sa halaman, hayop at pangisdaan",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "grade": "none",
+   "got": {
+    "department": null,
+    "subservice": null,
+    "needsContext": false,
+    "answer": "I’m sorry, but I could not find information on a damage certification for crops in the provided resources. Please ask at the Information Desk for further assist"
+   }
+  },
+  {
+   "q": "Paano mag‑apply para sa pagsasanay o seminar?",
+   "lang": "fil",
+   "subservice": "Kahilingan para sa Pagsasagawa ng Pagsasanay at Seminar CASO – Agri-Aqua Research and Technical",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "grade": "asked",
+   "got": {
+    "department": null,
+    "subservice": null,
+    "needsContext": true,
+    "answer": "May ilang uri ng pagsasanay o seminar na maaaring i‑apply sa Calamba. Maaari mo bang tukuyin kung alin sa mga sumusunod ang iyong hinahanap?\n\n1. **Kahilingan pa"
+   }
+  },
+  {
+   "q": "How can I test my farm product with the agri-aqua office?",
+   "lang": "en",
+   "subservice": "Pagpapasubok ng Produkto CASO – Agri-Aqua Management Services Division /",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "grade": "office",
+   "got": {
+    "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "subservice": "Pagsusuri ng Lupa gamit ang Soil Test Kit CASO – Agri-Aqua Management Services Division /",
+    "needsContext": false,
+    "answer": "1. Pasulat o Pasalitang Kahilingan (secure at: Kliyente)  \n2. Panukalang pagsasagawa ng “Demo” (secure at: N/A)  \n\nGo to: CITY AGRICULTURAL SERVICES DEPARTMENT"
+   }
+  },
+  {
+   "q": "Saan kunin ang certificate of finality and annotation?",
+   "lang": "fil",
+   "subservice": "Request for Certificate of Finality and Annotation (RA 9048 & 10172) City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "grade": "none",
+   "got": {
+    "answer": ""
+   }
+  },
+  {
+   "q": "How do I register a birth that happened outside Calamba?",
+   "lang": "en",
+   "subservice": "Batch Request Entry System (BREQS) Pagtatala ng Kapanganakan sa Ibang Lugar City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "grade": "office",
+   "got": {
+    "department": "CITY CIVIL REGISTRY OFFICE",
+    "subservice": "Application for Out-of-Town Registration of Birth City Civil Registry Office - Civil Certification and",
+    "needsContext": false,
+    "answer": "1. Four (4) copies of the Certificate of Live Birth (Form 102) duly accomplished and signed by the proper parties. (secure at: City Civil Registry Office)  \n2. "
+   }
+  },
+  {
+   "q": "Paano i‑register ang foundling?",
+   "lang": "fil",
+   "subservice": "Registration of Foundling City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "grade": "none",
+   "got": {
+    "answer": ""
+   }
+  },
+  {
+   "q": "How do I obtain an official receipt for my business tax?",
+   "lang": "en",
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Business Tax Pagkolekta sa Business Tax",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "grade": "none",
+   "got": {
+    "answer": ""
+   }
+  },
+  {
+   "q": "Saan mag-apply ng cedula receipt?",
+   "lang": "fil",
+   "subservice": "Pagbibigay ng Community Tax Certificate (Cedula) Pagkolekta mula sa Community Tax Certificate (Cedula)",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "grade": "none",
+   "got": {
+    "answer": ""
+   }
+  },
+  {
+   "q": "How to get a receipt for police, court and mayor’s permit fees?",
+   "lang": "en",
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Police, Court at Mayor’s Permit Fee Pagkolekta mula sa Police, Court at Mayor’s Permit",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "grade": "none",
+   "got": {
+    "answer": ""
+   }
+  },
+  {
+   "q": "How do I get an official receipt for my online property tax payment?",
+   "lang": "en",
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Real Property Tax (Online Payment) Pagkolekta mula sa Real Property Tax (Online Payment)",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "grade": "none",
+   "got": {
+    "answer": ""
+   }
+  },
+  {
+   "q": "Paano makakuha ng resibo sa ibang fees sa city hall?",
+   "lang": "fil",
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Miscellaneous Fees ng iba’t - ibang opisina Pagkolekta sa iba’t-ibang opisina ng Miscellaneous Fees",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "grade": "asked",
+   "got": {
+    "department": null,
+    "subservice": null,
+    "needsContext": true,
+    "answer": "May ilang uri ng resibo na maaaring kunin depende sa kung anong bayarin ang iyong binabayaran (hal., birth fee, tuition fee, police/court/mayor’s permit, civil "
+   }
+  },
+  {
+   "q": "How can I receive a receipt for my professional tax?",
+   "lang": "en",
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Professional Tax Receipt Fees Pagkolekta sa Professional Tax Receipt Fees",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "grade": "none",
+   "got": {
+    "answer": ""
+   }
+  },
+  {
+   "q": "Paano mag-request ng certified copy ng resibo?",
+   "lang": "fil",
+   "subservice": "Pagbibigay ng Certified True Copy ng Opisyal na Resibo",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "grade": "none",
+   "got": {
+    "answer": ""
+   }
+  },
+  {
+   "q": "Ano ang kailangan para sa building permit?",
+   "lang": "fil",
+   "subservice": "Pag-issue ng Building Permit (BP220) Ang BP220 ay ipinagkakaloob para sa mga residente na nagbibigay pahintulot sa kanila na magpagawa ng bagong bahay o magsagawa ng renovation sa bahay o",
+   "department": "HOUSING AND SETTLEMENTS DEPARTMENT",
+   "grade": "none",
+   "got": {
+    "answer": ""
+   }
+  },
+  {
+   "q": "How can I get an occupancy certificate for my new home?",
+   "lang": "en",
+   "subservice": "Pag-bibigay ng Occupancy Certification Ang Occupancy Certification ay ipinagkakaloob para sa mga: (1) awardee ng pabahay ng Pamahalaang Panlungsod ng Calamba na gagamitin itong requirement para sa",
+   "department": "HOUSING AND SETTLEMENTS DEPARTMENT",
+   "grade": "none",
+   "got": {
+    "answer": ""
+   }
+  }
+ ]
+}

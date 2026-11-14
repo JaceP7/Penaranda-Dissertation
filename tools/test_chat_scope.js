@@ -101,7 +101,10 @@ const usedLLM = () => calls.some((u) => u.includes('api.groq.com'));
     ok(`  in ${lang === 'fil' ? 'Filipino' : 'English'}`, r.body.lang === lang, r.body.lang);
     ok('  logged as out of scope', logged.length === 1 && logged[0].kind === 'scope', JSON.stringify(logged));
   }
-  for (const q of ['DPWH', 'where is the LTO', 'SSS']) {
+  // 2026-11-11: "Where can I get a national ID" was answered as Senior Citizens
+  // ID, "Voter's id" too before COMELEC was added. None of these are City Hall.
+  for (const q of ['DPWH', 'where is the LTO', 'SSS', 'Where can I get a national ID', 'philsys',
+                   "driver's license", 'saan kukuha ng nbi clearance', 'postal id']) {
     const r = await ask(q);
     ok(`"${q}" is another agency, not City Hall`, r.body.kind === 'scope' && r.body.topic === 'agency' && r.body.actions.includes('help'), JSON.stringify(r.body));
   }
@@ -123,7 +126,7 @@ const usedLLM = () => calls.some((u) => u.includes('api.groq.com'));
   }
   console.log('  (services that merely mention those words still reach the search)');
   for (const q of ['Exit clearance', 'do I need a photocopy of my ID for cedula', "How do I get a Mayor's Clearance?",
-                   'Certificate of BIR tax exemption', 'philhealth']) {
+                   'Certificate of BIR tax exemption', 'philhealth', 'how do I get a senior citizens id', 'marriage license', 'police clearance']) {
     r = await ask(q);
     ok(`"${q}" is a service question`, r.body.kind !== 'scope' && searched(), JSON.stringify([r.body.kind, r.body.topic]));
   }
@@ -157,7 +160,10 @@ const usedLLM = () => calls.some((u) => u.includes('api.groq.com'));
   ok('a chip worded as a question still goes through the search, logged as a chip',
      searched() && logged.length === 1 && logged[0].source === 'chip', JSON.stringify(logged));
   r = await ask(MAYORS.subservice);
-  ok('the same words typed (no chip) go through the search as before', searched() && !logged[0].source);
+  // Since 2026-11-11 a typed service name is answered from the Charter too
+  // (tools/test_service_match.js), but it is still logged as typed.
+  ok('the same words typed (no chip) are answered from the Charter, logged as typed',
+     !searched() && r.body.department === MAYORS.department && logged.length === 1 && !logged[0].source, JSON.stringify(logged));
 
   console.log('\n--- #2 chips after the first answer ---');
   r = await ask(MAYORS.subservice, { body: { source: 'chip' } });

@@ -1,0 +1,3483 @@
+{
+ "Application for Individual Working Permit|BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE": {
+  "en": "Individual Working Permit Application",
+  "fil": "Aplikasyon para sa Individual Working Permit",
+  "for": "any person working in Calamba",
+  "terms": [
+   "working permit",
+   "individual permit",
+   "Mayor’s clearance",
+   "Certificate of First-Time Job Seeker"
+  ]
+ },
+ "Approval of the Request to Use City Hall Facilities|CITY ADMINISTRATION OFFICE": {
+  "en": "Request to Use City Hall Facilities",
+  "fil": "Pahintulot sa Paggamit ng City Hall",
+  "for": "any citizen",
+  "terms": [
+   "facility use request",
+   "sulat kahilingan",
+   "city hall venue",
+   "activity permit"
+  ]
+ },
+ "Assistance Certificate of Compliance (COC) for Cooperative Development Authority (CDA)|COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT": {
+  "en": "Cooperative COC Assistance (CDA)",
+  "fil": "Tulong sa Certificate of Compliance para sa CDA",
+  "for": "Calamba cooperatives",
+  "terms": [
+   "COC",
+   "Cooperative compliance",
+   "CDA certificate",
+   "request letter"
+  ]
+ },
+ "Pagtanggap ng mga Financial Reports ng iba’t-ibang Barangay|CITY ACCOUNTING AND INTERNAL CONTROL OFFICE": {
+  "en": "Barangay Financial Reports Submission",
+  "fil": "Pagsumite ng Financial Reports ng Barangay",
+  "for": "barangay treasurers",
+  "terms": [
+   "financial reports",
+   "barangay treasurer",
+   "accounting submission",
+   "city accounting office"
+  ]
+ },
+ "Pag-iisyu ng Permiso sa Pagtatayo ng Gusali (Building Permit)|BUILDINGS REGULATORY SERVICES DEPARTMENT": {
+  "en": "Building Permit Issuance",
+  "fil": "Pag-iisyu ng Permiso sa Pagtatayo ng Gusali",
+  "for": "residential, commercial, industrial owners",
+  "terms": [
+   "building permit",
+   "permiso sa pagtatayo",
+   "TCT copy",
+   "application form"
+  ]
+ },
+ "CENRO Certificate|CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT": {
+  "en": "CENRO Business Certificate",
+  "fil": "CENRO Certificate para sa Negosyo",
+  "for": "businesses with permits",
+  "terms": [
+   "CENRO certificate",
+   "environment clearance",
+   "business barangay clearance",
+   "permit to operate"
+  ]
+ },
+ "Pagbibigay / Issuance ng Sertipiko o Katibayan ng Kontribusyon para sa Benepisyo (GSIS, PhilHealth at PAG-IBIG)|CITY ACCOUNTING AND INTERNAL CONTROL OFFICE": {
+  "en": "Contribution Certificate for GSIS/PhilHealth/PAG‑IBIG",
+  "fil": "Sertipiko ng Kontribusyon para sa GSIS, PhilHealth, PAG‑IBIG",
+  "for": "all customers",
+  "terms": [
+   "contribution certificate",
+   "GSIS proof",
+   "PhilHealth record",
+   "PAG‑IBIG slip"
+  ]
+ },
+ "Certificate Authentication and Verification (CAV)|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Certificate Authentication & Verification (CAV)",
+  "fil": "Pagpapatunay at Beripikasyon ng Sertipiko (CAV)",
+  "for": "CMDC graduates",
+  "terms": [
+   "CAV",
+   "certificate verification",
+   "training transcript",
+   "valid ID"
+  ]
+ },
+ "Certificate of Appearance – Acknowledgement of Transaction to the City|CITY ADMINISTRATION OFFICE": {
+  "en": "Certificate of Appearance",
+  "fil": "Sertipiko ng Pagpakita",
+  "for": "anyone",
+  "terms": [
+   "appearance certificate",
+   "acknowledgement transaction",
+   "city admin office",
+   "personal visit"
+  ]
+ },
+ "Certificate of BIR Tax Exemption for Homeowners Association (HOAs)|CITY ADMINISTRATION OFFICE": {
+  "en": "BIR Tax Exemption Certificate for HOAs",
+  "fil": "Sertipiko ng BIR Tax Exemption para sa HOA",
+  "for": "anyone",
+  "terms": [
+   "HOA tax exemption",
+   "BIR certificate",
+   "homeowners association",
+   "city admin office"
+  ]
+ },
+ "Pag-iisyu ng Sertipiko ng Panghuling Inspeksiyon sa Kuryente (Certificate of Final Electrical Inspection)|BUILDINGS REGULATORY SERVICES DEPARTMENT": {
+  "en": "Final Electrical Inspection Certificate",
+  "fil": "Sertipiko ng Panghuling Inspeksiyon sa Kuryente",
+  "for": "businesses applying for MERALCO",
+  "terms": [
+   "final electrical inspection",
+   "building regulatory services",
+   "certificate of occupancy",
+   "yellow card",
+   "TCT copy"
+  ]
+ },
+ "Certificate of Good Moral Character for Applying for a Job Abroad|CITY ADMINISTRATION OFFICE": {
+  "en": "Certificate of Good Moral Character (Abroad)",
+  "fil": "Sertipiko ng Mabuting Asal para sa Trabaho sa Ibang Bansa",
+  "for": "Calamba residents",
+  "terms": [
+   "good moral character",
+   "job abroad",
+   "city administration office",
+   "certificate request"
+  ]
+ },
+ "Certificate of Indigency for Educational Service Contracting (ESC) and College Scholarship Application|CITY ADMINISTRATION OFFICE": {
+  "en": "Certificate of Indigency for ESC & Scholarship",
+  "fil": "Sertipiko ng Indigency para sa ESC at Scholarship",
+  "for": "Calamba residents",
+  "terms": [
+   "indigency certificate",
+   "ESC application",
+   "college scholarship",
+   "barangay unemployment"
+  ]
+ },
+ "Certificate of Kinship – Tax Deduction and Death Benefit Claims|CITY ADMINISTRATION OFFICE": {
+  "en": "Certificate of Kinship for Tax & Death Benefits",
+  "fil": "Sertipiko ng Kaanakan para sa Tax Deduction at Death Benefit",
+  "for": "Calamba residents",
+  "terms": [
+   "kinship certificate",
+   "tax deduction",
+   "death benefit claim",
+   "city administration office"
+  ]
+ },
+ "Certificate of No Improvement|CITY ASSESSMENT OFFICE": {
+  "en": "Certificate of No Improvement",
+  "fil": "Sertipiko ng Walang Pagpapabuti",
+  "for": "property owners",
+  "terms": [
+   "no improvement certificate",
+   "city assessment office",
+   "request letter",
+   "tax receipt"
+  ]
+ },
+ "Certificate of No Objection as one of the requirements for the Issuance of permit to cut trees|CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT": {
+  "en": "Certificate of No Objection for Tree Cutting",
+  "fil": "Sertipiko ng Walang Pagtutol para sa Pagputol ng Puno",
+  "for": "Calamba residents",
+  "terms": [
+   "no objection certificate",
+   "tree cutting permit",
+   "environment department",
+   "sketch map",
+   "land title"
+  ]
+ },
+ "Certificate of Not-for-Profit Organization for Companies|CITY ADMINISTRATION OFFICE": {
+  "en": "Certificate of Not‑for‑Profit Organization",
+  "fil": "Sertipiko ng Non‑Profit na Organisasyon",
+  "for": "any public organization",
+  "terms": [
+   "non profit certificate",
+   "sertipiko ng non profit",
+   "company report",
+   "annual accomplishment",
+   "upcoming projects"
+  ]
+ },
+ "Pag-iisyu ng Sertipiko ng Pagsakop (Certificate of Occupancy)|BUILDINGS REGULATORY SERVICES DEPARTMENT": {
+  "en": "Certificate of Occupancy Issuance",
+  "fil": "Sertipiko ng Pagsakop",
+  "for": "residential, commercial, industrial owners",
+  "terms": [
+   "certificate of occupancy",
+   "sertipiko ng pagsakop",
+   "building permit",
+   "arkitekto sign",
+   "civil engineer seal"
+  ]
+ },
+ "Certificate of Residency for Applying for a Pension Abroad|CITY ADMINISTRATION OFFICE": {
+  "en": "Residency Certificate for Overseas Pension",
+  "fil": "Sertipiko ng Paninirahan para sa Pension Abroad",
+  "for": "Calamba residents",
+  "terms": [
+   "residency certificate",
+   "pension abroad",
+   "certificate of residency",
+   "Calamba resident",
+   "pension application"
+  ]
+ },
+ "Certificate of Termination of Franchise Use|BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE": {
+  "en": "Tricycle Franchise Termination Certificate",
+  "fil": "Sertipiko ng Pagwawakas ng Prangkisa ng Traysikel",
+  "for": "tricycle franchise holders",
+  "terms": [
+   "franchise termination",
+   "traysikel prangkisa",
+   "license plate",
+   "LTO receipt",
+   "certificate of termination"
+  ]
+ },
+ "Certified Death Certificate|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Certified Death Certificate",
+  "fil": "Sertipikadong Sertipiko ng Pagpanaw",
+  "for": "any citizen",
+  "terms": [
+   "death certificate",
+   "certified death",
+   "sertipiko ng pagpanaw",
+   "official death record",
+   "mortality certificate"
+  ]
+ },
+ "Certified True Copy of Business Permit|BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE": {
+  "en": "Certified True Copy of Business Permit",
+  "fil": "Kopiyang Totoo ng Business Permit",
+  "for": "registered businesses",
+  "terms": [
+   "true copy business permit",
+   "certified copy permit",
+   "business permit copy",
+   "kopya ng permit",
+   "written authorization"
+  ]
+ },
+ "Certified True Copy of Tricycle Franchise|BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE": {
+  "en": "Certified True Copy of Tricycle Franchise",
+  "fil": "Kopiyang Totoo ng Prangkisa ng Traysikel",
+  "for": "tricycle franchise owners",
+  "terms": [
+   "tricycle franchise copy",
+   "certified franchise copy",
+   "prangkisa ng traysikel",
+   "LTO receipt",
+   "certificate of registration"
+  ]
+ },
+ "Exhumation Permit(Pahintulot sa paghukay muli sa inilibing)|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Exhumation Permit",
+  "fil": "Pahintulot sa Paghukay Muli",
+  "for": "any citizen",
+  "terms": [
+   "exhumation permit",
+   "pahintulot sa paghukay",
+   "burial re‑excavation",
+   "request form",
+   "death certificate"
+  ]
+ },
+ "Health Permit(Pag-iisyu ng Permit Pangkalusugan)|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Health Permit",
+  "fil": "Permit Pangkalusugan",
+  "for": "any citizen",
+  "terms": [
+   "health permit",
+   "permit pangkalusugan",
+   "chest x‑ray",
+   "urinalysis",
+   "fecalysis",
+   "hepatitis screening"
+  ]
+ },
+ "Issuance of Transcript of Competencies|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Transcript of Competencies",
+  "fil": "Transkrip ng Kakayahan",
+  "for": "skills‑training graduates",
+  "terms": [
+   "transcript of competencies",
+   "transkrip ng kakayahan",
+   "training certificate replacement",
+   "affidavit of loss",
+   "request slip"
+  ]
+ },
+ "Issuance of Barangay Jurisdiction|CITY ASSESSMENT OFFICE": {
+  "en": "Barangay Jurisdiction Certificate",
+  "fil": "Sertipiko ng Jurisdiksyon ng Barangay",
+  "for": "property owners",
+  "terms": [
+   "barangay jurisdiction",
+   "jurisdiksyon ng barangay",
+   "title copy",
+   "authorization letter",
+   "valid ID"
+  ]
+ },
+ "Issuance of Certificate for the Transfer of Remains|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Certificate for Transfer of Remains",
+  "fil": "Sertipiko para sa Paglipat ng Patay",
+  "for": "any citizen",
+  "terms": [
+   "transfer of remains",
+   "certificate of transfer",
+   "sertipiko ng pagpanaw",
+   "death certificate",
+   "city health"
+  ]
+ },
+ "Issuance of Certificates (Enrollment, GWA, Medium of Certifications, Graduation, Completion)|CITY COLLEGE OF CALAMBA": {
+  "en": "Various Academic Certificates",
+  "fil": "Sertipiko ng Pag-aaral",
+  "for": "students",
+  "terms": [
+   "enrollment certificate",
+   "GWA certificate",
+   "graduation certificate",
+   "completion certificate",
+   "request form",
+   "documentary stamp"
+  ]
+ },
+ "Issuance of Certified True Copy of Tax Map|CITY ASSESSMENT OFFICE": {
+  "en": "Certified True Copy of Tax Map",
+  "fil": "Certified True Copy ng Tax Map",
+  "for": "property owners",
+  "terms": [
+   "tax map copy",
+   "certified true copy",
+   "title copy",
+   "authorization letter",
+   "valid ID"
+  ]
+ },
+ "Issuance of Certified True Copy of Tax Declaration / Certificate of Aggregate Land Holdings / Certificate of No Property|CITY ASSESSMENT OFFICE": {
+  "en": "Certified True Copy of Tax Declaration",
+  "fil": "Certified True Copy ng Tax Declaration",
+  "for": "property owners",
+  "terms": [
+   "tax declaration copy",
+   "aggregate land holdings",
+   "no property certificate",
+   "authorization letter",
+   "tax receipt",
+   "title"
+  ]
+ },
+ "Issuance of Locational Clearance (LC) and Certificate of Exemption from Locational Clearance (LC-Ex)|CITY PLANNING AND DEVELOPMENT OFFICE": {
+  "en": "Locational Clearance and LC‑Exemption",
+  "fil": "Locational Clearance at LC‑Exemption",
+  "for": "landowners or lessees",
+  "terms": [
+   "locational clearance",
+   "LC",
+   "LC‑Ex",
+   "ZA Form 1",
+   "ZA Form 3",
+   "proof of ownership",
+   "TCT"
+  ]
+ },
+ "Issuance of Mayor’s Clearance|INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE": {
+  "en": "Mayor’s Clearance",
+  "fil": "Mayor’s Clearance",
+  "for": "all citizens",
+  "terms": [
+   "mayor clearance",
+   "clearance ng mayor",
+   "barangay clearance",
+   "police clearance",
+   "court clearance"
+  ]
+ },
+ "Issuance of Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar Certificate|CITY POPULATION MANAGEMENT OFFICE": {
+  "en": "Pre‑Marriage/Family Planning Seminar Certificate",
+  "fil": "Sertipiko ng Pre‑Marriage Seminar",
+  "for": "Calamba residents",
+  "terms": [
+   "pre‑marriage seminar",
+   "responsible parenthood",
+   "family planning certificate",
+   "RPFP",
+   "seminar certificate"
+  ]
+ },
+ "Issuance of PWD ID, Medicine, and Purchase Booklet|PERSONS WITH DISABILITY AFFAIRS OFFICE": {
+  "en": "PWD ID, Medicine & Purchase Booklet",
+  "fil": "PWD ID at Medicine Booklet",
+  "for": "persons with disability",
+  "terms": [
+   "PWD ID",
+   "medicine booklet",
+   "purchase booklet",
+   "PWD application",
+   "disability certificate"
+  ]
+ },
+ "Issuance of Referral and Endorsement Letter|INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE": {
+  "en": "Referral and Endorsement Letter",
+  "fil": "Liham ng Referral at Endorsement",
+  "for": "all citizens",
+  "terms": [
+   "referral letter",
+   "endorsement letter",
+   "letter of referral",
+   "police clearance",
+   "city hall referral"
+  ]
+ },
+ "Issuance of Zoning Certificate|CITY PLANNING AND DEVELOPMENT OFFICE": {
+  "en": "Zoning Certificate",
+  "fil": "Sertipiko ng Zoning",
+  "for": "registered landowners",
+  "terms": [
+   "zoning certificate",
+   "zoning permit",
+   "ZA Form 5",
+   "title deed",
+   "tax declaration"
+  ]
+ },
+ "Kahilingan para sa Paggawa ng Certificate of Indigence|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Certificate of Indigency",
+  "fil": "Sertipiko ng Indigency",
+  "for": "any resident",
+  "terms": [
+   "certificate of indigency",
+   "indigency certificate",
+   "barangay clearance",
+   "proof of poverty",
+   "no property certificate"
+  ]
+ },
+ "Motorized Tricycle Operators Permit|BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE": {
+  "en": "Motorized Tricycle Operator Permit",
+  "fil": "Permit ng Motorized Tricycle",
+  "for": "resident operators",
+  "terms": [
+   "tricycle permit",
+   "motorized tricycle",
+   "operator permit",
+   "tricycle registration",
+   "driver’s license"
+  ]
+ },
+ "Issuance of Certifications and Verification of Various Records of the Office of Business Permit & Tricycle Franchising|BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE": {
+  "en": "Business & Tricycle Records Certification",
+  "fil": "Sertipikasyon ng Negosyo at Tricycle",
+  "for": "all stakeholders",
+  "terms": [
+   "business record certification",
+   "tricycle franchise verification",
+   "record verification form",
+   "business permit certificate",
+   "tricycle record"
+  ]
+ },
+ "Permit for Conducting Parades, Motorcades, Distribution of free products in public places, handing out of flyers for product or services|CITY ADMINISTRATION OFFICE": {
+  "en": "Parade, Motorcade and Flyer Distribution Permit",
+  "fil": "Permit para sa parada, motorcades at pamimigay ng flyers",
+  "for": "any citizen",
+  "terms": [
+   "parade permit",
+   "motorcade permit",
+   "flyer distribution",
+   "public event permit",
+   "parada permit",
+   "pamimigay ng flyers",
+   "public place permit",
+   "parada at motorcades"
+  ]
+ },
+ "Permit for Posting Banners, Tarpaulins, Streamers on Public Places|CITY ADMINISTRATION OFFICE": {
+  "en": "Banner and Tarpaulin Posting Permit",
+  "fil": "Permit para sa paglalagay ng banner at tarpaulin",
+  "for": "any citizen",
+  "terms": [
+   "banner permit",
+   "tarpaulin permit",
+   "public posting",
+   "banner posting permit",
+   "paglagay ng banner",
+   "tarpaulin sa pampublikong lugar",
+   "public signage permit",
+   "banner at tarpaulin"
+  ]
+ },
+ "Permit for Use of Public Facilities (City Hall, Banga, City Quadrangle, Jose Rizal Plaza, etc.)|CITY ADMINISTRATION OFFICE": {
+  "en": "Public Facility Use Permit (City Hall, Plaza, etc.)",
+  "fil": "Permit para sa paggamit ng pampublikong pasilidad",
+  "for": "any citizen",
+  "terms": [
+   "facility use permit",
+   "city hall use",
+   "public plaza permit",
+   "use of public space",
+   "pasilidad permit",
+   "paggamit ng plaza",
+   "public facility permit",
+   "paggamit ng City Hall"
+  ]
+ },
+ "Preparation of Death Certificate|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Death Certificate Preparation",
+  "fil": "Paghahanda ng Sertipiko ng Kamatayan",
+  "for": "any citizen",
+  "terms": [
+   "death certificate",
+   "certificado de defunción",
+   "death record",
+   "kamatayan certificate",
+   "paghahanda ng death certificate",
+   "death certificate request",
+   "certificate of death",
+   "kamatayan sertipiko"
+  ]
+ },
+ "Processing and Issuance of Solo Parent ID|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Solo Parent Identification Card Issuance",
+  "fil": "Pagproseso ng Solo Parent ID",
+  "for": "solo parents",
+  "terms": [
+   "solo parent ID",
+   "solo parent card",
+   "solo parent identification",
+   "solo parent certificate",
+   "solo parent ID issuance",
+   "solo parent ID application",
+   "solo parent ID request",
+   "solo parent ID form"
+  ]
+ },
+ "Request for Certificate (Cancellation / Verification / Late Birth Registration / No Record)|OFFICE FOR THE SENIOR CITIZENS AFFAIRS": {
+  "en": "Certificate Request (Cancellation/Verification/Late Birth)",
+  "fil": "Paghingi ng Sertipiko (Cancel/Verify/Late Birth)",
+  "for": "senior citizens",
+  "terms": [
+   "certificate request",
+   "senior citizen certificate",
+   "cancellation certificate",
+   "verification certificate",
+   "late birth certificate",
+   "senior certificate request",
+   "certificate slip",
+   "senior citizen request"
+  ]
+ },
+ "Request for Certificate of Project Completion|CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT": {
+  "en": "Certificate of Project Completion Request",
+  "fil": "Paghingi ng Sertipiko ng Natapos na Proyekto",
+  "for": "contractors",
+  "terms": [
+   "project completion certificate",
+   "completion certificate",
+   "contractor certificate",
+   "project final certificate",
+   "certificate of completion",
+   "project completion request",
+   "certificate ng proyekto",
+   "natapos na proyekto"
+  ]
+ },
+ "Request for Parenting Capability Assessment Report (PCAR)|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Parenting Capability Assessment Report Request",
+  "fil": "Paghingi ng Parenting Capability Assessment Report",
+  "for": "LGU or social agencies",
+  "terms": [
+   "PCAR request",
+   "parenting capability report",
+   "assessment report",
+   "parenting assessment",
+   "PCAR application",
+   "parenting capability assessment",
+   "social welfare PCAR",
+   "parenting report request"
+  ]
+ },
+ "Request for the Conduct of a Social Case Study Report|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Social Case Study Report Request",
+  "fil": "Kahilingan ng Social Case Study Report",
+  "for": "any citizen",
+  "terms": [
+   "social case study",
+   "report request",
+   "barangay clearance",
+   "certificate of indigency",
+   "medical certificate"
+  ]
+ },
+ "Request for the Issuance of a Certificate of Financial Incapability for the Universal Health Card of PhilHealth|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Certificate of Financial Incapacity for PhilHealth",
+  "fil": "Sertipiko ng Financial Incapacity para sa PhilHealth",
+  "for": "any citizen",
+  "terms": [
+   "financial incapacity",
+   "PhilHealth card",
+   "barangay certificate",
+   "indigency certificate",
+   "medical abstract"
+  ]
+ },
+ "Request for the Preparation of a Comprehensive Social Case Study Report|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Comprehensive Social Case Study Preparation",
+  "fil": "Paghahanda ng Comprehensive Social Case Study",
+  "for": "any citizen",
+  "terms": [
+   "comprehensive case study",
+   "social assessment",
+   "barangay clearance",
+   "certificate of indigency",
+   "clinical abstract"
+  ]
+ },
+ "Sanitation Permit(Pag-iisyu ng Permit ng Sanitasyon)|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Sanitation Permit Issuance",
+  "fil": "Pag-iisyu ng Permit ng Sanitasyon",
+  "for": "business owners",
+  "terms": [
+   "sanitation permit",
+   "health department",
+   "water refilling permit",
+   "hospital permit",
+   "funeral parlor permit"
+  ]
+ },
+ "Senior Citizens ID|OFFICE FOR THE SENIOR CITIZENS AFFAIRS": {
+  "en": "Senior Citizens ID Application",
+  "fil": "Pag-apply ng Senior Citizens ID",
+  "for": "Calamba seniors",
+  "terms": [
+   "senior citizen ID",
+   "residency certificate",
+   "1x1 picture",
+   "valid ID",
+   "senior benefits"
+  ]
+ },
+ "Serbisyong One Stop Shop (Simpleng Transaksyon)|BUILDINGS REGULATORY SERVICES DEPARTMENT": {
+  "en": "One‑Stop Shop Simple Transaction Service",
+  "fil": "Serbisyong One Stop Shop (Simpleng Transaksyon)",
+  "for": "property owners",
+  "terms": [
+   "one stop shop",
+   "building permit",
+   "application form",
+   "professional licenses",
+   "estimated value"
+  ]
+ },
+ "Amendment of Business Registration|BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE": {
+  "en": "Business Registration Amendment",
+  "fil": "Pagbabago ng Rehistro ng Negosyo",
+  "for": "registered businesses",
+  "terms": [
+   "business amendment",
+   "unified application form",
+   "certificate of compliance",
+   "clearance",
+   "proof of registration"
+  ]
+ },
+ "Competency Assessment|CITY ASSESSMENT OFFICE": {
+  "en": "Competency Assessment for Workers",
+  "fil": "Pagsusuri ng Kakayahan para sa Manggagawa",
+  "for": "graduates and OFWs",
+  "terms": [
+   "competency assessment",
+   "passport size picture",
+   "self‑assessment guide",
+   "CMDC graduate",
+   "skilled worker"
+  ]
+ },
+ "Request for Cancellation of Records (Tax Declaration of Building / Improvement / Machinery due to demolishment or non existing of property to reflect to the current status of property)|CITY ASSESSMENT OFFICE": {
+  "en": "Cancellation of Tax Declaration",
+  "fil": "Pagkansela ng Tax Declaration",
+  "for": "property owners",
+  "terms": [
+   "cancel tax declaration",
+   "kansela tax",
+   "demolition property",
+   "cancellation form",
+   "katunayan ng kansela"
+  ]
+ },
+ "Updating and Issuance of Tax Declaration from Transferred Properties|CITY ASSESSMENT OFFICE": {
+  "en": "Update/Issue Tax Declaration for Transfer",
+  "fil": "Pag-update ng Tax Declaration sa Transfer",
+  "for": "property owners",
+  "terms": [
+   "transfer tax declaration",
+   "update tax decl",
+   "bagong tax declaration",
+   "kasalukuyang titulo",
+   "notarized deed"
+  ]
+ },
+ "Verification and Location of Property|CITY ASSESSMENT OFFICE": {
+  "en": "Property Verification and Location",
+  "fil": "Beripikasyon at Lokasyon ng Ari-arian",
+  "for": "property owners",
+  "terms": [
+   "verify property",
+   "property location",
+   "beripikasyon ng lupa",
+   "kopya ng titulo",
+   "authorization letter"
+  ]
+ },
+ "Application for Business Permit Renewal – (On-Site by Schedule / Walk-In)|BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE": {
+  "en": "On‑Site Business Permit Renewal",
+  "fil": "Renewal ng Business Permit (On‑Site)",
+  "for": "business owners",
+  "terms": [
+   "business permit renewal",
+   "renew permit walk‑in",
+   "on‑site renewal",
+   "gross receipts proof",
+   "unified form"
+  ]
+ },
+ "Application for Business Permit Renewal – (Online)|BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE": {
+  "en": "Online Business Permit Renewal",
+  "fil": "Renewal ng Business Permit (Online)",
+  "for": "business owners",
+  "terms": [
+   "online permit renewal",
+   "renew business permit online",
+   "e‑renewal form",
+   "gross receipts upload",
+   "digital application"
+  ]
+ },
+ "Application for New Business Permit - (Onsite at Online)|BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE": {
+  "en": "New Business Permit Application",
+  "fil": "Bagong Business Permit",
+  "for": "business owners",
+  "terms": [
+   "new business permit",
+   "apply permit onsite",
+   "online business permit",
+   "certificate of compliance",
+   "unified application"
+  ]
+ },
+ "Pag-isyu ng Pahintulot upang magbukas (Permit to Operate) at Sertipiko ng Taunang Inspeksyon (Annual Inspection)|BUILDINGS REGULATORY SERVICES DEPARTMENT": {
+  "en": "Permit to Operate & Annual Inspection Certificate",
+  "fil": "Pahintulot Mag‑operate at Sertipiko ng Inspeksyon",
+  "for": "building owners",
+  "terms": [
+   "permit to operate",
+   "annual inspection certificate",
+   "building permit copy",
+   "site development plan",
+   "DOLE permit"
+  ]
+ },
+ "Retirement of Business Registration|BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE": {
+  "en": "Retirement of Business Registration",
+  "fil": "Pagretiro ng Business Registration",
+  "for": "registered businesses",
+  "terms": [
+   "retire business registration",
+   "business permit retirement",
+   "close business permit",
+   "unified form retirement",
+   "reason letter"
+  ]
+ },
+ "Emergency Response to Accidents and Disasters|CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO": {
+  "en": "Emergency response to accidents and disasters",
+  "fil": "Pagtugon sa emerhensiya at sakuna",
+  "for": "any citizen",
+  "terms": [
+   "emergency call",
+   "text emergency",
+   "disaster help",
+   "accident response"
+  ]
+ },
+ "Request for the Maintenance of Dangling Electrical Cables (Non-Live Wires) Posing a Safety Hazard|CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO": {
+  "en": "Report unsafe dangling electrical cables",
+  "fil": "Ulat sa hindi ligtas na kable",
+  "for": "any citizen",
+  "terms": [
+   "dangling cable",
+   "non‑live wire",
+   "hazard report",
+   "call DRRM"
+  ]
+ },
+ "Request for the Removal of Trees or Branches Posing a Safety Hazard to the Community|CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO": {
+  "en": "Request removal of hazardous trees/branches",
+  "fil": "Pag-alis ng delikadong puno",
+  "for": "any citizen",
+  "terms": [
+   "tree hazard",
+   "branch removal",
+   "safety permit",
+   "letter request"
+  ]
+ },
+ "Request for the Transfer of a Patient from One Hospital to Another Hospital|CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO": {
+  "en": "Transfer patient to another hospital",
+  "fil": "Paglipat ng pasyente sa ibang ospital",
+  "for": "any citizen",
+  "terms": [
+   "patient transfer",
+   "hospital move",
+   "call coordination",
+   "text request"
+  ]
+ },
+ "Request for Food Assistance or Transportation for a Patient from Home to Hospital or from Hospital to Home|CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO": {
+  "en": "Food or transport assistance for patients",
+  "fil": "Tulong sa pagkain o transportasyon ng pasyente",
+  "for": "any citizen",
+  "terms": [
+   "patient transport",
+   "food aid",
+   "hospital shuttle",
+   "clearance needed"
+  ]
+ },
+ "Addressing Complaints Concerning the Improper Implementation of Senior Citizen Discount Privileges|OFFICE FOR THE SENIOR CITIZENS AFFAIRS": {
+  "en": "Complaint on senior citizen discount abuse",
+  "fil": "Reklamo sa maling senior discount",
+  "for": "senior citizens",
+  "terms": [
+   "senior discount",
+   "complaint letter",
+   "SCID copy",
+   "improper discount"
+  ]
+ },
+ "Application for PhilHealth ID and Member Data Record (MDR)|OFFICE FOR THE SENIOR CITIZENS AFFAIRS": {
+  "en": "Apply for PhilHealth ID and MDR",
+  "fil": "Pag-apply ng PhilHealth ID at MDR",
+  "for": "senior citizens",
+  "terms": [
+   "PhilHealth ID",
+   "MDR application",
+   "senior ID copy",
+   "1x1 picture"
+  ]
+ },
+ "Application for Preliminary Approval-Locational Clearance (PALC) and Development Permit (DP).|CITY PLANNING AND DEVELOPMENT OFFICE": {
+  "en": "Apply for PALC and Development Permit",
+  "fil": "Pag-apply ng PALC at Development Permit",
+  "for": "licensed land developers",
+  "terms": [
+   "PALC form",
+   "development permit",
+   "zoning admin",
+   "licensing paperwork"
+  ]
+ },
+ "Application for Veterinary Health Certificate and Shipping Permit in Connection with Animal Transportation|CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE": {
+  "en": "Veterinary Health Certificate & Shipping Permit",
+  "fil": "Veterinary Health Certificate at Shipping Permit",
+  "for": "any Calamba resident",
+  "terms": [
+   "vet health certificate",
+   "shipping permit",
+   "animal transport",
+   "vet services"
+  ]
+ },
+ "Application to Conduct a Job Fair|INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE": {
+  "en": "Job Fair Application",
+  "fil": "Application para sa Job Fair",
+  "for": "any Calamba resident",
+  "terms": [
+   "job fair permit",
+   "employment fair",
+   "IIPESO accreditation",
+   "list of vacancies"
+  ]
+ },
+ "Application to Conduct a Local Recruitment Activity (LRA)|INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE": {
+  "en": "Local Recruitment Activity Application",
+  "fil": "Application para sa Local Recruitment Activity",
+  "for": "any Calamba resident",
+  "terms": [
+   "local recruitment",
+   "LRA permit",
+   "PESO accreditation",
+   "job vacancies"
+  ]
+ },
+ "Application to Conduct a Special Recruitment Activity (SRA)|INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE": {
+  "en": "Special Recruitment Activity Application",
+  "fil": "Application para sa Special Recruitment Activity",
+  "for": "any Calamba resident",
+  "terms": [
+   "special recruitment",
+   "SRA permit",
+   "POEA license",
+   "business permit",
+   "vacancy list"
+  ]
+ },
+ "Approval for the Sound System|INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE": {
+  "en": "Sound System Approval",
+  "fil": "Pag-apruba ng Sound System",
+  "for": "any Calamba resident",
+  "terms": [
+   "sound system permit",
+   "event audio",
+   "sulat kahilingan",
+   "approval"
+  ]
+ },
+ "Approval of Request for Blood Collection for Farm Accreditation|CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE": {
+  "en": "Farm Blood Collection for Accreditation",
+  "fil": "Blood Collection Request for Farm Accreditation",
+  "for": "any Calamba resident",
+  "terms": [
+   "farm accreditation",
+   "blood collection",
+   "veterinary office",
+   "farm documents"
+  ]
+ },
+ "Assistance in Processing Requirements for the Cooperative Development Authority (CDA) Registration|COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT": {
+  "en": "Cooperative Development Authority Registration Help",
+  "fil": "Tulong sa CDA Registration",
+  "for": "any Calamba resident",
+  "terms": [
+   "CDA registration",
+   "cooperative help",
+   "request letter",
+   "cooperative office"
+  ]
+ },
+ "Assistance in the Implementation of Enterprise Development Services|COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT": {
+  "en": "Enterprise Development Services Assistance",
+  "fil": "Tulong sa Enterprise Development Services",
+  "for": "qualified Calamba residents",
+  "terms": [
+   "enterprise development",
+   "product testing",
+   "coop profile",
+   "request form",
+   "barangay clearance"
+  ]
+ },
+ "Assistance through Business Incubation|COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT": {
+  "en": "Business Incubation Assistance",
+  "fil": "Tulong sa Business Incubation",
+  "for": "qualified Calamba residents",
+  "terms": [
+   "incubation program",
+   "DTI registration",
+   "BMBE permit",
+   "SEC registration",
+   "business permit",
+   "CDA registration"
+  ]
+ },
+ "Assistance to MSMEs through Consultation|COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT": {
+  "en": "MSME Consultation Services",
+  "fil": "Konsultasyon para sa MSMEs",
+  "for": "all Calamba residents",
+  "terms": [
+   "MSME advice",
+   "request letter",
+   "barangay clearance",
+   "business permit",
+   "registration certificate",
+   "bylaws copy"
+  ]
+ },
+ "Authorization and Signing of Shipping Permits and Veterinary Health Certificates for Transported Animals|CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE": {
+  "en": "Shipping Permit & Vet Health Certificate",
+  "fil": "Permit sa Pagpadala at Vet Certificate",
+  "for": "any Calamba resident",
+  "terms": [
+   "shipping permit",
+   "veterinary health certificate",
+   "animal transport",
+   "CAVS office",
+   "permit signing"
+  ]
+ },
+ "Burial Assistance|OFFICE OF THE MAYOR": {
+  "en": "Burial Assistance from Mayor’s Office",
+  "fil": "Tulong sa Libing",
+  "for": "any Calamba resident",
+  "terms": [
+   "burial aid",
+   "letter to mayor",
+   "death certificate",
+   "funeral contract",
+   "voter ID"
+  ]
+ },
+ "Complaint about Uncollected Garbage|CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT": {
+  "en": "Complaint on Uncollected Garbage",
+  "fil": "Reklamo sa Hindi Nakukolektang Basura",
+  "for": "any Calamba resident",
+  "terms": [
+   "garbage complaint",
+   "uncollected trash",
+   "letter of complaint",
+   "phone complaint",
+   "environment office"
+  ]
+ },
+ "Complaint Regarding Environment and Pollution (Piggery / Quarry / Dumpsite / Foul-smelling Area or River / Open Burning / Complaints on Company Violations)|CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT": {
+  "en": "Environmental Pollution Complaint",
+  "fil": "Reklamo sa Polusyon",
+  "for": "any Calamba resident",
+  "terms": [
+   "pollution complaint",
+   "piggery issue",
+   "quarry complaint",
+   "dumpsite smell",
+   "river pollution",
+   "open burning"
+  ]
+ },
+ "Conduct of Trainings and Seminars for Micro, Small, and Medium Enterprises|COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT": {
+  "en": "MSME Training and Seminar Programs",
+  "fil": "Pagsasanay at Seminar para sa MSMEs",
+  "for": "any Calamba resident",
+  "terms": [
+   "MSME training",
+   "seminar request",
+   "business registration copy",
+   "cooperative registration",
+   "barangay clearance"
+  ]
+ },
+ "Educational Assistance|OFFICE OF THE MAYOR": {
+  "en": "Educational Assistance from Mayor’s Office",
+  "fil": "Tulong Pang-edukasyon",
+  "for": "any Calamba resident",
+  "terms": [
+   "educational aid",
+   "letter to mayor",
+   "enrollment certificate",
+   "grade copy",
+   "school ID"
+  ]
+ },
+ "Educational Assistance (Pagbibigay Tulong Pang-Edukasyon)|OFFICE OF THE VICE MAYOR": {
+  "en": "Educational Assistance",
+  "fil": "Tulong Pang‑Edukasyon",
+  "for": "qualified Calamba residents",
+  "terms": [
+   "scholarship aid",
+   "educational grant",
+   "school fees help",
+   "pag-aaral tulong"
+  ]
+ },
+ "Financial Aid for Individuals (Pagbibigay Tulong Pinansyal sa mga Indibidwal)|OFFICE OF THE VICE MAYOR": {
+  "en": "Financial Aid for Individuals",
+  "fil": "Tulong Pinansyal sa Indibidwal",
+  "for": "any Calamba citizen",
+  "terms": [
+   "personal financial aid",
+   "cash assistance",
+   "pautang tulong",
+   "personal grant"
+  ]
+ },
+ "Free Notarization of Prepared Legal Documents (Serbisyo Notaryo)|CITY LEGAL SERVICES OFFICE": {
+  "en": "Free Notarization of Prepared Documents",
+  "fil": "Libre Notaryo ng Hand‑Prepared Docs",
+  "for": "all city constituents",
+  "terms": [
+   "free notarization",
+   "notaryo libre",
+   "document notarize",
+   "affidavit notarized"
+  ]
+ },
+ "Guarantee Letter|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Guarantee Letter for Hospital Bills",
+  "fil": "Guarantee Letter para sa Bayarin sa Ospital",
+  "for": "patients with unpaid hospital fees",
+  "terms": [
+   "hospital guarantee",
+   "bayarin guarantee",
+   "hospital bill help",
+   "guarantee letter"
+  ]
+ },
+ "Guarantee Letter (Anti-Rabies) – Pagbibigay ng Guarantee Letter para sa mga nakagat ng aso/pusa|OFFICE OF THE VICE MAYOR": {
+  "en": "Guarantee Letter for Animal Bites",
+  "fil": "Guarantee Letter para sa Kagat ng Hayop",
+  "for": "bite victims needing assistance",
+  "terms": [
+   "anti‑rabies guarantee",
+   "kagat guarantee",
+   "bite assistance",
+   "rabies guarantee"
+  ]
+ },
+ "Guarantee Letter (Blood) – Pagbibigay ng Guarantee Letter para sa mga nangangailangan ng Dugo|OFFICE OF THE VICE MAYOR": {
+  "en": "Guarantee Letter for Blood Request",
+  "fil": "Guarantee Letter para sa Dugo",
+  "for": "patients needing blood transfusion",
+  "terms": [
+   "blood guarantee",
+   "dugo guarantee",
+   "blood request help",
+   "guarantee letter blood"
+  ]
+ },
+ "Guarantee Letter (Hospital) – Pagbibigay ng Guarantee Letter para sa Hospital|OFFICE OF THE VICE MAYOR": {
+  "en": "Guarantee Letter for Hospital Admission",
+  "fil": "Guarantee Letter para sa Ospital",
+  "for": "patients admitted with pending fees",
+  "terms": [
+   "hospital admission guarantee",
+   "ospital guarantee",
+   "admission bill help",
+   "guarantee letter"
+  ]
+ },
+ "Guarantee Letter (Medicines) – Pagbibigay ng Guarantee Letter para sa gamot ng pasyente|OFFICE OF THE VICE MAYOR": {
+  "en": "Guarantee Letter for Medicines",
+  "fil": "Guarantee Letter para sa Gamot",
+  "for": "patients needing medication payment",
+  "terms": [
+   "medicine guarantee",
+   "gamot guarantee",
+   "prescription guarantee",
+   "guarantee letter medicines"
+  ]
+ },
+ "Request for Guarantee Letter for the Coverage of Hospital Expenses, Medications, Laboratory Procedures, Rehabilitation Therapy, Blood Transfusions, and Selected Dialysis Sessions|OFFICE OF THE MAYOR": {
+  "en": "Guarantee Letter for Hospital Expenses",
+  "fil": "Liham ng Garantiya para sa Gastos sa Ospital",
+  "for": "any Calamba resident",
+  "terms": [
+   "guarantee letter",
+   "hospital expenses",
+   "medication coverage",
+   "dialysis guarantee",
+   "hospital bill guarantee"
+  ]
+ },
+ "Handling Complaints Pertaining to Tourism in Private and Public Resorts and Establishments|CULTURAL AFFAIRS, TOURISM AND SPORTS DEVELOPMENT DEPARTMENT": {
+  "en": "Tourism Complaint Handling",
+  "fil": "Paghahawak ng Reklamo sa Turismo",
+  "for": "any Calamba resident",
+  "terms": [
+   "tourism complaint",
+   "resort issue",
+   "tourism grievance",
+   "tourism complaint form",
+   "tourism complaint letter"
+  ]
+ },
+ "Request for Hospitalization and Medical Assistance|OFFICE OF THE MAYOR": {
+  "en": "Hospitalization and Medical Assistance Request",
+  "fil": "Hiling para sa Hospitalisasyon at Medikal na Tulong",
+  "for": "any Calamba resident",
+  "terms": [
+   "hospitalization assistance",
+   "medical assistance request",
+   "hospital aid",
+   "medical help request",
+   "hospitalization letter"
+  ]
+ },
+ "Infrastructure Project Inspection|CITY PLANNING AND DEVELOPMENT OFFICE": {
+  "en": "Infrastructure Project Inspection Request",
+  "fil": "Hiling para sa Inspeksyon ng Proyektong Pang‑Imprastruktura",
+  "for": "registered landowners",
+  "terms": [
+   "project inspection",
+   "infrastructure inspection",
+   "inspection request form",
+   "construction inspection",
+   "lot owner inspection"
+  ]
+ },
+ "Land Use Reclassification|CITY PLANNING AND DEVELOPMENT OFFICE": {
+  "en": "Land Use Reclassification Application",
+  "fil": "Aplikasyon para sa Reclassification ng Lupa",
+  "for": "registered landowners",
+  "terms": [
+   "land reclassification",
+   "use reclassification",
+   "reclassify lot",
+   "land use change",
+   "reclassification request"
+  ]
+ },
+ "Medical / Hospitalization / Burial Assistance|OFFICE FOR THE SENIOR CITIZENS AFFAIRS": {
+  "en": "Senior Medical, Hospitalization & Burial Assistance",
+  "fil": "Tulong Medikal, Hospitalisasyon at Libing para sa Senior",
+  "for": "senior citizens",
+  "terms": [
+   "senior medical aid",
+   "senior hospitalization",
+   "senior burial assistance",
+   "senior assistance",
+   "senior citizen aid"
+  ]
+ },
+ "Medical Assistance (Pagbibigay Tulong Medikal)|OFFICE OF THE VICE MAYOR": {
+  "en": "General Medical Assistance for Qualified Residents",
+  "fil": "Pangkalahatang Tulong Medikal para sa Kwalipikadong Mamamayan",
+  "for": "qualified residents",
+  "terms": [
+   "medical assistance",
+   "medical aid",
+   "medical help",
+   "medical assistance letter",
+   "medical support"
+  ]
+ },
+ "Provision of Assistive Devices (Wheelchair, Hearing Aid, Crutches, Quad Cane, and Others)|PERSONS WITH DISABILITY AFFAIRS OFFICE": {
+  "en": "Assistive Devices Provision (Wheelchair, Hearing Aid, etc.)",
+  "fil": "Pagbibigay ng Assistive Devices (Wheelchair, Hearing Aid, atbp.)",
+  "for": "any Calamba resident",
+  "terms": [
+   "assistive devices",
+   "wheelchair request",
+   "hearing aid assistance",
+   "crutches provision",
+   "assistive device request"
+  ]
+ },
+ "Provision of Medical Transporter (Ambulance)|CITY GENERAL SERVICES OFFICE": {
+  "en": "Ambulance medical transport service",
+  "fil": "Serbisyo ng ambulansya para sa medikal",
+  "for": "any Calamba resident with voter ID",
+  "terms": [
+   "ambulance request",
+   "medical transport",
+   "voter ID needed",
+   "request form",
+   "medical certificate"
+  ]
+ },
+ "Provision of Tent, Tables, and Chairs|CITY GENERAL SERVICES OFFICE": {
+  "en": "Provision of tents, tables, chairs",
+  "fil": "Paghahatid ng tolda, mesa, upuan",
+  "for": "private groups, schools, churches, barangays",
+  "terms": [
+   "tent rental",
+   "tables and chairs",
+   "sulat ng kahilingan",
+   "event equipment",
+   "Calamba hall hire"
+  ]
+ },
+ "Provision of Vehicle Services on Loan (Ferry Boat / Bus / Coaster)|CITY GENERAL SERVICES OFFICE": {
+  "en": "Loan of ferry boat, bus, coaster",
+  "fil": "Pahiram ng bangka, bus, coaster",
+  "for": "government offices and private groups",
+  "terms": [
+   "vehicle loan",
+   "ferry boat hire",
+   "bus on loan",
+   "coaster rental",
+   "sulat ng kahilingan"
+  ]
+ },
+ "Registration and Granting of Accreditation to Companies and Manpower Agencies|INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE": {
+  "en": "Accreditation for companies and manpower agencies",
+  "fil": "Pagrehistro at akreditasyon ng kumpanya",
+  "for": "all citizens seeking business registration",
+  "terms": [
+   "company accreditation",
+   "manpower agency registration",
+   "business permit copy",
+   "IIPES office",
+   "business registration"
+  ]
+ },
+ "Registration for Cat Spaying or Neutering|CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE": {
+  "en": "Cat spaying/neutering registration",
+  "fil": "Rehistro para sa pagpapakipot ng pusa",
+  "for": "Calamba residents with healthy cats",
+  "terms": [
+   "cat spay registration",
+   "neuter cat",
+   "valid ID",
+   "email required",
+   "cat age six months"
+  ]
+ },
+ "Registration for Spay and Neuter (Special Scheduled Activity)|CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE": {
+  "en": "Special cat spay/neuter activity registration",
+  "fil": "Espesyal na rehistro ng pagpapakipot ng pusa",
+  "for": "Calamba residents with healthy cats",
+  "terms": [
+   "special spay neuter",
+   "cat age eight months",
+   "valid ID",
+   "email needed",
+   "veterinary service"
+  ]
+ },
+ "Request for a Seminar on Ecological Solid Waste Management|CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT": {
+  "en": "Request for ecological solid waste seminar",
+  "fil": "Hiling ng seminar sa solid waste",
+  "for": "any Calamba citizen",
+  "terms": [
+   "solid waste seminar",
+   "ecological waste",
+   "liham na kahilingan",
+   "environment workshop",
+   "city environment dept"
+  ]
+ },
+ "Request for a Tour or Visit to the City of Calamba|CULTURAL AFFAIRS, TOURISM AND SPORTS DEVELOPMENT DEPARTMENT": {
+  "en": "Request city tour or visit",
+  "fil": "Hiling ng pagbisita sa Calamba",
+  "for": "local and foreign visitors",
+  "terms": [
+   "city tour request",
+   "visit Calamba",
+   "valid ID",
+   "tourism department",
+   "cultural tour"
+  ]
+ },
+ "Request for Access to Available Materials (Including Photographs, Reports, Key Cultural Heritage Profiles, and Inventories of Cultural Properties)|CULTURAL AFFAIRS, TOURISM AND SPORTS DEVELOPMENT DEPARTMENT": {
+  "en": "Access to Cultural Materials",
+  "fil": "Pagkuha ng Cultural Materials",
+  "for": "citizens and students",
+  "terms": [
+   "request materials",
+   "cultural heritage",
+   "photos reports",
+   "valid ID"
+  ]
+ },
+ "Request for Free Legal Counseling / Advice (Dulugang Bayan)|CITY LEGAL SERVICES OFFICE": {
+  "en": "Free Legal Counseling",
+  "fil": "Libreng Legal Counseling",
+  "for": "all city constituents",
+  "terms": [
+   "legal advice",
+   "Dulugang Bayan",
+   "walk‑in counsel",
+   "office hours"
+  ]
+ },
+ "Request for Support and Assistance During Parade and Motorcade Activities|PUBLIC ORDER AND SAFETY OFFICE": {
+  "en": "Parade and Motorcade Support Permit",
+  "fil": "Suporta sa Parade at Motorcade",
+  "for": "Calamba residents",
+  "terms": [
+   "parade permit",
+   "motorcade assistance",
+   "Mayor’s permit",
+   "public safety"
+  ]
+ },
+ "Request for the Conduct of a Comprehensive Social Case Study Report for the Rehabilitation of Individuals Using Illegal Drugs|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Social Case Study for Drug Rehabilitation",
+  "fil": "Social Case Study para sa Rehab",
+  "for": "citizens needing rehab",
+  "terms": [
+   "drug rehab study",
+   "social case report",
+   "barangay clearance",
+   "indigency certificate"
+  ]
+ },
+ "Researching Data Information|CITY PLANNING AND DEVELOPMENT OFFICE": {
+  "en": "Research Data Request",
+  "fil": "Paghingi ng Data para sa Research",
+  "for": "citizens",
+  "terms": [
+   "research data",
+   "city planning info",
+   "school ID",
+   "company ID"
+  ]
+ },
+ "Response to Complaints from Senior Citizens|OFFICE OF THE MAYOR": {
+  "en": "Senior Citizen Complaint Response",
+  "fil": "Pagtugon sa Reklamo ng Senior",
+  "for": "senior citizens",
+  "terms": [
+   "senior complaint",
+   "mayor’s office",
+   "complaint form",
+   "response"
+  ]
+ },
+ "Solicitation Letter|OFFICE OF THE MAYOR": {
+  "en": "Solicitation Letter for Organizations",
+  "fil": "Liham ng Pagsusolusyon",
+  "for": "city residents",
+  "terms": [
+   "solicitation letter",
+   "association request",
+   "official signatures",
+   "Voter’s ID copy"
+  ]
+ },
+ "Application for Late Enrollment, Re-Admission and Shifting|CITY COLLEGE OF CALAMBA": {
+  "en": "Late Enrollment / Re‑Admission Application",
+  "fil": "Late Enrollment at Re‑Admission",
+  "for": "Calamba students",
+  "terms": [
+   "late enrollment",
+   "re‑admission",
+   "shift application",
+   "evaluation form"
+  ]
+ },
+ "Application for Temporary ID|CITY COLLEGE OF CALAMBA": {
+  "en": "Temporary ID Application",
+  "fil": "Aplikasyon para sa Temporary ID",
+  "for": "students",
+  "terms": [
+   "temporary ID",
+   "temp ID",
+   "temporary ID request",
+   "temporary ID form",
+   "temporary ID picture"
+  ]
+ },
+ "Approval of Request for Training and/or Capture of Stray Dogs|CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE": {
+  "en": "Stray Dog Training/Capture Request",
+  "fil": "Kahilingan para sa Training o Capture ng Stray Dogs",
+  "for": "any citizen",
+  "terms": [
+   "stray dog training",
+   "capture stray dogs",
+   "dog capture request",
+   "stray dog permit",
+   "dog training request"
+  ]
+ },
+ "Authentication of Documents|CITY COLLEGE OF CALAMBA": {
+  "en": "Document Authentication Service",
+  "fil": "Serbisyo ng Pagpapatunay ng Dokumento",
+  "for": "students and residents",
+  "terms": [
+   "document authentication",
+   "authenticate documents",
+   "document verification",
+   "authenticating papers",
+   "document notarization"
+  ]
+ },
+ "Certificate of Good Moral Character|CITY COLLEGE OF CALAMBA": {
+  "en": "Certificate of Good Moral Character",
+  "fil": "Sertipiko ng Mabuting Asal",
+  "for": "students",
+  "terms": [
+   "good moral certificate",
+   "certificate of good moral character",
+   "good moral paper",
+   "good moral certificate request",
+   "good moral form"
+  ]
+ },
+ "Competency Assessment|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Competency Assessment for Workers",
+  "fil": "Pagsusuri ng Kakayahan para sa Manggagawa",
+  "for": "graduates and workers",
+  "terms": [
+   "competency assessment",
+   "skill assessment",
+   "competency test",
+   "worker assessment",
+   "skill evaluation"
+  ]
+ },
+ "Conduct of Knowledge and Skills Training in Public Schools|PUBLIC ORDER AND SAFETY OFFICE": {
+  "en": "Knowledge & Skills Training in Public Schools",
+  "fil": "Pagsasanay sa Kaalaman at Kasanayan sa Pampublikong Paaralan",
+  "for": "students and teachers",
+  "terms": [
+   "public school training",
+   "knowledge skills training",
+   "school training program",
+   "teacher training request",
+   "student training request"
+  ]
+ },
+ "Dropping of Subjects|CITY COLLEGE OF CALAMBA": {
+  "en": "Subject Dropping Process",
+  "fil": "Pag-drop ng Subject",
+  "for": "students",
+  "terms": [
+   "dropping subjects",
+   "subject drop form",
+   "drop subject request",
+   "subject withdrawal",
+   "drop class"
+  ]
+ },
+ "Enrollment for Irregular and Transferee Students|CITY COLLEGE OF CALAMBA": {
+  "en": "Irregular/Transferee Student Enrollment",
+  "fil": "Pag-enrol ng Irregular at Transferee na Estudyante",
+  "for": "students",
+  "terms": [
+   "irregular enrollment",
+   "transferee enrollment",
+   "student enrollment form",
+   "enroll irregular student",
+   "transfer student enrollment"
+  ]
+ },
+ "Enrollment for Regular and Freshmen Students|CITY COLLEGE OF CALAMBA": {
+  "en": "Regular and Freshmen Student Enrollment",
+  "fil": "Pag-enrol ng Regular at Freshmen na Estudyante",
+  "for": "Estudyanteng mamamayan ng Calamba",
+  "terms": [
+   "enrollment",
+   "registration form",
+   "college enrol",
+   "bagong estudyante",
+   "regular student",
+   "freshman registration",
+   "apply college"
+  ]
+ },
+ "Enrollment in Technical-Vocational Education and Training (TVET) Programs|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Technical‑Vocational (TVET) Program Enrollment",
+  "fil": "Pag-enrol sa TVET Programs",
+  "for": "Calamba residents wanting TVET",
+  "terms": [
+   "TVET enrollment",
+   "technical vocational",
+   "birth certificate",
+   "proof of residency",
+   "voter’s ID",
+   "skill training",
+   "vocational course"
+  ]
+ },
+ "Exit Clearance or Returning Clearance|CITY COLLEGE OF CALAMBA": {
+  "en": "Exit or Returning Clearance for Students",
+  "fil": "Exit o Returning Clearance ng Estudyante",
+  "for": "Estudyanteng mamamayan ng Calamba",
+  "terms": [
+   "exit clearance",
+   "returning clearance",
+   "leave of absence form",
+   "college clearance",
+   "student exit",
+   "clearance form"
+  ]
+ },
+ "Filing of Student Leave of Absence|CITY COLLEGE OF CALAMBA": {
+  "en": "Student Leave of Absence Filing",
+  "fil": "Pag-file ng Leave of Absence ng Estudyante",
+  "for": "Estudyanteng mamamayan ng Calamba",
+  "terms": [
+   "leave of absence",
+   "LOA form",
+   "official receipt",
+   "student leave",
+   "absence request",
+   "college LOA"
+  ]
+ },
+ "Guarantee Letter (Laboratory) – Pagbibigay ng Guarantee Letter para sa pagpapa-laboratoryo|OFFICE OF THE VICE MAYOR": {
+  "en": "Laboratory Guarantee Letter Issuance",
+  "fil": "Pagbibigay ng Guarantee Letter para sa Laboratoryo",
+  "for": "Qualified Calamba citizens",
+  "terms": [
+   "guarantee letter",
+   "laboratory use",
+   "medical certification",
+   "voter’s ID copy",
+   "price quotation",
+   "lab guarantee"
+  ]
+ },
+ "Learning Management System (LMS) Queries and Concerns|CITY COLLEGE OF CALAMBA": {
+  "en": "Learning Management System (LMS) Support",
+  "fil": "LMS Queries and Concerns",
+  "for": "Students",
+  "terms": [
+   "LMS help",
+   "system query",
+   "client query form",
+   "user requirements",
+   "online class support",
+   "LMS issue"
+  ]
+ },
+ "Petition of Opening of Subject|CITY COLLEGE OF CALAMBA": {
+  "en": "Petition to Open a Subject",
+  "fil": "Petisyon para Buksan ang Subject",
+  "for": "Estudyanteng mamamayan ng Calamba",
+  "terms": [
+   "subject petition",
+   "open subject",
+   "petition form",
+   "course request",
+   "class opening",
+   "student petition"
+  ]
+ },
+ "Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar|CITY POPULATION MANAGEMENT OFFICE": {
+  "en": "Pre‑Marriage and Family Planning Seminar",
+  "fil": "Pre‑Marriage Orientation / RPFP Seminar",
+  "for": "Mamamayan ng Calamba",
+  "terms": [
+   "pre‑marriage seminar",
+   "family planning",
+   "RPFP form",
+   "orientation seminar",
+   "marriage prep",
+   "responsible parenthood"
+  ]
+ },
+ "Pre-Registration for Entering Freshmen and Transferee|CITY COLLEGE OF CALAMBA": {
+  "en": "College Pre‑Registration for Freshmen/Transferees",
+  "fil": "Pre‑rehistro para sa Bagong Estudyante/Transferee",
+  "for": "estudyanteng mamamayan ng Calamba",
+  "terms": [
+   "pre‑registration",
+   "freshman enrollment",
+   "transferee form 138",
+   "birth certificate",
+   "personal info sheet",
+   "brgy clearance"
+  ]
+ },
+ "Providing Various Knowledge and Skills for Disaster Preparedness|CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO": {
+  "en": "Disaster Preparedness Training and Drills",
+  "fil": "Pagsasanay at Drill para sa Disaster Preparedness",
+  "for": "paaralan, kumpanya, komunidad, barangay, NGOs",
+  "terms": [
+   "disaster training",
+   "risk reduction seminar",
+   "DRRM drill",
+   "knowledge and skills",
+   "sulat kahilingan"
+  ]
+ },
+ "Request for Adolescent Health and Development (AHD) Seminar, Bilateral Tubal Ligation (BTL), Progestin Subdermal Implant (PSI), and Family Planning in the Workplace|CITY POPULATION MANAGEMENT OFFICE": {
+  "en": "Workplace Family Planning & Health Seminar Request",
+  "fil": "Request para sa Family Planning at Health Seminar sa Workplace",
+  "for": "barangay at schools",
+  "terms": [
+   "adolescent health seminar",
+   "BTL request",
+   "PSI implant",
+   "family planning workplace",
+   "sulat kahilingan"
+  ]
+ },
+ "Request for Change of Grades|CITY COLLEGE OF CALAMBA": {
+  "en": "Request to Change Academic Grades",
+  "fil": "Paghingi ng Pagbabago ng Marka",
+  "for": "estudyanteng mamamayan ng Calamba",
+  "terms": [
+   "grade change request",
+   "letter for grade change",
+   "supporting documents",
+   "request form"
+  ]
+ },
+ "Request for Completion Form|CITY COLLEGE OF CALAMBA": {
+  "en": "Request for College Completion Form",
+  "fil": "Paghingi ng Completion Form ng College",
+  "for": "estudyanteng mamamayan ng Calamba",
+  "terms": [
+   "completion form request",
+   "diploma stamp",
+   "official receipt",
+   "request form"
+  ]
+ },
+ "Request for Second Copy (Registration Form, Comp Card & Diploma)|CITY COLLEGE OF CALAMBA": {
+  "en": "Second Copy of Registration Form, Comp Card or Diploma",
+  "fil": "Kopya #2 ng Registration Form, Comp Card o Diploma",
+  "for": "estudyanteng mamamayan ng Calamba",
+  "terms": [
+   "second copy request",
+   "affidavit of loss",
+   "official receipt",
+   "request form"
+  ]
+ },
+ "Request of Copy of Grades|CITY COLLEGE OF CALAMBA": {
+  "en": "Copy of Academic Grades Request",
+  "fil": "Paghingi ng Kopya ng Marka",
+  "for": "estudyanteng mamamayan ng Calamba",
+  "terms": [
+   "copy of grades",
+   "documentary stamp",
+   "official receipt",
+   "request form"
+  ]
+ },
+ "Request of Transcript of Records|CITY COLLEGE OF CALAMBA": {
+  "en": "Transcript of Records Request",
+  "fil": "Paghingi ng Transcript of Records",
+  "for": "estudyanteng mamamayan ng Calamba",
+  "terms": [
+   "transcript request",
+   "documentary stamp",
+   "official receipt",
+   "request form"
+  ]
+ },
+ "Scheduling of Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar|CITY POPULATION MANAGEMENT OFFICE": {
+  "en": "Pre‑Marriage Orientation / Family Planning Seminar",
+  "fil": "Seminario sa Pre‑Kasalan at Pamilya",
+  "for": "any Calamba resident",
+  "terms": [
+   "pre‑marriage seminar",
+   "responsible parenthood",
+   "family planning",
+   "orientation",
+   "Calamba",
+   "seminar",
+   "form"
+  ]
+ },
+ "Supervised Industry Training (SIT) / Supervised Industry Learning (SIL) / On-the-Job Training (OJT)|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Supervised Industry Training (SIT/OJT)",
+  "fil": "Supervised Industry Training (SIT)",
+  "for": "students",
+  "terms": [
+   "OJT",
+   "SIT",
+   "SIL",
+   "on‑the‑job training",
+   "industry training",
+   "request slip",
+   "grades"
+  ]
+ },
+ "Application for Vacant Positions|CITY HUMAN RESOURCE AND MANAGEMENT OFFICE": {
+  "en": "Application for City Vacant Positions",
+  "fil": "Aplikasyon sa Bakanteng Posisyon",
+  "for": "qualified applicants",
+  "terms": [
+   "vacant job",
+   "application letter",
+   "CS Form 212",
+   "city HR",
+   "position number",
+   "resume"
+  ]
+ },
+ "Employment Assistance Request|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Employment Assistance for Skills Graduates",
+  "fil": "Tulong sa Trabaho para sa Graduates",
+  "for": "skills‑training graduates",
+  "terms": [
+   "employment request",
+   "certificate of training",
+   "job assistance",
+   "Calamba manpower",
+   "skills center"
+  ]
+ },
+ "Adult Counselling|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Adult Counselling Service",
+  "fil": "Serbisyo ng Pagsangguni para sa Adulto",
+  "for": "any resident",
+  "terms": [
+   "adult counselling",
+   "psychological help",
+   "schedule confirmation",
+   "counselling session",
+   "Calamba health"
+  ]
+ },
+ "Adult Psychiatric Consultation|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Adult Psychiatric Consultation",
+  "fil": "Konsultasyong Psychiatric para sa Adulto",
+  "for": "any resident",
+  "terms": [
+   "psychiatric consult",
+   "adult mental health",
+   "schedule confirmation",
+   "mental health service",
+   "Calamba"
+  ]
+ },
+ "Approval for Use of Medical Transporter Vehicle (Ambulance)|CITY ADMINISTRATION OFFICE": {
+  "en": "Approval to Use City Ambulance",
+  "fil": "Pahintulot sa Paggamit ng Ambulansya",
+  "for": "any Calamba resident",
+  "terms": [
+   "ambulance use",
+   "medical transporter",
+   "travel order copy",
+   "approval request",
+   "city admin"
+  ]
+ },
+ "Dental Check-up(Pagsusuri sa Ngipin / Pagbunot ng Ngipin)|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Dental Check‑up and Tooth Extraction",
+  "fil": "Pagsusuri at Pagbunot ng Ngipin",
+  "for": "any resident",
+  "terms": [
+   "dental check‑up",
+   "tooth extraction",
+   "dental record",
+   "referral letter",
+   "cedula",
+   "barangay clearance"
+  ]
+ },
+ "Endorsement Letter / Guarantee Letter / Financial Assistance (Hospital or Medical)|CITY ADMINISTRATION OFFICE": {
+  "en": "Hospital Financial Assistance Letter",
+  "fil": "Liham ng Tulong Medikal",
+  "for": "any public client",
+  "terms": [
+   "endorsement letter",
+   "guarantee letter",
+   "medical aid",
+   "social case study"
+  ]
+ },
+ "Endorsement Letter / Recommendation for Drug Rehabilitation Center (Tahanan ng Kabataan)|CITY ADMINISTRATION OFFICE": {
+  "en": "Drug Rehab Recommendation Letter",
+  "fil": "Liham ng Rekomendasyon para Rehab",
+  "for": "any public client",
+  "terms": [
+   "rehab endorsement",
+   "drug rehab letter",
+   "tahanan ng kabataan",
+   "social case study"
+  ]
+ },
+ "Family Planning|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Family Planning Services",
+  "fil": "Serbisyo ng Pagpaplano ng Pamilya",
+  "for": "all citizens",
+  "terms": [
+   "family planning",
+   "birth control",
+   "talaan ng pagplano",
+   "health department"
+  ]
+ },
+ "Issuance of Pink Card|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Pink Card Issuance (STD Test)",
+  "fil": "Pagkuha ng Pink Card",
+  "for": "all citizens",
+  "terms": [
+   "pink card",
+   "VDRL result",
+   "STD certificate",
+   "health services"
+  ]
+ },
+ "Laboratory Services|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Laboratory Test Services",
+  "fil": "Serbisyo ng Laboratoryo",
+  "for": "all citizens",
+  "terms": [
+   "lab services",
+   "specimen request",
+   "laboratory request",
+   "health department"
+  ]
+ },
+ "Medical Treatment for Animal Bite Victims|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Medical Care for Animal Bite Victims",
+  "fil": "Gamot para sa Biktima ng Kagat ng Hayop",
+  "for": "all citizens",
+  "terms": [
+   "animal bite treatment",
+   "barangay investigation",
+   "medical aid",
+   "health services"
+  ]
+ },
+ "Newborn Screening|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Newborn Screening Test",
+  "fil": "Screening ng Sanggol",
+  "for": "all citizens",
+  "terms": [
+   "newborn screening",
+   "48-72 hour test",
+   "infant health",
+   "health department"
+  ]
+ },
+ "Patient Consultation Services|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Patient Consultation Services",
+  "fil": "Serbisyo ng Konsultasyon sa Pasyente",
+  "for": "all citizens",
+  "terms": [
+   "patient consultation",
+   "referral from midwife",
+   "health check-up",
+   "health department"
+  ]
+ },
+ "Pre-Natal Services at Birthing Facility|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Prenatal Services at Birthing Facility",
+  "fil": "Serbisyong Prenatal sa Pasilidad ng Panganganak",
+  "for": "any citizen",
+  "terms": [
+   "prenatal checkup",
+   "booklet ni mommy at baby",
+   "birthing facility",
+   "pre-natal services"
+  ]
+ },
+ "Services for Prenatal and Postnatal Care|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Prenatal and Postnatal Care Services",
+  "fil": "Serbisyong Prenatal at Postnatal",
+  "for": "any citizen",
+  "terms": [
+   "prenatal care",
+   "postnatal care",
+   "talaan bago manganak",
+   "mother and baby health"
+  ]
+ },
+ "Tuberculosis Consultation Services|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Tuberculosis Consultation Services",
+  "fil": "Konsultasyon sa Tuberculosis",
+  "for": "any citizen",
+  "terms": [
+   "TB consultation",
+   "plema test",
+   "NTP referral",
+   "lab request form"
+  ]
+ },
+ "Tuberculosis Consultation Services for Children|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Tuberculosis Consultation for Children",
+  "fil": "Konsultasyon sa TB para sa Bata",
+  "for": "any citizen",
+  "terms": [
+   "child TB test",
+   "PPD test",
+   "plema mula sa pasyente",
+   "NTP referral"
+  ]
+ },
+ "Vaccination Services|CITY HEALTH SERVICES DEPARTMENT": {
+  "en": "Vaccination Services for Children",
+  "fil": "Serbisyo ng Bakuna para sa Bata",
+  "for": "any citizen",
+  "terms": [
+   "child vaccination",
+   "medical records",
+   "vaccination schedule",
+   "bakuna"
+  ]
+ },
+ "Approval for External Consultation for the Treatment of Livestock Used in Production|CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE": {
+  "en": "Approval for External Livestock Consultation",
+  "fil": "Pag-apruba sa External Consultation ng Hayop",
+  "for": "Calamba residents",
+  "terms": [
+   "livestock consultation",
+   "external approval",
+   "production animals",
+   "vet approval"
+  ]
+ },
+ "Approval of Request for Mass Rabies Vaccination (Homeowners / Companies, etc.)|CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE": {
+  "en": "Mass Rabies Vaccination Request Approval",
+  "fil": "Pag-apruba ng Mass Rabies Vaccination",
+  "for": "Calamba residents",
+  "terms": [
+   "rabies vaccination",
+   "mass vaccination",
+   "homeowners request",
+   "sulat kahilingan"
+  ]
+ },
+ "Approval of Request for Veterinary Medical Supplies|CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE": {
+  "en": "Veterinary Medical Supplies Request Approval",
+  "fil": "Pag-apruba ng Veterinary Supplies",
+  "for": "Calamba residents",
+  "terms": [
+   "vet supplies",
+   "animal weight",
+   "supply request",
+   "type and number of animals"
+  ]
+ },
+ "Individual/Personal Walk-in Approach for Vaccination Services|CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE": {
+  "en": "Walk‑in Vaccination Service",
+  "fil": "Walk‑in na Serbisyo ng Bakuna",
+  "for": "any Calamba resident",
+  "terms": [
+   "vaccination card",
+   "bakuna walk‑in",
+   "veterinary office",
+   "vaccination service"
+  ]
+ },
+ "Provision of Consultation Services to Walk-In Clients|CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE": {
+  "en": "Walk‑in Pet Consultation",
+  "fil": "Walk‑in na Konsultasyon ng Alagang Hayop",
+  "for": "any Calamba resident",
+  "terms": [
+   "pet check‑up",
+   "konsultasyon hayop",
+   "vaccination card",
+   "veterinary office"
+  ]
+ },
+ "Redemption of Captured Stray Dogs (City Pound)|CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE": {
+  "en": "Stray Dog Redemption (City Pound)",
+  "fil": "Pag‑redeem ng Alagang Aso sa City Pound",
+  "for": "any Calamba resident",
+  "terms": [
+   "stray dog redemption",
+   "redeem stray",
+   "city pound payment",
+   "order of payment"
+  ]
+ },
+ "Adoption Application for Step-Parent, Relative, and Adult Cases|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Adoption Application – Step‑Parent/Relative/Adult",
+  "fil": "Aplikasyon sa Pag‑ampon – Step‑Parent/Relatives/Adult",
+  "for": "applicants 25+ years old",
+  "terms": [
+   "adoption step‑parent",
+   "relatives adoption",
+   "adult adoption",
+   "birth record copy"
+  ]
+ },
+ "Application for Adoption (Regular Case)|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Regular Adoption Application",
+  "fil": "Regular na Aplikasyon sa Pag‑ampon",
+  "for": "applicants 25+ years old",
+  "terms": [
+   "regular adoption",
+   "adoption form",
+   "birth certificate copy",
+   "CENOMAR"
+  ]
+ },
+ "Assistance in Handling Cases of Children at Risk (CAR) and Children in Conflict with the Law (CICL)|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Assistance for Children at Risk / CICL",
+  "fil": "Tulong sa Mga Bata sa Panganib / CICL",
+  "for": "PNP, barangay, parents/guardians",
+  "terms": [
+   "children at risk",
+   "CICL case help",
+   "barangay blotter",
+   "court case info"
+  ]
+ },
+ "Case Management for Women and Their Children Who Are Victims of Abuse Under Republic Act 9262|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Case Management for VAWC Victims (RA 9262)",
+  "fil": "Case Management para sa Biktima ng VAWC (RA 9262)",
+  "for": "women and their children",
+  "terms": [
+   "VAWC case",
+   "abuse victim support",
+   "birth certificate",
+   "valid ID"
+  ]
+ },
+ "Conducting Immediate Reach-Out Operation|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Immediate Reach‑Out Operation for Child/Woman Victims",
+  "fil": "Agad na Reach‑Out para sa Bata/Kababaihan na Biktima",
+  "for": "child and women victims",
+  "terms": [
+   "reach‑out operation",
+   "RA 7610 victim",
+   "blotter report",
+   "partner agency call"
+  ]
+ },
+ "Financial Assistance for Funeral Services|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Funeral Financial Assistance",
+  "fil": "Tulong Pinansyal sa Libing",
+  "for": "any citizen",
+  "terms": [
+   "funeral aid",
+   "tulong libing",
+   "death certificate",
+   "certificate of indigency"
+  ]
+ },
+ "Financial Assistance for Hospitalization Services|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Hospitalization Financial Assistance",
+  "fil": "Tulong Pinansyal sa Ospital",
+  "for": "any citizen",
+  "terms": [
+   "hospital aid",
+   "tulong ospital",
+   "hospital bill",
+   "medical abstract"
+  ]
+ },
+ "Financial Assistance for Individuals Affected by Fire or Natural Disasters|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Disaster Relief Financial Assistance",
+  "fil": "Tulong Pinansyal sa Kalamidad",
+  "for": "any citizen",
+  "terms": [
+   "disaster aid",
+   "tulong kalamidad",
+   "fire report",
+   "BFP report"
+  ]
+ },
+ "Financial Assistance for Medical Services|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Medical Services Financial Assistance",
+  "fil": "Tulong Pinansyal sa Medikal",
+  "for": "any citizen",
+  "terms": [
+   "medical aid",
+   "tulong medikal",
+   "doctor prescription",
+   "medical abstract"
+  ]
+ },
+ "Financial Assistance for Returning to the Province|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Travel Assistance to Province",
+  "fil": "Tulong sa Pagbabalik sa Probinsya",
+  "for": "any citizen",
+  "terms": [
+   "travel aid",
+   "tulong pamasahe",
+   "return to province",
+   "valid ID"
+  ]
+ },
+ "Implementation of the Aftercare Program|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Aftercare Program Implementation",
+  "fil": "Pagpapatupad ng Aftercare Program",
+  "for": "discharged residential care clients",
+  "terms": [
+   "aftercare program",
+   "discharge slip",
+   "PCAR request",
+   "parenting assessment"
+  ]
+ },
+ "Management of cases involving children who are victims of different types of abuse|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Child Abuse Case Management",
+  "fil": "Pamamahala ng Kaso ng Pang-aabuso sa Bata",
+  "for": "child victims of abuse",
+  "terms": [
+   "child abuse case",
+   "RA 7610",
+   "blotter report",
+   "medico‑legal exam"
+  ]
+ },
+ "Pag-aasikaso sa Batang Napulot (Foundling), Pinabayaan (Abandoned), Boluntaryo / Hindi Boluntaryong Ipinaubayang Bata (Voluntary / Involuntary Committed)|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Foundling and Abandoned Child Services",
+  "fil": "Serbisyo para sa Batang Napulot at Pinabayaan",
+  "for": "foundlings and abandoned children",
+  "terms": [
+   "foundling services",
+   "batang napulot",
+   "voluntary commitment",
+   "blotter report"
+  ]
+ },
+ "Processing of Foster Care Application|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Foster Care Application Processing",
+  "fil": "Pagproseso ng Aplikasyon para sa Foster Care",
+  "for": "petitioner na gustong maging foster parent",
+  "terms": [
+   "foster care",
+   "application",
+   "certificate of live birth",
+   "marriage certificate",
+   "medical certificate"
+  ]
+ },
+ "Request for Assistance for Psychosocial Support|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Psychosocial Support Assistance Request",
+  "fil": "Hiling ng Tulong para sa Psychosocial Support",
+  "for": "bata o kababaihan na kailangan ng support",
+  "terms": [
+   "psychosocial support",
+   "intake sheet",
+   "medical history",
+   "birth certificate",
+   "blotter report"
+  ]
+ },
+ "Request for Assistance in Discussions Related to Issues on Financial Support or Custody of Children (Mediation Dialogue) or Discussions Concerning Family Disputes (Family Conference)|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Mediation/Family Conference Assistance",
+  "fil": "Tulong sa Mediation o Family Conference",
+  "for": "mag-asawa na may dispute sa support o custody",
+  "terms": [
+   "mediation dialogue",
+   "family conference",
+   "letter of invitation",
+   "barangay mediation copy",
+   "blotter"
+  ]
+ },
+ "Admission to Rehabilitation Center|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Admission to Rehabilitation Center",
+  "fil": "Pagpasok sa Rehabilitation Center",
+  "for": "sinumang mamamayan na nangangailangan",
+  "terms": [
+   "rehab center admission",
+   "barangay clearance",
+   "certificate of indigency",
+   "valid ID",
+   "birth certificate"
+  ]
+ },
+ "Special Assistance: Financial Aid for Distressed/Repatriated OFWs and Others in Need of Livelihood Support|CITY SOCIAL SERVICES OFFICE": {
+  "en": "Financial Aid for Distressed OFWs",
+  "fil": "Pinansyal na Tulong para sa Distressed OFWs",
+  "for": "OFWs at mamamayan na kailangan ng livelihood",
+  "terms": [
+   "OFW financial aid",
+   "barangay certificate",
+   "certificate of indigency",
+   "voter ID",
+   "livelihood support"
+  ]
+ },
+ "Pagkuha ng katunayan – Pagpapatunay ng kasalukuyang gamit at pananim ng lupa at pagputol ng bungang kahoy|CITY AGRICULTURAL SERVICES DEPARTMENT": {
+  "en": "Certificate of Land Use and Tree Cutting",
+  "fil": "Katibayan ng Gamit ng Lupa at Pagtatabas ng Puno",
+  "for": "mamamayan ng Calamba",
+  "terms": [
+   "land use certificate",
+   "tree cutting permit",
+   "sulat kahilingan",
+   "barangay permiso",
+   "agri services"
+  ]
+ },
+ "Pagkuha ng katunayan – Pagpapatunay ng antas ng pinsala sa halaman, hayop at pangisdaan|CITY AGRICULTURAL SERVICES DEPARTMENT": {
+  "en": "Certificate of Damage to Crops, Livestock, Fisheries",
+  "fil": "Katibayan ng Pinsala sa Halaman, Hayop, Isda",
+  "for": "mamamayan ng Calamba",
+  "terms": [
+   "damage certificate",
+   "crop loss",
+   "livestock injury",
+   "fisheries damage",
+   "pasulat kahilingan"
+  ]
+ },
+ "Pagkuha ng katunayan, farm plan o auxillary – na nakatala sa tanggapan bilang magsasaka / mangingisda Pagpapatunay na nakatala sa tanggapan bilang magsasaka / mangingisda|CITY AGRICULTURAL SERVICES DEPARTMENT": {
+  "en": "Certificate, Farm Plan or Auxiliary for Farmers/Fishermen",
+  "fil": "Katibayan, Farm Plan o Auxillary para sa Magsasaka/Mangingisda",
+  "for": "mamamayan na nakatala bilang magsasaka o mangingisda",
+  "terms": [
+   "farm plan certificate",
+   "auxiliary certificate",
+   "farmer registration",
+   "fisherman registration",
+   "sulat kahilingan"
+  ]
+ },
+ "Pagpaparehistro bilang magsasaka / mangingisda|CITY AGRICULTURAL SERVICES DEPARTMENT": {
+  "en": "Farmer/Fisherfolk Registration",
+  "fil": "Pagpaparehistro ng Magsasaka/Mangingisda",
+  "for": "any Calamba resident",
+  "terms": [
+   "registration",
+   "magsasaka",
+   "mangingisda",
+   "land title",
+   "barangay cert",
+   "2x2 picture"
+  ]
+ },
+ "Paghingi ng Tulong / Subsidiya sa mga kailangan sa bukid at pangisdaan CASO – Agri-Aqua Management Services Division /|CITY AGRICULTURAL SERVICES DEPARTMENT": {
+  "en": "Agricultural/Subsidy Assistance Request",
+  "fil": "Paghingi ng Tulong o Subsidiya sa Bukid/Pangisdaan",
+  "for": "any Calamba resident",
+  "terms": [
+   "subsidy",
+   "agri aid",
+   "pangangailangan",
+   "bukid",
+   "pangisdaan",
+   "request letter"
+  ]
+ },
+ "Pagpapaiwi ng hayop / paglilipat-iwi ng hayop|CITY AGRICULTURAL SERVICES DEPARTMENT": {
+  "en": "Animal Relocation Service",
+  "fil": "Pagpaiwi o Paglilipat-iwi ng Hayop",
+  "for": "any Calamba resident",
+  "terms": [
+   "animal transfer",
+   "hayop",
+   "relocation",
+   "request",
+   "agri services"
+  ]
+ },
+ "Paghingi ng tulong teknikal patungkol sa mga gawain sa “value chain” (hal. produksyon, pagproseso, pagbebenta) ng mga produkto sa agrikultura at pangisdaan|CITY AGRICULTURAL SERVICES DEPARTMENT": {
+  "en": "Technical Help for Value‑Chain Activities",
+  "fil": "Tulong Teknikal sa Value Chain ng Agrikultura",
+  "for": "any Calamba resident",
+  "terms": [
+   "value chain",
+   "production help",
+   "processing aid",
+   "selling support",
+   "technical request"
+  ]
+ },
+ "Serbisyo ng traktora Serbisyong traktora|CITY AGRICULTURAL SERVICES DEPARTMENT": {
+  "en": "Tractor Rental Service",
+  "fil": "Serbisyo ng Traktora",
+  "for": "any Calamba resident",
+  "terms": [
+   "tractor service",
+   "traktora",
+   "rental",
+   "agri equipment",
+   "request"
+  ]
+ },
+ "Kahilingan para sa Pagsasagawa ng Pagsasanay at Seminar CASO – Agri-Aqua Research and Technical|CITY AGRICULTURAL SERVICES DEPARTMENT": {
+  "en": "Training and Seminar Request",
+  "fil": "Kahilingan para sa Pagsasanay at Seminar",
+  "for": "any Calamba resident",
+  "terms": [
+   "training",
+   "seminar",
+   "workshop",
+   "agri research",
+   "request letter"
+  ]
+ },
+ "Paghingi ng tulong-teknikal para sa pamamahala sa peste Tulong Teknikal para sa pamamahala sa peste CASO – Agri-Aqua Management Services Division /|CITY AGRICULTURAL SERVICES DEPARTMENT": {
+  "en": "Technical Assistance for Pest Management",
+  "fil": "Tulong Teknikal sa Pamamahala ng Peste",
+  "for": "any Calamba resident",
+  "terms": [
+   "pest control",
+   "peste",
+   "technical help",
+   "agri management",
+   "request"
+  ]
+ },
+ "Pagsusuri ng Lupa gamit ang Soil Test Kit CASO – Agri-Aqua Management Services Division /|CITY AGRICULTURAL SERVICES DEPARTMENT": {
+  "en": "Soil Testing Service",
+  "fil": "Pagsusuri ng Lupa gamit ang Soil Test Kit",
+  "for": "any Calamba resident",
+  "terms": [
+   "soil test",
+   "soil kit",
+   "lupa analysis",
+   "agri service",
+   "request"
+  ]
+ },
+ "Pagpapasubok ng Produkto CASO – Agri-Aqua Management Services Division /|CITY AGRICULTURAL SERVICES DEPARTMENT": {
+  "en": "Product testing request (Agri‑Aqua)",
+  "fil": "Pagpapasubok ng produkto (Agri‑Aqua)",
+  "for": "any Calamba resident",
+  "terms": [
+   "demo",
+   "product test",
+   "agri‑aqua",
+   "pasulat kahilingan",
+   "demo request"
+  ]
+ },
+ "Paghingi ng tulong teknikal ng mga mananaliksik CASO – Agri-Aqua Management Services Division /|CITY AGRICULTURAL SERVICES DEPARTMENT": {
+  "en": "Technical assistance from researchers (Agri‑Aqua)",
+  "fil": "Paghingi ng tulong teknikal ng mananaliksik",
+  "for": "any Calamba resident",
+  "terms": [
+   "technical help",
+   "research assistance",
+   "sulat kahilingan",
+   "agri‑aqua support",
+   "research help"
+  ]
+ },
+ "Kahilingan para sa Pagsusuri sa Taunang Barangay Budget at Taunang Sangguniang Kabataan Budget Pagsusuri sa Taunang Barangay Budget at Taunang SK Budget|CITY BUDGET MANAGEMENT OFFICE": {
+  "en": "Review of Barangay and SK annual budgets",
+  "fil": "Pagsusuri sa taunang budget ng barangay at SK",
+  "for": "government units",
+  "terms": [
+   "budget review",
+   "barangay budget",
+   "SK budget",
+   "annual budget analysis",
+   "budget documents"
+  ]
+ },
+ "Request for Certified True Copies of Birth / Marriage and Death / Certification of Civil Registry Documents City Civil Registry Office - Civil Certification and|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Certified true copies of civil registry records",
+  "fil": "Certified true copies ng birth/marriage/death records",
+  "for": "any citizen",
+  "terms": [
+   "certified copy",
+   "birth certificate",
+   "marriage record",
+   "death certificate",
+   "civil registry"
+  ]
+ },
+ "Application for Timely Registration of Birth (Hospital, Lying In Clinic and City Health Office) City Civil Registry Office – Civil Registration|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Timely birth registration (hospital/clinic)",
+  "fil": "Mabilis na rehistro ng kapanganakan",
+  "for": "birthing facilities",
+  "terms": [
+   "birth registration",
+   "hospital birth",
+   "live birth form",
+   "timely registration",
+   "city health office"
+  ]
+ },
+ "Application for Late Registration of Birth City Civil Registry Office - Civil|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Late birth registration application",
+  "fil": "Late registration ng kapanganakan",
+  "for": "citizens",
+  "terms": [
+   "late birth registration",
+   "PSA negative",
+   "affidavit of kin",
+   "birth certificate",
+   "delayed registration"
+  ]
+ },
+ "Application for Timely Registration of Death City Civil Registry Office - Civil Registration|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Timely death registration filing",
+  "fil": "Mabilis na rehistro ng kamatayan",
+  "for": "citizens",
+  "terms": [
+   "death registration",
+   "Form 103",
+   "timely death filing",
+   "civil registry",
+   "death certificate"
+  ]
+ },
+ "Application for Late Registration of Death City Civil Registry Office - Civil Registration|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Late death registration application",
+  "fil": "Late registration ng kamatayan",
+  "for": "citizens",
+  "terms": [
+   "late death registration",
+   "affidavit for delay",
+   "PSA negative",
+   "cremation certificate",
+   "delayed death filing"
+  ]
+ },
+ "Application for Timely Registration of Marriage City Civil Registry Office - Civil Registration|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Timely Marriage Registration",
+  "fil": "Mabilis na Rehistro ng Kasal",
+  "for": "citizens",
+  "terms": [
+   "marriage registration",
+   "timely",
+   "certificate of marriage",
+   "4 copies",
+   "civil registry"
+  ]
+ },
+ "Application for Late Registration of Marriage City Civil Registry Office - Civil Registration|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Late Marriage Registration",
+  "fil": "Late na Rehistro ng Kasal",
+  "for": "citizens",
+  "terms": [
+   "late marriage registration",
+   "affidavit",
+   "marriage certificate",
+   "court order",
+   "civil registry"
+  ]
+ },
+ "Application for Marriage License City Civil Registry Office - Civil Registration|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Marriage License Application",
+  "fil": "Pagkuha ng Lisensya sa Kasal",
+  "for": "citizens",
+  "terms": [
+   "marriage license",
+   "CENOMAR",
+   "legal capacity",
+   "pre‑marriage seminar",
+   "parental consent"
+  ]
+ },
+ "Request for Endorsement City Civil Registry Office - Civil Certification and|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Endorsement of Civil Documents",
+  "fil": "Endorsment ng Civil Document",
+  "for": "citizens",
+  "terms": [
+   "endorsement request",
+   "PSA negative",
+   "certified true copy",
+   "civil registry"
+  ]
+ },
+ "Request for Registration of Court Decrees and Orders City Civil Registry Office - Civil Certification and|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Registration of Court Decrees",
+  "fil": "Rehistro ng Court Decree",
+  "for": "citizens",
+  "terms": [
+   "court decree registration",
+   "certified copies",
+   "civil registry",
+   "legal order"
+  ]
+ },
+ "Legitimation City Civil Registry Office - Civil Certification and|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Legitimation of Birth",
+  "fil": "Legitimasyon ng Kapanganakan",
+  "for": "citizens",
+  "terms": [
+   "legitimation",
+   "birth certificate",
+   "RA 9858",
+   "joint affidavit",
+   "civil registry"
+  ]
+ },
+ "Request for Correction of Entries (CCE) RA 9048 City Civil Registry Office - Civil Certification and|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Correction of Registry Entries (CCE)",
+  "fil": "Pagwawasto ng Entry (CCE)",
+  "for": "citizens",
+  "terms": [
+   "correction of entry",
+   "RA 9048",
+   "certified copy",
+   "public document",
+   "civil registry"
+  ]
+ },
+ "Request for Correction of Entries – RA 9048 (CFN) City Civil Registry Office - Civil Certification and|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Correction of Registry Entries (CFN)",
+  "fil": "Pagwawasto ng Entry (CFN)",
+  "for": "citizens",
+  "terms": [
+   "correction of entry",
+   "CFN",
+   "RA 9048",
+   "birth certificate",
+   "civil registry"
+  ]
+ },
+ "Request for Changes of Entries RA 10172 in Birth Certificate City Civil Registry Office - Civil Certification and|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Change entry in birth certificate (RA 10172)",
+  "fil": "Pagbabago ng entry sa birth certificate (RA 10172)",
+  "for": "any citizen",
+  "terms": [
+   "change birth entry",
+   "RA 10172",
+   "certified true copy",
+   "police clearance",
+   "NBI clearance"
+  ]
+ },
+ "Request for Certificate of Finality and Annotation (RA 9048 & 10172) City Civil Registry Office - Civil Certification and|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Certificate of finality and annotation (RA 9048/10172)",
+  "fil": "Certificate of finality at annotation (RA 9048/10172)",
+  "for": "any citizen",
+  "terms": [
+   "finality certificate",
+   "annotation",
+   "RA 9048",
+   "RA 10172",
+   "request form",
+   "valid ID"
+  ]
+ },
+ "Request for Affidavit to Use the Surname of the Father (if not registered) City Civil Registry Office - Civil Certification and|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Affidavit to use father's surname (father not registered)",
+  "fil": "Affidavit para gamitin apelyido ng ama (hindi rehistrado)",
+  "for": "citizen (child/parent)",
+  "terms": [
+   "use father surname",
+   "affidavit",
+   "notarized",
+   "mother’s sworn statement",
+   "child’s signature"
+  ]
+ },
+ "Request for Affidavit to Use the Surname of the Father (if registered) City Civil Registry Office - Civil Certification and|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Affidavit to use father's surname (father registered)",
+  "fil": "Affidavit para gamitin apelyido ng ama (rehistrado)",
+  "for": "citizen (child/parent)",
+  "terms": [
+   "father’s surname affidavit",
+   "registered father",
+   "notarized",
+   "mother’s attestation",
+   "child’s consent"
+  ]
+ },
+ "Batch Request Entry System (BREQS) Pagtatala ng Kapanganakan sa Ibang Lugar City Civil Registry Office - Civil Certification and|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Batch Request Entry System (BREQS) – birth registration elsewhere",
+  "fil": "Batch Request Entry System (BREQS) – pagtatala ng kapanganakan sa ibang lugar",
+  "for": "any citizen",
+  "terms": [
+   "BREQS",
+   "birth registration other place",
+   "request form",
+   "affidavit of kinship",
+   "authorization letter"
+  ]
+ },
+ "Application for Out-of-Town Registration of Birth City Civil Registry Office - Civil Certification and|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Out‑of‑town birth registration application",
+  "fil": "Aplikasyon para sa out‑of‑town na pagtatala ng kapanganakan",
+  "for": "any citizen",
+  "terms": [
+   "out of town birth",
+   "registration application",
+   "four copies live birth",
+   "affidavit of two persons",
+   "marriage certificate"
+  ]
+ },
+ "Registration of Foundling City Civil Registry Office - Civil Certification and|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Registration of foundling child",
+  "fil": "Pagrehistro ng foundling na bata",
+  "for": "any citizen",
+  "terms": [
+   "foundling registration",
+   "OCRG Form 101",
+   "DSWD certificate",
+   "four copies",
+   "affidavit"
+  ]
+ },
+ "Request for Certificate of Supplemental Report City Civil Registry Office - Civil Certification and|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Request for supplemental report certificate",
+  "fil": "Paghingi ng certificate ng supplemental report",
+  "for": "any citizen",
+  "terms": [
+   "supplemental report",
+   "PSA copy",
+   "affidavit",
+   "baptismal certificate",
+   "school records"
+  ]
+ },
+ "Issuance of Order of Payment (Death Certificate/Certified Death Certificate/Exhumation/Burial Transfer)|CITY CIVIL REGISTRY OFFICE": {
+  "en": "Order of Payment for Death‑Related Services",
+  "fil": "Order of Payment para sa Patay",
+  "for": "any citizen",
+  "terms": [
+   "death certificate payment",
+   "exhumation fee",
+   "burial transfer charge",
+   "OP for death"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Business Tax Pagkolekta sa Business Tax|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official Receipt for Business Tax",
+  "fil": "Resibo para sa Business Tax",
+  "for": "business owners",
+  "terms": [
+   "business tax receipt",
+   "official receipt tax",
+   "BTR payment",
+   "OR business tax"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa 2% PEZA Share Pagkolekta sa PEZA Share|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official Receipt for 2% PEZA Share",
+  "fil": "Resibo para sa 2% PEZA Share",
+  "for": "PEZA‑registered firms",
+  "terms": [
+   "PEZA share receipt",
+   "2% share payment",
+   "PEZA tax receipt",
+   "official PEZA receipt"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Amusement Tax Pagkolekta sa Amusement Tax|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official Receipt for Amusement Tax",
+  "fil": "Resibo para sa Amusement Tax",
+  "for": "entertainment operators",
+  "terms": [
+   "amusement tax receipt",
+   "ticket tax payment",
+   "OR amusement tax",
+   "official amusement receipt"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Annual Fixed Tax (AFT) Pagkolekta sa Annual Fixed Tax|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official Receipt for Annual Fixed Tax (AFT)",
+  "fil": "Resibo para sa Annual Fixed Tax",
+  "for": "all taxpayers",
+  "terms": [
+   "AFT receipt",
+   "annual fixed tax OR",
+   "official AFT payment",
+   "fixed tax receipt"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Birth Fee Pagkolekta sa Birth Fee|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official Receipt for Birth Fee",
+  "fil": "Resibo para sa Birth Fee",
+  "for": "any citizen",
+  "terms": [
+   "birth fee receipt",
+   "OR birth registration",
+   "official birth fee",
+   "birth certificate payment"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Tuition Fee at ibang bayarin Pagkolekta sa Tuition Fee at ibang bayarin|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official Receipt for Tuition and Other Fees (CCC)",
+  "fil": "Resibo para sa Tuition Fee at Iba Pa",
+  "for": "CCC students",
+  "terms": [
+   "tuition fee receipt",
+   "college fee OR",
+   "official receipt tuition",
+   "CCC fee payment"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Pump Verification Testing and Sealing Pagkolekta sa mga gasoline station|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official Receipt for Pump Verification & Sealing",
+  "fil": "Resibo para sa Pump Verification",
+  "for": "gasoline stations",
+  "terms": [
+   "pump verification receipt",
+   "sealing fee OR",
+   "official pump test payment",
+   "gas station seal fee"
+  ]
+ },
+ "Pagbibigay ng Community Tax Certificate (Cedula) Pagkolekta mula sa Community Tax Certificate (Cedula)|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Community Tax Certificate (Cedula) issuance",
+  "fil": "Pagkuha ng Community Tax Certificate (Cedula)",
+  "for": "taxpayers",
+  "terms": [
+   "cedula",
+   "community tax",
+   "tax certificate",
+   "income tax return",
+   "CTC",
+   "taxpayer form",
+   "bayad buwis"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Franchise Tax Pagkolekta mula sa Franchise Tax|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official receipt for Franchise Tax",
+  "fil": "Resibo para sa Franchise Tax",
+  "for": "taxpayers",
+  "terms": [
+   "franchise tax receipt",
+   "official receipt",
+   "franchise fee",
+   "income tax receipt",
+   "bayad franchise",
+   "tax receipt"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Market Fees Pagkolekta sa Market Fees|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official receipt for Market Fees",
+  "fil": "Resibo para sa Market Fees",
+  "for": "taxpayers",
+  "terms": [
+   "market fee receipt",
+   "official receipt",
+   "order of payment",
+   "bayad pamilihan",
+   "market fees",
+   "payment slip"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Police, Court at Mayor’s Permit Fee Pagkolekta mula sa Police, Court at Mayor’s Permit|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official receipt for Police, Court & Mayor’s Permit Fees",
+  "fil": "Resibo para sa Police, Court at Mayor’s Permit Fee",
+  "for": "taxpayers",
+  "terms": [
+   "police fee receipt",
+   "court fee receipt",
+   "mayor permit receipt",
+   "official receipt",
+   "order of payment",
+   "bayad permit"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Slaughter and Coral Fees Pagkolekta mula sa Slaughter at Coral Fees|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official receipt for Slaughter and Coral Fees",
+  "fil": "Resibo para sa Slaughter at Coral Fees",
+  "for": "taxpayers",
+  "terms": [
+   "slaughter fee receipt",
+   "coral fee receipt",
+   "official receipt",
+   "order of payment",
+   "bayad pagpatay hayop",
+   "bayad coral"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Traffic Violation Fees Pagkolekta mula sa mga Traffic Violation|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official receipt for Traffic Violation Fees",
+  "fil": "Resibo para sa Traffic Violation Fees",
+  "for": "taxpayers",
+  "terms": [
+   "traffic violation receipt",
+   "traffic citation ticket",
+   "official receipt",
+   "order of payment",
+   "bayad trapiko",
+   "traffic fine"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Beripikasyon, Inspeksyon at Sealing ng Weighing Scale Pagkolekta mula sa mga Weighing Scale|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official receipt for Weighing Scale Certification",
+  "fil": "Resibo para sa Beripikasyon ng Weighing Scale",
+  "for": "taxpayers",
+  "terms": [
+   "weighing scale receipt",
+   "scale certification",
+   "official receipt",
+   "weighing scale",
+   "bayad inspeksyon",
+   "scale sealing"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Real Property Tax Pagkolekta mula sa Real Property Tax|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official receipt for Real Property Tax",
+  "fil": "Resibo para sa Real Property Tax",
+  "for": "taxpayers",
+  "terms": [
+   "real property tax receipt",
+   "RPT receipt",
+   "official receipt",
+   "tax declaration",
+   "land title",
+   "previous receipt",
+   "bayad buwis lupa"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Real Property Tax (Online Payment) Pagkolekta mula sa Real Property Tax (Online Payment)|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official Receipt for Online Real Property Tax",
+  "fil": "Opisyal na Resibo para sa Online Real Property Tax",
+  "for": "taxpayers",
+  "terms": [
+   "RPT online payment",
+   "receipt ng buwis",
+   "tax declaration",
+   "land title",
+   "previous receipt"
+  ]
+ },
+ "Pagbibigay ng Tax Clearance Pagkolekta mula sa Tax Clearance|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Tax Clearance Issuance",
+  "fil": "Pagbibigay ng Tax Clearance",
+  "for": "taxpayers",
+  "terms": [
+   "tax clearance",
+   "updated tax declaration",
+   "owner ID",
+   "birth certificate",
+   "death certificate"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Miscellaneous Fees ng iba’t - ibang opisina Pagkolekta sa iba’t-ibang opisina ng Miscellaneous Fees|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official Receipt for Miscellaneous Fees",
+  "fil": "Opisyal na Resibo para sa Misc Fees",
+  "for": "taxpayers",
+  "terms": [
+   "miscellaneous fees receipt",
+   "order of payment",
+   "improvement tax",
+   "occupancy fee",
+   "electrical fee"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Transfer Tax na may kasama Tax Clearance Pagkolekta sa Transfer Tax|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official Receipt for Transfer Tax with Tax Clearance",
+  "fil": "Opisyal na Resibo para sa Transfer Tax at Tax Clearance",
+  "for": "taxpayers",
+  "terms": [
+   "transfer tax receipt",
+   "tax clearance",
+   "deed of conveyance",
+   "buyer seller ID",
+   "authorization letter"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Civil Registry Fees Pagkolekta sa Civil Registry Fees|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official Receipt for Civil Registry Fees",
+  "fil": "Opisyal na Resibo para sa Civil Registry Fees",
+  "for": "taxpayers",
+  "terms": [
+   "civil registry receipt",
+   "order of payment",
+   "birth certificate fee",
+   "marriage certificate fee",
+   "death certificate fee"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Professional Tax Receipt Fees Pagkolekta sa Professional Tax Receipt Fees|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official Receipt for Professional Tax Fees",
+  "fil": "Opisyal na Resibo para sa Professional Tax",
+  "for": "professionals",
+  "terms": [
+   "professional tax receipt",
+   "PRC ID",
+   "insurance certification",
+   "professional fee",
+   "tax payment"
+  ]
+ },
+ "Pagbibigay ng Opisyal na Resibo para sa Tricycle Franchise Pagkolekta sa Tricyle Franchise Fees|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Official Receipt for Tricycle Franchise Fees",
+  "fil": "Opisyal na Resibo para sa Tricycle Franchise",
+  "for": "tricycle operators",
+  "terms": [
+   "tricycle franchise receipt",
+   "order of payment",
+   "OR",
+   "certificate of registration",
+   "CR"
+  ]
+ },
+ "Pagbibigay ng Certified True Copy ng Opisyal na Resibo|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Certified True Copy of Official Receipt",
+  "fil": "Certified True Copy ng Opisyal na Resibo",
+  "for": "taxpayers",
+  "terms": [
+   "certified copy receipt",
+   "owner ID",
+   "authorization letter",
+   "representative ID",
+   "request letter"
+  ]
+ },
+ "Pag-rerelease ng Tseke para sa Financial Assistance, Supplier / Contractor at Land Acquisition Pagbibigay ng mga Tseke|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Check Release for Financial Assistance, Supplier/Contractor, Land Acquisition",
+  "fil": "Paglabas ng tseke para sa tulong pinansyal, supplier/kontraktor, lupa",
+  "for": "stakeholders",
+  "terms": [
+   "check release",
+   "financial assistance",
+   "supplier tseke",
+   "land acquisition",
+   "authorization",
+   "payee ID"
+  ]
+ },
+ "Pagrerelease ng Financial Assistance (FA) Pagrerelease ng Tulong Pinansyal|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Release of Financial Assistance Funds",
+  "fil": "Paglabas ng tulong pinansyal",
+  "for": "Calamba residents",
+  "terms": [
+   "financial assistance",
+   "FA release",
+   "government aid",
+   "valid ID",
+   "authorization letter"
+  ]
+ },
+ "Pagbibigay ng Money Accountability Clearance|CITY TREASURY MANAGEMENT OFFICE": {
+  "en": "Money Accountability Clearance Issuance",
+  "fil": "Pagbibigay ng Money Accountability Clearance",
+  "for": "stakeholders, taxpayers",
+  "terms": [
+   "accountability clearance",
+   "money clearance",
+   "taxpayer",
+   "ID copy",
+   "clearance request"
+  ]
+ },
+ "Kahilingan para sa pagkumpuni at pangangalaga ng mga kagamitan sa ibang Ahensya. Pagkukumpuni at Pangangalaga ng mga kagamitan sa ibang Ahensya|HOUSING AND SETTLEMENTS DEPARTMENT": {
+  "en": "Repair and Maintenance Request for Other Agencies’ Equipment",
+  "fil": "Kahilingan para sa pagkumpuni ng kagamitan ng ibang ahensya",
+  "for": "other government agencies",
+  "terms": [
+   "equipment repair",
+   "agency request",
+   "maintenance form",
+   "repair request",
+   "government equipment"
+  ]
+ },
+ "Pag-issue ng Building Permit (BP220) Ang BP220 ay ipinagkakaloob para sa mga residente na nagbibigay pahintulot sa kanila na magpagawa ng bagong bahay o magsagawa ng renovation sa bahay o|HOUSING AND SETTLEMENTS DEPARTMENT": {
+  "en": "Building Permit (BP220) Issuance",
+  "fil": "Pag-issue ng Building Permit (BP220)",
+  "for": "Calamba residents building/renovating",
+  "terms": [
+   "building permit",
+   "BP220",
+   "construction permit",
+   "design plans",
+   "HSD form"
+  ]
+ },
+ "Issuance of Certificate of Final Electrical Inspection (CFEI)(BP220) Ang CFEI ay isang requirement para sa mga magpapakabit ng linya ng kuryente sa kanilang bahay o istruktura na klasipikadong low-cost housing, economic housing o|HOUSING AND SETTLEMENTS DEPARTMENT": {
+  "en": "Certificate of Final Electrical Inspection (CFEI)",
+  "fil": "Certificate of Final Electrical Inspection (CFEI)",
+  "for": "low‑cost, economic, socialized housing owners",
+  "terms": [
+   "CFEI",
+   "final electrical inspection",
+   "Meralco application",
+   "occupancy permit",
+   "barangay clearance"
+  ]
+ },
+ "Aplikasyon sa Programang Pabahay at Palupa Ang Aplikasyon sa Programang Pabahay at Palupa ng Pamahalaang Panlungsod ay alinsunod sa Batas Republika 7279 o Urban Development and Housing Act ng 1992 na|HOUSING AND SETTLEMENTS DEPARTMENT": {
+  "en": "Application for Housing and Shelter Program",
+  "fil": "Aplikasyon sa Programang Pabahay at Palupa",
+  "for": "Calamba residents 18‑55 years",
+  "terms": [
+   "housing program",
+   "palupa application",
+   "RP 7279",
+   "family picture",
+   "birth certificate"
+  ]
+ },
+ "Pag-bibigay ng Occupancy Certification Ang Occupancy Certification ay ipinagkakaloob para sa mga: (1) awardee ng pabahay ng Pamahalaang Panlungsod ng Calamba na gagamitin itong requirement para sa|HOUSING AND SETTLEMENTS DEPARTMENT": {
+  "en": "Occupancy Certification Issuance",
+  "fil": "Pagbibigay ng Occupancy Certification",
+  "for": "housing awardees and informal settler families",
+  "terms": [
+   "occupancy certification",
+   "building permit",
+   "barangay clearance",
+   "informal settlers",
+   "extension permit"
+  ]
+ },
+ "Pagbibigay ng Occupancy Permit Ang Occupancy Permit ay ipinagkakaloob bilang patunay na ang pagkakatayo ng isang istruktura na klasipikadong low-cost housing ay nakasunod sa aprubadong planong|HOUSING AND SETTLEMENTS DEPARTMENT": {
+  "en": "Occupancy Permit for Low‑Cost Housing",
+  "fil": "Occupancy Permit para sa low‑cost housing",
+  "for": "property owners building low‑cost homes",
+  "terms": [
+   "occupancy permit",
+   "low cost housing permit",
+   "permit sa bahay",
+   "HSD Form 3",
+   "aprubadong plano",
+   "certificate of building completion"
+  ]
+ },
+ "Pagbibigay ng mga Sertipikadong Kopya / Sipi ng mga Dokumento ng Sangguniang Panlungsod Pagkakaloob ng mga Sertipikadong Kopya / Sipi ng mga dokumento ng Sangguniang|LEGISLATIVE SERVICES OFFICE": {
+  "en": "Certified Copy of City Council Documents",
+  "fil": "Sertipikadong Kopya ng Dokumento ng Sangguniang Panlungsod",
+  "for": "any citizen or office requesting records",
+  "terms": [
+   "sertipikadong kopya",
+   "sipi ng dokumento",
+   "city council records",
+   "request letter",
+   "legislative services office",
+   "document copy"
+  ]
+ },
+ "Pagsasampa ng Kasong Administratibo laban sa mga kawani at opisyal ng Gobyerno sa Sangguniang Panlungsod|LEGISLATIVE SERVICES OFFICE": {
+  "en": "Administrative Complaint Against City Officials",
+  "fil": "Kasong Administratibo laban sa Opisyal ng Lungsod",
+  "for": "citizens filing complaints",
+  "terms": [
+   "administrative case",
+   "complaint sa opisyal",
+   "sworn statement",
+   "non‑forum shopping",
+   "city council complaint",
+   "legislative services office"
+  ]
+ },
+ "Special Permit (Special Mayor's Permit for Events and Activities)|BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE": {
+  "en": "Special Mayor's Permit for Events",
+  "fil": "Special Permit para sa mga Kaganapan",
+  "for": "any person or organization",
+  "terms": [
+   "event permit",
+   "special mayor permit",
+   "pahintulot sa event",
+   "special permit",
+   "pahintulot ng alkalde",
+   "event clearance",
+   "peddler’s permit",
+   "barangay clearance"
+  ]
+ },
+ "Issuance of New Tax Declaration for General Purposes (Reassessment, Revision or New Discovery of Real Property)|CITY ASSESSMENT OFFICE": {
+  "en": "New Tax Declaration for Property",
+  "fil": "Bagong Tax Declaration ng Lupa",
+  "for": "property owners and administrators",
+  "terms": [
+   "tax declaration",
+   "new tax declaration",
+   "real property tax",
+   "tax reassessment",
+   "tax revision",
+   "property tax form",
+   "declaration ng buwis",
+   "tax declaration Calamba"
+  ]
+ },
+ "Application for Clearance for Graduating Students|CITY COLLEGE OF CALAMBA": {
+  "en": "Clearance for Graduating Students",
+  "fil": "Clearance para sa Nagtatapos na Estudyante",
+  "for": "graduating students",
+  "terms": [
+   "graduation clearance",
+   "student clearance",
+   "clearance para sa graduation",
+   "graduating student",
+   "graduation stub",
+   "prospectus",
+   "birth certificate",
+   "documentary stamp"
+  ]
+ },
+ "Hardware / Software / Network Maintenance and Troubleshooting|CITY COLLEGE OF CALAMBA": {
+  "en": "Hardware/Software/Network Maintenance",
+  "fil": "Pagpapanatili ng Hardware at Software",
+  "for": "college students and teachers",
+  "terms": [
+   "IT support",
+   "network troubleshooting",
+   "hardware maintenance",
+   "software maintenance",
+   "service request form",
+   "client log",
+   "tech help",
+   "CCC IT service"
+  ]
+ },
+ "Request for Retrieval of Document|CITY COLLEGE OF CALAMBA": {
+  "en": "Document Retrieval Request",
+  "fil": "Pagkuha ng Dokumento",
+  "for": "teachers and staff",
+  "terms": [
+   "document retrieval",
+   "request for document",
+   "document request form",
+   "retrieval of records",
+   "document retrieval Calamba",
+   "request form",
+   "staff document"
+  ]
+ },
+ "Standby Ambulance (Pagtatalaga ng Nakahandang Ambulansya sa Pagtitipon)|CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO": {
+  "en": "Standby Ambulance for Events",
+  "fil": "Pagtatalaga ng Nakahandang Ambulansya",
+  "for": "government agencies",
+  "terms": [
+   "standby ambulance",
+   "ambulance for event",
+   "emergency ambulance",
+   "paghiling ng ambulansya",
+   "event ambulance",
+   "disaster risk management",
+   "ambulance request"
+  ]
+ },
+ "Request for Investigation, Review or Audit of Transactions (Internal Audit Services)|OFFICE OF THE MAYOR": {
+  "en": "Request for Internal Audit Services",
+  "fil": "Hiling ng Internal Audit",
+  "for": "any department or unit",
+  "terms": [
+   "internal audit request",
+   "audit of transactions",
+   "investigation request",
+   "review of accounts",
+   "formal audit letter",
+   "audit services",
+   "transaction audit",
+   "internal audit Calamba"
+  ]
+ },
+ "Paghahanda ng Programa sa Paggawa ng mga Proyektong Imprastraktura (Infrastructure Project Programming)|CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT": {
+  "en": "Infrastructure Project Programming",
+  "fil": "Programa sa Paggawa ng Imprastruktura",
+  "for": "barangay officials and DepEd",
+  "terms": [
+   "infrastructure programming",
+   "project programming",
+   "project planning",
+   "barangay project request",
+   "PPMP budget",
+   "infrastructure project",
+   "project program request",
+   "engineering department"
+  ]
+ },
+ "Pagsasaayos at Pagpapanatili ng Imprastraktura / Gusali (Infrastructure and Building Repair and Maintenance)|CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT": {
+  "en": "Infrastructure Repair & Maintenance",
+  "fil": "Pagsasaayos at Pagpapanatili ng Imprastruktura",
+  "for": "barangay officials, DepEd, citizens",
+  "terms": [
+   "liham ng kahilingan",
+   "building repair",
+   "gusali maintenance",
+   "infrastructure fix"
+  ]
+ },
+ "Pagpapahiram ng Pansamantalang Entablado, Sasakyan at Heavy Equipment (Loan of Stage, Vehicles and Heavy Equipment)|CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT": {
+  "en": "Loan of Stage, Vehicles & Heavy Equipment",
+  "fil": "Pagpapahiram ng Entablado, Sasakyan at Heavy Equipment",
+  "for": "barangay officials, DepEd, citizens",
+  "terms": [
+   "liham ng kahilingan",
+   "stage loan",
+   "vehicle hire",
+   "heavy equipment rental"
+  ]
+ },
+ "Pagkukumpuni ng Pagpapailaw sa Kalsada (Streetlight Repair)|CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT": {
+  "en": "Streetlight Repair Service",
+  "fil": "Pagkukumpuni ng Pagpapailaw sa Kalsada",
+  "for": "barangay officials",
+  "terms": [
+   "liham ng kahilingan",
+   "streetlight fix",
+   "kalsada ilaw repair",
+   "street lighting"
+  ]
+ },
+ "Pagkukumpuni at Pagsasaayos ng Daluyan ng Tubig (Repair, Clearing and Desilting of Drainage Canals)|CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT": {
+  "en": "Drainage Repair, Clearing & Desilting",
+  "fil": "Pagkukumpuni at Pagsasaayos ng Daluyan ng Tubig",
+  "for": "barangay officials",
+  "terms": [
+   "liham ng kahilingan",
+   "drainage cleaning",
+   "canal desilting",
+   "tubig drainage repair"
+  ]
+ },
+ "Pagpapanatili ng Kaayusan ng Sewerage Treatment Plant (STP Maintenance)|CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT": {
+  "en": "Sewerage Treatment Plant Maintenance",
+  "fil": "Pagpapanatili ng Kaayusan ng Sewerage Treatment Plant",
+  "for": "city hall, BJMP, Mercado de Calamba",
+  "terms": [
+   "tala ng pagmomonito",
+   "STP upkeep",
+   "sewage plant maintenance",
+   "treatment plant service"
+  ]
+ },
+ "Demolisyon ng mga Iligal na Istraktura sa Road Right-of-Way at Lumang Gusali ng Paaralan (Demolition of Illegal Structures)|CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT": {
+  "en": "Demolition of Illegal Structures",
+  "fil": "Demolisyon ng mga Iligal na Istraktura",
+  "for": "barangay officials, DepEd",
+  "terms": [
+   "liham ng kahilingan",
+   "illegal structure demolition",
+   "road right-of-way tear down",
+   "demolition request"
+  ]
+ },
+ "Pagkukumpuni at Pangangalaga ng mga Kagamitan ng Ibang Ahensya (Equipment Repair for Other Agencies)|CITY GENERAL SERVICES OFFICE": {
+  "en": "Equipment Repair for Other Agencies",
+  "fil": "Pagkukumpuni at Pangangalaga ng Kagamitan ng Ibang Ahensya",
+  "for": "other government agencies",
+  "terms": [
+   "request form",
+   "agency equipment repair",
+   "kagamitan maintenance",
+   "service request"
+  ]
+ },
+ "Application for Leave (Without Commutation of Leave Credits)|CITY HUMAN RESOURCE AND MANAGEMENT OFFICE": {
+  "en": "Leave Application (No Credit Commutation)",
+  "fil": "Application for Leave (Without Commutation of Leave Credits)",
+  "for": "city employees",
+  "terms": [
+   "leave application form",
+   "LAF CS Form No.6",
+   "leave without commutation",
+   "employee leave request"
+  ]
+ },
+ "Application for Leave (With Commutation of Leave Credits)|CITY HUMAN RESOURCE AND MANAGEMENT OFFICE": {
+  "en": "Leave Application with Credit Commutation",
+  "fil": "Aplikasyon ng Pagliban na may Komutasyon",
+  "for": "empleyado",
+  "terms": [
+   "leave form",
+   "CS Form No.6",
+   "commutation",
+   "leave credits",
+   "aplay leave",
+   "pahintulot"
+  ]
+ },
+ "Pagpapalit ng Identification Card (Employee ID Replacement)|CITY HUMAN RESOURCE AND MANAGEMENT OFFICE": {
+  "en": "Employee ID Card Replacement",
+  "fil": "Pagpapalit ng Employee ID",
+  "for": "empleyado",
+  "terms": [
+   "ID replacement",
+   "lost ID",
+   "affidavit of loss",
+   "IDRF form",
+   "bagong ID",
+   "palitan ID"
+  ]
+ },
+ "Pagpapalit ng Nawala o Nasirang ATM / Cash Card (ATM / Cash Card Replacement)|CITY HUMAN RESOURCE AND MANAGEMENT OFFICE": {
+  "en": "ATM/Cash Card Replacement",
+  "fil": "Pagpapalit ng ATM o Cash Card",
+  "for": "empleyado",
+  "terms": [
+   "ATM replacement",
+   "cash card lost",
+   "affidavit loss",
+   "card request form",
+   "palitan ATM",
+   "card replacement"
+  ]
+ },
+ "Pagbabago ng Impormasyon (Update of Employee Information)|CITY HUMAN RESOURCE AND MANAGEMENT OFFICE": {
+  "en": "Update of Employee Personal Information",
+  "fil": "Pagbabago ng Impormasyon ng Empleyado",
+  "for": "empleyado",
+  "terms": [
+   "info update",
+   "name spelling change",
+   "civil status update",
+   "birth certificate",
+   "marriage certificate",
+   "update form"
+  ]
+ },
+ "Paghiling ng Human Resource Clearance (HR Clearance)|CITY HUMAN RESOURCE AND MANAGEMENT OFFICE": {
+  "en": "Human Resource Clearance Request",
+  "fil": "Paghiling ng HR Clearance",
+  "for": "empleyado",
+  "terms": [
+   "HR clearance",
+   "clearance request form",
+   "CRF",
+   "travel clearance",
+   "abroad clearance",
+   "HR form"
+  ]
+ },
+ "Request for Preparation of Legal Documents including Notarization|CITY LEGAL SERVICES OFFICE": {
+  "en": "Legal Document Preparation & Notarization",
+  "fil": "Paghahanda at Notarasyon ng Legal na Dokumento",
+  "for": "constituents",
+  "terms": [
+   "notarization",
+   "legal docs",
+   "certificate of indigency",
+   "valid ID",
+   "contract notarization",
+   "legal services"
+  ]
+ },
+ "Computer Repair (Pagkukumpuni ng mga Computer)|CITY PLANNING AND DEVELOPMENT OFFICE": {
+  "en": "Computer Repair Service",
+  "fil": "Pagkukumpuni ng Computer",
+  "for": "empleyado",
+  "terms": [
+   "computer repair",
+   "repair form",
+   "IT support",
+   "fix computer",
+   "computer maintenance",
+   "tech help"
+  ]
+ },
+ "Pagproseso at Pagbigay ng CLDF Loan (CLDF Livelihood Loan)|COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT": {
+  "en": "CLDF Livelihood Loan Processing",
+  "fil": "Pagproseso ng CLDF Livelihood Loan",
+  "for": "cooperatives and entrepreneurs",
+  "terms": [
+   "CLDF loan",
+   "livelihood loan",
+   "business permit",
+   "cedula",
+   "loan application",
+   "farm plan"
+  ]
+ },
+ "Certificate of Disability and Certificate of Cancellation of PWD ID|PERSONS WITH DISABILITY AFFAIRS OFFICE": {
+  "en": "Disability Certificate",
+  "fil": "Sertipiko ng Kapansanan",
+  "for": "persons with disability",
+  "terms": [
+   "PWD ID",
+   "certificate of disability",
+   "cancellation of PWD ID",
+   "request form"
+  ]
+ },
+ "Tulong Pinansiyal para sa Medical at Therapy ng PWD (Medical and Therapy Assistance for PWDs)|PERSONS WITH DISABILITY AFFAIRS OFFICE": {
+  "en": "PWD Medical & Therapy Assistance",
+  "fil": "Tulong Medikal at Therapy para sa PWD",
+  "for": "persons with disability",
+  "terms": [
+   "medical assistance",
+   "therapy aid",
+   "PWD request letter",
+   "medicine quotation"
+  ]
+ },
+ "Pag-verify ng PhilHealth Benefit ng PWD (PWD PhilHealth Verification)|PERSONS WITH DISABILITY AFFAIRS OFFICE": {
+  "en": "PWD PhilHealth Benefit Verification",
+  "fil": "Pag-verify ng PhilHealth Benefit ng PWD",
+  "for": "persons with disability",
+  "terms": [
+   "PhilHealth verification",
+   "PWD ID copy",
+   "records request",
+   "benefit check"
+  ]
+ },
+ "Request to View or Get a Copy of CCTV Footage|PUBLIC ORDER AND SAFETY OFFICE": {
+  "en": "CCTV Footage Request",
+  "fil": "Hiling ng CCTV Footage",
+  "for": "anyone",
+  "terms": [
+   "CCTV request form",
+   "police request",
+   "valid ID",
+   "flash drive copy"
+  ]
+ },
+ "Pagtubos ng Lisensya (Redemption of Confiscated Driver's License)|PUBLIC ORDER AND SAFETY OFFICE": {
+  "en": "Driver's License Redemption",
+  "fil": "Pagtubos ng Lisensya",
+  "for": "traffic violators",
+  "terms": [
+   "confiscated license",
+   "traffic ticket",
+   "valid ID",
+   "license redemption"
+  ]
+ },
+ "Request for Public Order Assistance at Events in Public Places|PUBLIC ORDER AND SAFETY OFFICE": {
+  "en": "Public Order Assistance for Events",
+  "fil": "Tulong Pampubliko sa Kaganapan",
+  "for": "barangay council, residents",
+  "terms": [
+   "event assistance",
+   "public order request",
+   "sulat kahilingan",
+   "barangay"
+  ]
+ },
+ "Request for Assistance in Clearing Road Obstructions|PUBLIC ORDER AND SAFETY OFFICE": {
+  "en": "Road Obstruction Clearing Assistance",
+  "fil": "Tulong sa Paglilinis ng Baradong Daan",
+  "for": "barangay council, residents",
+  "terms": [
+   "road obstruction",
+   "clearing request",
+   "sulat kahilingan",
+   "public safety"
+  ]
+ },
+ "CCTV Compliance Certification for Business Establishments|PUBLIC ORDER AND SAFETY OFFICE": {
+  "en": "CCTV Compliance Certificate for Businesses",
+  "fil": "Sertipiko ng CCTV Compliance para sa Negosyo",
+  "for": "business owners",
+  "terms": [
+   "CCTV compliance",
+   "business permit",
+   "inspection report",
+   "certification"
+  ]
+ }
+}
