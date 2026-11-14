@@ -22,7 +22,7 @@ const { redis, redisConfigured } = require('../lib/redis');
 const { requireAdmin, requireJson } = require('../lib/gate');
 const { manilaStamp } = require('../lib/manila');
 
-const { key } = require('../lib/keys');
+const { key, previewUnisolated } = require('../lib/keys');
 // Key names are resolved per call (key() reads WF_KEY_PREFIX), so these are getters.
 const LIVE = { get querylog() { return key('wf:querylog'); }, get navlog() { return key('wf:navlog'); } };
 const ARCHIVES_KEY = () => key('wf:archives');
@@ -108,6 +108,9 @@ module.exports = async function handler(req, res) {
     }
 
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed.' });
+    if (previewUnisolated()) {
+      return res.status(503).json({ error: 'Data changes are disabled on a preview deployment — set WF_KEY_PREFIX (e.g. pv1:) so it does not touch the live logs.' });
+    }
     if (!requireJson(req, res)) return;
     let b = req.body;
     if (typeof b === 'string') { try { b = JSON.parse(b); } catch (_) { return res.status(400).json({ error: 'Bad JSON.' }); } }

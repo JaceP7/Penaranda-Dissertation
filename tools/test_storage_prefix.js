@@ -91,6 +91,19 @@ const load = (f) => { const p = path.resolve(ROOT, f); delete require.cache[p]; 
   ok('chat still answers', res.code === 200, res.code);
   ok('chat does not LPUSH', !cmds.some((c) => c[0] === 'LPUSH'), JSON.stringify(cmds));
 
+  process.env.ADMIN_PIN = 'test-pin-4821';
+  const cookie = 'wf_admin=' + load('lib/session.js').signSession();
+  const data = load('api/data.js');
+  for (const action of ['reset', 'remove', 'restore']) {
+    res = mockRes(); cmds = [];
+    await data({ method: 'POST', query: {}, headers: { cookie, 'content-type': 'application/json' },
+                 body: { action, confirm: 'RESET', id: 'x' } }, res);
+    ok(`data POST ${action} is refused 503 naming WF_KEY_PREFIX`,
+       res.code === 503 && /WF_KEY_PREFIX/.test(JSON.stringify(res.body)), res.code);
+    ok('  and issues no RENAME/LPUSH/LTRIM/DEL/LREM',
+       !cmds.some((c) => ['RENAME', 'LPUSH', 'LTRIM', 'DEL', 'LREM'].includes(c[0])), JSON.stringify(cmds));
+  }
+
   console.log('\n--- a prefixed preview writes under the prefix ---');
   process.env.WF_KEY_PREFIX = 'pv1:';
   const navlog2 = load('api/navlog.js');
