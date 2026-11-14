@@ -22,15 +22,17 @@ const { redis, redisConfigured } = require('../lib/redis');
 const { requireAdmin, requireJson } = require('../lib/gate');
 const { manilaStamp } = require('../lib/manila');
 
-const LIVE = { querylog: 'wf:querylog', navlog: 'wf:navlog' };
-const ARCHIVES = 'wf:archives';
-const DATA_LOG = 'wf:data:log';
+const { key } = require('../lib/keys');
+// Key names are resolved per call (key() reads WF_KEY_PREFIX), so these are getters.
+const LIVE = { get querylog() { return key('wf:querylog'); }, get navlog() { return key('wf:navlog'); } };
+const ARCHIVES_KEY = () => key('wf:archives');
+const DATA_LOG_KEY = () => key('wf:data:log');
 const KEEP = 5;
 const BY = 'staff PIN';
 const CHUNK = 2500, MAX = 50000;
 
 const rowId = (raw) => crypto.createHash('sha256').update(raw).digest('hex').slice(0, 16);
-const archiveKey = (id, tag) => `wf:archive:${id}:${tag}`;
+const archiveKey = (id, tag) => key(`wf:archive:${id}:${tag}`);
 
 async function readList(key) {
   const out = [];
@@ -44,8 +46,8 @@ async function readList(key) {
 const parse = (raws) => raws.map((s) => { try { return JSON.parse(s); } catch (_) { return null; } }).filter(Boolean);
 
 async function note(action, detail) {
-  await redis(['LPUSH', DATA_LOG, JSON.stringify({ action, by: BY, at: Date.now(), detail })]);
-  await redis(['LTRIM', DATA_LOG, '0', '99']);
+  await redis(['LPUSH', DATA_LOG_KEY(), JSON.stringify({ action, by: BY, at: Date.now(), detail })]);
+  await redis(['LTRIM', DATA_LOG_KEY(), '0', '99']);
 }
 
 /** Move the live logs into a new archive. Returns its metadata (not yet listed). */
@@ -61,9 +63,9 @@ async function archiveLive(now) {
 
 /** List an archive, keep the newest KEEP, delete the logs of any that fall off. */
 async function listArchive(meta) {
-  await redis(['LPUSH', ARCHIVES, JSON.stringify(meta)]);
-  const dropped = parse((await redis(['LRANGE', ARCHIVES, String(KEEP), '-1'])) || []);
-  await redis(['LTRIM', ARCHIVES, '0', String(KEEP - 1)]);
+  await redis(['LPUSH', ARCHIVES_KEY(), JSON.stringify(meta)]);
+  const dropped = parse((await redis(['LRANGE', ARCHIVES_KEY(), String(KEEP), '-1'])) || []);
+  await redis(['LTRIM', ARCHIVES_KEY(), '0', String(KEEP - 1)]);
   for (const m of dropped) for (const tag of Object.keys(LIVE)) await redis(['DEL', archiveKey(m.id, tag)]);
 }
 
@@ -91,8 +93,8 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({
         current: { questions: Number(await redis(['LLEN', LIVE.querylog])) || 0,
                    navigation: Number(await redis(['LLEN', LIVE.navlog])) || 0 },
-        archives: parse((await redis(['LRANGE', ARCHIVES, '0', String(KEEP - 1)])) || []),
-        log: parse((await redis(['LRANGE', DATA_LOG, '0', '49'])) || []),
+        archives: parse((await redis(['LRANGE', ARCHIVES_KEY(), '0', String(KEEP - 1)])) || []),
+        log: parse((await redis(['LRANGE', DATA_LOG_KEY(), '0', '49'])) || []),
       });
     }
 
@@ -134,7 +136,7 @@ module.exports = async function handler(req, res) {
     if (b.action === 'restore') {
       if (b.confirm !== 'RESTORE') return res.status(400).json({ error: 'Type RESTORE to confirm.' });
       const id = String(b.id || '');
-      const listRaw = (await redis(['LRANGE', ARCHIVES, '0', '-1'])) || [];
+      const listRaw = (await redis(['LRANGE', ARCHIVES_KEY(), '0', '-1'])) || [];
       const raw = listRaw.find((s) => { try { return String(JSON.parse(s).id) === id; } catch (_) { return false; } });
       if (!raw) return res.status(404).json({ error: 'No archive with that id.' });
       // 1. save what is live now; 2. bring the archive back; 3. list the save.
@@ -144,7 +146,7 @@ module.exports = async function handler(req, res) {
       for (const tag of Object.keys(LIVE)) {
         if (Number(await redis(['EXISTS', archiveKey(id, tag)]))) await redis(['RENAME', archiveKey(id, tag), LIVE[tag]]);
       }
-      await redis(['LREM', ARCHIVES, '1', raw]);
+      await redis(['LREM', ARCHIVES_KEY(), '1', raw]);
       await listArchive(saved);
       await note('restore', `archive ${id} (current saved as ${saved.id})`);
       return res.status(200).json({ ok: true, saved });

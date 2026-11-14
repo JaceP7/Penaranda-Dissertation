@@ -35,8 +35,9 @@
 const REDIS_URL   = (process.env.UPSTASH_REDIS_REST_URL || '').replace(/\/$/, '');
 const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || '';
 const ADMIN_TOKEN = process.env.MAP_ADMIN_TOKEN || '';
-const KEY         = 'wf:mapstate';
-const HIST_KEY    = 'wf:mapstate:hist';
+const { key, previewUnisolated } = require('../lib/keys');
+const KEY      = () => key('wf:mapstate');       // per request: the prefix is read each call
+const HIST_KEY = () => key('wf:mapstate:hist');
 const HIST_KEEP   = 10;          // snapshots retained for rollback
 const MAX_BYTES   = 4_000_000;   // ~4 MB guard (4 floors of 75x75 + stamps is far smaller)
 
@@ -52,13 +53,13 @@ async function redis(cmd) {
 }
 
 async function readCurrent() {
-  const raw = await redis(['GET', KEY]);
+  const raw = await redis(['GET', KEY()]);
   return raw ? JSON.parse(raw) : { version: 0, state: null };
 }
 
 /** Archived snapshots, newest first. Entries that fail to parse are skipped. */
 async function readHistory() {
-  const rows = (await redis(['LRANGE', HIST_KEY, 0, HIST_KEEP - 1])) || [];
+  const rows = (await redis(['LRANGE', HIST_KEY(), 0, HIST_KEEP - 1])) || [];
   return rows.map((r) => { try { return JSON.parse(r); } catch { return null; } })
              .filter(Boolean);
 }
@@ -120,6 +121,9 @@ module.exports = async function handler(req, res) {
 
   // ── Publish / rollback (admin-only) ────────────────────────────────────────
   if (req.method === 'POST') {
+    if (previewUnisolated()) {
+      return res.status(503).json({ error: 'Publishing disabled on a preview deployment — set WF_KEY_PREFIX (e.g. pv1:) so it does not overwrite the live map.' });
+    }
     if (!ADMIN_TOKEN) {
       return res.status(503).json({ error: 'Publishing disabled — set MAP_ADMIN_TOKEN in Vercel.' });
     }
@@ -193,10 +197,10 @@ module.exports = async function handler(req, res) {
     try {
       // Archive the outgoing version first, so a failed SET cannot lose history.
       if (cur && cur.state) {
-        await redis(['LPUSH', HIST_KEY, JSON.stringify(cur)]);
-        await redis(['LTRIM', HIST_KEY, 0, HIST_KEEP - 1]);
+        await redis(['LPUSH', HIST_KEY(), JSON.stringify(cur)]);
+        await redis(['LTRIM', HIST_KEY(), 0, HIST_KEEP - 1]);
       }
-      await redis(['SET', KEY, JSON.stringify(doc)]);
+      await redis(['SET', KEY(), JSON.stringify(doc)]);
     } catch (e) {
       return res.status(500).json({ error: `write failed: ${e.message}` });
     }

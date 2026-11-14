@@ -25,7 +25,7 @@
 
 const REDIS_URL   = (process.env.UPSTASH_REDIS_REST_URL || '').replace(/\/$/, '');
 const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || '';
-const LOG_KEY     = 'wf:querylog';
+const { key } = require('../lib/keys');
 const { requireAdmin } = require('../lib/gate');
 const { manilaParts, manilaDay, manilaToday, manilaStamp } = require('../lib/manila');
 
@@ -60,7 +60,7 @@ async function readLog() {
   let start = 0;
   let capped = false;
   for (;;) {
-    const raw = await redisLRange(LOG_KEY, start, start + CHUNK - 1);
+    const raw = await redisLRange(key('wf:querylog'), start, start + CHUNK - 1);
     for (const s of raw) {
       try {
         const o = JSON.parse(s);

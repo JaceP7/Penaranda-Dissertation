@@ -29,6 +29,7 @@
  */
 'use strict';
 const { redis, redisConfigured } = require('../lib/redis');
+const { key } = require('../lib/keys');
 const { sessionConfig, signSession, verifySession, readSessionToken,
         setSessionCookie, clearSessionCookie } = require('../lib/session');
 
@@ -58,18 +59,18 @@ function clientIp(req) {
 // check still applies, only the counting is skipped.
 async function failures(ip) {
   if (!redisConfigured()) return 0;
-  try { return Number(await redis(['GET', 'wf:pinfail:' + ip])) || 0; } catch (_) { return 0; }
+  try { return Number(await redis(['GET', key('wf:pinfail:' + ip)])) || 0; } catch (_) { return 0; }
 }
 async function recordFailure(ip) {
   if (!redisConfigured()) return;
   try {
-    const n = await redis(['INCR', 'wf:pinfail:' + ip]);
-    if (Number(n) === 1) await redis(['EXPIRE', 'wf:pinfail:' + ip, String(WINDOW_S)]);
+    const n = await redis(['INCR', key('wf:pinfail:' + ip)]);
+    if (Number(n) === 1) await redis(['EXPIRE', key('wf:pinfail:' + ip), String(WINDOW_S)]);
   } catch (_) { /* best effort */ }
 }
 async function clearFailures(ip) {
   if (!redisConfigured()) return;
-  try { await redis(['DEL', 'wf:pinfail:' + ip]); } catch (_) { /* best effort */ }
+  try { await redis(['DEL', key('wf:pinfail:' + ip)]); } catch (_) { /* best effort */ }
 }
 
 module.exports = async function handler(req, res) {

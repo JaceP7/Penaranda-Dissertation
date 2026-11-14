@@ -33,7 +33,7 @@
 
 const REDIS_URL   = (process.env.UPSTASH_REDIS_REST_URL || '').replace(/\/$/, '');
 const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || '';
-const KEY         = 'wf:navlog';
+const { key, previewUnisolated } = require('../lib/keys');
 const { requireAdmin } = require('../lib/gate');
 const { manilaDay, manilaStamp } = require('../lib/manila');
 const CAP         = 50000;
@@ -69,7 +69,7 @@ async function readAll() {
   const rows = [];
   let start = 0;
   for (;;) {
-    const raw = (await redis(['LRANGE', KEY, String(start), String(start + CHUNK - 1)])) || [];
+    const raw = (await redis(['LRANGE', key('wf:navlog'), String(start), String(start + CHUNK - 1)])) || [];
     for (const s of raw) { try { rows.push(JSON.parse(s)); } catch { /* skip */ } }
     if (raw.length < CHUNK) break;
     start += CHUNK;
@@ -112,9 +112,11 @@ module.exports = async function handler(req, res) {
       synthetic:  b.synthetic === true || undefined, // set by automated checks
     };
 
+    if (previewUnisolated()) return res.status(200).json({ ok: false, _note: 'logging skipped on a preview without WF_KEY_PREFIX' });
+
     try {
-      await redis(['LPUSH', KEY, JSON.stringify(entry)]);
-      await redis(['LTRIM', KEY, '0', String(CAP - 1)]);
+      await redis(['LPUSH', key('wf:navlog'), JSON.stringify(entry)]);
+      await redis(['LTRIM', key('wf:navlog'), '0', String(CAP - 1)]);
     } catch (e) {
       return res.status(200).json({ ok: false, _note: `write failed: ${e.message}` });
     }

@@ -122,3 +122,12 @@ Regression tests for the publishing logic (conflict detection, rollback, auth) r
 ```bash
 node tools/test_admin_publishing.js .
 ```
+
+### Testing on a preview deployment
+
+A Vercel preview shares the project's Redis database with the live site. Two environment variables keep the two apart (set them for the **Preview** environment only):
+
+- `WF_KEY_PREFIX`: for example `pv1:`. Every key the preview reads or writes (map, history, query and navigation logs, archives) is stored under this prefix, so the live map and logs are never touched.
+- `VERCEL_ENV`: set by Vercel itself (`preview` or `production`). Do not set it by hand.
+
+If a preview runs without `WF_KEY_PREFIX`, it refuses to publish the map (HTTP 503 naming `WF_KEY_PREFIX`) and skips writing query and navigation logs, rather than risk the live data. A prefixed preview starts empty: publish a map there first to try the editor.

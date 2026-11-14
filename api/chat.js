@@ -66,7 +66,7 @@ const UPSTASH_NS    = (process.env.UPSTASH_VECTOR_NAMESPACE || '').replace(/^\/+
 // aren't set, logging is silently skipped (the chat still works).
 const REDIS_URL   = (process.env.UPSTASH_REDIS_REST_URL || '').replace(/\/$/, '');
 const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || '';
-const LOG_KEY     = 'wf:querylog';
+const { key, previewUnisolated } = require('../lib/keys');
 // Keep the most recent N entries. Raised from 5,000 so an evaluation period
 // cannot silently lose its earliest queries — at ~200 bytes an entry this is
 // roughly 10 MB, well inside the Upstash free tier. api/analytics.js pages
@@ -76,14 +76,15 @@ const LOG_CAP     = 50000;
 
 async function logQuery(entry) {
   if (!REDIS_URL || !REDIS_TOKEN) return;   // logging not configured → skip
+  if (previewUnisolated()) return;          // a preview must not write to the live log
   try {
     const post = (cmd) => fetch(REDIS_URL, {
       method:  'POST',
       headers: { 'Authorization': `Bearer ${REDIS_TOKEN}`, 'Content-Type': 'application/json' },
       body:    JSON.stringify(cmd),
     });
-    await post(['LPUSH', LOG_KEY, JSON.stringify(entry)]);
-    await post(['LTRIM', LOG_KEY, '0', String(LOG_CAP - 1)]);
+    await post(['LPUSH', key('wf:querylog'), JSON.stringify(entry)]);
+    await post(['LTRIM', key('wf:querylog'), '0', String(LOG_CAP - 1)]);
   } catch (_) { /* best-effort; never break the chat on a logging failure */ }
 }
 
