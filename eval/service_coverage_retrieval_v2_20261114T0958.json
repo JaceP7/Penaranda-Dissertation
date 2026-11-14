@@ -1,0 +1,1500 @@
+{
+ "mode": "retrieval",
+ "total": 582,
+ "tally": {
+  "service@1": 458,
+  "service in top 6": 508,
+  "other office@1": 81,
+  "office@1 only": 43
+ },
+ "misses": [
+  {
+   "q": "How do I request a certificate verification?",
+   "lang": "en",
+   "subservice": "Certificate Authentication and Verification (CAV)",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "top": [
+    "0.776 Request for Certificate (Cancellation / Verification / Late Birth Registration / No Record) | OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+    "0.771 Request for Certificate (Cancellation / Verification / Late Birth Registration / No Record) | OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+    "0.740 Request for Certificate of Supplemental Report City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Paano mag‑request ng certificate authentication?",
+   "lang": "fil",
+   "subservice": "Certificate Authentication and Verification (CAV)",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "top": [
+    "0.780 Request for Certificate (Cancellation / Verification / Late Birth Registration / No Record) | OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+    "0.777 Request for Certificate (Cancellation / Verification / Late Birth Registration / No Record) | OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+    "0.763 Authentication of Documents | CITY COLLEGE OF CALAMBA"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Where do I apply for a certificate of occupancy for my building?",
+   "lang": "en",
+   "subservice": "Pag-iisyu ng Sertipiko ng Pagsakop (Certificate of Occupancy)",
+   "department": "BUILDINGS REGULATORY SERVICES DEPARTMENT",
+   "top": [
+    "0.773 Pag-bibigay ng Occupancy Certification Ang Occupancy Certification ay ipinagkakaloob para sa mga: (1) awardee ng pabahay ng Pamahalaang Panlungsod ng Calamba na gagamitin itong requirement para sa | HOUSING AND SETTLEMENTS DEPARTMENT",
+    "0.757 Pag-iisyu ng Sertipiko ng Pagsakop (Certificate of Occupancy) | BUILDINGS REGULATORY SERVICES DEPARTMENT",
+    "0.738 Issuance of Zoning Certificate | CITY PLANNING AND DEVELOPMENT OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Saan mag‑apply ng certificate of occupancy sa building?",
+   "lang": "fil",
+   "subservice": "Pag-iisyu ng Sertipiko ng Pagsakop (Certificate of Occupancy)",
+   "department": "BUILDINGS REGULATORY SERVICES DEPARTMENT",
+   "top": [
+    "0.825 Pag-bibigay ng Occupancy Certification Ang Occupancy Certification ay ipinagkakaloob para sa mga: (1) awardee ng pabahay ng Pamahalaang Panlungsod ng Calamba na gagamitin itong requirement para sa | HOUSING AND SETTLEMENTS DEPARTMENT",
+    "0.815 Pag-iisyu ng Sertipiko ng Pagsakop (Certificate of Occupancy) | BUILDINGS REGULATORY SERVICES DEPARTMENT",
+    "0.784 Pagbibigay ng Occupancy Permit Ang Occupancy Permit ay ipinagkakaloob bilang patunay na ang pagkakatayo ng isang istruktura na klasipikadong low-cost housing ay nakasunod sa aprubadong planong | HOUSING AND SETTLEMENTS DEPARTMENT"
+   ],
+   "in6": true
+  },
+  {
+   "q": "How do I get a death certificate copy?",
+   "lang": "en",
+   "subservice": "Certified Death Certificate",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "top": [
+    "0.753 Preparation of Death Certificate | CITY HEALTH SERVICES DEPARTMENT",
+    "0.749 Request for Certified True Copies of Birth / Marriage and Death / Certification of Civil Registry Documents City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE",
+    "0.748 Certified Death Certificate | CITY HEALTH SERVICES DEPARTMENT"
+   ],
+   "in6": true
+  },
+  {
+   "q": "How can I get a certified copy of my tax deed?",
+   "lang": "en",
+   "subservice": "Issuance of Certified True Copy of Tax Declaration / Certificate of Aggregate Land Holdings / Certificate of No Property",
+   "department": "CITY ASSESSMENT OFFICE",
+   "top": [
+    "0.751 Issuance of Certified True Copy of Tax Map | CITY ASSESSMENT OFFICE",
+    "0.748 Issuance of Certified True Copy of Tax Map | CITY ASSESSMENT OFFICE",
+    "0.740 Pagbibigay ng Certified True Copy ng Opisyal na Resibo | CITY TREASURY MANAGEMENT OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Where can I sign up for the pre‑marriage seminar?",
+   "lang": "en",
+   "subservice": "Issuance of Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar Certificate",
+   "department": "CITY POPULATION MANAGEMENT OFFICE",
+   "top": [
+    "0.795 Scheduling of Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar | CITY POPULATION MANAGEMENT OFFICE",
+    "0.795 Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar | CITY POPULATION MANAGEMENT OFFICE",
+    "0.781 Issuance of Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar Certificate | CITY POPULATION MANAGEMENT OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Saan mag‑sign up para sa pre‑marriage orientation?",
+   "lang": "fil",
+   "subservice": "Issuance of Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar Certificate",
+   "department": "CITY POPULATION MANAGEMENT OFFICE",
+   "top": [
+    "0.797 Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar | CITY POPULATION MANAGEMENT OFFICE",
+    "0.794 Scheduling of Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar | CITY POPULATION MANAGEMENT OFFICE",
+    "0.774 Issuance of Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar Certificate | CITY POPULATION MANAGEMENT OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "How to book the city hall for an event?",
+   "lang": "en",
+   "subservice": "Permit for Use of Public Facilities (City Hall, Banga, City Quadrangle, Jose Rizal Plaza, etc.)",
+   "department": "CITY ADMINISTRATION OFFICE",
+   "top": [
+    "0.758 Approval of the Request to Use City Hall Facilities | CITY ADMINISTRATION OFFICE",
+    "0.711 Provision of Tent, Tables, and Chairs | CITY GENERAL SERVICES OFFICE",
+    "0.709 Permit for Use of Public Facilities (City Hall, Banga, City Quadrangle, Jose Rizal Plaza, etc.) | CITY ADMINISTRATION OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Paano mag-reserve ng City Hall para event?",
+   "lang": "fil",
+   "subservice": "Permit for Use of Public Facilities (City Hall, Banga, City Quadrangle, Jose Rizal Plaza, etc.)",
+   "department": "CITY ADMINISTRATION OFFICE",
+   "top": [
+    "0.805 Approval of the Request to Use City Hall Facilities | CITY ADMINISTRATION OFFICE",
+    "0.781 Permit for Use of Public Facilities (City Hall, Banga, City Quadrangle, Jose Rizal Plaza, etc.) | CITY ADMINISTRATION OFFICE",
+    "0.780 Provision of Tent, Tables, and Chairs | CITY GENERAL SERVICES OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Who issues a death certificate in Calamba?",
+   "lang": "en",
+   "subservice": "Preparation of Death Certificate",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "top": [
+    "0.808 Certificate of Kinship – Tax Deduction and Death Benefit Claims | CITY ADMINISTRATION OFFICE",
+    "0.806 Burial Assistance | OFFICE OF THE MAYOR",
+    "0.791 Request for Certificate (Cancellation / Verification / Late Birth Registration / No Record) | OFFICE FOR THE SENIOR CITIZENS AFFAIRS"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Where do I request a birth record correction?",
+   "lang": "en",
+   "subservice": "Request for Certificate (Cancellation / Verification / Late Birth Registration / No Record)",
+   "department": "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+   "top": [
+    "0.760 Request for Correction of Entries – RA 9048 (CFN) City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE",
+    "0.754 Request for Changes of Entries RA 10172 in Birth Certificate City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE",
+    "0.748 Request for Correction of Entries (CCE) RA 9048 City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Saan mag-request ng correction sa birth record?",
+   "lang": "fil",
+   "subservice": "Request for Certificate (Cancellation / Verification / Late Birth Registration / No Record)",
+   "department": "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+   "top": [
+    "0.782 Request for Changes of Entries RA 10172 in Birth Certificate City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE",
+    "0.775 Request for Correction of Entries (CCE) RA 9048 City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE",
+    "0.775 Request for Correction of Entries – RA 9048 (CFN) City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "How do I get a social case study report?",
+   "lang": "en",
+   "subservice": "Request for the Preparation of a Comprehensive Social Case Study Report",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "top": [
+    "0.841 Request for the Conduct of a Social Case Study Report | CITY SOCIAL SERVICES OFFICE",
+    "0.840 Request for the Conduct of a Social Case Study Report | CITY SOCIAL SERVICES OFFICE",
+    "0.838 Request for the Conduct of a Social Case Study Report | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Paano kumuha ng case study report para sa social services?",
+   "lang": "fil",
+   "subservice": "Request for the Preparation of a Comprehensive Social Case Study Report",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "top": [
+    "0.861 Request for the Conduct of a Social Case Study Report | CITY SOCIAL SERVICES OFFICE",
+    "0.855 Request for the Conduct of a Social Case Study Report | CITY SOCIAL SERVICES OFFICE",
+    "0.855 Request for the Preparation of a Comprehensive Social Case Study Report | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Where do I take the competency assessment?",
+   "lang": "en",
+   "subservice": "Competency Assessment",
+   "department": "CITY ASSESSMENT OFFICE",
+   "top": [
+    "0.805 Competency Assessment | CITY SOCIAL SERVICES OFFICE",
+    "0.796 Competency Assessment | CITY SOCIAL SERVICES OFFICE",
+    "0.796 Competency Assessment | CITY ASSESSMENT OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Saan po mag‑competency assessment?",
+   "lang": "fil",
+   "subservice": "Competency Assessment",
+   "department": "CITY ASSESSMENT OFFICE",
+   "top": [
+    "0.848 Competency Assessment | CITY SOCIAL SERVICES OFFICE",
+    "0.842 Competency Assessment | CITY SOCIAL SERVICES OFFICE",
+    "0.837 Competency Assessment | CITY ASSESSMENT OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Where can I apply for a locational clearance for my new shop?",
+   "lang": "en",
+   "subservice": "Application for Preliminary Approval-Locational Clearance (PALC) and Development Permit (DP).",
+   "department": "CITY PLANNING AND DEVELOPMENT OFFICE",
+   "top": [
+    "0.766 Issuance of Locational Clearance (LC) and Certificate of Exemption from Locational Clearance (LC-Ex) | CITY PLANNING AND DEVELOPMENT OFFICE",
+    "0.752 Application for Preliminary Approval-Locational Clearance (PALC) and Development Permit (DP). | CITY PLANNING AND DEVELOPMENT OFFICE",
+    "0.727 Application for New Business Permit - (Onsite at Online) | BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Saan mag-apply ng clearance para sa negosyo?",
+   "lang": "fil",
+   "subservice": "Application for Preliminary Approval-Locational Clearance (PALC) and Development Permit (DP).",
+   "department": "CITY PLANNING AND DEVELOPMENT OFFICE",
+   "top": [
+    "0.787 Issuance of Mayor’s Clearance | INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+    "0.770 Pagbibigay ng Money Accountability Clearance | CITY TREASURY MANAGEMENT OFFICE",
+    "0.761 Pagbibigay ng Tax Clearance Pagkolekta mula sa Tax Clearance | CITY TREASURY MANAGEMENT OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Need a shipping permit for moving livestock, where to apply?",
+   "lang": "en",
+   "subservice": "Authorization and Signing of Shipping Permits and Veterinary Health Certificates for Transported Animals",
+   "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+   "top": [
+    "0.764 Application for Veterinary Health Certificate and Shipping Permit in Connection with Animal Transportation | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "0.760 Application for Veterinary Health Certificate and Shipping Permit in Connection with Animal Transportation | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "0.758 Authorization and Signing of Shipping Permits and Veterinary Health Certificates for Transported Animals | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Paano mag-apply ng shipping permit para sa hayop?",
+   "lang": "fil",
+   "subservice": "Authorization and Signing of Shipping Permits and Veterinary Health Certificates for Transported Animals",
+   "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+   "top": [
+    "0.787 Application for Veterinary Health Certificate and Shipping Permit in Connection with Animal Transportation | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "0.783 Application for Veterinary Health Certificate and Shipping Permit in Connection with Animal Transportation | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "0.775 Authorization and Signing of Shipping Permits and Veterinary Health Certificates for Transported Animals | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Who can help with burial costs for a family member?",
+   "lang": "en",
+   "subservice": "Burial Assistance",
+   "department": "OFFICE OF THE MAYOR",
+   "top": [
+    "0.758 Financial Assistance for Funeral Services | CITY SOCIAL SERVICES OFFICE",
+    "0.741 Burial Assistance | OFFICE OF THE MAYOR",
+    "0.714 Medical / Hospitalization / Burial Assistance | OFFICE FOR THE SENIOR CITIZENS AFFAIRS"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Sino ang pwedeng tumulong sa burial assistance?",
+   "lang": "fil",
+   "subservice": "Burial Assistance",
+   "department": "OFFICE OF THE MAYOR",
+   "top": [
+    "0.830 Financial Assistance for Funeral Services | CITY SOCIAL SERVICES OFFICE",
+    "0.824 Burial Assistance | OFFICE OF THE MAYOR",
+    "0.805 Medical / Hospitalization / Burial Assistance | OFFICE FOR THE SENIOR CITIZENS AFFAIRS"
+   ],
+   "in6": true
+  },
+  {
+   "q": "How can I apply for educational assistance for my child?",
+   "lang": "en",
+   "subservice": "Educational Assistance",
+   "department": "OFFICE OF THE MAYOR",
+   "top": [
+    "0.729 Educational Assistance (Pagbibigay Tulong Pang-Edukasyon) | OFFICE OF THE VICE MAYOR",
+    "0.711 Educational Assistance | OFFICE OF THE MAYOR",
+    "0.686 Employment Assistance Request | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Paano mag-apply ng tuition assistance para sa anak?",
+   "lang": "fil",
+   "subservice": "Educational Assistance",
+   "department": "OFFICE OF THE MAYOR",
+   "top": [
+    "0.757 Educational Assistance (Pagbibigay Tulong Pang-Edukasyon) | OFFICE OF THE VICE MAYOR",
+    "0.739 Financial Aid for Individuals (Pagbibigay Tulong Pinansyal sa mga Indibidwal) | OFFICE OF THE VICE MAYOR",
+    "0.729 Educational Assistance | OFFICE OF THE MAYOR"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Where do I request scholarship help from the vice mayor’s office?",
+   "lang": "en",
+   "subservice": "Educational Assistance (Pagbibigay Tulong Pang-Edukasyon)",
+   "department": "OFFICE OF THE VICE MAYOR",
+   "top": [
+    "0.735 Educational Assistance | OFFICE OF THE MAYOR",
+    "0.725 Educational Assistance (Pagbibigay Tulong Pang-Edukasyon) | OFFICE OF THE VICE MAYOR",
+    "0.715 Burial Assistance | OFFICE OF THE MAYOR"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Paano mag‑apply ng guarantee para sa gastusin sa ospital at lab?",
+   "lang": "fil",
+   "subservice": "Request for Guarantee Letter for the Coverage of Hospital Expenses, Medications, Laboratory Procedures, Rehabilitation Therapy, Blood Transfusions, and Selected Dialysis Sessions",
+   "department": "OFFICE OF THE MAYOR",
+   "top": [
+    "0.852 Guarantee Letter (Hospital) – Pagbibigay ng Guarantee Letter para sa Hospital | OFFICE OF THE VICE MAYOR",
+    "0.848 Guarantee Letter | CITY SOCIAL SERVICES OFFICE",
+    "0.843 Guarantee Letter | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Paano i-register ang pusa para spay?",
+   "lang": "fil",
+   "subservice": "Registration for Cat Spaying or Neutering",
+   "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+   "top": [
+    "0.784 Registration for Spay and Neuter (Special Scheduled Activity) | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "0.783 Registration for Spay and Neuter (Special Scheduled Activity) | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "0.780 Registration for Cat Spaying or Neutering | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Where can I enroll my pet in the city’s neuter program?",
+   "lang": "en",
+   "subservice": "Registration for Spay and Neuter (Special Scheduled Activity)",
+   "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+   "top": [
+    "0.777 Registration for Cat Spaying or Neutering | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "0.772 Registration for Cat Spaying or Neutering | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "0.769 Registration for Spay and Neuter (Special Scheduled Activity) | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "How do I file a complaint on behalf of a senior citizen?",
+   "lang": "en",
+   "subservice": "Response to Complaints from Senior Citizens",
+   "department": "OFFICE OF THE MAYOR",
+   "top": [
+    "0.795 Addressing Complaints Concerning the Improper Implementation of Senior Citizen Discount Privileges | OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+    "0.787 Response to Complaints from Senior Citizens | OFFICE OF THE MAYOR",
+    "0.714 Senior Citizens ID | OFFICE FOR THE SENIOR CITIZENS AFFAIRS"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Paano mag‑reklamo para sa senior citizen?",
+   "lang": "fil",
+   "subservice": "Response to Complaints from Senior Citizens",
+   "department": "OFFICE OF THE MAYOR",
+   "top": [
+    "0.846 Addressing Complaints Concerning the Improper Implementation of Senior Citizen Discount Privileges | OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+    "0.840 Response to Complaints from Senior Citizens | OFFICE OF THE MAYOR",
+    "0.773 Senior Citizens ID | OFFICE FOR THE SENIOR CITIZENS AFFAIRS"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Pwede ba mag‑late enrollment sa City College of Calamba?",
+   "lang": "fil",
+   "subservice": "Application for Late Enrollment, Re-Admission and Shifting",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "top": [
+    "0.855 Enrollment for Irregular and Transferee Students | CITY COLLEGE OF CALAMBA",
+    "0.850 Enrollment for Regular and Freshmen Students | CITY COLLEGE OF CALAMBA",
+    "0.848 Application for Late Enrollment, Re-Admission and Shifting | CITY COLLEGE OF CALAMBA"
+   ],
+   "in6": true
+  },
+  {
+   "q": "When is the next pre‑marriage orientation seminar?",
+   "lang": "en",
+   "subservice": "Scheduling of Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar",
+   "department": "CITY POPULATION MANAGEMENT OFFICE",
+   "top": [
+    "0.792 Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar | CITY POPULATION MANAGEMENT OFFICE",
+    "0.790 Scheduling of Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar | CITY POPULATION MANAGEMENT OFFICE",
+    "0.751 Issuance of Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar Certificate | CITY POPULATION MANAGEMENT OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Kailan ang susunod na pre‑marriage orientation?",
+   "lang": "fil",
+   "subservice": "Scheduling of Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar",
+   "department": "CITY POPULATION MANAGEMENT OFFICE",
+   "top": [
+    "0.770 Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar | CITY POPULATION MANAGEMENT OFFICE",
+    "0.767 Scheduling of Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar | CITY POPULATION MANAGEMENT OFFICE",
+    "0.730 Issuance of Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar Certificate | CITY POPULATION MANAGEMENT OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Where can I get my vaccinations in Calamba?",
+   "lang": "en",
+   "subservice": "Vaccination Services",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "top": [
+    "0.839 Individual/Personal Walk-in Approach for Vaccination Services | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "0.789 Approval of Request for Mass Rabies Vaccination (Homeowners / Companies, etc.) | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "0.783 Provision of Medical Transporter (Ambulance) | CITY GENERAL SERVICES OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Paano makakakuha ng tulong para sa batang delikado o nasasakdal?",
+   "lang": "fil",
+   "subservice": "Assistance in Handling Cases of Children at Risk (CAR) and Children in Conflict with the Law (CICL)",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "top": [
+    "0.718 Paghingi ng Tulong / Subsidiya sa mga kailangan sa bukid at pangisdaan CASO – Agri-Aqua Management Services Division / | CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "0.716 Pag-aasikaso sa Batang Napulot (Foundling), Pinabayaan (Abandoned), Boluntaryo / Hindi Boluntaryong Ipinaubayang Bata (Voluntary / Involuntary Committed) | CITY SOCIAL SERVICES OFFICE",
+    "0.710 Educational Assistance (Pagbibigay Tulong Pang-Edukasyon) | OFFICE OF THE VICE MAYOR"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Saan makakakuha ng tulong ang biktima ng pang-aabuso at anak niya?",
+   "lang": "fil",
+   "subservice": "Case Management for Women and Their Children Who Are Victims of Abuse Under Republic Act 9262",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "top": [
+    "0.779 Conducting Immediate Reach-Out Operation | CITY SOCIAL SERVICES OFFICE",
+    "0.763 Management of cases involving children who are victims of different types of abuse | CITY SOCIAL SERVICES OFFICE",
+    "0.751 Case Management for Women and Their Children Who Are Victims of Abuse Under Republic Act 9262 | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "How do I report or adopt a found or abandoned child?",
+   "lang": "en",
+   "subservice": "Pag-aasikaso sa Batang Napulot (Foundling), Pinabayaan (Abandoned), Boluntaryo / Hindi Boluntaryong Ipinaubayang Bata (Voluntary / Involuntary Committed)",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "top": [
+    "0.732 Application for Adoption (Regular Case) | CITY SOCIAL SERVICES OFFICE",
+    "0.722 Registration of Foundling City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE",
+    "0.721 Adoption Application for Step-Parent, Relative, and Adult Cases | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "How do I get a certificate for my land’s current use and tree cutting?",
+   "lang": "en",
+   "subservice": "Pagkuha ng katunayan – Pagpapatunay ng kasalukuyang gamit at pananim ng lupa at pagputol ng bungang kahoy",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "top": [
+    "0.773 Certificate of No Objection as one of the requirements for the Issuance of permit to cut trees | CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT",
+    "0.745 Pagkuha ng katunayan – Pagpapatunay ng kasalukuyang gamit at pananim ng lupa at pagputol ng bungang kahoy | CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "0.741 Issuance of Zoning Certificate | CITY PLANNING AND DEVELOPMENT OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Where do I apply for a farmer/fisher registration proof?",
+   "lang": "en",
+   "subservice": "Pagkuha ng katunayan, farm plan o auxillary – na nakatala sa tanggapan bilang magsasaka / mangingisda Pagpapatunay na nakatala sa tanggapan bilang magsasaka / mangingisda",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "top": [
+    "0.703 Amendment of Business Registration | BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+    "0.699 Amendment of Business Registration | BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+    "0.699 Amendment of Business Registration | BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Saan mag-apply ng patunay na rehistradong magsasaka?",
+   "lang": "fil",
+   "subservice": "Pagkuha ng katunayan, farm plan o auxillary – na nakatala sa tanggapan bilang magsasaka / mangingisda Pagpapatunay na nakatala sa tanggapan bilang magsasaka / mangingisda",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "top": [
+    "0.732 Pagpaparehistro bilang magsasaka / mangingisda | CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "0.699 Pagkuha ng katunayan, farm plan o auxillary – na nakatala sa tanggapan bilang magsasaka / mangingisda Pagpapatunay na nakatala sa tanggapan bilang magsasaka / mangingisda | CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "0.686 Pagkuha ng katunayan – Pagpapatunay ng antas ng pinsala sa halaman, hayop at pangisdaan | CITY AGRICULTURAL SERVICES DEPARTMENT"
+   ],
+   "in6": true
+  },
+  {
+   "q": "How can I move my livestock to another location?",
+   "lang": "en",
+   "subservice": "Pagpapaiwi ng hayop / paglilipat-iwi ng hayop",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "top": [
+    "0.687 Approval for External Consultation for the Treatment of Livestock Used in Production | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "0.678 Pagpapaiwi ng hayop / paglilipat-iwi ng hayop | CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "0.673 Request for the Transfer of a Patient from One Hospital to Another Hospital | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Paano mag‑register ng death agad matapos mamatay?",
+   "lang": "fil",
+   "subservice": "Application for Timely Registration of Death City Civil Registry Office - Civil Registration",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "top": [
+    "0.815 Application for Late Registration of Death City Civil Registry Office - Civil Registration | CITY CIVIL REGISTRY OFFICE",
+    "0.810 Application for Timely Registration of Death City Civil Registry Office - Civil Registration | CITY CIVIL REGISTRY OFFICE",
+    "0.775 Issuance of Certificate for the Transfer of Remains | CITY HEALTH SERVICES DEPARTMENT"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Where do I apply for a marriage registration right after wedding?",
+   "lang": "en",
+   "subservice": "Application for Timely Registration of Marriage City Civil Registry Office - Civil Registration",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "top": [
+    "0.793 Application for Late Registration of Marriage City Civil Registry Office - Civil Registration | CITY CIVIL REGISTRY OFFICE",
+    "0.778 Application for Timely Registration of Marriage City Civil Registry Office - Civil Registration | CITY CIVIL REGISTRY OFFICE",
+    "0.762 Application for Marriage License City Civil Registry Office - Civil Registration | CITY CIVIL REGISTRY OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Saan mag‑apply ng marriage registration agad pagkatapos wedding?",
+   "lang": "fil",
+   "subservice": "Application for Timely Registration of Marriage City Civil Registry Office - Civil Registration",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "top": [
+    "0.815 Application for Late Registration of Marriage City Civil Registry Office - Civil Registration | CITY CIVIL REGISTRY OFFICE",
+    "0.800 Application for Timely Registration of Marriage City Civil Registry Office - Civil Registration | CITY CIVIL REGISTRY OFFICE",
+    "0.787 Application for Marriage License City Civil Registry Office - Civil Registration | CITY CIVIL REGISTRY OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Saan kunin ang endorsement ng papeles ko?",
+   "lang": "fil",
+   "subservice": "Request for Endorsement City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "top": [
+    "0.761 Issuance of Referral and Endorsement Letter | INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+    "0.747 Request for Endorsement City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE",
+    "0.725 Endorsement Letter / Guarantee Letter / Financial Assistance (Hospital or Medical) | CITY ADMINISTRATION OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "How can I correct an entry on my certificate?",
+   "lang": "en",
+   "subservice": "Request for Correction of Entries (CCE) RA 9048 City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "top": [
+    "0.764 Request for Correction of Entries – RA 9048 (CFN) City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE",
+    "0.757 Request for Correction of Entries (CCE) RA 9048 City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE",
+    "0.729 Request for Changes of Entries RA 10172 in Birth Certificate City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Where do I request a correction under RA 9048?",
+   "lang": "en",
+   "subservice": "Request for Correction of Entries – RA 9048 (CFN) City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "top": [
+    "0.831 Request for Correction of Entries (CCE) RA 9048 City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE",
+    "0.824 Request for Correction of Entries – RA 9048 (CFN) City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE",
+    "0.788 Request for Changes of Entries RA 10172 in Birth Certificate City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Saan mag-request ng correction under RA 9048?",
+   "lang": "fil",
+   "subservice": "Request for Correction of Entries – RA 9048 (CFN) City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "top": [
+    "0.815 Request for Correction of Entries (CCE) RA 9048 City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE",
+    "0.801 Request for Correction of Entries – RA 9048 (CFN) City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE",
+    "0.774 Request for Changes of Entries RA 10172 in Birth Certificate City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Paano mag-request ng affidavit para gamitin ang apelyido ng ama (registered)?",
+   "lang": "fil",
+   "subservice": "Request for Affidavit to Use the Surname of the Father (if registered) City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "top": [
+    "0.867 Request for Affidavit to Use the Surname of the Father (if not registered) City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE",
+    "0.866 Request for Affidavit to Use the Surname of the Father (if registered) City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE",
+    "0.757 Application for Adoption (Regular Case) | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "How do I register a birth that happened outside Calamba?",
+   "lang": "en",
+   "subservice": "Batch Request Entry System (BREQS) Pagtatala ng Kapanganakan sa Ibang Lugar City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "top": [
+    "0.796 Application for Late Registration of Birth City Civil Registry Office - Civil | CITY CIVIL REGISTRY OFFICE",
+    "0.796 Application for Out-of-Town Registration of Birth City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE",
+    "0.791 Request for Certificate (Cancellation / Verification / Late Birth Registration / No Record) | OFFICE FOR THE SENIOR CITIZENS AFFAIRS"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Paano magpatala ng kapanganakan sa labas ng Calamba?",
+   "lang": "fil",
+   "subservice": "Batch Request Entry System (BREQS) Pagtatala ng Kapanganakan sa Ibang Lugar City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "top": [
+    "0.782 Request for a Tour or Visit to the City of Calamba | CULTURAL AFFAIRS, TOURISM AND SPORTS DEVELOPMENT DEPARTMENT",
+    "0.777 Pagpaparehistro bilang magsasaka / mangingisda | CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "0.772 Complaint Regarding Environment and Pollution (Piggery / Quarry / Dumpsite / Foul-smelling Area or River / Open Burning / Complaints on Company Violations) | CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Where do I obtain a receipt for slaughter or coral fees?",
+   "lang": "en",
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Slaughter and Coral Fees Pagkolekta mula sa Slaughter at Coral Fees",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "top": [
+    "0.710 Application for Veterinary Health Certificate and Shipping Permit in Connection with Animal Transportation | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "0.709 Authorization and Signing of Shipping Permits and Veterinary Health Certificates for Transported Animals | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "0.708 Application for Veterinary Health Certificate and Shipping Permit in Connection with Animal Transportation | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Saan makuha ang resibo para slaughter o coral fees?",
+   "lang": "fil",
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Slaughter and Coral Fees Pagkolekta mula sa Slaughter at Coral Fees",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "top": [
+    "0.716 Approval for External Consultation for the Treatment of Livestock Used in Production | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "0.714 Authorization and Signing of Shipping Permits and Veterinary Health Certificates for Transported Animals | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "0.712 Authorization and Signing of Shipping Permits and Veterinary Health Certificates for Transported Animals | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Paano makakuha ng resibo sa ibang fees sa city hall?",
+   "lang": "fil",
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Miscellaneous Fees ng iba’t - ibang opisina Pagkolekta sa iba’t-ibang opisina ng Miscellaneous Fees",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "top": [
+    "0.828 Pagbibigay ng Opisyal na Resibo para sa Police, Court at Mayor’s Permit Fee Pagkolekta mula sa Police, Court at Mayor’s Permit | CITY TREASURY MANAGEMENT OFFICE",
+    "0.809 Pagbibigay ng Opisyal na Resibo para sa Miscellaneous Fees ng iba’t - ibang opisina Pagkolekta sa iba’t-ibang opisina ng Miscellaneous Fees | CITY TREASURY MANAGEMENT OFFICE",
+    "0.808 Pagbibigay ng Opisyal na Resibo para sa Birth Fee Pagkolekta sa Birth Fee | CITY TREASURY MANAGEMENT OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Where can I request equipment repair for another agency?",
+   "lang": "en",
+   "subservice": "Kahilingan para sa pagkumpuni at pangangalaga ng mga kagamitan sa ibang Ahensya. Pagkukumpuni at Pangangalaga ng mga kagamitan sa ibang Ahensya",
+   "department": "HOUSING AND SETTLEMENTS DEPARTMENT",
+   "top": [
+    "0.692 Employment Assistance Request | CITY SOCIAL SERVICES OFFICE",
+    "0.691 Provision of Assistive Devices (Wheelchair, Hearing Aid, Crutches, Quad Cane, and Others) | PERSONS WITH DISABILITY AFFAIRS OFFICE",
+    "0.690 Employment Assistance Request | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "What’s needed to apply for a building permit?",
+   "lang": "en",
+   "subservice": "Pag-issue ng Building Permit (BP220) Ang BP220 ay ipinagkakaloob para sa mga residente na nagbibigay pahintulot sa kanila na magpagawa ng bagong bahay o magsagawa ng renovation sa bahay o",
+   "department": "HOUSING AND SETTLEMENTS DEPARTMENT",
+   "top": [
+    "0.744 Application for Preliminary Approval-Locational Clearance (PALC) and Development Permit (DP). | CITY PLANNING AND DEVELOPMENT OFFICE",
+    "0.743 Pag-iisyu ng Permiso sa Pagtatayo ng Gusali (Building Permit) | BUILDINGS REGULATORY SERVICES DEPARTMENT",
+    "0.743 Pag-issue ng Building Permit (BP220) Ang BP220 ay ipinagkakaloob para sa mga residente na nagbibigay pahintulot sa kanila na magpagawa ng bagong bahay o magsagawa ng renovation sa bahay o | HOUSING AND SETTLEMENTS DEPARTMENT"
+   ],
+   "in6": true
+  },
+  {
+   "q": "Ano ang kailangan para sa building permit?",
+   "lang": "fil",
+   "subservice": "Pag-issue ng Building Permit (BP220) Ang BP220 ay ipinagkakaloob para sa mga residente na nagbibigay pahintulot sa kanila na magpagawa ng bagong bahay o magsagawa ng renovation sa bahay o",
+   "department": "HOUSING AND SETTLEMENTS DEPARTMENT",
+   "top": [
+    "0.820 Pag-iisyu ng Permiso sa Pagtatayo ng Gusali (Building Permit) | BUILDINGS REGULATORY SERVICES DEPARTMENT",
+    "0.811 Pag-issue ng Building Permit (BP220) Ang BP220 ay ipinagkakaloob para sa mga residente na nagbibigay pahintulot sa kanila na magpagawa ng bagong bahay o magsagawa ng renovation sa bahay o | HOUSING AND SETTLEMENTS DEPARTMENT",
+    "0.785 Pag-isyu ng Pahintulot upang magbukas (Permit to Operate) at Sertipiko ng Taunang Inspeksyon (Annual Inspection) | BUILDINGS REGULATORY SERVICES DEPARTMENT"
+   ],
+   "in6": true
+  },
+  {
+   "q": "How to obtain a final electrical inspection certificate?",
+   "lang": "en",
+   "subservice": "Issuance of Certificate of Final Electrical Inspection (CFEI)(BP220) Ang CFEI ay isang requirement para sa mga magpapakabit ng linya ng kuryente sa kanilang bahay o istruktura na klasipikadong low-cost housing, economic housing o",
+   "department": "HOUSING AND SETTLEMENTS DEPARTMENT",
+   "top": [
+    "0.801 Pag-iisyu ng Sertipiko ng Panghuling Inspeksiyon sa Kuryente (Certificate of Final Electrical Inspection) | BUILDINGS REGULATORY SERVICES DEPARTMENT",
+    "0.774 Issuance of Certificate of Final Electrical Inspection (CFEI)(BP220) Ang CFEI ay isang requirement para sa mga magpapakabit ng linya ng kuryente sa kanilang bahay o istruktura na klasipikadong low-cost housing, economic housing o | HOUSING AND SETTLEMENTS DEPARTMENT",
+    "0.723 Request for Certificate of Project Completion | CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT"
+   ],
+   "in6": true
+  },
+  {
+   "q": "How to request a certified copy of a city council document?",
+   "lang": "en",
+   "subservice": "Pagbibigay ng mga Sertipikadong Kopya / Sipi ng mga Dokumento ng Sangguniang Panlungsod Pagkakaloob ng mga Sertipikadong Kopya / Sipi ng mga dokumento ng Sangguniang",
+   "department": "LEGISLATIVE SERVICES OFFICE",
+   "top": [
+    "0.776 Request for Certified True Copies of Birth / Marriage and Death / Certification of Civil Registry Documents City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE",
+    "0.762 Pagbibigay ng mga Sertipikadong Kopya / Sipi ng mga Dokumento ng Sangguniang Panlungsod Pagkakaloob ng mga Sertipikadong Kopya / Sipi ng mga dokumento ng Sangguniang | LEGISLATIVE SERVICES OFFICE",
+    "0.755 Request for Certificate of Supplemental Report City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE"
+   ],
+   "in6": true
+  },
+  {
+   "q": "How do I get a mayor's permit for my event?",
+   "lang": "en",
+   "subservice": "Special Permit (Special Mayor's Permit for Events and Activities)",
+   "department": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+   "top": [
+    "0.758 Permit for Conducting Parades, Motorcades, Distribution of free products in public places, handing out of flyers for product or services | CITY ADMINISTRATION OFFICE",
+    "0.753 Issuance of Mayor’s Clearance | INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+    "0.737 Permit for Use of Public Facilities (City Hall, Banga, City Quadrangle, Jose Rizal Plaza, etc.) | CITY ADMINISTRATION OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Paano kumuha ng permit sa mayor para sa event?",
+   "lang": "fil",
+   "subservice": "Special Permit (Special Mayor's Permit for Events and Activities)",
+   "department": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+   "top": [
+    "0.816 Permit for Conducting Parades, Motorcades, Distribution of free products in public places, handing out of flyers for product or services | CITY ADMINISTRATION OFFICE",
+    "0.808 Permit for Use of Public Facilities (City Hall, Banga, City Quadrangle, Jose Rizal Plaza, etc.) | CITY ADMINISTRATION OFFICE",
+    "0.792 Permit for Posting Banners, Tarpaulins, Streamers on Public Places | CITY ADMINISTRATION OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Where can I apply for a new tax declaration for my land?",
+   "lang": "en",
+   "subservice": "Issuance of New Tax Declaration for General Purposes (Reassessment, Revision or New Discovery of Real Property)",
+   "department": "CITY ASSESSMENT OFFICE",
+   "top": [
+    "0.771 Updating and Issuance of Tax Declaration from Transferred Properties | CITY ASSESSMENT OFFICE",
+    "0.759 Issuance of Certified True Copy of Tax Declaration / Certificate of Aggregate Land Holdings / Certificate of No Property | CITY ASSESSMENT OFFICE",
+    "0.752 Issuance of Certified True Copy of Tax Declaration / Certificate of Aggregate Land Holdings / Certificate of No Property | CITY ASSESSMENT OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Saan mag-apply ng bagong tax declaration sa lupa?",
+   "lang": "fil",
+   "subservice": "Issuance of New Tax Declaration for General Purposes (Reassessment, Revision or New Discovery of Real Property)",
+   "department": "CITY ASSESSMENT OFFICE",
+   "top": [
+    "0.800 Updating and Issuance of Tax Declaration from Transferred Properties | CITY ASSESSMENT OFFICE",
+    "0.763 Issuance of Certified True Copy of Tax Declaration / Certificate of Aggregate Land Holdings / Certificate of No Property | CITY ASSESSMENT OFFICE",
+    "0.763 Request for Cancellation of Records (Tax Declaration of Building / Improvement / Machinery due to demolishment or non existing of property to reflect to the current status of property) | CITY ASSESSMENT OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "What’s needed for a graduation clearance at City College?",
+   "lang": "en",
+   "subservice": "Application for Clearance for Graduating Students",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "top": [
+    "0.762 Issuance of Certificates (Enrollment, GWA, Medium of Certifications, Graduation, Completion) | CITY COLLEGE OF CALAMBA",
+    "0.760 Issuance of Mayor’s Clearance | INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+    "0.756 Issuance of Certificates (Enrollment, GWA, Medium of Certifications, Graduation, Completion) | CITY COLLEGE OF CALAMBA"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Ano ang kailangan para sa clearance ng graduating sa City College?",
+   "lang": "fil",
+   "subservice": "Application for Clearance for Graduating Students",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "top": [
+    "0.814 Exit Clearance or Returning Clearance | CITY COLLEGE OF CALAMBA",
+    "0.788 Issuance of Mayor’s Clearance | INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+    "0.781 Issuance of Certificates (Enrollment, GWA, Medium of Certifications, Graduation, Completion) | CITY COLLEGE OF CALAMBA"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Can you help fix the college’s computer network?",
+   "lang": "en",
+   "subservice": "Hardware / Software / Network Maintenance and Troubleshooting",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "top": [
+    "0.647 Learning Management System (LMS) Queries and Concerns | CITY COLLEGE OF CALAMBA",
+    "0.645 Request for Change of Grades | CITY COLLEGE OF CALAMBA",
+    "0.631 Authentication of Documents | CITY COLLEGE OF CALAMBA"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Pwede niyo bang ayusin ang network ng college?",
+   "lang": "fil",
+   "subservice": "Hardware / Software / Network Maintenance and Troubleshooting",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "top": [
+    "0.708 Request for Change of Grades | CITY COLLEGE OF CALAMBA",
+    "0.707 Enrollment for Regular and Freshmen Students | CITY COLLEGE OF CALAMBA",
+    "0.707 Learning Management System (LMS) Queries and Concerns | CITY COLLEGE OF CALAMBA"
+   ],
+   "in6": false
+  },
+  {
+   "q": "How do I request a copy of my college document?",
+   "lang": "en",
+   "subservice": "Request for Retrieval of Document",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "top": [
+    "0.791 Request of Copy of Grades | CITY COLLEGE OF CALAMBA",
+    "0.766 Request for Second Copy (Registration Form, Comp Card & Diploma) | CITY COLLEGE OF CALAMBA",
+    "0.762 Request of Transcript of Records | CITY COLLEGE OF CALAMBA"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Paano mag-request ng kopya ng dokumento sa college?",
+   "lang": "fil",
+   "subservice": "Request for Retrieval of Document",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "top": [
+    "0.814 Request of Copy of Grades | CITY COLLEGE OF CALAMBA",
+    "0.788 Request for Second Copy (Registration Form, Comp Card & Diploma) | CITY COLLEGE OF CALAMBA",
+    "0.754 Request of Transcript of Records | CITY COLLEGE OF CALAMBA"
+   ],
+   "in6": false
+  },
+  {
+   "q": "How to arrange a standby ambulance for my event?",
+   "lang": "en",
+   "subservice": "Standby Ambulance (Pagtatalaga ng Nakahandang Ambulansya sa Pagtitipon)",
+   "department": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+   "top": [
+    "0.719 Provision of Medical Transporter (Ambulance) | CITY GENERAL SERVICES OFFICE",
+    "0.712 Approval for Use of Medical Transporter Vehicle (Ambulance) | CITY ADMINISTRATION OFFICE",
+    "0.677 Request for the Transfer of a Patient from One Hospital to Another Hospital | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Paano mag-assign ng standby ambulance sa event?",
+   "lang": "fil",
+   "subservice": "Standby Ambulance (Pagtatalaga ng Nakahandang Ambulansya sa Pagtitipon)",
+   "department": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+   "top": [
+    "0.765 Approval for Use of Medical Transporter Vehicle (Ambulance) | CITY ADMINISTRATION OFFICE",
+    "0.765 Provision of Medical Transporter (Ambulance) | CITY GENERAL SERVICES OFFICE",
+    "0.744 Request for the Transfer of a Patient from One Hospital to Another Hospital | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Who do I contact to audit a city transaction?",
+   "lang": "en",
+   "subservice": "Request for Investigation, Review or Audit of Transactions (Internal Audit Services)",
+   "department": "OFFICE OF THE MAYOR",
+   "top": [
+    "0.713 Pagtanggap ng mga Financial Reports ng iba’t-ibang Barangay | CITY ACCOUNTING AND INTERNAL CONTROL OFFICE",
+    "0.709 Pagbibigay ng Money Accountability Clearance | CITY TREASURY MANAGEMENT OFFICE",
+    "0.705 Certificate of Appearance – Acknowledgement of Transaction to the City | CITY ADMINISTRATION OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Sino ang dapat kontakin para mag-audit ng transaction?",
+   "lang": "fil",
+   "subservice": "Request for Investigation, Review or Audit of Transactions (Internal Audit Services)",
+   "department": "OFFICE OF THE MAYOR",
+   "top": [
+    "0.739 Pagtanggap ng mga Financial Reports ng iba’t-ibang Barangay | CITY ACCOUNTING AND INTERNAL CONTROL OFFICE",
+    "0.738 Pagbibigay ng Money Accountability Clearance | CITY TREASURY MANAGEMENT OFFICE",
+    "0.714 Pagsasampa ng Kasong Administratibo laban sa mga kawani at opisyal ng Gobyerno sa Sangguniang Panlungsod | LEGISLATIVE SERVICES OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Need help planning an infrastructure project, where to start?",
+   "lang": "en",
+   "subservice": "Paghahanda ng Programa sa Paggawa ng mga Proyektong Imprastraktura (Infrastructure Project Programming)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "top": [
+    "0.717 Infrastructure Project Inspection | CITY PLANNING AND DEVELOPMENT OFFICE",
+    "0.627 Application for Preliminary Approval-Locational Clearance (PALC) and Development Permit (DP). | CITY PLANNING AND DEVELOPMENT OFFICE",
+    "0.621 Request for Certificate of Project Completion | CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Paano magsimula sa paggawa ng infrastructure project?",
+   "lang": "fil",
+   "subservice": "Paghahanda ng Programa sa Paggawa ng mga Proyektong Imprastraktura (Infrastructure Project Programming)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "top": [
+    "0.774 Infrastructure Project Inspection | CITY PLANNING AND DEVELOPMENT OFFICE",
+    "0.713 Request for Certificate of Project Completion | CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+    "0.712 Request for Certificate of Project Completion | CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Who handles repairs for city buildings and roads?",
+   "lang": "en",
+   "subservice": "Pagsasaayos at Pagpapanatili ng Imprastraktura / Gusali (Infrastructure and Building Repair and Maintenance)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "top": [
+    "0.695 Infrastructure Project Inspection | CITY PLANNING AND DEVELOPMENT OFFICE",
+    "0.678 Approval of the Request to Use City Hall Facilities | CITY ADMINISTRATION OFFICE",
+    "0.665 Emergency Response to Accidents and Disasters | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Sino ang nag-aasikaso ng repair ng gusali at kalsada?",
+   "lang": "fil",
+   "subservice": "Pagsasaayos at Pagpapanatili ng Imprastraktura / Gusali (Infrastructure and Building Repair and Maintenance)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "top": [
+    "0.688 Pagkuha ng katunayan – Pagpapatunay ng antas ng pinsala sa halaman, hayop at pangisdaan | CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "0.681 Kahilingan para sa pagkumpuni at pangangalaga ng mga kagamitan sa ibang Ahensya. Pagkukumpuni at Pangangalaga ng mga kagamitan sa ibang Ahensya | HOUSING AND SETTLEMENTS DEPARTMENT",
+    "0.674 Pagkuha ng katunayan – Pagpapatunay ng kasalukuyang gamit at pananim ng lupa at pagputol ng bungang kahoy | CITY AGRICULTURAL SERVICES DEPARTMENT"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Can I borrow a stage or heavy equipment from the city?",
+   "lang": "en",
+   "subservice": "Pagpapahiram ng Pansamantalang Entablado, Sasakyan at Heavy Equipment (Loan of Stage, Vehicles and Heavy Equipment)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "top": [
+    "0.706 Provision of Vehicle Services on Loan (Ferry Boat / Bus / Coaster) | CITY GENERAL SERVICES OFFICE",
+    "0.693 Approval of the Request to Use City Hall Facilities | CITY ADMINISTRATION OFFICE",
+    "0.684 Provision of Tent, Tables, and Chairs | CITY GENERAL SERVICES OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Pwede bang umutang ng entablado o heavy equipment sa city?",
+   "lang": "fil",
+   "subservice": "Pagpapahiram ng Pansamantalang Entablado, Sasakyan at Heavy Equipment (Loan of Stage, Vehicles and Heavy Equipment)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "top": [
+    "0.716 Pagkuha ng katunayan – Pagpapatunay ng kasalukuyang gamit at pananim ng lupa at pagputol ng bungang kahoy | CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "0.716 Approval for Use of Medical Transporter Vehicle (Ambulance) | CITY ADMINISTRATION OFFICE",
+    "0.714 Request for the Removal of Trees or Branches Posing a Safety Hazard to the Community | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO"
+   ],
+   "in6": false
+  },
+  {
+   "q": "The street light near my house is out, who do I call?",
+   "lang": "en",
+   "subservice": "Pagkukumpuni ng Pagpapailaw sa Kalsada (Streetlight Repair)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "top": [
+    "0.676 Request for the Maintenance of Dangling Electrical Cables (Non-Live Wires) Posing a Safety Hazard | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+    "0.672 Request for the Maintenance of Dangling Electrical Cables (Non-Live Wires) Posing a Safety Hazard | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+    "0.650 Request for the Removal of Trees or Branches Posing a Safety Hazard to the Community | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Patay ang poste sa kanto, sino ang aayos?",
+   "lang": "fil",
+   "subservice": "Pagkukumpuni ng Pagpapailaw sa Kalsada (Streetlight Repair)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "top": [
+    "0.709 Pagpapaiwi ng hayop / paglilipat-iwi ng hayop | CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "0.704 Pagkuha ng katunayan – Pagpapatunay ng antas ng pinsala sa halaman, hayop at pangisdaan | CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "0.696 Redemption of Captured Stray Dogs (City Pound) | CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Where can I report a broken drainage pipe?",
+   "lang": "en",
+   "subservice": "Pagkukumpuni at Pagsasaayos ng Daluyan ng Tubig (Repair, Clearing and Desilting of Drainage Canals)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "top": [
+    "0.702 Request for the Maintenance of Dangling Electrical Cables (Non-Live Wires) Posing a Safety Hazard | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+    "0.697 Request for the Maintenance of Dangling Electrical Cables (Non-Live Wires) Posing a Safety Hazard | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+    "0.682 Complaint Regarding Environment and Pollution (Piggery / Quarry / Dumpsite / Foul-smelling Area or River / Open Burning / Complaints on Company Violations) | CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT"
+   ],
+   "in6": false
+  },
+  {
+   "q": "May sira na kanal, kanino i-report?",
+   "lang": "fil",
+   "subservice": "Pagkukumpuni at Pagsasaayos ng Daluyan ng Tubig (Repair, Clearing and Desilting of Drainage Canals)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "top": [
+    "0.715 Request for the Conduct of a Social Case Study Report | CITY SOCIAL SERVICES OFFICE",
+    "0.709 Request for the Conduct of a Social Case Study Report | CITY SOCIAL SERVICES OFFICE",
+    "0.708 Request for the Conduct of a Social Case Study Report | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "How do I request cleaning for the sewage plant?",
+   "lang": "en",
+   "subservice": "Pagpapanatili ng Kaayusan ng Sewerage Treatment Plant (STP Maintenance)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "top": [
+    "0.716 Request for a Seminar on Ecological Solid Waste Management | CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT",
+    "0.686 Complaint Regarding Environment and Pollution (Piggery / Quarry / Dumpsite / Foul-smelling Area or River / Open Burning / Complaints on Company Violations) | CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT",
+    "0.685 Request for the Removal of Trees or Branches Posing a Safety Hazard to the Community | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Paano magpa‑linis ng treatment plant?",
+   "lang": "fil",
+   "subservice": "Pagpapanatili ng Kaayusan ng Sewerage Treatment Plant (STP Maintenance)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "top": [
+    "0.726 Paghingi ng tulong-teknikal para sa pamamahala sa peste Tulong Teknikal para sa pamamahala sa peste CASO – Agri-Aqua Management Services Division / | CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "0.714 Infrastructure Project Inspection | CITY PLANNING AND DEVELOPMENT OFFICE",
+    "0.714 Pagsusuri ng Lupa gamit ang Soil Test Kit CASO – Agri-Aqua Management Services Division / | CITY AGRICULTURAL SERVICES DEPARTMENT"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Who removes illegal structures on road right‑of‑way?",
+   "lang": "en",
+   "subservice": "Demolisyon ng mga Iligal na Istraktura sa Road Right-of-Way at Lumang Gusali ng Paaralan (Demolition of Illegal Structures)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "top": [
+    "0.698 Request for the Removal of Trees or Branches Posing a Safety Hazard to the Community | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+    "0.696 Request for the Removal of Trees or Branches Posing a Safety Hazard to the Community | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+    "0.670 Infrastructure Project Inspection | CITY PLANNING AND DEVELOPMENT OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Sino ang nagte‑demolish ng illegal na gusali sa kalsada?",
+   "lang": "fil",
+   "subservice": "Demolisyon ng mga Iligal na Istraktura sa Road Right-of-Way at Lumang Gusali ng Paaralan (Demolition of Illegal Structures)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "top": [
+    "0.703 Request for the Removal of Trees or Branches Posing a Safety Hazard to the Community | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+    "0.702 Pagsasampa ng Kasong Administratibo laban sa mga kawani at opisyal ng Gobyerno sa Sangguniang Panlungsod | LEGISLATIVE SERVICES OFFICE",
+    "0.699 Request for the Removal of Trees or Branches Posing a Safety Hazard to the Community | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Can the city fix broken equipment for my agency?",
+   "lang": "en",
+   "subservice": "Pagkukumpuni at Pangangalaga ng mga Kagamitan ng Ibang Ahensya (Equipment Repair for Other Agencies)",
+   "department": "CITY GENERAL SERVICES OFFICE",
+   "top": [
+    "0.686 Kahilingan para sa pagkumpuni at pangangalaga ng mga kagamitan sa ibang Ahensya. Pagkukumpuni at Pangangalaga ng mga kagamitan sa ibang Ahensya | HOUSING AND SETTLEMENTS DEPARTMENT",
+    "0.673 Request for the Maintenance of Dangling Electrical Cables (Non-Live Wires) Posing a Safety Hazard | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+    "0.667 Request for the Maintenance of Dangling Electrical Cables (Non-Live Wires) Posing a Safety Hazard | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Pwede ba ayusin ng city ang sirang gamit ng agency ko?",
+   "lang": "fil",
+   "subservice": "Pagkukumpuni at Pangangalaga ng mga Kagamitan ng Ibang Ahensya (Equipment Repair for Other Agencies)",
+   "department": "CITY GENERAL SERVICES OFFICE",
+   "top": [
+    "0.727 Pagsasampa ng Kasong Administratibo laban sa mga kawani at opisyal ng Gobyerno sa Sangguniang Panlungsod | LEGISLATIVE SERVICES OFFICE",
+    "0.714 Kahilingan para sa pagkumpuni at pangangalaga ng mga kagamitan sa ibang Ahensya. Pagkukumpuni at Pangangalaga ng mga kagamitan sa ibang Ahensya | HOUSING AND SETTLEMENTS DEPARTMENT",
+    "0.714 Application for Vacant Positions | CITY HUMAN RESOURCE AND MANAGEMENT OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "How to apply for leave without using my leave credits?",
+   "lang": "en",
+   "subservice": "Application for Leave (Without Commutation of Leave Credits)",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "top": [
+    "0.720 Filing of Student Leave of Absence | CITY COLLEGE OF CALAMBA",
+    "0.658 Application for Vacant Positions | CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+    "0.654 Application for Late Enrollment, Re-Admission and Shifting | CITY COLLEGE OF CALAMBA"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Paano mag‑apply ng leave na hindi babawas ng credit?",
+   "lang": "fil",
+   "subservice": "Application for Leave (Without Commutation of Leave Credits)",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "top": [
+    "0.754 Filing of Student Leave of Absence | CITY COLLEGE OF CALAMBA",
+    "0.700 Application for Temporary ID | CITY COLLEGE OF CALAMBA",
+    "0.698 Application for Vacant Positions | CITY HUMAN RESOURCE AND MANAGEMENT OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Where do I request leave with cash conversion?",
+   "lang": "en",
+   "subservice": "Application for Leave (With Commutation of Leave Credits)",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "top": [
+    "0.685 Filing of Student Leave of Absence | CITY COLLEGE OF CALAMBA",
+    "0.663 Pagbibigay ng Money Accountability Clearance | CITY TREASURY MANAGEMENT OFFICE",
+    "0.657 Employment Assistance Request | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Saan mag‑apply ng leave na may commutation?",
+   "lang": "fil",
+   "subservice": "Application for Leave (With Commutation of Leave Credits)",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "top": [
+    "0.742 Filing of Student Leave of Absence | CITY COLLEGE OF CALAMBA",
+    "0.697 Approval for Use of Medical Transporter Vehicle (Ambulance) | CITY ADMINISTRATION OFFICE",
+    "0.695 Application for Late Enrollment, Re-Admission and Shifting | CITY COLLEGE OF CALAMBA"
+   ],
+   "in6": false
+  },
+  {
+   "q": "I lost my employee ID, how can I get a new one?",
+   "lang": "en",
+   "subservice": "Pagpapalit ng Identification Card (Employee ID Replacement)",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "top": [
+    "0.663 Processing and Issuance of Solo Parent ID | CITY SOCIAL SERVICES OFFICE",
+    "0.660 Processing and Issuance of Solo Parent ID | CITY SOCIAL SERVICES OFFICE",
+    "0.660 Processing and Issuance of Solo Parent ID | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Nawala ang ID ko, paano mag‑palit?",
+   "lang": "fil",
+   "subservice": "Pagpapalit ng Identification Card (Employee ID Replacement)",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "top": [
+    "0.731 Issuance of PWD ID, Medicine, and Purchase Booklet | PERSONS WITH DISABILITY AFFAIRS OFFICE",
+    "0.728 Application for Temporary ID | CITY COLLEGE OF CALAMBA",
+    "0.726 Senior Citizens ID | OFFICE FOR THE SENIOR CITIZENS AFFAIRS"
+   ],
+   "in6": false
+  },
+  {
+   "q": "My cash card isn’t working, how do I replace it?",
+   "lang": "en",
+   "subservice": "Pagpapalit ng Nawala o Nasirang ATM / Cash Card (ATM / Cash Card Replacement)",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "top": [
+    "0.636 Request for the Issuance of a Certificate of Financial Incapability for the Universal Health Card of PhilHealth | CITY SOCIAL SERVICES OFFICE",
+    "0.636 Request for the Issuance of a Certificate of Financial Incapability for the Universal Health Card of PhilHealth | CITY SOCIAL SERVICES OFFICE",
+    "0.636 Request for the Issuance of a Certificate of Financial Incapability for the Universal Health Card of PhilHealth | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Nasira ang cash card, papalit po paano?",
+   "lang": "fil",
+   "subservice": "Pagpapalit ng Nawala o Nasirang ATM / Cash Card (ATM / Cash Card Replacement)",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "top": [
+    "0.686 Pagbibigay ng Community Tax Certificate (Cedula) Pagkolekta mula sa Community Tax Certificate (Cedula) | CITY TREASURY MANAGEMENT OFFICE",
+    "0.681 Issuance of Pink Card | CITY HEALTH SERVICES DEPARTMENT",
+    "0.678 Pagbibigay ng Money Accountability Clearance | CITY TREASURY MANAGEMENT OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "How can I update my personal info in the HR system?",
+   "lang": "en",
+   "subservice": "Pagbabago ng Impormasyon (Update of Employee Information)",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "top": [
+    "0.680 Request for Changes of Entries RA 10172 in Birth Certificate City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE",
+    "0.669 Application for Vacant Positions | CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+    "0.653 Request for Correction of Entries – RA 9048 (CFN) City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Paano i‑update ang data ko sa HR?",
+   "lang": "fil",
+   "subservice": "Pagbabago ng Impormasyon (Update of Employee Information)",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "top": [
+    "0.713 Application for Vacant Positions | CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+    "0.704 Application for PhilHealth ID and Member Data Record (MDR) | OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+    "0.691 Registration and Granting of Accreditation to Companies and Manpower Agencies | INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "How do I get a HR clearance?",
+   "lang": "en",
+   "subservice": "Paghiling ng Human Resource Clearance (HR Clearance)",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "top": [
+    "0.704 Issuance of Mayor’s Clearance | INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+    "0.675 Pagbibigay ng Money Accountability Clearance | CITY TREASURY MANAGEMENT OFFICE",
+    "0.669 Approval of the Request to Use City Hall Facilities | CITY ADMINISTRATION OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Paano kumuha ng HR clearance?",
+   "lang": "fil",
+   "subservice": "Paghiling ng Human Resource Clearance (HR Clearance)",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "top": [
+    "0.765 Issuance of Mayor’s Clearance | INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+    "0.752 Pagbibigay ng Money Accountability Clearance | CITY TREASURY MANAGEMENT OFFICE",
+    "0.741 Pagbibigay ng Tax Clearance Pagkolekta mula sa Tax Clearance | CITY TREASURY MANAGEMENT OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Where can I notarize my documents?",
+   "lang": "en",
+   "subservice": "Request for Preparation of Legal Documents including Notarization",
+   "department": "CITY LEGAL SERVICES OFFICE",
+   "top": [
+    "0.775 Free Notarization of Prepared Legal Documents (Serbisyo Notaryo) | CITY LEGAL SERVICES OFFICE",
+    "0.717 Authentication of Documents | CITY COLLEGE OF CALAMBA",
+    "0.687 Request for Endorsement City Civil Registry Office - Civil Certification and | CITY CIVIL REGISTRY OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Saan ako magpa-notaryo ng papeles?",
+   "lang": "fil",
+   "subservice": "Request for Preparation of Legal Documents including Notarization",
+   "department": "CITY LEGAL SERVICES OFFICE",
+   "top": [
+    "0.762 Free Notarization of Prepared Legal Documents (Serbisyo Notaryo) | CITY LEGAL SERVICES OFFICE",
+    "0.716 Certificate of Appearance – Acknowledgement of Transaction to the City | CITY ADMINISTRATION OFFICE",
+    "0.714 Pagbibigay ng mga Sertipikadong Kopya / Sipi ng mga Dokumento ng Sangguniang Panlungsod Pagkakaloob ng mga Sertipikadong Kopya / Sipi ng mga dokumento ng Sangguniang | LEGISLATIVE SERVICES OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "My computer’s not working, who can fix it?",
+   "lang": "en",
+   "subservice": "Computer Repair (Pagkukumpuni ng mga Computer)",
+   "department": "CITY PLANNING AND DEVELOPMENT OFFICE",
+   "top": [
+    "0.597 Request for the Maintenance of Dangling Electrical Cables (Non-Live Wires) Posing a Safety Hazard | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+    "0.595 Paghingi ng tulong-teknikal para sa pamamahala sa peste Tulong Teknikal para sa pamamahala sa peste CASO – Agri-Aqua Management Services Division / | CITY AGRICULTURAL SERVICES DEPARTMENT",
+    "0.595 Paghingi ng tulong teknikal ng mga mananaliksik CASO – Agri-Aqua Management Services Division / | CITY AGRICULTURAL SERVICES DEPARTMENT"
+   ],
+   "in6": false
+  },
+  {
+   "q": "May sira ang PC ko, sino pwedeng ayusin?",
+   "lang": "fil",
+   "subservice": "Computer Repair (Pagkukumpuni ng mga Computer)",
+   "department": "CITY PLANNING AND DEVELOPMENT OFFICE",
+   "top": [
+    "0.674 Pagsasampa ng Kasong Administratibo laban sa mga kawani at opisyal ng Gobyerno sa Sangguniang Panlungsod | LEGISLATIVE SERVICES OFFICE",
+    "0.670 Pagbibigay ng mga Sertipikadong Kopya / Sipi ng mga Dokumento ng Sangguniang Panlungsod Pagkakaloob ng mga Sertipikadong Kopya / Sipi ng mga dokumento ng Sangguniang | LEGISLATIVE SERVICES OFFICE",
+    "0.668 Application for PhilHealth ID and Member Data Record (MDR) | OFFICE FOR THE SENIOR CITIZENS AFFAIRS"
+   ],
+   "in6": false
+  },
+  {
+   "q": "How to apply for a CLDF livelihood loan?",
+   "lang": "en",
+   "subservice": "Pagproseso at Pagbigay ng CLDF Loan (CLDF Livelihood Loan)",
+   "department": "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT",
+   "top": [
+    "0.709 Assistance in Processing Requirements for the Cooperative Development Authority (CDA) Registration | COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT",
+    "0.704 Assistance in the Implementation of Enterprise Development Services | COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT",
+    "0.701 Assistance through Business Incubation | COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Paano mag-apply ng CLDF loan?",
+   "lang": "fil",
+   "subservice": "Pagproseso at Pagbigay ng CLDF Loan (CLDF Livelihood Loan)",
+   "department": "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT",
+   "top": [
+    "0.736 Assistance in Processing Requirements for the Cooperative Development Authority (CDA) Registration | COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT",
+    "0.735 Provision of Vehicle Services on Loan (Ferry Boat / Bus / Coaster) | CITY GENERAL SERVICES OFFICE",
+    "0.733 Aplikasyon sa Programang Pabahay at Palupa Ang Aplikasyon sa Programang Pabahay at Palupa ng Pamahalaang Panlungsod ay alinsunod sa Batas Republika 7279 o Urban Development and Housing Act ng 1992 na | HOUSING AND SETTLEMENTS DEPARTMENT"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Where do I get a disability certificate?",
+   "lang": "en",
+   "subservice": "Certificate of Disability and Certificate of Cancellation of PWD ID",
+   "department": "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+   "top": [
+    "0.740 Issuance of PWD ID, Medicine, and Purchase Booklet | PERSONS WITH DISABILITY AFFAIRS OFFICE",
+    "0.739 Request for the Issuance of a Certificate of Financial Incapability for the Universal Health Card of PhilHealth | CITY SOCIAL SERVICES OFFICE",
+    "0.739 Request for the Issuance of a Certificate of Financial Incapability for the Universal Health Card of PhilHealth | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Saan makakakuha ng disability certificate?",
+   "lang": "fil",
+   "subservice": "Certificate of Disability and Certificate of Cancellation of PWD ID",
+   "department": "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+   "top": [
+    "0.775 Request for the Issuance of a Certificate of Financial Incapability for the Universal Health Card of PhilHealth | CITY SOCIAL SERVICES OFFICE",
+    "0.773 Issuance of PWD ID, Medicine, and Purchase Booklet | PERSONS WITH DISABILITY AFFAIRS OFFICE",
+    "0.773 Request for the Issuance of a Certificate of Financial Incapability for the Universal Health Card of PhilHealth | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Who provides medical aid for PWDs?",
+   "lang": "en",
+   "subservice": "Tulong Pinansiyal para sa Medical at Therapy ng PWD (Medical and Therapy Assistance for PWDs)",
+   "department": "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+   "top": [
+    "0.734 Provision of Assistive Devices (Wheelchair, Hearing Aid, Crutches, Quad Cane, and Others) | PERSONS WITH DISABILITY AFFAIRS OFFICE",
+    "0.728 Financial Assistance for Medical Services | CITY SOCIAL SERVICES OFFICE",
+    "0.727 Medical Assistance (Pagbibigay Tulong Medikal) | OFFICE OF THE VICE MAYOR"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Sino ang nag-aalok ng medical aid sa PWD?",
+   "lang": "fil",
+   "subservice": "Tulong Pinansiyal para sa Medical at Therapy ng PWD (Medical and Therapy Assistance for PWDs)",
+   "department": "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+   "top": [
+    "0.779 Financial Assistance for Medical Services | CITY SOCIAL SERVICES OFFICE",
+    "0.774 Medical Assistance (Pagbibigay Tulong Medikal) | OFFICE OF THE VICE MAYOR",
+    "0.765 Provision of Assistive Devices (Wheelchair, Hearing Aid, Crutches, Quad Cane, and Others) | PERSONS WITH DISABILITY AFFAIRS OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "How can I check my PhilHealth benefits?",
+   "lang": "en",
+   "subservice": "Pag-verify ng PhilHealth Benefit ng PWD (PWD PhilHealth Verification)",
+   "department": "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+   "top": [
+    "0.771 Application for PhilHealth ID and Member Data Record (MDR) | OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+    "0.758 Request for the Issuance of a Certificate of Financial Incapability for the Universal Health Card of PhilHealth | CITY SOCIAL SERVICES OFFICE",
+    "0.758 Request for the Issuance of a Certificate of Financial Incapability for the Universal Health Card of PhilHealth | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Paano i-verify ang PhilHealth benefits ko?",
+   "lang": "fil",
+   "subservice": "Pag-verify ng PhilHealth Benefit ng PWD (PWD PhilHealth Verification)",
+   "department": "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+   "top": [
+    "0.776 Application for PhilHealth ID and Member Data Record (MDR) | OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+    "0.762 Request for the Issuance of a Certificate of Financial Incapability for the Universal Health Card of PhilHealth | CITY SOCIAL SERVICES OFFICE",
+    "0.762 Request for the Issuance of a Certificate of Financial Incapability for the Universal Health Card of PhilHealth | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Can I request CCTV footage from an incident?",
+   "lang": "en",
+   "subservice": "Request to View or Get a Copy of CCTV Footage",
+   "department": "PUBLIC ORDER AND SAFETY OFFICE",
+   "top": [
+    "0.693 Request for the Conduct of a Social Case Study Report | CITY SOCIAL SERVICES OFFICE",
+    "0.693 Request for the Conduct of a Social Case Study Report | CITY SOCIAL SERVICES OFFICE",
+    "0.693 Request for the Conduct of a Social Case Study Report | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Pwede ba humingi ng CCTV footage?",
+   "lang": "fil",
+   "subservice": "Request to View or Get a Copy of CCTV Footage",
+   "department": "PUBLIC ORDER AND SAFETY OFFICE",
+   "top": [
+    "0.712 Request for the Conduct of a Social Case Study Report | CITY SOCIAL SERVICES OFFICE",
+    "0.712 Request for the Conduct of a Social Case Study Report | CITY SOCIAL SERVICES OFFICE",
+    "0.708 Request for Access to Available Materials (Including Photographs, Reports, Key Cultural Heritage Profiles, and Inventories of Cultural Properties) | CULTURAL AFFAIRS, TOURISM AND SPORTS DEVELOPMENT DEPARTMENT"
+   ],
+   "in6": false
+  },
+  {
+   "q": "What’s the process to recover a confiscated license?",
+   "lang": "en",
+   "subservice": "Pagtubos ng Lisensya (Redemption of Confiscated Driver's License)",
+   "department": "PUBLIC ORDER AND SAFETY OFFICE",
+   "top": [
+    "0.679 Certificate of Termination of Franchise Use | BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+    "0.663 Certified True Copy of Tricycle Franchise | BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+    "0.659 Pagbibigay ng Opisyal na Resibo para sa Traffic Violation Fees Pagkolekta mula sa mga Traffic Violation | CITY TREASURY MANAGEMENT OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Ano ang steps para mabawi ang confiscated license?",
+   "lang": "fil",
+   "subservice": "Pagtubos ng Lisensya (Redemption of Confiscated Driver's License)",
+   "department": "PUBLIC ORDER AND SAFETY OFFICE",
+   "top": [
+    "0.735 Certificate of Termination of Franchise Use | BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+    "0.725 Certified True Copy of Tricycle Franchise | BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+    "0.716 Application for Marriage License City Civil Registry Office - Civil Registration | CITY CIVIL REGISTRY OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "How do I request security for a public event?",
+   "lang": "en",
+   "subservice": "Request for Public Order Assistance at Events in Public Places",
+   "department": "PUBLIC ORDER AND SAFETY OFFICE",
+   "top": [
+    "0.696 Approval of the Request to Use City Hall Facilities | CITY ADMINISTRATION OFFICE",
+    "0.694 Request for Support and Assistance During Parade and Motorcade Activities | PUBLIC ORDER AND SAFETY OFFICE",
+    "0.686 Request for the Conduct of a Social Case Study Report | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Paano mag-request ng security sa event?",
+   "lang": "fil",
+   "subservice": "Request for Public Order Assistance at Events in Public Places",
+   "department": "PUBLIC ORDER AND SAFETY OFFICE",
+   "top": [
+    "0.736 Approval of the Request to Use City Hall Facilities | CITY ADMINISTRATION OFFICE",
+    "0.731 Request for Support and Assistance During Parade and Motorcade Activities | PUBLIC ORDER AND SAFETY OFFICE",
+    "0.726 Request for Assistance for Psychosocial Support | CITY SOCIAL SERVICES OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "How can I report a blocked road?",
+   "lang": "en",
+   "subservice": "Request for Assistance in Clearing Road Obstructions",
+   "department": "PUBLIC ORDER AND SAFETY OFFICE",
+   "top": [
+    "0.655 Request for the Removal of Trees or Branches Posing a Safety Hazard to the Community | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+    "0.655 Request for the Maintenance of Dangling Electrical Cables (Non-Live Wires) Posing a Safety Hazard | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+    "0.654 Request for the Maintenance of Dangling Electrical Cables (Non-Live Wires) Posing a Safety Hazard | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Paano mag-report ng baradong kalsada?",
+   "lang": "fil",
+   "subservice": "Request for Assistance in Clearing Road Obstructions",
+   "department": "PUBLIC ORDER AND SAFETY OFFICE",
+   "top": [
+    "0.724 Request for the Maintenance of Dangling Electrical Cables (Non-Live Wires) Posing a Safety Hazard | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+    "0.718 Request for the Maintenance of Dangling Electrical Cables (Non-Live Wires) Posing a Safety Hazard | CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+    "0.685 Pagtanggap ng mga Financial Reports ng iba’t-ibang Barangay | CITY ACCOUNTING AND INTERNAL CONTROL OFFICE"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Where do I get a CCTV compliance certificate?",
+   "lang": "en",
+   "subservice": "CCTV Compliance Certification for Business Establishments",
+   "department": "PUBLIC ORDER AND SAFETY OFFICE",
+   "top": [
+    "0.728 Certificate Authentication and Verification (CAV) | CITY SOCIAL SERVICES OFFICE",
+    "0.721 Certificate Authentication and Verification (CAV) | CITY SOCIAL SERVICES OFFICE",
+    "0.702 Assistance Certificate of Compliance (COC) for Cooperative Development Authority (CDA) | COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT"
+   ],
+   "in6": false
+  },
+  {
+   "q": "Saan kukuha ng CCTV compliance certificate?",
+   "lang": "fil",
+   "subservice": "CCTV Compliance Certification for Business Establishments",
+   "department": "PUBLIC ORDER AND SAFETY OFFICE",
+   "top": [
+    "0.776 Certificate Authentication and Verification (CAV) | CITY SOCIAL SERVICES OFFICE",
+    "0.771 Certificate Authentication and Verification (CAV) | CITY SOCIAL SERVICES OFFICE",
+    "0.758 Request for Certificate of Project Completion | CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT"
+   ],
+   "in6": false
+  }
+ ]
+}

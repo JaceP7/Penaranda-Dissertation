@@ -28,7 +28,16 @@ REQ_SPLIT_X = 260
 STEP_MAX_X = 160
 
 FIELDS = ["Office or Division", "Classification", "Type of Transaction", "Who may avail"]
-STOP = FIELDS + ["CHECKLIST OF REQUIREMENTS", "CLIENT STEPS", "WHERE TO SECURE", "Total"]
+# Some charters (Human Resources) print these labels in Filipino. Each field's
+# pattern accepts both, so `meta` keeps the English keys either way.
+FIELD_PAT = {
+    "Office or Division": r"(?:Office\s*or\s*Division|Opisina\s*o\s*Dibisyon)",
+    "Classification": r"(?:Classification|Klasipikasyon)",
+    "Type of Transaction": r"(?:Type\s*of\s*Transaction|Uri\s*ng\s*Transaksyon)",
+    "Who may avail": r"(?:Who\s*may\s*avail|Sino\s*ang\s*maa?a?ring\s*mag-?\s*avail)",
+}
+CHECKLIST = r"(?:CHECKLIST\s*(?:OF\s*)?REQUIREMENTS|LISTAHAN NG MGA KINAKAILANGAN)"
+STOP = list(FIELD_PAT.values()) + [CHECKLIST, "CLIENT STEPS", "WHERE TO SECURE", "SAAN MAA?A?RING MAKUHA", "Total", "Kabuuan"]
 
 CATEGORY_RULES = [
     (r"birth|marriage|death|civil registry|certified true cop|certificat|clearance|permit",
@@ -79,7 +88,7 @@ def parse_pdf(path, department):
     texts = [row_text(r[2]) for r in rows]
 
     # Service blocks are anchored by the "Office or Division" label.
-    anchors = [i for i, t in enumerate(texts) if re.match(r"^Office\s*or\s*Division", t, re.I)]
+    anchors = [i for i, t in enumerate(texts) if re.match(r"^" + FIELD_PAT["Office or Division"], t, re.I)]
     services = []
 
     for n, a in enumerate(anchors):
@@ -113,8 +122,8 @@ def parse_pdf(path, department):
         meta = {}
         for i in range(a, min(end + 1, len(rows))):
             for f in FIELDS:
-                if re.match(r"^%s" % f.replace(" ", r"\s*"), texts[i], re.I):
-                    val = clean(re.sub(r"^%s\s*:?" % f.replace(" ", r"\s*"), "", texts[i], flags=re.I))
+                if re.match(r"^" + FIELD_PAT[f], texts[i], re.I):
+                    val = clean(re.sub(r"^" + FIELD_PAT[f] + r"\s*:?", "", texts[i], flags=re.I))
                     j = i + 1
                     while not val and j < len(rows) and j <= end:
                         if re.match(r"^(%s)" % "|".join(STOP), texts[j], re.I):
@@ -129,7 +138,7 @@ def parse_pdf(path, department):
                     return i
             return None
 
-        r0 = find(r"CHECKLIST OF REQUIREMENTS", a, end)
+        r0 = find(CHECKLIST, a, end)
         s0 = find(r"CLIENT STEPS", a, end)
         # The steps-table header spans several rows and its topmost row ("FEES TO
         # BE", "PROCESSING TIME"...) can sit ABOVE the "CLIENT STEPS" row, so
@@ -164,7 +173,7 @@ def parse_pdf(path, department):
         steps, cur = [], None
         if s0 is not None:
             for i in range(s0 + 1, min(end, len(rows))):
-                if re.match(r"^Total", texts[i], re.I):
+                if re.match(r"^(Total|Kabuuan)", texts[i], re.I):
                     break
                 left = row_text(rows[i][2], xmax=STEP_MAX_X)
                 if not left or re.match(r"^(AGENCY|FEES|PROCESSING|PERSON)", left, re.I):
@@ -212,6 +221,29 @@ DEPT = {
     "city_budget_management_office": "CITY BUDGET MANAGEMENT OFFICE",
     "housing_and_settlements_department": "HOUSING AND SETTLEMENTS DEPARTMENT",
     "legislative_services_office": "LEGISLATIVE SERVICES OFFICE",
+    # The other 22 offices on /Users/Home/CitizenCharter (28 PDFs in all, Nov 2026).
+    "building_regulatory_services_office": "BUILDINGS REGULATORY SERVICES DEPARTMENT",
+    "business_permits_and_tricycle_franchising_office": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+    "city_accounting_and_internal_control_office": "CITY ACCOUNTING AND INTERNAL CONTROL OFFICE",
+    "city_administration_office": "CITY ADMINISTRATION OFFICE",
+    "city_assessment_office": "CITY ASSESSMENT OFFICE",
+    "city_college_of_calamba": "CITY COLLEGE OF CALAMBA",
+    "city_engineering_services_office": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+    "city_environment_and_natural_resources_office": "CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT",
+    "city_general_services_office": "CITY GENERAL SERVICES OFFICE",
+    "city_health_services_office": "CITY HEALTH SERVICES DEPARTMENT",
+    "city_human_resources_management_office": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+    "city_legal_services_office": "CITY LEGAL SERVICES OFFICE",
+    "city_planning_and_development_office": "CITY PLANNING AND DEVELOPMENT OFFICE",
+    "city_population_management_office": "CITY POPULATION MANAGEMENT OFFICE",
+    "city_social_services_office": "CITY SOCIAL SERVICES OFFICE",
+    "city_veterinary_services_and_slaughterhouse_mgt_office": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+    "cooperatives_and_livelihood_development_department": "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT",
+    "cultural_affairs_tourism_and_sports_development_office": "CULTURAL AFFAIRS, TOURISM AND SPORTS DEVELOPMENT DEPARTMENT",
+    "information_investment_promotions_and_emp_services_office": "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+    "office_of_the_city_mayor": "OFFICE OF THE MAYOR",
+    "office_of_the_city_vice-mayor": "OFFICE OF THE VICE MAYOR",
+    "public_order_and_safety_office": "PUBLIC ORDER AND SAFETY OFFICE",
 }
 
 

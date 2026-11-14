@@ -1,0 +1,1750 @@
+{
+ "items": [
+  {
+   "subservice": "Application for Individual Working Permit",
+   "department": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+   "en": "How do I apply for a personal work permit?",
+   "fil": "Paano kumuha ng working permit para sa sarili?"
+  },
+  {
+   "subservice": "Approval of the Request to Use City Hall Facilities",
+   "department": "CITY ADMINISTRATION OFFICE",
+   "en": "Where can I book a city hall venue?",
+   "fil": "Saan mag-apply para gamitin ang hall?"
+  },
+  {
+   "subservice": "Assistance Certificate of Compliance (COC) for Cooperative Development Authority (CDA)",
+   "department": "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT",
+   "en": "Need help getting a COC for my cooperative, where to start?",
+   "fil": "Paano kunin ang COC para sa kooperatiba?"
+  },
+  {
+   "subservice": "Pagtanggap ng mga Financial Reports ng iba’t-ibang Barangay",
+   "department": "CITY ACCOUNTING AND INTERNAL CONTROL OFFICE",
+   "en": "Where do barangays submit their financial statements?",
+   "fil": "Saan mag-submit ng financial reports ng barangay?"
+  },
+  {
+   "subservice": "Pag-iisyu ng Permiso sa Pagtatayo ng Gusali (Building Permit)",
+   "department": "BUILDINGS REGULATORY SERVICES DEPARTMENT",
+   "en": "What’s the process for a building construction permit?",
+   "fil": "Paano mag-apply ng permiso sa pagtatayo?"
+  },
+  {
+   "subservice": "CENRO Certificate",
+   "department": "CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT",
+   "en": "How can I get a CENRO environmental clearance?",
+   "fil": "Paano makuha ang CENRO certificate?"
+  },
+  {
+   "subservice": "Pagbibigay / Issuance ng Sertipiko o Katibayan ng Kontribusyon para sa Benepisyo (GSIS, PhilHealth at PAG-IBIG)",
+   "department": "CITY ACCOUNTING AND INTERNAL CONTROL OFFICE",
+   "en": "Where do I get proof of contributions for GSIS/PhilHealth/Pag‑IBIG?",
+   "fil": "Saan kunin ang sertipiko ng kontribusyon para GSIS?"
+  },
+  {
+   "subservice": "Certificate Authentication and Verification (CAV)",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "How do I request a certificate verification?",
+   "fil": "Paano mag‑request ng certificate authentication?"
+  },
+  {
+   "subservice": "Certificate of Appearance – Acknowledgement of Transaction to the City",
+   "department": "CITY ADMINISTRATION OFFICE",
+   "en": "How to obtain a certificate confirming I dealt with the city?",
+   "fil": "Paano kumuha ng certificate na nag‑transact ako sa city?"
+  },
+  {
+   "subservice": "Certificate of BIR Tax Exemption for Homeowners Association (HOAs)",
+   "department": "CITY ADMINISTRATION OFFICE",
+   "en": "Where can I apply for a BIR tax exemption for my HOA?",
+   "fil": "Saan mag‑apply ng BIR tax exemption para sa HOA?"
+  },
+  {
+   "subservice": "Pag-iisyu ng Sertipiko ng Panghuling Inspeksiyon sa Kuryente (Certificate of Final Electrical Inspection)",
+   "department": "BUILDINGS REGULATORY SERVICES DEPARTMENT",
+   "en": "How do I get the final electrical inspection certificate?",
+   "fil": "Paano kumuha ng sertipiko matapos inspeksyon sa kuryente?"
+  },
+  {
+   "subservice": "Certificate of Good Moral Character for Applying for a Job Abroad",
+   "department": "CITY ADMINISTRATION OFFICE",
+   "en": "Where can I apply for a good moral character certificate for overseas work?",
+   "fil": "Saan mag-apply ng good moral certificate para abroad?"
+  },
+  {
+   "subservice": "Certificate of Indigency for Educational Service Contracting (ESC) and College Scholarship Application",
+   "department": "CITY ADMINISTRATION OFFICE",
+   "en": "Need a certificate of indigency for my ESC scholarship, where to go?",
+   "fil": "Saan kukuha ng certificate of indigency para ESC scholarship?"
+  },
+  {
+   "subservice": "Certificate of Kinship – Tax Deduction and Death Benefit Claims",
+   "department": "CITY ADMINISTRATION OFFICE",
+   "en": "How to obtain a kinship certificate for tax and death benefits?",
+   "fil": "Paano makakuha ng certificate of kinship para tax at death benefit?"
+  },
+  {
+   "subservice": "Certificate of No Improvement",
+   "department": "CITY ASSESSMENT OFFICE",
+   "en": "Where do I request a no‑improvement certificate for my property?",
+   "fil": "Saan mag‑request ng certificate of no improvement?"
+  },
+  {
+   "subservice": "Certificate of No Objection as one of the requirements for the Issuance of permit to cut trees",
+   "department": "CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT",
+   "en": "I need a no‑objection paper to cut a tree, who issues it?",
+   "fil": "Sino ang nagbibigay ng no objection para mag‑cut ng puno?"
+  },
+  {
+   "subservice": "Certificate of Not-for-Profit Organization for Companies",
+   "department": "CITY ADMINISTRATION OFFICE",
+   "en": "How can my nonprofit get a not‑for‑profit certificate?",
+   "fil": "Paano makakuha ng not‑for‑profit certificate para NGO?"
+  },
+  {
+   "subservice": "Pag-iisyu ng Sertipiko ng Pagsakop (Certificate of Occupancy)",
+   "department": "BUILDINGS REGULATORY SERVICES DEPARTMENT",
+   "en": "Where do I apply for a certificate of occupancy for my building?",
+   "fil": "Saan mag‑apply ng certificate of occupancy sa building?"
+  },
+  {
+   "subservice": "Certificate of Residency for Applying for a Pension Abroad",
+   "department": "CITY ADMINISTRATION OFFICE",
+   "en": "Need a residency certificate for pension abroad, where to obtain it?",
+   "fil": "Saan makakakuha ng residency certificate para pension abroad?"
+  },
+  {
+   "subservice": "Certificate of Termination of Franchise Use",
+   "department": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+   "en": "How to get a franchise termination certificate for my tricycle business?",
+   "fil": "Paano makuha ang termination certificate ng franchise para tricycle?"
+  },
+  {
+   "subservice": "Certified Death Certificate",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "How do I get a death certificate copy?",
+   "fil": "Paano kumuha ng certified death certificate?"
+  },
+  {
+   "subservice": "Certified True Copy of Business Permit",
+   "department": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+   "en": "Where can I request a true copy of my business permit?",
+   "fil": "Saan mag-apply ng true copy ng business permit?"
+  },
+  {
+   "subservice": "Certified True Copy of Tricycle Franchise",
+   "department": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+   "en": "Need a certified copy of my tricycle franchise, where to go?",
+   "fil": "Saan magkuha ng certified copy ng tricycle franchise?"
+  },
+  {
+   "subservice": "Exhumation Permit(Pahintulot sa paghukay muli sa inilibing)",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "How to apply for an exhumation permit?",
+   "fil": "Paano mag‑request ng exhumation permit?"
+  },
+  {
+   "subservice": "Health Permit(Pag-iisyu ng Permit Pangkalusugan)",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "Where do I get a health permit for my stall?",
+   "fil": "Saan makakakuha ng health permit para sa stall?"
+  },
+  {
+   "subservice": "Issuance of Transcript of Competencies",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "How can I obtain my transcript of competencies?",
+   "fil": "Paano kunin ang transcript of competencies?"
+  },
+  {
+   "subservice": "Issuance of Barangay Jurisdiction",
+   "department": "CITY ASSESSMENT OFFICE",
+   "en": "Where do I request a barangay jurisdiction certificate?",
+   "fil": "Saan mag‑apply ng barangay jurisdiction?"
+  },
+  {
+   "subservice": "Issuance of Certificate for the Transfer of Remains",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "How to get a certificate for transferring remains?",
+   "fil": "Paano kumuha ng certificate para ilipat ang labi?"
+  },
+  {
+   "subservice": "Issuance of Certificates (Enrollment, GWA, Medium of Certifications, Graduation, Completion)",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "Where can I get my graduation or enrollment certificate?",
+   "fil": "Saan makukuha ang graduation/enrollment certificate?"
+  },
+  {
+   "subservice": "Issuance of Certified True Copy of Tax Map",
+   "department": "CITY ASSESSMENT OFFICE",
+   "en": "How do I request a certified copy of the tax map?",
+   "fil": "Paano mag‑request ng certified copy ng tax map?"
+  },
+  {
+   "subservice": "Issuance of Certified True Copy of Tax Declaration / Certificate of Aggregate Land Holdings / Certificate of No Property",
+   "department": "CITY ASSESSMENT OFFICE",
+   "en": "How can I get a certified copy of my tax deed?",
+   "fil": "Paano kumuha ng certified copy ng tax declaration?"
+  },
+  {
+   "subservice": "Issuance of Locational Clearance (LC) and Certificate of Exemption from Locational Clearance (LC-Ex)",
+   "department": "CITY PLANNING AND DEVELOPMENT OFFICE",
+   "en": "Where do I apply for a locational clearance?",
+   "fil": "Saan mag-apply ng locational clearance?"
+  },
+  {
+   "subservice": "Issuance of Mayor’s Clearance",
+   "department": "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+   "en": "Need a mayor’s clearance, where to request it?",
+   "fil": "Saan ako mag‑request ng mayor’s clearance?"
+  },
+  {
+   "subservice": "Issuance of Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar Certificate",
+   "department": "CITY POPULATION MANAGEMENT OFFICE",
+   "en": "Where can I sign up for the pre‑marriage seminar?",
+   "fil": "Saan mag‑sign up para sa pre‑marriage orientation?"
+  },
+  {
+   "subservice": "Issuance of PWD ID, Medicine, and Purchase Booklet",
+   "department": "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+   "en": "How do I obtain a PWD ID and medicine booklet?",
+   "fil": "Paano makakakuha ng PWD ID at medicine booklet?"
+  },
+  {
+   "subservice": "Issuance of Referral and Endorsement Letter",
+   "department": "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+   "en": "Where can I get a referral letter for my business?",
+   "fil": "Saan makakakuha ng referral letter para sa negosyo?"
+  },
+  {
+   "subservice": "Issuance of Zoning Certificate",
+   "department": "CITY PLANNING AND DEVELOPMENT OFFICE",
+   "en": "How to apply for a zoning certificate?",
+   "fil": "Paano mag‑apply ng zoning certificate?"
+  },
+  {
+   "subservice": "Kahilingan para sa Paggawa ng Certificate of Indigence",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "Where do I request a certificate of indigence?",
+   "fil": "Saan mag‑request ng certificate of indigence?"
+  },
+  {
+   "subservice": "Motorized Tricycle Operators Permit",
+   "department": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+   "en": "How to get a motorized tricycle operator’s permit?",
+   "fil": "Paano kumuha ng permit para sa motorized tricycle?"
+  },
+  {
+   "subservice": "Issuance of Certifications and Verification of Various Records of the Office of Business Permit & Tricycle Franchising",
+   "department": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+   "en": "Where can I verify my business permit records?",
+   "fil": "Saan i‑verify ang records ng business permit?"
+  },
+  {
+   "subservice": "Permit for Conducting Parades, Motorcades, Distribution of free products in public places, handing out of flyers for product or services",
+   "department": "CITY ADMINISTRATION OFFICE",
+   "en": "How do I get a permit for a street parade?",
+   "fil": "Paano kumuha ng permiso para sa parada?"
+  },
+  {
+   "subservice": "Permit for Posting Banners, Tarpaulins, Streamers on Public Places",
+   "department": "CITY ADMINISTRATION OFFICE",
+   "en": "Where can I apply for a banner posting permit?",
+   "fil": "Saan mag-apply ng permit para maglagay ng banner?"
+  },
+  {
+   "subservice": "Permit for Use of Public Facilities (City Hall, Banga, City Quadrangle, Jose Rizal Plaza, etc.)",
+   "department": "CITY ADMINISTRATION OFFICE",
+   "en": "How to book the city hall for an event?",
+   "fil": "Paano mag-reserve ng City Hall para event?"
+  },
+  {
+   "subservice": "Preparation of Death Certificate",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "Who issues a death certificate in Calamba?",
+   "fil": "Sino ang nag-iisyu ng death certificate?"
+  },
+  {
+   "subservice": "Processing and Issuance of Solo Parent ID",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "How can I apply for a Solo Parent ID?",
+   "fil": "Paano mag-apply ng Solo Parent ID?"
+  },
+  {
+   "subservice": "Request for Certificate (Cancellation / Verification / Late Birth Registration / No Record)",
+   "department": "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+   "en": "Where do I request a birth record correction?",
+   "fil": "Saan mag-request ng correction sa birth record?"
+  },
+  {
+   "subservice": "Request for Certificate of Project Completion",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "en": "How to get a certificate that a project is finished?",
+   "fil": "Paano kumuha ng certificate na tapos na ang project?"
+  },
+  {
+   "subservice": "Request for Parenting Capability Assessment Report (PCAR)",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "What’s needed for a parenting capability assessment?",
+   "fil": "Ano ang kailangan para sa parenting capability assessment?"
+  },
+  {
+   "subservice": "Request for the Conduct of a Social Case Study Report",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "How do I request a social case study report?",
+   "fil": "Paano mag-request ng social case study report?"
+  },
+  {
+   "subservice": "Request for the Issuance of a Certificate of Financial Incapability for the Universal Health Card of PhilHealth",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "Where can I obtain a financial incapability certificate for PhilHealth?",
+   "fil": "Saan makakakuha ng certificate of financial incapability para sa PhilHealth?"
+  },
+  {
+   "subservice": "Request for the Preparation of a Comprehensive Social Case Study Report",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "How do I get a social case study report?",
+   "fil": "Paano kumuha ng case study report para sa social services?"
+  },
+  {
+   "subservice": "Sanitation Permit(Pag-iisyu ng Permit ng Sanitasyon)",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "Where can I apply for a sanitation permit?",
+   "fil": "Saan po mag-apply ng permit para sa sanitasyon?"
+  },
+  {
+   "subservice": "Senior Citizens ID",
+   "department": "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+   "en": "How to apply for a senior citizen ID?",
+   "fil": "Paano po kumuha ng Senior Citizen ID?"
+  },
+  {
+   "subservice": "Serbisyong One Stop Shop (Simpleng Transaksyon)",
+   "department": "BUILDINGS REGULATORY SERVICES DEPARTMENT",
+   "en": "What do I need for a one‑stop shop transaction?",
+   "fil": "Ano po ang kailangan para sa One Stop Shop?"
+  },
+  {
+   "subservice": "Amendment of Business Registration",
+   "department": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+   "en": "How can I amend my business registration?",
+   "fil": "Paano po i‑amend ang business registration?"
+  },
+  {
+   "subservice": "Competency Assessment",
+   "department": "CITY ASSESSMENT OFFICE",
+   "en": "Where do I take the competency assessment?",
+   "fil": "Saan po mag‑competency assessment?"
+  },
+  {
+   "subservice": "Request for Cancellation of Records (Tax Declaration of Building / Improvement / Machinery due to demolishment or non existing of property to reflect to the current status of property)",
+   "department": "CITY ASSESSMENT OFFICE",
+   "en": "How to cancel tax declaration for a demolished building?",
+   "fil": "Paano po i‑cancel ang tax declaration ng nabuwal na building?"
+  },
+  {
+   "subservice": "Updating and Issuance of Tax Declaration from Transferred Properties",
+   "department": "CITY ASSESSMENT OFFICE",
+   "en": "How do I update tax declaration after transferring property?",
+   "fil": "Paano po i‑update ang tax declaration kung nailipat na property?"
+  },
+  {
+   "subservice": "Verification and Location of Property",
+   "department": "CITY ASSESSMENT OFFICE",
+   "en": "Can you help verify my property location?",
+   "fil": "Pwede po bang i‑verify ang lokasyon ng property ko?"
+  },
+  {
+   "subservice": "Application for Business Permit Renewal – (On-Site by Schedule / Walk-In)",
+   "department": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+   "en": "When can I renew my business permit on‑site?",
+   "fil": "Kailan po pwede mag‑renew ng business permit on‑site?"
+  },
+  {
+   "subservice": "Application for Business Permit Renewal – (Online)",
+   "department": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+   "en": "How do I renew my business permit online?",
+   "fil": "Paano mag‑renew ng business permit sa online?"
+  },
+  {
+   "subservice": "Application for New Business Permit - (Onsite at Online)",
+   "department": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+   "en": "Where can I apply for a new business permit?",
+   "fil": "Saan mag‑apply ng bagong business permit?"
+  },
+  {
+   "subservice": "Pag-isyu ng Pahintulot upang magbukas (Permit to Operate) at Sertipiko ng Taunang Inspeksyon (Annual Inspection)",
+   "department": "BUILDINGS REGULATORY SERVICES DEPARTMENT",
+   "en": "How to get a permit to operate and annual inspection certificate?",
+   "fil": "Paano kunin ang permit to operate at inspection certificate?"
+  },
+  {
+   "subservice": "Retirement of Business Registration",
+   "department": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+   "en": "What’s the process to retire my business registration?",
+   "fil": "Paano i-retire ang business registration ko?"
+  },
+  {
+   "subservice": "Emergency Response to Accidents and Disasters",
+   "department": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+   "en": "Who do I contact for emergency disaster response?",
+   "fil": "Kanino tawagan para sa emergency disaster response?"
+  },
+  {
+   "subservice": "Request for the Maintenance of Dangling Electrical Cables (Non-Live Wires) Posing a Safety Hazard",
+   "department": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+   "en": "How can I report dangerous dangling power lines?",
+   "fil": "Paano i‑report yung nakabiting electrical cables?"
+  },
+  {
+   "subservice": "Request for the Removal of Trees or Branches Posing a Safety Hazard to the Community",
+   "department": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+   "en": "Who handles removal of hazardous trees or branches?",
+   "fil": "Sino ang nag-aasikaso ng pagtanggal ng delikadong puno?"
+  },
+  {
+   "subservice": "Request for the Transfer of a Patient from One Hospital to Another Hospital",
+   "department": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+   "en": "How to request a patient transfer to another hospital?",
+   "fil": "Paano mag‑request ng pag‑transfer ng pasyente sa ibang ospital?"
+  },
+  {
+   "subservice": "Request for Food Assistance or Transportation for a Patient from Home to Hospital or from Hospital to Home",
+   "department": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+   "en": "Can I get food or transport help for a patient’s travel?",
+   "fil": "May food o transport assistance ba para sa pasyente?"
+  },
+  {
+   "subservice": "Addressing Complaints Concerning the Improper Implementation of Senior Citizen Discount Privileges",
+   "department": "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+   "en": "Where do I file a complaint about senior citizen discounts?",
+   "fil": "Saan mag‑reklamo tungkol sa senior citizen discount?"
+  },
+  {
+   "subservice": "Application for PhilHealth ID and Member Data Record (MDR)",
+   "department": "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+   "en": "How do I get a PhilHealth ID for my senior?",
+   "fil": "Paano kumuha ng PhilHealth ID para sa senior?"
+  },
+  {
+   "subservice": "Application for Preliminary Approval-Locational Clearance (PALC) and Development Permit (DP).",
+   "department": "CITY PLANNING AND DEVELOPMENT OFFICE",
+   "en": "Where can I apply for a locational clearance for my new shop?",
+   "fil": "Saan mag-apply ng clearance para sa negosyo?"
+  },
+  {
+   "subservice": "Application for Veterinary Health Certificate and Shipping Permit in Connection with Animal Transportation",
+   "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+   "en": "What’s needed for a veterinary health certificate to ship my dog?",
+   "fil": "Ano ang requirements para vet certificate para ipadala aso?"
+  },
+  {
+   "subservice": "Application to Conduct a Job Fair",
+   "department": "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+   "en": "How can I request permission to hold a job fair here?",
+   "fil": "Paano mag-apply para mag‑job fair sa Calamba?"
+  },
+  {
+   "subservice": "Application to Conduct a Local Recruitment Activity (LRA)",
+   "department": "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+   "en": "Where do I file a local recruitment activity application?",
+   "fil": "Saan mag‑apply para sa local recruitment activity?"
+  },
+  {
+   "subservice": "Application to Conduct a Special Recruitment Activity (SRA)",
+   "department": "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+   "en": "Who do I contact for a special recruitment activity permit?",
+   "fil": "Kanino mag‑request ng special recruitment permit?"
+  },
+  {
+   "subservice": "Approval for the Sound System",
+   "department": "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+   "en": "How to get approval for setting up a sound system at an event?",
+   "fil": "Paano kumuha ng approval para sa sound system?"
+  },
+  {
+   "subservice": "Approval of Request for Blood Collection for Farm Accreditation",
+   "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+   "en": "What’s the process for getting a blood collection permit for farm accreditation?",
+   "fil": "Ano ang steps para sa blood collection permit para farm accreditation?"
+  },
+  {
+   "subservice": "Assistance in Processing Requirements for the Cooperative Development Authority (CDA) Registration",
+   "department": "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT",
+   "en": "Can you help me with the paperwork for CDA registration?",
+   "fil": "Tulungan niyo ako sa CDA registration paperwork?"
+  },
+  {
+   "subservice": "Assistance in the Implementation of Enterprise Development Services",
+   "department": "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT",
+   "en": "Where can I get support for starting an enterprise development program?",
+   "fil": "Saan makakakuha ng tulong para sa enterprise development?"
+  },
+  {
+   "subservice": "Assistance through Business Incubation",
+   "department": "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT",
+   "en": "How can I join the city’s business incubator program?",
+   "fil": "Paano makasali sa business incubator ng Calamba?"
+  },
+  {
+   "subservice": "Assistance to MSMEs through Consultation",
+   "department": "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT",
+   "en": "Where do I get free advice for my small business?",
+   "fil": "Saan makakakuha ng libreng konsultasyon para sa MSME?"
+  },
+  {
+   "subservice": "Authorization and Signing of Shipping Permits and Veterinary Health Certificates for Transported Animals",
+   "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+   "en": "Need a shipping permit for moving livestock, where to apply?",
+   "fil": "Paano mag-apply ng shipping permit para sa hayop?"
+  },
+  {
+   "subservice": "Burial Assistance",
+   "department": "OFFICE OF THE MAYOR",
+   "en": "Who can help with burial costs for a family member?",
+   "fil": "Sino ang pwedeng tumulong sa burial assistance?"
+  },
+  {
+   "subservice": "Complaint about Uncollected Garbage",
+   "department": "CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT",
+   "en": "My street’s garbage isn’t collected, who do I report?",
+   "fil": "Hindi na-collect ang basura sa block namin, kanino i-complaint?"
+  },
+  {
+   "subservice": "Complaint Regarding Environment and Pollution (Piggery / Quarry / Dumpsite / Foul-smelling Area or River / Open Burning / Complaints on Company Violations)",
+   "department": "CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT",
+   "en": "There’s foul smell near the river, how to file a complaint?",
+   "fil": "May masangsang na amoy sa ilog, paano mag-complaint?"
+  },
+  {
+   "subservice": "Conduct of Trainings and Seminars for Micro, Small, and Medium Enterprises",
+   "department": "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT",
+   "en": "When are the next free trainings for small business owners?",
+   "fil": "Kailan ang susunod na libre training para sa MSMEs?"
+  },
+  {
+   "subservice": "Educational Assistance",
+   "department": "OFFICE OF THE MAYOR",
+   "en": "How can I apply for educational assistance for my child?",
+   "fil": "Paano mag-apply ng tuition assistance para sa anak?"
+  },
+  {
+   "subservice": "Educational Assistance (Pagbibigay Tulong Pang-Edukasyon)",
+   "department": "OFFICE OF THE VICE MAYOR",
+   "en": "Where do I request scholarship help from the vice mayor’s office?",
+   "fil": "Saan mag-request ng tulong pang-edukasyon sa opisina ng Vice Mayor?"
+  },
+  {
+   "subservice": "Financial Aid for Individuals (Pagbibigay Tulong Pinansyal sa mga Indibidwal)",
+   "department": "OFFICE OF THE VICE MAYOR",
+   "en": "I need personal financial aid, who do I contact?",
+   "fil": "Kailangan ko ng personal financial aid, kanino mag-apply?"
+  },
+  {
+   "subservice": "Free Notarization of Prepared Legal Documents (Serbisyo Notaryo)",
+   "department": "CITY LEGAL SERVICES OFFICE",
+   "en": "How can I get a free notary for my document?",
+   "fil": "Libre ba ang notaryo para sa papeles ko?"
+  },
+  {
+   "subservice": "Guarantee Letter",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "Where do I apply for a guarantee letter?",
+   "fil": "Saan po mag‑apply ng guarantee letter?"
+  },
+  {
+   "subservice": "Guarantee Letter (Anti-Rabies) – Pagbibigay ng Guarantee Letter para sa mga nakagat ng aso/pusa",
+   "department": "OFFICE OF THE VICE MAYOR",
+   "en": "Need a guarantee letter after a dog bite, where to get it?",
+   "fil": "Paano kumuha ng guarantee letter pag kinagat ng aso?"
+  },
+  {
+   "subservice": "Guarantee Letter (Blood) – Pagbibigay ng Guarantee Letter para sa mga nangangailangan ng Dugo",
+   "department": "OFFICE OF THE VICE MAYOR",
+   "en": "How to request a guarantee letter for blood donation?",
+   "fil": "Paano mag‑request ng guarantee letter para sa dugo?"
+  },
+  {
+   "subservice": "Guarantee Letter (Hospital) – Pagbibigay ng Guarantee Letter para sa Hospital",
+   "department": "OFFICE OF THE VICE MAYOR",
+   "en": "Where can I obtain a guarantee letter for hospital fees?",
+   "fil": "Saan po makakakuha ng guarantee letter para sa ospital?"
+  },
+  {
+   "subservice": "Guarantee Letter (Medicines) – Pagbibigay ng Guarantee Letter para sa gamot ng pasyente",
+   "department": "OFFICE OF THE VICE MAYOR",
+   "en": "I need a guarantee letter for my meds, who issues it?",
+   "fil": "Sino ang nag‑issue ng guarantee letter para sa gamot?"
+  },
+  {
+   "subservice": "Request for Guarantee Letter for the Coverage of Hospital Expenses, Medications, Laboratory Procedures, Rehabilitation Therapy, Blood Transfusions, and Selected Dialysis Sessions",
+   "department": "OFFICE OF THE MAYOR",
+   "en": "How to apply for a guarantee covering hospital and lab costs?",
+   "fil": "Paano mag‑apply ng guarantee para sa gastusin sa ospital at lab?"
+  },
+  {
+   "subservice": "Handling Complaints Pertaining to Tourism in Private and Public Resorts and Establishments",
+   "department": "CULTURAL AFFAIRS, TOURISM AND SPORTS DEVELOPMENT DEPARTMENT",
+   "en": "Who handles complaints about resorts and tourism spots?",
+   "fil": "Kanino i‑report ang reklamo sa resort o tourism place?"
+  },
+  {
+   "subservice": "Request for Hospitalization and Medical Assistance",
+   "department": "OFFICE OF THE MAYOR",
+   "en": "Where can I request hospitalization and medical aid?",
+   "fil": "Saan po mag‑request ng tulong sa hospital at medical assistance?"
+  },
+  {
+   "subservice": "Infrastructure Project Inspection",
+   "department": "CITY PLANNING AND DEVELOPMENT OFFICE",
+   "en": "How do I file an inspection request for a city project?",
+   "fil": "Paano mag‑file ng inspection request sa infrastructure project?"
+  },
+  {
+   "subservice": "Land Use Reclassification",
+   "department": "CITY PLANNING AND DEVELOPMENT OFFICE",
+   "en": "How can I change my land's zoning?",
+   "fil": "Paano mag-reclassify ng lupa?"
+  },
+  {
+   "subservice": "Medical / Hospitalization / Burial Assistance",
+   "department": "OFFICE FOR THE SENIOR CITIZENS AFFAIRS",
+   "en": "Where do seniors apply for hospital help?",
+   "fil": "Saan mag-apply ng med assistance para senior?"
+  },
+  {
+   "subservice": "Medical Assistance (Pagbibigay Tulong Medikal)",
+   "department": "OFFICE OF THE VICE MAYOR",
+   "en": "How do I get medical aid from the vice mayor's office?",
+   "fil": "Paano makakuha ng medical assistance sa Office of Vice Mayor?"
+  },
+  {
+   "subservice": "Provision of Assistive Devices (Wheelchair, Hearing Aid, Crutches, Quad Cane, and Others)",
+   "department": "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+   "en": "Where can I request a wheelchair or hearing aid?",
+   "fil": "Saan pwede mag-request ng wheelchair o hearing aid?"
+  },
+  {
+   "subservice": "Provision of Medical Transporter (Ambulance)",
+   "department": "CITY GENERAL SERVICES OFFICE",
+   "en": "How to request an ambulance for emergency transport?",
+   "fil": "Paano mag-request ng ambulance?"
+  },
+  {
+   "subservice": "Provision of Tent, Tables, and Chairs",
+   "department": "CITY GENERAL SERVICES OFFICE",
+   "en": "Who provides tents, tables, and chairs for events?",
+   "fil": "Sino ang nag-aalok ng tent, tables, chairs?"
+  },
+  {
+   "subservice": "Provision of Vehicle Services on Loan (Ferry Boat / Bus / Coaster)",
+   "department": "CITY GENERAL SERVICES OFFICE",
+   "en": "How can I borrow a ferry boat or bus for my group?",
+   "fil": "Paano mag-loan ng ferry boat o bus?"
+  },
+  {
+   "subservice": "Registration and Granting of Accreditation to Companies and Manpower Agencies",
+   "department": "INFORMATION, INVESTMENT PROMOTIONS AND EMPLOYMENT SERVICES OFFICE",
+   "en": "Where do I register my company for accreditation?",
+   "fil": "Saan i-register ang kumpanya para accreditation?"
+  },
+  {
+   "subservice": "Registration for Cat Spaying or Neutering",
+   "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+   "en": "How to sign up my cat for spaying?",
+   "fil": "Paano i-register ang pusa para spay?"
+  },
+  {
+   "subservice": "Registration for Spay and Neuter (Special Scheduled Activity)",
+   "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+   "en": "Where can I enroll my pet in the city’s neuter program?",
+   "fil": "Saan mag-enroll ng alagang hayop sa spay/neuter program?"
+  },
+  {
+   "subservice": "Request for a Seminar on Ecological Solid Waste Management",
+   "department": "CITY ENVIRONMENT AND NATURAL RESOURCES DEPARTMENT",
+   "en": "When is the next waste management seminar?",
+   "fil": "Kailan ang susunod na seminar tungkol sa solid waste?"
+  },
+  {
+   "subservice": "Request for a Tour or Visit to the City of Calamba",
+   "department": "CULTURAL AFFAIRS, TOURISM AND SPORTS DEVELOPMENT DEPARTMENT",
+   "en": "How can I book a city tour in Calamba?",
+   "fil": "Paano mag‑schedule ng tour sa Calamba?"
+  },
+  {
+   "subservice": "Request for Access to Available Materials (Including Photographs, Reports, Key Cultural Heritage Profiles, and Inventories of Cultural Properties)",
+   "department": "CULTURAL AFFAIRS, TOURISM AND SPORTS DEVELOPMENT DEPARTMENT",
+   "en": "Where can I get cultural heritage photos and reports?",
+   "fil": "Saan ko makukuha ang mga larawan at report ng cultural heritage?"
+  },
+  {
+   "subservice": "Request for Free Legal Counseling / Advice (Dulugang Bayan)",
+   "department": "CITY LEGAL SERVICES OFFICE",
+   "en": "Do you offer free legal advice for residents?",
+   "fil": "Libre ba ang legal counseling para sa mga residente?"
+  },
+  {
+   "subservice": "Request for Support and Assistance During Parade and Motorcade Activities",
+   "department": "PUBLIC ORDER AND SAFETY OFFICE",
+   "en": "How do I request help for a parade or motorcade?",
+   "fil": "Paano mag‑request ng support para sa parada?"
+  },
+  {
+   "subservice": "Request for the Conduct of a Comprehensive Social Case Study Report for the Rehabilitation of Individuals Using Illegal Drugs",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "Can the city do a social case study for drug rehab?",
+   "fil": "Pwede ba kayong gumawa ng social case study para sa drug rehab?"
+  },
+  {
+   "subservice": "Researching Data Information",
+   "department": "CITY PLANNING AND DEVELOPMENT OFFICE",
+   "en": "Where can I find city planning data and statistics?",
+   "fil": "Saan ko makikita ang data ng city planning?"
+  },
+  {
+   "subservice": "Response to Complaints from Senior Citizens",
+   "department": "OFFICE OF THE MAYOR",
+   "en": "How do I file a complaint on behalf of a senior citizen?",
+   "fil": "Paano mag‑reklamo para sa senior citizen?"
+  },
+  {
+   "subservice": "Solicitation Letter",
+   "department": "OFFICE OF THE MAYOR",
+   "en": "I need a solicitation letter from the mayor’s office, how?",
+   "fil": "Paano kumuha ng solicitation letter mula sa mayor?"
+  },
+  {
+   "subservice": "Application for Late Enrollment, Re-Admission and Shifting",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "Can I apply for late enrollment at Calamba City College?",
+   "fil": "Pwede ba mag‑late enrollment sa City College of Calamba?"
+  },
+  {
+   "subservice": "Application for Temporary ID",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "How do I get a temporary ID from the city college?",
+   "fil": "Paano kumuha ng temporary ID sa city college?"
+  },
+  {
+   "subservice": "Approval of Request for Training and/or Capture of Stray Dogs",
+   "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+   "en": "Where can I apply to train or catch stray dogs?",
+   "fil": "Saan mag-apply para sa training o pag‑capture ng mga stray dogs?"
+  },
+  {
+   "subservice": "Authentication of Documents",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "Who can verify my documents at the city college?",
+   "fil": "Sino ang mag‑authenticate ng documents ko sa city college?"
+  },
+  {
+   "subservice": "Certificate of Good Moral Character",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "How to request a good moral character certificate?",
+   "fil": "Paano mag‑request ng Certificate of Good Moral Character?"
+  },
+  {
+   "subservice": "Competency Assessment",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "Where do I take the competency test for social services?",
+   "fil": "Saan ako mag‑competency assessment para sa social services?"
+  },
+  {
+   "subservice": "Conduct of Knowledge and Skills Training in Public Schools",
+   "department": "PUBLIC ORDER AND SAFETY OFFICE",
+   "en": "Who handles knowledge and skills training for public schools?",
+   "fil": "Sino ang nag‑organize ng training sa public schools?"
+  },
+  {
+   "subservice": "Dropping of Subjects",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "How can I drop a subject at the city college?",
+   "fil": "Paano mag‑drop ng subject sa city college?"
+  },
+  {
+   "subservice": "Enrollment for Irregular and Transferee Students",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "What’s the process to enroll as an irregular or transfer student?",
+   "fil": "Ano ang steps para mag‑enroll bilang irregular o transferee?"
+  },
+  {
+   "subservice": "Enrollment for Regular and Freshmen Students",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "Where do I sign up for regular freshman enrollment?",
+   "fil": "Saan mag‑enroll para sa regular freshman?"
+  },
+  {
+   "subservice": "Enrollment in Technical-Vocational Education and Training (TVET) Programs",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "How to join a TVET program through the social services office?",
+   "fil": "Paano sumali sa TVET program sa social services office?"
+  },
+  {
+   "subservice": "Exit Clearance or Returning Clearance",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "How do I get a clearance to leave or return to school?",
+   "fil": "Paano kumuha ng exit o returning clearance?"
+  },
+  {
+   "subservice": "Filing of Student Leave of Absence",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "Where can I apply for a student leave of absence?",
+   "fil": "Saan mag-apply ng leave of absence para sa estudyante?"
+  },
+  {
+   "subservice": "Guarantee Letter (Laboratory) – Pagbibigay ng Guarantee Letter para sa pagpapa-laboratoryo",
+   "department": "OFFICE OF THE VICE MAYOR",
+   "en": "How to request a guarantee letter for lab work?",
+   "fil": "Paano kumuha ng guarantee letter para sa laboratory?"
+  },
+  {
+   "subservice": "Learning Management System (LMS) Queries and Concerns",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "I have a problem with the LMS, who can help?",
+   "fil": "May issue ako sa LMS, kanino mag‑report?"
+  },
+  {
+   "subservice": "Petition of Opening of Subject",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "Can I propose a new subject to be offered?",
+   "fil": "Pwede ba mag‑request ng bagong subject?"
+  },
+  {
+   "subservice": "Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar",
+   "department": "CITY POPULATION MANAGEMENT OFFICE",
+   "en": "When is the next pre‑marriage orientation seminar?",
+   "fil": "Kailan ang susunod na pre‑marriage orientation?"
+  },
+  {
+   "subservice": "Pre-Registration for Entering Freshmen and Transferee",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "How do I pre‑register as a freshman or transfer student?",
+   "fil": "Paano mag‑pre‑register bilang freshman o transferee?"
+  },
+  {
+   "subservice": "Providing Various Knowledge and Skills for Disaster Preparedness",
+   "department": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+   "en": "Where can I learn disaster preparedness skills?",
+   "fil": "Saan matutunan ang skills para sa disaster preparedness?"
+  },
+  {
+   "subservice": "Request for Adolescent Health and Development (AHD) Seminar, Bilateral Tubal Ligation (BTL), Progestin Subdermal Implant (PSI), and Family Planning in the Workplace",
+   "department": "CITY POPULATION MANAGEMENT OFFICE",
+   "en": "How to request an AHD or family planning seminar at work?",
+   "fil": "Paano mag‑request ng AHD o family planning seminar sa opisina?"
+  },
+  {
+   "subservice": "Request for Change of Grades",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "Who handles requests to change my grades?",
+   "fil": "Sino ang nagha‑handle ng grade change request?"
+  },
+  {
+   "subservice": "Request for Completion Form",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "How can I get the completion form for my college program?",
+   "fil": "Paano makakakuha ng form para tapusin ang kurso?"
+  },
+  {
+   "subservice": "Request for Second Copy (Registration Form, Comp Card & Diploma)",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "Where do I request a second copy of my diploma and registration?",
+   "fil": "Saan mag-apply ng pangalawang kopya ng diploma at registration?"
+  },
+  {
+   "subservice": "Request of Copy of Grades",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "Can I get a copy of my grades from City College?",
+   "fil": "Pwede ba makuha ang kopya ng grades ko sa kolehiyo?"
+  },
+  {
+   "subservice": "Request of Transcript of Records",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "How do I request my transcript of records?",
+   "fil": "Paano mag-request ng transcript of records?"
+  },
+  {
+   "subservice": "Scheduling of Pre-Marriage Orientation Seminar / Responsible Parenthood and Family Planning Seminar",
+   "department": "CITY POPULATION MANAGEMENT OFFICE",
+   "en": "When is the next pre‑marriage orientation seminar?",
+   "fil": "Kailan ang susunod na pre‑marriage orientation?"
+  },
+  {
+   "subservice": "Supervised Industry Training (SIT) / Supervised Industry Learning (SIL) / On-the-Job Training (OJT)",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "How can I apply for on‑the‑job training through the city?",
+   "fil": "Paano mag-apply ng OJT sa city social services?"
+  },
+  {
+   "subservice": "Application for Vacant Positions",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "en": "Where can I see the current job openings in the city hall?",
+   "fil": "Saan ko makikita ang bakanteng trabaho sa city hall?"
+  },
+  {
+   "subservice": "Employment Assistance Request",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "I need help finding a job, where do I go?",
+   "fil": "Kailangan ko ng job assistance, saan ako pupunta?"
+  },
+  {
+   "subservice": "Adult Counselling",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "How do I book an adult counseling session?",
+   "fil": "Paano mag‑schedule ng adult counseling?"
+  },
+  {
+   "subservice": "Adult Psychiatric Consultation",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "Where can I get a psychiatric consultation for adults?",
+   "fil": "Saan makakakuha ng adult psychiatric consultation?"
+  },
+  {
+   "subservice": "Approval for Use of Medical Transporter Vehicle (Ambulance)",
+   "department": "CITY ADMINISTRATION OFFICE",
+   "en": "How do I get permission to use an ambulance?",
+   "fil": "Paano kumuha ng permiso para sa ambulansya?"
+  },
+  {
+   "subservice": "Dental Check-up(Pagsusuri sa Ngipin / Pagbunot ng Ngipin)",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "Where can I schedule a dental check‑up?",
+   "fil": "Saan magpa‑appointment para sa dental check‑up?"
+  },
+  {
+   "subservice": "Endorsement Letter / Guarantee Letter / Financial Assistance (Hospital or Medical)",
+   "department": "CITY ADMINISTRATION OFFICE",
+   "en": "Can I apply for a hospital financial aid letter?",
+   "fil": "Paano mag‑apply ng financial aid letter sa ospital?"
+  },
+  {
+   "subservice": "Endorsement Letter / Recommendation for Drug Rehabilitation Center (Tahanan ng Kabataan)",
+   "department": "CITY ADMINISTRATION OFFICE",
+   "en": "Where do I request a rehab center recommendation?",
+   "fil": "Saan mag‑request ng recommendation para sa rehab center?"
+  },
+  {
+   "subservice": "Family Planning",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "How do I enroll in the city family planning program?",
+   "fil": "Paano mag‑enroll sa family planning ng lungsod?"
+  },
+  {
+   "subservice": "Issuance of Pink Card",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "Where can I obtain a pink health card?",
+   "fil": "Saan makakakuha ng pink card?"
+  },
+  {
+   "subservice": "Laboratory Services",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "How to request lab tests at the health department?",
+   "fil": "Paano mag‑request ng lab tests sa health department?"
+  },
+  {
+   "subservice": "Medical Treatment for Animal Bite Victims",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "Where do I get treatment after an animal bite?",
+   "fil": "Saan magpa‑treatment kung nabakbak ng hayop?"
+  },
+  {
+   "subservice": "Newborn Screening",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "How can I arrange newborn screening for my baby?",
+   "fil": "Paano mag‑arrange ng newborn screening para sa baby?"
+  },
+  {
+   "subservice": "Patient Consultation Services",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "Where do I book a patient consultation with a doctor?",
+   "fil": "Saan mag‑book ng patient consultation?"
+  },
+  {
+   "subservice": "Pre-Natal Services at Birthing Facility",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "Where can I get prenatal check‑ups for my baby?",
+   "fil": "Saan ako makakakuha ng prenatal check‑up?"
+  },
+  {
+   "subservice": "Services for Prenatal and Postnatal Care",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "How do I sign up for mom‑and‑baby postnatal care?",
+   "fil": "Paano mag‑register sa postnatal care?"
+  },
+  {
+   "subservice": "Tuberculosis Consultation Services",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "Where do I go for TB testing and advice?",
+   "fil": "Saan ako magpa‑TB test at konsultasyon?"
+  },
+  {
+   "subservice": "Tuberculosis Consultation Services for Children",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "Do you have TB check‑ups for kids?",
+   "fil": "May TB consultation ba para sa mga bata?"
+  },
+  {
+   "subservice": "Vaccination Services",
+   "department": "CITY HEALTH SERVICES DEPARTMENT",
+   "en": "Where can I get my vaccinations in Calamba?",
+   "fil": "Saan ako magpa‑vaccine dito?"
+  },
+  {
+   "subservice": "Approval for External Consultation for the Treatment of Livestock Used in Production",
+   "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+   "en": "How to get approval for external vet consult for my livestock?",
+   "fil": "Paano kumuha ng approval para external vet consult ng hayop?"
+  },
+  {
+   "subservice": "Approval of Request for Mass Rabies Vaccination (Homeowners / Companies, etc.)",
+   "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+   "en": "Who approves mass rabies shots for my barangay?",
+   "fil": "Sino ang nag‑approve ng mass rabies vaccination sa barangay?"
+  },
+  {
+   "subservice": "Approval of Request for Veterinary Medical Supplies",
+   "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+   "en": "Where can I request veterinary medical supplies?",
+   "fil": "Saan ako mag‑request ng vet medical supplies?"
+  },
+  {
+   "subservice": "Individual/Personal Walk-in Approach for Vaccination Services",
+   "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+   "en": "Can I walk in for a pet vaccination today?",
+   "fil": "Pwede ba mag‑walk‑in para sa pet vaccination?"
+  },
+  {
+   "subservice": "Provision of Consultation Services to Walk-In Clients",
+   "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+   "en": "Do you offer walk‑in vet consultations?",
+   "fil": "May walk‑in vet consultation ba?"
+  },
+  {
+   "subservice": "Redemption of Captured Stray Dogs (City Pound)",
+   "department": "CITY VETERINARY SERVICES AND SLAUGHTERHOUSE MANAGEMENT OFFICE",
+   "en": "How can I claim a stray dog from the city pound?",
+   "fil": "Paano kunin yung aso na nasa city pound?"
+  },
+  {
+   "subservice": "Adoption Application for Step-Parent, Relative, and Adult Cases",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "Where do I apply to adopt a relative’s child?",
+   "fil": "Saan mag-apply para ampunin ang anak ng kamag-anak?"
+  },
+  {
+   "subservice": "Application for Adoption (Regular Case)",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "What’s the process to adopt a child normally?",
+   "fil": "Paano mag-apply para mag-ampon ng bata?"
+  },
+  {
+   "subservice": "Assistance in Handling Cases of Children at Risk (CAR) and Children in Conflict with the Law (CICL)",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "How do I get help for a child at risk or in trouble?",
+   "fil": "Paano makakakuha ng tulong para sa batang delikado o nasasakdal?"
+  },
+  {
+   "subservice": "Case Management for Women and Their Children Who Are Victims of Abuse Under Republic Act 9262",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "Where can victims of abuse get support for themselves and kids?",
+   "fil": "Saan makakakuha ng tulong ang biktima ng pang-aabuso at anak niya?"
+  },
+  {
+   "subservice": "Conducting Immediate Reach-Out Operation",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "How do I request an immediate outreach assistance?",
+   "fil": "Paano mag-request ng agarang outreach?"
+  },
+  {
+   "subservice": "Financial Assistance for Funeral Services",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "Can I get money help for funeral costs?",
+   "fil": "May financial aid ba para sa gastusin sa libing?"
+  },
+  {
+   "subservice": "Financial Assistance for Hospitalization Services",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "How to apply for hospital expense assistance?",
+   "fil": "Paano mag-apply para sa tulong sa gastusin sa ospital?"
+  },
+  {
+   "subservice": "Financial Assistance for Individuals Affected by Fire or Natural Disasters",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "Where to apply for aid after fire or disaster damage?",
+   "fil": "Saan mag-apply ng tulong pagkatapos ng sunog o kalamidad?"
+  },
+  {
+   "subservice": "Financial Assistance for Medical Services",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "How can I get financial help for medical treatment?",
+   "fil": "Paano makakuha ng pera para sa medikal na treatment?"
+  },
+  {
+   "subservice": "Financial Assistance for Returning to the Province",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "How can I get money help to move back to my hometown?",
+   "fil": "Paano makakuha ng financial aid para bumalik probinsya?"
+  },
+  {
+   "subservice": "Implementation of the Aftercare Program",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "Where do I apply for the after‑care program for my child?",
+   "fil": "Saan mag‑apply para sa aftercare program ng anak?"
+  },
+  {
+   "subservice": "Management of cases involving children who are victims of different types of abuse",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "Who handles cases of kids who suffered abuse?",
+   "fil": "Sino ang nagha‑handle ng child abuse cases?"
+  },
+  {
+   "subservice": "Pag-aasikaso sa Batang Napulot (Foundling), Pinabayaan (Abandoned), Boluntaryo / Hindi Boluntaryong Ipinaubayang Bata (Voluntary / Involuntary Committed)",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "How do I report or adopt a found or abandoned child?",
+   "fil": "Paano mag‑report o mag‑adopt ng batang napulot o inabandona?"
+  },
+  {
+   "subservice": "Processing of Foster Care Application",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "What’s needed to file a foster care request?",
+   "fil": "Ano ang kailangan para mag‑apply ng foster care?"
+  },
+  {
+   "subservice": "Request for Assistance for Psychosocial Support",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "Where can I ask for counseling and psychosocial help?",
+   "fil": "Saan ako makakakuha ng psychosocial support?"
+  },
+  {
+   "subservice": "Request for Assistance in Discussions Related to Issues on Financial Support or Custody of Children (Mediation Dialogue) or Discussions Concerning Family Disputes (Family Conference)",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "How do I set up a mediation for child support or family dispute?",
+   "fil": "Paano mag‑schedule ng mediation para child support o family issue?"
+  },
+  {
+   "subservice": "Admission to Rehabilitation Center",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "Where can I get admitted to a rehab center?",
+   "fil": "Saan pwede mag‑admit sa rehabilitation center?"
+  },
+  {
+   "subservice": "Special Assistance: Financial Aid for Distressed/Repatriated OFWs and Others in Need of Livelihood Support",
+   "department": "CITY SOCIAL SERVICES OFFICE",
+   "en": "Is there financial aid for OFWs returning home or needing jobs?",
+   "fil": "May financial aid ba para sa repatriated OFWs o livelihood?"
+  },
+  {
+   "subservice": "Pagkuha ng katunayan – Pagpapatunay ng kasalukuyang gamit at pananim ng lupa at pagputol ng bungang kahoy",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "en": "How do I get a certificate for my land’s current use and tree cutting?",
+   "fil": "Paano kumuha ng katunayan sa gamit ng lupa at pagputol ng puno?"
+  },
+  {
+   "subservice": "Pagkuha ng katunayan – Pagpapatunay ng antas ng pinsala sa halaman, hayop at pangisdaan",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "en": "How can I get a damage certification for my crops?",
+   "fil": "Paano kumuha ng katibayan ng pinsala sa tanim?"
+  },
+  {
+   "subservice": "Pagkuha ng katunayan, farm plan o auxillary – na nakatala sa tanggapan bilang magsasaka / mangingisda Pagpapatunay na nakatala sa tanggapan bilang magsasaka / mangingisda",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "en": "Where do I apply for a farmer/fisher registration proof?",
+   "fil": "Saan mag-apply ng patunay na rehistradong magsasaka?"
+  },
+  {
+   "subservice": "Pagpaparehistro bilang magsasaka / mangingisda",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "en": "How do I register as a farmer or fisherman?",
+   "fil": "Paano magparehistro bilang magsasaka o mangingisda?"
+  },
+  {
+   "subservice": "Paghingi ng Tulong / Subsidiya sa mga kailangan sa bukid at pangisdaan CASO – Agri-Aqua Management Services Division /",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "en": "What subsidies are available for farm or fishery needs?",
+   "fil": "Ano'ng tulong o subsidiya para sa bukid o pangisdaan?"
+  },
+  {
+   "subservice": "Pagpapaiwi ng hayop / paglilipat-iwi ng hayop",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "en": "How can I move my livestock to another location?",
+   "fil": "Paano maglipat-iwi ng hayop?"
+  },
+  {
+   "subservice": "Paghingi ng tulong teknikal patungkol sa mga gawain sa “value chain” (hal. produksyon, pagproseso, pagbebenta) ng mga produkto sa agrikultura at pangisdaan",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "en": "Where can I get technical help for product value‑chain?",
+   "fil": "Saan makakakuha ng tulong teknikal sa value chain ng produkto?"
+  },
+  {
+   "subservice": "Serbisyo ng traktora Serbisyong traktora",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "en": "How do I request tractor services for my farm?",
+   "fil": "Paano mag-request ng serbisyong traktora?"
+  },
+  {
+   "subservice": "Kahilingan para sa Pagsasagawa ng Pagsasanay at Seminar CASO – Agri-Aqua Research and Technical",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "en": "How can I apply for a training or seminar on agriculture?",
+   "fil": "Paano mag‑apply para sa pagsasanay o seminar?"
+  },
+  {
+   "subservice": "Paghingi ng tulong-teknikal para sa pamamahala sa peste Tulong Teknikal para sa pamamahala sa peste CASO – Agri-Aqua Management Services Division /",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "en": "Where do I get pest‑management technical assistance?",
+   "fil": "Saan makakakuha ng tulong teknikal sa pamamahala ng peste?"
+  },
+  {
+   "subservice": "Pagsusuri ng Lupa gamit ang Soil Test Kit CASO – Agri-Aqua Management Services Division /",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "en": "How to arrange a soil test for my land?",
+   "fil": "Paano mag‑schedule ng soil test sa lupa?"
+  },
+  {
+   "subservice": "Pagpapasubok ng Produkto CASO – Agri-Aqua Management Services Division /",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "en": "How can I test my farm product with the agri-aqua office?",
+   "fil": "Paano magpa‑test ng produkto sa agri‑aqua?"
+  },
+  {
+   "subservice": "Paghingi ng tulong teknikal ng mga mananaliksik CASO – Agri-Aqua Management Services Division /",
+   "department": "CITY AGRICULTURAL SERVICES DEPARTMENT",
+   "en": "Where do I get technical help from agricultural researchers?",
+   "fil": "Saan kukuha ng technical help sa mga researcher?"
+  },
+  {
+   "subservice": "Kahilingan para sa Pagsusuri sa Taunang Barangay Budget at Taunang Sangguniang Kabataan Budget Pagsusuri sa Taunang Barangay Budget at Taunang SK Budget",
+   "department": "CITY BUDGET MANAGEMENT OFFICE",
+   "en": "Who reviews the yearly barangay and SK budgets?",
+   "fil": "Sino ang nagche‑check ng yearly barangay at SK budget?"
+  },
+  {
+   "subservice": "Request for Certified True Copies of Birth / Marriage and Death / Certification of Civil Registry Documents City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "How do I request a certified copy of my birth certificate?",
+   "fil": "Paano mag‑request ng certified copy ng birth certificate?"
+  },
+  {
+   "subservice": "Application for Timely Registration of Birth (Hospital, Lying In Clinic and City Health Office) City Civil Registry Office – Civil Registration",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "Where can I register my newborn’s birth right after delivery?",
+   "fil": "Saan mag‑register ng newborn birth agad pagkatapos ng delivery?"
+  },
+  {
+   "subservice": "Application for Late Registration of Birth City Civil Registry Office - Civil",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "Can I still register a birth after the deadline?",
+   "fil": "Pwede pa ba mag‑late registration ng birth?"
+  },
+  {
+   "subservice": "Application for Timely Registration of Death City Civil Registry Office - Civil Registration",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "How do I file a death registration soon after the passing?",
+   "fil": "Paano mag‑register ng death agad matapos mamatay?"
+  },
+  {
+   "subservice": "Application for Late Registration of Death City Civil Registry Office - Civil Registration",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "Is it possible to register a death that was missed earlier?",
+   "fil": "Pwede pa bang i‑late register ang death?"
+  },
+  {
+   "subservice": "Application for Timely Registration of Marriage City Civil Registry Office - Civil Registration",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "Where do I apply for a marriage registration right after wedding?",
+   "fil": "Saan mag‑apply ng marriage registration agad pagkatapos wedding?"
+  },
+  {
+   "subservice": "Application for Late Registration of Marriage City Civil Registry Office - Civil Registration",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "How can I register a marriage that wasn’t recorded on time?",
+   "fil": "Paano mag‑late register ng marriage?"
+  },
+  {
+   "subservice": "Application for Marriage License City Civil Registry Office - Civil Registration",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "How do I apply for a marriage license?",
+   "fil": "Paano mag-apply ng marriage license?"
+  },
+  {
+   "subservice": "Request for Endorsement City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "Where can I get an endorsement for my document?",
+   "fil": "Saan kunin ang endorsement ng papeles ko?"
+  },
+  {
+   "subservice": "Request for Registration of Court Decrees and Orders City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "How to register a court decree with the city office?",
+   "fil": "Paano i-register ang court decree sa city office?"
+  },
+  {
+   "subservice": "Legitimation City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "What’s needed to legitimize a birth record?",
+   "fil": "Ano ang kailangan para legitimize ng birth record?"
+  },
+  {
+   "subservice": "Request for Correction of Entries (CCE) RA 9048 City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "How can I correct an entry on my certificate?",
+   "fil": "Paano i-correct ang entry sa certificate ko?"
+  },
+  {
+   "subservice": "Request for Correction of Entries – RA 9048 (CFN) City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "Where do I request a correction under RA 9048?",
+   "fil": "Saan mag-request ng correction under RA 9048?"
+  },
+  {
+   "subservice": "Request for Changes of Entries RA 10172 in Birth Certificate City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "How to change my birth certificate details per RA 10172?",
+   "fil": "Paano baguhin ang birth certificate ayon sa RA 10172?"
+  },
+  {
+   "subservice": "Request for Certificate of Finality and Annotation (RA 9048 & 10172) City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "Where do I get a certificate of finality and annotation?",
+   "fil": "Saan kunin ang certificate of finality and annotation?"
+  },
+  {
+   "subservice": "Request for Affidavit to Use the Surname of the Father (if not registered) City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "How to get an affidavit to use my father’s surname (unregistered)?",
+   "fil": "Paano kumuha ng affidavit para gamitin ang apelyido ng ama (hindi registered)?"
+  },
+  {
+   "subservice": "Request for Affidavit to Use the Surname of the Father (if registered) City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "How to request an affidavit to use my father’s surname (registered)?",
+   "fil": "Paano mag-request ng affidavit para gamitin ang apelyido ng ama (registered)?"
+  },
+  {
+   "subservice": "Batch Request Entry System (BREQS) Pagtatala ng Kapanganakan sa Ibang Lugar City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "How do I register a birth that happened outside Calamba?",
+   "fil": "Paano magpatala ng kapanganakan sa labas ng Calamba?"
+  },
+  {
+   "subservice": "Application for Out-of-Town Registration of Birth City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "Where can I file an out‑of‑town birth registration?",
+   "fil": "Saan mag‑apply ng birth registration kung nasa ibang lugar?"
+  },
+  {
+   "subservice": "Registration of Foundling City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "What’s the process to register a found baby?",
+   "fil": "Paano i‑register ang foundling?"
+  },
+  {
+   "subservice": "Request for Certificate of Supplemental Report City Civil Registry Office - Civil Certification and",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "How can I get a supplemental report certificate?",
+   "fil": "Paano kumuha ng certificate of supplemental report?"
+  },
+  {
+   "subservice": "Issuance of Order of Payment (Death Certificate/Certified Death Certificate/Exhumation/Burial Transfer)",
+   "department": "CITY CIVIL REGISTRY OFFICE",
+   "en": "Where do I request a death certificate or burial transfer order?",
+   "fil": "Saan mag‑request ng death certificate o burial transfer order?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Business Tax Pagkolekta sa Business Tax",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "How do I obtain an official receipt for my business tax?",
+   "fil": "Paano kumuha ng opisyal na resibo para sa business tax?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa 2% PEZA Share Pagkolekta sa PEZA Share",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "Where can I get a receipt for the 2% PEZA share?",
+   "fil": "Saan makakakuha ng resibo para sa 2% PEZA share?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Amusement Tax Pagkolekta sa Amusement Tax",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "How to get an official receipt for amusement tax?",
+   "fil": "Paano makuha ang opisyal na resibo ng amusement tax?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Annual Fixed Tax (AFT) Pagkolekta sa Annual Fixed Tax",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "Where do I request an official receipt for the Annual Fixed Tax?",
+   "fil": "Saan mag‑request ng opisyal na resibo para sa Annual Fixed Tax?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Birth Fee Pagkolekta sa Birth Fee",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "How can I obtain an official receipt for the birth fee?",
+   "fil": "Paano kumuha ng opisyal na resibo para sa birth fee?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Tuition Fee at ibang bayarin Pagkolekta sa Tuition Fee at ibang bayarin",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "Where can I get an official receipt for my school fees?",
+   "fil": "Saan makakakuha ng resibo para tuition?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Pump Verification Testing and Sealing Pagkolekta sa mga gasoline station",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "How do I obtain a receipt for my gas station pump test?",
+   "fil": "Paano makakuha ng resibo sa pump verification?"
+  },
+  {
+   "subservice": "Pagbibigay ng Community Tax Certificate (Cedula) Pagkolekta mula sa Community Tax Certificate (Cedula)",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "Where do I apply for a community tax certificate receipt?",
+   "fil": "Saan mag-apply ng cedula receipt?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Franchise Tax Pagkolekta mula sa Franchise Tax",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "Need a receipt for my franchise tax, where to go?",
+   "fil": "Saan makakakuha ng resibo para franchise tax?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Market Fees Pagkolekta sa Market Fees",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "Where can I get an official receipt for market fees?",
+   "fil": "Saan makuha ang resibo ng market fees?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Police, Court at Mayor’s Permit Fee Pagkolekta mula sa Police, Court at Mayor’s Permit",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "How to get a receipt for police, court and mayor’s permit fees?",
+   "fil": "Paano kumuha ng resibo para police, court, mayor permit?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Slaughter and Coral Fees Pagkolekta mula sa Slaughter at Coral Fees",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "Where do I obtain a receipt for slaughter or coral fees?",
+   "fil": "Saan makuha ang resibo para slaughter o coral fees?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Traffic Violation Fees Pagkolekta mula sa mga Traffic Violation",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "How can I get a receipt for my traffic violation fine?",
+   "fil": "Paano makakuha ng resibo sa traffic violation?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Beripikasyon, Inspeksyon at Sealing ng Weighing Scale Pagkolekta mula sa mga Weighing Scale",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "Where to get a receipt for weighing scale verification and sealing?",
+   "fil": "Saan makuha ang resibo para weighing scale inspection?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Real Property Tax Pagkolekta mula sa Real Property Tax",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "Where can I request an official receipt for real property tax?",
+   "fil": "Saan mag-request ng resibo para real property tax?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Real Property Tax (Online Payment) Pagkolekta mula sa Real Property Tax (Online Payment)",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "How do I get an official receipt for my online property tax payment?",
+   "fil": "Paano kumuha ng resibo sa online na buwis sa lupa?"
+  },
+  {
+   "subservice": "Pagbibigay ng Tax Clearance Pagkolekta mula sa Tax Clearance",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "Where can I apply for a tax clearance?",
+   "fil": "Saan ako mag-aapply ng tax clearance?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Miscellaneous Fees ng iba’t - ibang opisina Pagkolekta sa iba’t-ibang opisina ng Miscellaneous Fees",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "Need a receipt for miscellaneous fees paid to city offices, how?",
+   "fil": "Paano makakuha ng resibo sa ibang fees sa city hall?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Transfer Tax na may kasama Tax Clearance Pagkolekta sa Transfer Tax",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "How to obtain receipt and tax clearance for a property transfer?",
+   "fil": "Paano makuha receipt at tax clearance sa transfer tax?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Civil Registry Fees Pagkolekta sa Civil Registry Fees",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "Where do I get an official receipt for civil registry services?",
+   "fil": "Saan makakakuha ng resibo para sa civil registry?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Professional Tax Receipt Fees Pagkolekta sa Professional Tax Receipt Fees",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "How can I receive a receipt for my professional tax?",
+   "fil": "Paano makuha receipt sa professional tax?"
+  },
+  {
+   "subservice": "Pagbibigay ng Opisyal na Resibo para sa Tricycle Franchise Pagkolekta sa Tricyle Franchise Fees",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "Need a receipt for my tricycle franchise fee, where?",
+   "fil": "Saan makakakuha ng resibo para sa tricycle franchise?"
+  },
+  {
+   "subservice": "Pagbibigay ng Certified True Copy ng Opisyal na Resibo",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "How do I request a certified true copy of my receipt?",
+   "fil": "Paano mag-request ng certified copy ng resibo?"
+  },
+  {
+   "subservice": "Pag-rerelease ng Tseke para sa Financial Assistance, Supplier / Contractor at Land Acquisition Pagbibigay ng mga Tseke",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "Where can I have a check reissued for financial assistance?",
+   "fil": "Saan i-reissue ang tseke para sa financial assistance?"
+  },
+  {
+   "subservice": "Pagrerelease ng Financial Assistance (FA) Pagrerelease ng Tulong Pinansyal",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "How to apply for a financial assistance release?",
+   "fil": "Paano mag-apply para sa release ng tulong pinansyal?"
+  },
+  {
+   "subservice": "Pagbibigay ng Money Accountability Clearance",
+   "department": "CITY TREASURY MANAGEMENT OFFICE",
+   "en": "How do I get a money accountability clearance?",
+   "fil": "Paano kumuha ng money accountability clearance?"
+  },
+  {
+   "subservice": "Kahilingan para sa pagkumpuni at pangangalaga ng mga kagamitan sa ibang Ahensya. Pagkukumpuni at Pangangalaga ng mga kagamitan sa ibang Ahensya",
+   "department": "HOUSING AND SETTLEMENTS DEPARTMENT",
+   "en": "Where can I request equipment repair for another agency?",
+   "fil": "Saan mag-request ng repair ng equipment ng ibang ahensya?"
+  },
+  {
+   "subservice": "Pag-issue ng Building Permit (BP220) Ang BP220 ay ipinagkakaloob para sa mga residente na nagbibigay pahintulot sa kanila na magpagawa ng bagong bahay o magsagawa ng renovation sa bahay o",
+   "department": "HOUSING AND SETTLEMENTS DEPARTMENT",
+   "en": "What’s needed to apply for a building permit?",
+   "fil": "Ano ang kailangan para sa building permit?"
+  },
+  {
+   "subservice": "Issuance of Certificate of Final Electrical Inspection (CFEI)(BP220) Ang CFEI ay isang requirement para sa mga magpapakabit ng linya ng kuryente sa kanilang bahay o istruktura na klasipikadong low-cost housing, economic housing o",
+   "department": "HOUSING AND SETTLEMENTS DEPARTMENT",
+   "en": "How to obtain a final electrical inspection certificate?",
+   "fil": "Paano makuha ang CFEI para sa bahay?"
+  },
+  {
+   "subservice": "Aplikasyon sa Programang Pabahay at Palupa Ang Aplikasyon sa Programang Pabahay at Palupa ng Pamahalaang Panlungsod ay alinsunod sa Batas Republika 7279 o Urban Development and Housing Act ng 1992 na",
+   "department": "HOUSING AND SETTLEMENTS DEPARTMENT",
+   "en": "Where do I apply for the city housing and loan program?",
+   "fil": "Saan mag-apply sa programang pabahay at palupa?"
+  },
+  {
+   "subservice": "Pag-bibigay ng Occupancy Certification Ang Occupancy Certification ay ipinagkakaloob para sa mga: (1) awardee ng pabahay ng Pamahalaang Panlungsod ng Calamba na gagamitin itong requirement para sa",
+   "department": "HOUSING AND SETTLEMENTS DEPARTMENT",
+   "en": "How can I get an occupancy certificate for my new home?",
+   "fil": "Paano makuha ang occupancy certification ng bahay?"
+  },
+  {
+   "subservice": "Pagbibigay ng Occupancy Permit Ang Occupancy Permit ay ipinagkakaloob bilang patunay na ang pagkakatayo ng isang istruktura na klasipikadong low-cost housing ay nakasunod sa aprubadong planong",
+   "department": "HOUSING AND SETTLEMENTS DEPARTMENT",
+   "en": "Where do I apply for an occupancy permit?",
+   "fil": "Saan mag-apply ng occupancy permit?"
+  },
+  {
+   "subservice": "Pagbibigay ng mga Sertipikadong Kopya / Sipi ng mga Dokumento ng Sangguniang Panlungsod Pagkakaloob ng mga Sertipikadong Kopya / Sipi ng mga dokumento ng Sangguniang",
+   "department": "LEGISLATIVE SERVICES OFFICE",
+   "en": "How to request a certified copy of a city council document?",
+   "fil": "Paano kumuha ng certified copy ng dokumento ng Sangguniang Panlungsod?"
+  },
+  {
+   "subservice": "Pagsasampa ng Kasong Administratibo laban sa mga kawani at opisyal ng Gobyerno sa Sangguniang Panlungsod",
+   "department": "LEGISLATIVE SERVICES OFFICE",
+   "en": "How do I file an administrative case against a city official?",
+   "fil": "Paano magsampa ng administrative case laban sa opisyal?"
+  },
+  {
+   "subservice": "Special Permit (Special Mayor's Permit for Events and Activities)",
+   "department": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+   "en": "How do I get a mayor's permit for my event?",
+   "fil": "Paano kumuha ng permit sa mayor para sa event?"
+  },
+  {
+   "subservice": "Issuance of New Tax Declaration for General Purposes (Reassessment, Revision or New Discovery of Real Property)",
+   "department": "CITY ASSESSMENT OFFICE",
+   "en": "Where can I apply for a new tax declaration for my land?",
+   "fil": "Saan mag-apply ng bagong tax declaration sa lupa?"
+  },
+  {
+   "subservice": "Application for Clearance for Graduating Students",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "What’s needed for a graduation clearance at City College?",
+   "fil": "Ano ang kailangan para sa clearance ng graduating sa City College?"
+  },
+  {
+   "subservice": "Hardware / Software / Network Maintenance and Troubleshooting",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "Can you help fix the college’s computer network?",
+   "fil": "Pwede niyo bang ayusin ang network ng college?"
+  },
+  {
+   "subservice": "Request for Retrieval of Document",
+   "department": "CITY COLLEGE OF CALAMBA",
+   "en": "How do I request a copy of my college document?",
+   "fil": "Paano mag-request ng kopya ng dokumento sa college?"
+  },
+  {
+   "subservice": "Standby Ambulance (Pagtatalaga ng Nakahandang Ambulansya sa Pagtitipon)",
+   "department": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+   "en": "How to arrange a standby ambulance for my event?",
+   "fil": "Paano mag-assign ng standby ambulance sa event?"
+  },
+  {
+   "subservice": "Request for Investigation, Review or Audit of Transactions (Internal Audit Services)",
+   "department": "OFFICE OF THE MAYOR",
+   "en": "Who do I contact to audit a city transaction?",
+   "fil": "Sino ang dapat kontakin para mag-audit ng transaction?"
+  },
+  {
+   "subservice": "Paghahanda ng Programa sa Paggawa ng mga Proyektong Imprastraktura (Infrastructure Project Programming)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "en": "Need help planning an infrastructure project, where to start?",
+   "fil": "Paano magsimula sa paggawa ng infrastructure project?"
+  },
+  {
+   "subservice": "Pagsasaayos at Pagpapanatili ng Imprastraktura / Gusali (Infrastructure and Building Repair and Maintenance)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "en": "Who handles repairs for city buildings and roads?",
+   "fil": "Sino ang nag-aasikaso ng repair ng gusali at kalsada?"
+  },
+  {
+   "subservice": "Pagpapahiram ng Pansamantalang Entablado, Sasakyan at Heavy Equipment (Loan of Stage, Vehicles and Heavy Equipment)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "en": "Can I borrow a stage or heavy equipment from the city?",
+   "fil": "Pwede bang umutang ng entablado o heavy equipment sa city?"
+  },
+  {
+   "subservice": "Pagkukumpuni ng Pagpapailaw sa Kalsada (Streetlight Repair)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "en": "The street light near my house is out, who do I call?",
+   "fil": "Patay ang poste sa kanto, sino ang aayos?"
+  },
+  {
+   "subservice": "Pagkukumpuni at Pagsasaayos ng Daluyan ng Tubig (Repair, Clearing and Desilting of Drainage Canals)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "en": "Where can I report a broken drainage pipe?",
+   "fil": "May sira na kanal, kanino i-report?"
+  },
+  {
+   "subservice": "Pagpapanatili ng Kaayusan ng Sewerage Treatment Plant (STP Maintenance)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "en": "How do I request cleaning for the sewage plant?",
+   "fil": "Paano magpa‑linis ng treatment plant?"
+  },
+  {
+   "subservice": "Demolisyon ng mga Iligal na Istraktura sa Road Right-of-Way at Lumang Gusali ng Paaralan (Demolition of Illegal Structures)",
+   "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+   "en": "Who removes illegal structures on road right‑of‑way?",
+   "fil": "Sino ang nagte‑demolish ng illegal na gusali sa kalsada?"
+  },
+  {
+   "subservice": "Pagkukumpuni at Pangangalaga ng mga Kagamitan ng Ibang Ahensya (Equipment Repair for Other Agencies)",
+   "department": "CITY GENERAL SERVICES OFFICE",
+   "en": "Can the city fix broken equipment for my agency?",
+   "fil": "Pwede ba ayusin ng city ang sirang gamit ng agency ko?"
+  },
+  {
+   "subservice": "Application for Leave (Without Commutation of Leave Credits)",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "en": "How to apply for leave without using my leave credits?",
+   "fil": "Paano mag‑apply ng leave na hindi babawas ng credit?"
+  },
+  {
+   "subservice": "Application for Leave (With Commutation of Leave Credits)",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "en": "Where do I request leave with cash conversion?",
+   "fil": "Saan mag‑apply ng leave na may commutation?"
+  },
+  {
+   "subservice": "Pagpapalit ng Identification Card (Employee ID Replacement)",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "en": "I lost my employee ID, how can I get a new one?",
+   "fil": "Nawala ang ID ko, paano mag‑palit?"
+  },
+  {
+   "subservice": "Pagpapalit ng Nawala o Nasirang ATM / Cash Card (ATM / Cash Card Replacement)",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "en": "My cash card isn’t working, how do I replace it?",
+   "fil": "Nasira ang cash card, papalit po paano?"
+  },
+  {
+   "subservice": "Pagbabago ng Impormasyon (Update of Employee Information)",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "en": "How can I update my personal info in the HR system?",
+   "fil": "Paano i‑update ang data ko sa HR?"
+  },
+  {
+   "subservice": "Paghiling ng Human Resource Clearance (HR Clearance)",
+   "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+   "en": "How do I get a HR clearance?",
+   "fil": "Paano kumuha ng HR clearance?"
+  },
+  {
+   "subservice": "Request for Preparation of Legal Documents including Notarization",
+   "department": "CITY LEGAL SERVICES OFFICE",
+   "en": "Where can I notarize my documents?",
+   "fil": "Saan ako magpa-notaryo ng papeles?"
+  },
+  {
+   "subservice": "Computer Repair (Pagkukumpuni ng mga Computer)",
+   "department": "CITY PLANNING AND DEVELOPMENT OFFICE",
+   "en": "My computer’s not working, who can fix it?",
+   "fil": "May sira ang PC ko, sino pwedeng ayusin?"
+  },
+  {
+   "subservice": "Pagproseso at Pagbigay ng CLDF Loan (CLDF Livelihood Loan)",
+   "department": "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT",
+   "en": "How to apply for a CLDF livelihood loan?",
+   "fil": "Paano mag-apply ng CLDF loan?"
+  },
+  {
+   "subservice": "Certificate of Disability and Certificate of Cancellation of PWD ID",
+   "department": "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+   "en": "Where do I get a disability certificate?",
+   "fil": "Saan makakakuha ng disability certificate?"
+  },
+  {
+   "subservice": "Tulong Pinansiyal para sa Medical at Therapy ng PWD (Medical and Therapy Assistance for PWDs)",
+   "department": "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+   "en": "Who provides medical aid for PWDs?",
+   "fil": "Sino ang nag-aalok ng medical aid sa PWD?"
+  },
+  {
+   "subservice": "Pag-verify ng PhilHealth Benefit ng PWD (PWD PhilHealth Verification)",
+   "department": "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+   "en": "How can I check my PhilHealth benefits?",
+   "fil": "Paano i-verify ang PhilHealth benefits ko?"
+  },
+  {
+   "subservice": "Request to View or Get a Copy of CCTV Footage",
+   "department": "PUBLIC ORDER AND SAFETY OFFICE",
+   "en": "Can I request CCTV footage from an incident?",
+   "fil": "Pwede ba humingi ng CCTV footage?"
+  },
+  {
+   "subservice": "Pagtubos ng Lisensya (Redemption of Confiscated Driver's License)",
+   "department": "PUBLIC ORDER AND SAFETY OFFICE",
+   "en": "What’s the process to recover a confiscated license?",
+   "fil": "Ano ang steps para mabawi ang confiscated license?"
+  },
+  {
+   "subservice": "Request for Public Order Assistance at Events in Public Places",
+   "department": "PUBLIC ORDER AND SAFETY OFFICE",
+   "en": "How do I request security for a public event?",
+   "fil": "Paano mag-request ng security sa event?"
+  },
+  {
+   "subservice": "Request for Assistance in Clearing Road Obstructions",
+   "department": "PUBLIC ORDER AND SAFETY OFFICE",
+   "en": "How can I report a blocked road?",
+   "fil": "Paano mag-report ng baradong kalsada?"
+  },
+  {
+   "subservice": "CCTV Compliance Certification for Business Establishments",
+   "department": "PUBLIC ORDER AND SAFETY OFFICE",
+   "en": "Where do I get a CCTV compliance certificate?",
+   "fil": "Saan kukuha ng CCTV compliance certificate?"
+  }
+ ]
+}

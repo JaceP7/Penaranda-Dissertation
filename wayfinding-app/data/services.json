@@ -665,11 +665,27 @@
     "requirements": [
       {
         "requirement": "1. Plaka o Body Number / Sticker ng Tricycle",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "2. Latest Tricycle Franchise",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "3. Fare Matrix",
         "where_to_secure": "May-ari ng Tricycle"
       },
       {
-        "requirement": "6. Original and Photocopy ng mga sumusunod: • Latest LTO Official Receipt (OR) • Certificate of Registration (CR) (Isasauli o ibabalik sa may-ari ang orihinal na LTO OR at CR pagkatapos mapatunayang lehitimo) Note: Please see additional requirements for complex situation",
-        "where_to_secure": "Land Transportation Office (LTO)"
+        "requirement": "4. Tricycle Operator’s ID",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "5. Picture ng Motorsiklo ng Tricycle sa aplikasyon ng Change Motor)",
+        "where_to_secure": "(para"
+      },
+      {
+        "requirement": "6. Original and Photocopy ng mga sumusunod:  Latest LTO Official Receipt (OR)  Certificate of Registration (CR) (Isasauli o ibabalik sa may-ari ang orihinal na LTO OR at CR pagkatapos mapatunayang lehitimo) Note: Please see additional requirements for complex situation",
+        "where_to_secure": "Land Transportation Office (LTO) 197"
       }
     ],
     "steps": [
@@ -906,6 +922,10 @@
       {
         "requirement": "1. Kopya ng Titulo",
         "where_to_secure": "Registry of Deeds"
+      },
+      {
+        "requirement": "2. Request Form",
+        "where_to_secure": "City Assessment Office"
       },
       {
         "requirement": "2. Authorization Letter with Valid ID’s",
@@ -2164,11 +2184,15 @@
     "requirements": [
       {
         "requirement": "1. Authorization Letter with Valid ID’s",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "2. Liham ng kahilingan para mapakansela ang nakatalang improvement o makina",
         "where_to_secure": "Kliyente o Authorized Representative"
       },
       {
         "requirement": "3. Katunayan ng cancellation of Real estate Property",
-        "where_to_secure": ""
+        "where_to_secure": "103"
       }
     ],
     "steps": [
@@ -2707,8 +2731,12 @@
     "who_may_avail": "Mamamayan ng Calamba",
     "requirements": [
       {
-        "requirement": "1. Tawag o text at coordination mula sa pinanggalingang ospital at ospital na paglilipatan",
-        "where_to_secure": ""
+        "requirement": "1. Tawag o text at coordination mula pinanggalingang ospital at ospital na paglilipatan",
+        "where_to_secure": "sa Mula sa pinanggalingan na doctor at ospital ng kliyente"
+      },
+      {
+        "requirement": "2. Paglakda sa Patient Transport Request Form",
+        "where_to_secure": "Mula sa tanggapan ng CDRRM"
       }
     ],
     "steps": [
@@ -2881,11 +2909,15 @@
     "requirements": [
       {
         "requirement": "1. PESO Accreditation",
-        "where_to_secure": "IIPESO"
+        "where_to_secure": ""
       },
       {
         "requirement": "2. List of Job Vacancies",
-        "where_to_secure": "IIPESO"
+        "where_to_secure": "Sa Tanggapan ng IIPESO"
+      },
+      {
+        "requirement": "3. Application Form",
+        "where_to_secure": ""
       }
     ],
     "steps": [
@@ -2908,12 +2940,16 @@
         "where_to_secure": "POEA"
       },
       {
-        "requirement": "2. Business Permit",
+        "requirement": "3. Business Permit",
         "where_to_secure": "Business Permits & Tricycle Franchising Office"
       },
       {
-        "requirement": "3. List of Job Vacancies",
+        "requirement": "4. List of Job Vacancies",
         "where_to_secure": "Company"
+      },
+      {
+        "requirement": "5. Application Form",
+        "where_to_secure": "IIPESO"
       }
     ],
     "steps": [
@@ -3054,12 +3090,16 @@
         "where_to_secure": "Kliyente"
       },
       {
-        "requirement": "2. Certified True Copy ng isa sa mga sumusunod: • Barangay Clearance • Business Permit • Certificate of Registration",
-        "where_to_secure": "• Barangay • Business Permits & Tricycle Franchising Office • Cooperative Development Authority o Securities & Exchange Commission"
+        "requirement": "2. Certified True Copy ng isa sa mga sumusunod:  Barangay Clearance  Business Permit  Certificate of Registration",
+        "where_to_secure": " Barangay  Business Permits & Tricycle Franchising Office  Cooperative Development Authority o Securities & Exchange Commission"
       },
       {
-        "requirement": "3. Photocopy ng mga sumusunod na dokumento: ✓ By Laws ✓ Artikulo ng Kooperasyon ✓ Financial Statement ✓ Process Flow 4. Sample Product",
+        "requirement": "3. Photocopy ng mga sumusunod na dokumento:  By Laws  Artikulo ng Kooperasyon  Financial Statement  Process Flow",
         "where_to_secure": "Kliyente"
+      },
+      {
+        "requirement": "4. Sample Product",
+        "where_to_secure": "235"
       }
     ],
     "steps": [
@@ -3192,8 +3232,12 @@
         "where_to_secure": "Kliyente"
       },
       {
-        "requirement": "3. Certified True Copy of Certificate of Registration of Business Entity / Cooperative Registration (para sa mga may negosyo) o Barangay Clearance (para sa mga indibidwal)",
-        "where_to_secure": "Business Permits Tricycle Franchising Office o Barangay"
+        "requirement": "2. Certification of Participation ng nakaraang seminar (photocopy)",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "3. Certifified True Copy of Certificate Registration of Business Entity / Cooperative Registration (para sa mga may negosyo) Barangay Clearance (para sa mga indibidwal)",
+        "where_to_secure": "of Business Permits Tricycle Franchising o Office o Barangay"
       }
     ],
     "steps": [
@@ -3254,16 +3298,24 @@
     "who_may_avail": "Lahat ng mga Kwalipikadong Mamamayan ng Calamba",
     "requirements": [
       {
-        "requirement": "Liham ng Kahilingan nakapangalan sa Pangalawang Punong Lungsod",
-        "where_to_secure": "Kliyente"
+        "requirement": "1. Liham ng Kahilingan nakapangalan Pangalawang Punong Lungsod",
+        "where_to_secure": "sa Kliyente"
       },
       {
-        "requirement": "Kopya ng Voter’s I.D. ng mga magulang",
+        "requirement": "2. Kopya ng Voter’s I.D. ng mga magulang",
         "where_to_secure": "Comelec"
       },
       {
-        "requirement": "Kopya ng School ID",
-        "where_to_secure": "School"
+        "requirement": "3. Kopya ng School ID",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "4. Sertipiko o katibayan na naka-enrol eskwelahan (orihinal o sertipikado)",
+        "where_to_secure": "sa School"
+      },
+      {
+        "requirement": "5. Kopya ng halaga ng babayaran (orihinal o sertipikado)",
+        "where_to_secure": ""
       }
     ],
     "steps": [
@@ -3576,8 +3628,12 @@
     "who_may_avail": "Registered Landowners of Lots in Calamba City",
     "requirements": [
       {
-        "requirement": "1. Request for Inspection Form, signed by the Contractor or duly authorized representative; 2. Construction Plans and Program of Works.",
-        "where_to_secure": "• CPDO • City Engineering and Infrastructure Development Department;"
+        "requirement": "1. Request for Inspection Form, signed by the Contractor or duly authorized representative;",
+        "where_to_secure": " CPDO  City Engineering and Infrastructure"
+      },
+      {
+        "requirement": "2. Construction Plans and Program Works.",
+        "where_to_secure": "of Development Department;"
       }
     ],
     "steps": [
@@ -4384,6 +4440,10 @@
         "where_to_secure": "Kliyente"
       },
       {
+        "requirement": "3. Photocopy of the Document to be authenticated",
+        "where_to_secure": ""
+      },
+      {
         "requirement": "4. Official Receipt",
         "where_to_secure": "Cashier"
       }
@@ -4568,6 +4628,10 @@
       {
         "requirement": "1. Leave of Absence Form (for returning clearance)",
         "where_to_secure": "Registrar’s Office"
+      },
+      {
+        "requirement": "2. Dropping Form (If Applicable)",
+        "where_to_secure": ""
       }
     ],
     "steps": [
@@ -4588,6 +4652,10 @@
       {
         "requirement": "1. Leave of Absence Form",
         "where_to_secure": "Registrar’s Office"
+      },
+      {
+        "requirement": "2. Dropping Form",
+        "where_to_secure": ""
       },
       {
         "requirement": "3. Official Receipt",
@@ -4726,7 +4794,23 @@
     "requirements": [
       {
         "requirement": "1. Form 138 / Transcript of Record (Transferee)",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "2. Form 137 / Copy of Grades (Transferee)",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "3. Honorable Dismissal",
         "where_to_secure": "Previous School"
+      },
+      {
+        "requirement": "4. Admission Slip",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "5. Good Moral Character",
+        "where_to_secure": ""
       },
       {
         "requirement": "6. Birth Certificate",
@@ -9419,8 +9503,8 @@
     "who_may_avail": "Calamba na magpapagawa ng istrukturang",
     "requirements": [
       {
-        "requirement": "1. Application form para sa hinihiling BP220 (original copy)",
-        "where_to_secure": "na Housing and Settlements Department"
+        "requirement": "1. Revised BP 220 Building Permit Application Form (required from June 1, 2026; the old form is returned without processing)",
+        "where_to_secure": "Housing and Settlements Department office, or download from the City of Calamba website"
       },
       {
         "requirement": "2. HSD Form No. 1 (1 orihinal na kopya)",
@@ -9464,7 +9548,12 @@
       "2. Alamin ang resulta ng inspeksyon at evaluation",
       "3. Magbayad ng kaukulang halaga",
       "4. Tanggapin ang Building Permit"
-    ]
+    ],
+    "announcement": {
+      "url": "https://calambacity.gov.ph/Users/Home/ViewDetailsAnnouncements?announcementsId=1044",
+      "date": "2026-05-20",
+      "effective": "2026-06-01"
+    }
   },
   {
     "service": "Certificates, Permits, and IDs",
@@ -9610,6 +9699,895 @@
       "2. Magbayad sa Tanggapan ng Ingat Yaman",
       "3. Ipresinta ang Opisyal na Resibo ng pinagbayaran.",
       "4. Tanggapin ang kopya ng katunayan na tinanggap ng Legislative Services Office ang mga isinumiteng dokumento"
+    ]
+  },
+  {
+    "service": "Business and Trade",
+    "subservice": "Special Permit (Special Mayor's Permit for Events and Activities)",
+    "department": "BUSINESS PERMITS AND TRICYCLE FRANCHISING OFFICE",
+    "source_id": "1071",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/business_permits_and_tricycle_franchising_office.pdf#page=32",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizens",
+    "who_may_avail": "Any person / organization who will be holding an event",
+    "requirements": [
+      {
+        "requirement": "Regulatory and Documentary Requirements:",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "1. Peddler’s Permit  Application form na may mga tamang kasagutan  Barangay Clearance  Cedula  Health Clearance (kung nagtitinda ng pagkain)",
+        "where_to_secure": " Downloadble form through Calambago Online Portal  Barangay  Business Permits & Tricycle Franchising Office B.O.S.S Area  City Health Office at the B.O.S.S. Area  Business Permits & Tricycle"
+      },
+      {
+        "requirement": "2. Contractor’s Business Tax Certificate  Contractor’s Information Sheet may tamang kasagutan  Bill of Materials na inaprubahan Building Regulatory Services Office  Mayor’s Permit ng Contractor (kung mayroon lamang)  Notarized Authorization Letter hindi may-ari / Contractor ang nagpoproseso",
+        "where_to_secure": "Franchising Office na ng  Applicant 180 kung"
+      },
+      {
+        "requirement": "3. Special Permit for Recruitment Agency  Endorsement Form  Mayor’s Business Permit (Nang main office ng Recruitment Agency)",
+        "where_to_secure": " Information, Investment Promotions & Employment Services Office  Applicant"
+      },
+      {
+        "requirement": "4. Cockfighting (Derby and Pintakasi)  Request Letter na nagsasaad mga petsa ng request na pagdadaos ng Derby o Pintakasi, at aprubado ng City Mayor",
+        "where_to_secure": "ng  Applicant"
+      },
+      {
+        "requirement": "5. Firecrackers Permit to sell  Public Order & Safety Office Clearance for slot at selling area  Updated PNP Clearance  Barangay Clearance  Court Clearance  Fireworks Safety Training Course (FSTC) Certificate  Dealer’s Permit",
+        "where_to_secure": " POSO Calamba City  PNP Calamba City Station  Barangay where stall is located  Municipal Trial Court  Bureau of Fire Protection  Supplier of Fireworks"
+      },
+      {
+        "requirement": "6. Motorcade  Application Form na may mga tamang kasagutan  Request Letter na inaprubahan City Administrator",
+        "where_to_secure": " Business Permits & Tricycle Franchising Office  ng Applicant"
+      },
+      {
+        "requirement": "7. Hanging of Tarpaulins  Application Form na may mga tamang kasagutan  Request Letter na inaprubahan City Administrator",
+        "where_to_secure": " Business Permits & Tricycle Franchising Office ng  Applicant"
+      }
+    ],
+    "steps": [
+      "1.Ipasa ang nasagutang application form at lahat ng mga requirements sa BPTFO para ma- evaluate at ma- verify sa BPTFO. Matapos ay maari na itong aprubahan at i-proseso  Tanggapin ang Statement of Account at magtungo sa bayaran PAY",
+      "2. Magtungo sa tanggapan ng City Treasury na matatagpuan sa ground floor ng city government building at bayaran ang mga kaukulang bayarin CLAIM",
+      "3. Tanggapin mula sa releasing kopya ng Special Permit, at Sanitary Permit."
+    ]
+  },
+  {
+    "service": "Tax",
+    "subservice": "Issuance of New Tax Declaration for General Purposes (Reassessment, Revision or New Discovery of Real Property)",
+    "department": "CITY ASSESSMENT OFFICE",
+    "source_id": "1072",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_assessment_office.pdf#page=11",
+    "classification": "Complex",
+    "type_of_transaction": "Business Entity, G2G – Government to Government",
+    "who_may_avail": "All Property Owners / Administrators in Calamba City",
+    "requirements": [
+      {
+        "requirement": "1. Liham ng Kahilingan / Authorization Valid ID",
+        "where_to_secure": "Letter with Kliyente o Authorized Representative"
+      },
+      {
+        "requirement": "2. Building Permit/Occupancy Permit/Building of Materials/Certificate of Completion",
+        "where_to_secure": "Plan/Bill Building Regulatory Office City Planning & Development"
+      },
+      {
+        "requirement": "3. Zoning Certificate / Clearance",
+        "where_to_secure": "Office (CPDO)"
+      },
+      {
+        "requirement": "4. List of Machinery (Acquisition & Installation and Date)",
+        "where_to_secure": "Cost Kliyente"
+      },
+      {
+        "requirement": "5. Authorization / SPA /Secretary Certificate",
+        "where_to_secure": "with Ids Abogado, Naglalakad ng papel"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang photocopy ng mga kinakailangang dokumento at iprisinta ang mga orihinal na dokumento.",
+      "2. Magbayad ng kaukulang halaga",
+      "3. Ipresinta ang opisyal na resibo tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Education, Training, Seminars, and Competencies",
+    "subservice": "Application for Clearance for Graduating Students",
+    "department": "CITY COLLEGE OF CALAMBA",
+    "source_id": "1073",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_college_of_calamba.pdf#page=23",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Estudyanteng Mamamayan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "1. Application for Graduation Stub",
+        "where_to_secure": "Registrar’s Office"
+      },
+      {
+        "requirement": "2. 2 pcs Documentary Stamp",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "3. Birth Certificate",
+        "where_to_secure": "Philippine Statistics Office"
+      },
+      {
+        "requirement": "4. Prospectus",
+        "where_to_secure": ""
+      }
+    ],
+    "steps": [
+      "1. Punan ang online application form para sa graduation",
+      "2. Ipasa ang mga kinakailangang dokumento"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Hardware / Software / Network Maintenance and Troubleshooting",
+    "department": "CITY COLLEGE OF CALAMBA",
+    "source_id": "1074",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_college_of_calamba.pdf#page=27",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "CCC Students and Teachers",
+    "requirements": [
+      {
+        "requirement": "Client Log, Service Request Form",
+        "where_to_secure": "Management Information System Department"
+      }
+    ],
+    "steps": [
+      "1. Punan ang Service Request Form",
+      "2. Hintayin ang abiso tungkol sa Status ng Repair"
+    ]
+  },
+  {
+    "service": "Education, Training, Seminars, and Competencies",
+    "subservice": "Request for Retrieval of Document",
+    "department": "CITY COLLEGE OF CALAMBA",
+    "source_id": "1075",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_college_of_calamba.pdf#page=28",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Teachers and Non Teaching Staff",
+    "requirements": [
+      {
+        "requirement": "1. Request Form",
+        "where_to_secure": "Records Management Office"
+      }
+    ],
+    "steps": [
+      "1. Punan ang request form",
+      "2. Tanggapin ang dokumento"
+    ]
+  },
+  {
+    "service": "Disaster and Weather",
+    "subservice": "Standby Ambulance (Pagtatalaga ng Nakahandang Ambulansya sa Pagtitipon)",
+    "department": "CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO",
+    "source_id": "1076",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/office_of_the_city_mayor.pdf#page=36",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "ng gobyerno na nangangailangan ng standby",
+    "requirements": [
+      {
+        "requirement": "1. Sulat Kahilingan",
+        "where_to_secure": "Mula sa kliyente"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang sulat kahilingan na naglalaman ng impormasyon tungkol sa magaganap na pagtitipon kasama ang contact number at e-mail address tatlong (3) araw bago ang nasabing pagtitipon"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Request for Investigation, Review or Audit of Transactions (Internal Audit Services)",
+    "department": "OFFICE OF THE MAYOR",
+    "source_id": "1077",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/office_of_the_city_mayor.pdf#page=38",
+    "classification": "Simple",
+    "type_of_transaction": "Business; G2G – Government to Government",
+    "who_may_avail": "imbestigasyon, pagsusuri at/o pag-audit ng mga",
+    "requirements": [
+      {
+        "requirement": "1. Pormal na liham ng kahilingan na naglalaman ng mga sumusunod: a. Pangalan ng humihiling, tirahan, at contact number. b. Personal na sitwasyon ng humihiling (opisina/departamento/yunit, posisyon, address kung mayroong ibang partido) c. Mga detalye ng kahilingan. d. Kompletong detalye ng mga sitwasyon e. Inaasahang resulta, kung naaangkop f. Mga sumusuportang dokumento kung naaangkop",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1.Isumite ang liham na kahilingan sa Tanggapan ng Internal Audit Services Office ng may dalawang kopya."
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Paghahanda ng Programa sa Paggawa ng mga Proyektong Imprastraktura (Infrastructure Project Programming)",
+    "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+    "source_id": "1078",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_engineering_services_office.pdf#page=9",
+    "classification": "Complex",
+    "type_of_transaction": "G2G – Government to Government",
+    "who_may_avail": "Barangay Officials, DepEd",
+    "requirements": [
+      {
+        "requirement": "1. Liham ng kahilingan o Resolusyon Barangay na nagsasaad ng kailangang serbisyo",
+        "where_to_secure": "ng Kliyente"
+      },
+      {
+        "requirement": "2. Liham ng kahilingan ng DepEd ang PPMP na nagsasaad ng budget sa kanilang serbisyo",
+        "where_to_secure": "kalakip para"
+      }
+    ],
+    "steps": [
+      "1. Magbigay ng liham ng kahilingan sa nakatalang tauhan"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagsasaayos at Pagpapanatili ng Imprastraktura / Gusali (Infrastructure and Building Repair and Maintenance)",
+    "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+    "source_id": "1079",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_engineering_services_office.pdf#page=16",
+    "classification": "Simple",
+    "type_of_transaction": "G2G – Government to Government",
+    "who_may_avail": "Barangay Officials, DepEd, Citizens",
+    "requirements": [
+      {
+        "requirement": "1. Liham ng Kahilingan",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Magbigay ng liham ng kahilingan sa nakatalagang tauhan."
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagpapahiram ng Pansamantalang Entablado, Sasakyan at Heavy Equipment (Loan of Stage, Vehicles and Heavy Equipment)",
+    "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+    "source_id": "1080",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_engineering_services_office.pdf#page=18",
+    "classification": "Simple",
+    "type_of_transaction": "G2G – Government to Government",
+    "who_may_avail": "Barangay Officials, DepEd, Citizens",
+    "requirements": [
+      {
+        "requirement": "1. Liham ng Kahilingan",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Magbigay ng liham ng kahilingan sa panghihiram ng pansamantalang entablado o paghiram ng sasakyan ng pamahalaang lungsod."
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagkukumpuni ng Pagpapailaw sa Kalsada (Streetlight Repair)",
+    "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+    "source_id": "1081",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_engineering_services_office.pdf#page=20",
+    "classification": "Simple",
+    "type_of_transaction": "G2G – Government to Government",
+    "who_may_avail": "Barangay Officials",
+    "requirements": [
+      {
+        "requirement": "1. Liham ng Kahilingan",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Magbigay ng liham ng kahil- ingan para sa pagkukumpuni ng pagpapailaw sa kalsada- (Streetlight Repair)."
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagkukumpuni at Pagsasaayos ng Daluyan ng Tubig (Repair, Clearing and Desilting of Drainage Canals)",
+    "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+    "source_id": "1082",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_engineering_services_office.pdf#page=21",
+    "classification": "Simple",
+    "type_of_transaction": "G2G – Government to Government",
+    "who_may_avail": "Barangay Officials",
+    "requirements": [
+      {
+        "requirement": "1. Liham ng Kahilingan",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Magbigay ng liham ng kahi- lingan para sa pagkukumpuni at pagsasaayos ng daluyan ng tubig gaya ng kanal, sapa at iba pa (Repair, Clearing and Desilting of Drainage Canal, etc.)"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagpapanatili ng Kaayusan ng Sewerage Treatment Plant (STP Maintenance)",
+    "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+    "source_id": "1083",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_engineering_services_office.pdf#page=22",
+    "classification": "Simple",
+    "type_of_transaction": "G2G – Government to Government",
+    "who_may_avail": "City Hall, Tanggapan ng BJMP, Mercado de Calamba",
+    "requirements": [
+      {
+        "requirement": "1. Tala ng pagmomonito",
+        "where_to_secure": "Tanggapan ng Engineering"
+      }
+    ],
+    "steps": [
+      "1. Ilalahad ang tala o report liham ng kahilingan para sa pagpapanatili ng kaayusan ng Sewerage Treatment Plant (STP)."
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Demolisyon ng mga Iligal na Istraktura sa Road Right-of-Way at Lumang Gusali ng Paaralan (Demolition of Illegal Structures)",
+    "department": "CITY ENGINEERING AND INFRASTRUCTURE DEVELOPMENT DEPARTMENT",
+    "source_id": "1084",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_engineering_services_office.pdf#page=23",
+    "classification": "Simple",
+    "type_of_transaction": "G2G – Government to Government",
+    "who_may_avail": "Barangay Officials at DepEd",
+    "requirements": [
+      {
+        "requirement": "1. Liham ng Kahilingan",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Magbigay ng liham para sa demolisyon ng mga nakata- yong istraktura na sumasakop sa lupang pagmamay-ari ng gobyerno o lumang gusali ng paaralan"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Pagkukumpuni at Pangangalaga ng mga Kagamitan ng Ibang Ahensya (Equipment Repair for Other Agencies)",
+    "department": "CITY GENERAL SERVICES OFFICE",
+    "source_id": "1085",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_general_services_office.pdf#page=12",
+    "classification": "Simple",
+    "type_of_transaction": "G2G – Government to Government",
+    "who_may_avail": "Other Agency",
+    "requirements": [
+      {
+        "requirement": "1. Request Form",
+        "where_to_secure": "GSO/ Building Maintenance Section"
+      }
+    ],
+    "steps": [
+      "1. Punan ang Request Form"
+    ]
+  },
+  {
+    "service": "Employment",
+    "subservice": "Application for Leave (Without Commutation of Leave Credits)",
+    "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+    "source_id": "1086",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_human_resources_management_office.pdf#page=18",
+    "classification": "Simple",
+    "type_of_transaction": "G2G – Government to Government",
+    "who_may_avail": "Empleyado",
+    "requirements": [
+      {
+        "requirement": "1. Pormularyo sa Aplikasyon sa Pagliban o Leave Application Form (LAF) (CS Form No. 6 Revised 2020) (2 kopya)",
+        "where_to_secure": "CSC Website o Administrative Officer ng Tanggapan"
+      },
+      {
+        "requirement": "2. Clearance from Money, Property and Work-related Accountabilities (if more than 30 days leave) Kung Sick Leave na hihigit sa limang (5)",
+        "where_to_secure": "Kliyente araw o ipa-file bago ang nakatakdang pagliban:"
+      },
+      {
+        "requirement": "2. Medical Certificate (kung higit sa limang araw ang pagliban o para sa nakatakdang pagliban) o Affidavit (kung kumonsulta sa doctor) Kung Maternity Leave:",
+        "where_to_secure": "Doktor (para sa Medical Certificate) o Abogado (para sa Affidavit)"
+      },
+      {
+        "requirement": "3. Katunayan ng pagbubuntis (hal. ultrasound, pagpapatunay ng doctor nakatakdang araw ng panganganak) Kung Paternity Leave:",
+        "where_to_secure": "sa Doktor o Ospital"
+      },
+      {
+        "requirement": "4. Katunayan ng Panganganak (hal. certificate, medical certificate at marriage contract)",
+        "where_to_secure": "birth City Civil Registry Office o Ospital kung saan ipinanganak ang anak"
+      },
+      {
+        "requirement": "5. Accomplished Notice of Allocation Maternity Leave Credits (CS Form No. 6a) Kung Solo Parent Leave:",
+        "where_to_secure": "of CSC Website o Administrative Officer ng Tanggapan 260"
+      },
+      {
+        "requirement": "6. Valid Solo Parent Identification Card Kung Study Leave:",
+        "where_to_secure": "City Social Services Department"
+      },
+      {
+        "requirement": "7. Kontrata sa pagitan ng empleyado ng Pamahalaang Lungsod Kung VAWC Leave (alin man sa mga",
+        "where_to_secure": "at Kliyente sumusunod):"
+      },
+      {
+        "requirement": "8. Barangay Protection Order (BPO) sa barangay",
+        "where_to_secure": "mula Kliyente"
+      },
+      {
+        "requirement": "9. Temporary/Permanent Protection Order (TPO/PPO)",
+        "where_to_secure": "Korte"
+      },
+      {
+        "requirement": "10. Sertipikasyon mula sa Punong Barangay, Kagawad, Piskal o Korte may aplikasyon na para sa protection order",
+        "where_to_secure": "na Barangay, Piskalya o Korte"
+      },
+      {
+        "requirement": "11. Police Report na nagsasalaysay karahasan sa biktima at medical certificate, kung wala pang protection order Kung Rehabilitation Leave:",
+        "where_to_secure": "ng Tanggapan ng Pulisya at Doktor"
+      },
+      {
+        "requirement": "12. Sulat Kahilingan kalakip at ang mga katunayan katulad ng police report at pa.",
+        "where_to_secure": "iba Kliyente"
+      },
+      {
+        "requirement": "13. Medical Certificate tungkol sa natamong injury, paraan sa paggagamot, kung kailangan magpahinga upang gumaling, o rehabilitasyon, kung ano ang naayon.",
+        "where_to_secure": "Lisensyadong Doktor o Ospital man"
+      },
+      {
+        "requirement": "14. Kasulatan ng pagsang-ayon ng government physician patungkol sa rekomendasyon sa rehabilitasyon kung pribadong doctor ang attending physician Kung Special Privilege Leave Benefits",
+        "where_to_secure": "Lisensyadong Doktor o Ospital ng Gobyerno for Women:"
+      },
+      {
+        "requirement": "15. Medical Certificate kalakip ng clinical summary na nagsasaysay ng gynecological disorder at iba pang impormasyong kailangan para sa pagliban Kung Adoption Leave:",
+        "where_to_secure": "Lisensyadong Doktor o Ospital"
+      },
+      {
+        "requirement": "16. Pre-adoptive Placement Authority authenticated copy)",
+        "where_to_secure": "(1 Department of Social Welfare & Development (DSWD) 261"
+      }
+    ],
+    "steps": [
+      "1. Punan ang lahat ng mga kinakailangan sa pormularyo, at isumite ito at ang mga iba pang mga kailangang dokumento",
+      "2. Pirmahan ang log sheet at tanggapin ang aplikasyong may aksyon."
+    ]
+  },
+  {
+    "service": "Employment",
+    "subservice": "Application for Leave (With Commutation of Leave Credits)",
+    "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+    "source_id": "1087",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_human_resources_management_office.pdf#page=21",
+    "classification": "Simple",
+    "type_of_transaction": "G2G – Government to Government",
+    "who_may_avail": "Empleyado",
+    "requirements": [
+      {
+        "requirement": "1. Pormularyo sa Aplikasyon sa Pagliban o Leave Application Form (LAF) (CS Form No. 6 Revised 2020) (2 kopya) Kung Monetization of Leave Credits (hindi",
+        "where_to_secure": "CSC Website o Administrative Officer ng Tanggapan hihigit sa kalahati ng kabuuang leave credits:"
+      },
+      {
+        "requirement": "2. Sulat kahilingang aprubado ng City Mayor, kung magmo-monetize ng kalahati o higit pa ng available leave credits Kung Monetization of Leave Credits (karagdagan",
+        "where_to_secure": "Kliyente pa sa taunang monetization): Kapwa empleyado na nagbigay pahintulot"
+      },
+      {
+        "requirement": "3. Waiver Kung Monetization of Leave Credits",
+        "where_to_secure": "upang magamit ang kaniyang slot sa monetization (Sick Leave):"
+      },
+      {
+        "requirement": "4. Medical Certificate Kung Terminal Leave:",
+        "where_to_secure": "Doktor o Ospital 263"
+      },
+      {
+        "requirement": "5. Katunayan ng pagbibitiw sa trabaho, pagreretiro o iba pang katulad nito",
+        "where_to_secure": "Kliyente"
+      },
+      {
+        "requirement": "6. Clearance mula sa GSIS at iba pang institusyon na may pinagkakautangan ang empleyado",
+        "where_to_secure": "GSIS at iba pang institusyong nagpapautang"
+      }
+    ],
+    "steps": [
+      "1. Punan ang lahat ng mga kinakailangan sa pormularyo, at isumite ito at ang mga iba pang mga kailangang dokumento",
+      "2. Pirmahan ang log sheet at tanggapin ang aplikasyong may aksyon.",
+      "3. Tanggapin ang sahod sa ATM o sa CTMO kung ito ay Over the Counter (OTC)"
+    ]
+  },
+  {
+    "service": "Employment",
+    "subservice": "Pagpapalit ng Identification Card (Employee ID Replacement)",
+    "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+    "source_id": "1088",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_human_resources_management_office.pdf#page=24",
+    "classification": "Simple",
+    "type_of_transaction": "G2G – Government to Government",
+    "who_may_avail": "Empleyado o Manggagawa ng Pamahalaang Lungsod",
+    "requirements": [
+      {
+        "requirement": "1. Pormularyo sa Pagpapapalit ng Pagkakakilanlan o ID Card Request (IDRF)",
+        "where_to_secure": "Form CHRMO"
+      },
+      {
+        "requirement": "2. Pagkakakilanlan o Valid ID Kung Nawala ang lumang Pagkakakilanlan",
+        "where_to_secure": "Kliyente o Humihiling o ID Card:"
+      },
+      {
+        "requirement": "3. Notaryadong Affidavit of Loss (1 kopya) Kung sira o luma na ang Pagkakakilanlan",
+        "where_to_secure": "City Legal Services Office o kahit anong Law Office o ID Card:"
+      },
+      {
+        "requirement": "4. Lumang Pagkakakilanlan o ID Card",
+        "where_to_secure": "Kliyente 266"
+      }
+    ],
+    "steps": [
+      "1. Punan ang lahat ng mga kinakailangan sa pormularyo, at isumite ito at ang mga iba pang mga kailangan",
+      "2. Kung ang litratong kuha ay mahigit nang isang taon, magpakuhang muli ng litrato,",
+      "3. Pumirma sa purmularyo at tanggapin ang panibagong pagkakakilanlan o ID Card"
+    ]
+  },
+  {
+    "service": "Employment",
+    "subservice": "Pagpapalit ng Nawala o Nasirang ATM / Cash Card (ATM / Cash Card Replacement)",
+    "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+    "source_id": "1089",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_human_resources_management_office.pdf#page=29",
+    "classification": "Simple",
+    "type_of_transaction": "G2G – Government to Government",
+    "who_may_avail": "Empleyado o Manggagawa ng Pamahalaang Lungsod",
+    "requirements": [
+      {
+        "requirement": "1. Pormularyo sa Pagpapalit ng ATM Kung Nawala ang ATM o Cash Card",
+        "where_to_secure": "o Cash Card CHRMO City Legal Services Office o kahit"
+      },
+      {
+        "requirement": "2. Notaryadong Affidavit of Loss (1 kopya)",
+        "where_to_secure": "anong Law Office"
+      }
+    ],
+    "steps": [
+      "1. Punan ang lahat ng mga kinakailangan sa pormularyo, at isumite ito at ang mga iba pang mga kailangan.",
+      "2. Kung ang litratong kuha ay mahigit nang isang taon, magpakuhang muli ng litrato",
+      "3. Pumunta sa City Treasury Management Office upang bayaran ang pagpapalit ng ATM at sa Landbank pag Cash Card",
+      "4. Ibigay ang resibo sa City Human Resource Management Office",
+      "5. Tanggapin ang bagong ATM o Cash Card"
+    ]
+  },
+  {
+    "service": "Employment",
+    "subservice": "Pagbabago ng Impormasyon (Update of Employee Information)",
+    "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+    "source_id": "1090",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_human_resources_management_office.pdf#page=31",
+    "classification": "Simple",
+    "type_of_transaction": "G2G – Government to Government",
+    "who_may_avail": "Empleyado o Manggagawa ng Pamahalaang Lungsod",
+    "requirements": [
+      {
+        "requirement": "1. Pormularyo sa Pagbabago ng Impormasyon Kung Pagbabago ng Spelling ng Pangalan:",
+        "where_to_secure": "CHRMO"
+      },
+      {
+        "requirement": "2. Birth Certificate (1 orihinal na kopya) Kung Pagbabago ng Civil Status o Impormasyong",
+        "where_to_secure": "Philippine Statistics Office (PSA) may kinalaman dito:"
+      },
+      {
+        "requirement": "3. Marriage Certificate, Death Certificate o anomang katulad nito",
+        "where_to_secure": "Philippine Statistics Office (PSA) o sa City Civil Registry Office"
+      }
+    ],
+    "steps": [
+      "1. Punan ang lahat ng mga kinakailangan sa pormularyo, at isumite ito at ang mga iba pang mga kailangan. Kumpirmahin ang mga impormas- yong pinabago, kung kinakai- langan."
+    ]
+  },
+  {
+    "service": "Employment",
+    "subservice": "Paghiling ng Human Resource Clearance (HR Clearance)",
+    "department": "CITY HUMAN RESOURCE AND MANAGEMENT OFFICE",
+    "source_id": "1091",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_human_resources_management_office.pdf#page=32",
+    "classification": "Simple",
+    "type_of_transaction": "G2G – Government to Government",
+    "who_may_avail": "Empleyado o Manggagawa ng Pamahalaang Lungsod",
+    "requirements": [
+      {
+        "requirement": "1. Clearance Request Form (CRF)",
+        "where_to_secure": "CHRMO"
+      },
+      {
+        "requirement": "2. Primadong CS Form No. 7 o Clearance Form (1 kopya) Kung gagamitin sa pagpunta ng abroad:",
+        "where_to_secure": "CHRMO o CSC Website"
+      },
+      {
+        "requirement": "3. Approved Application for Leave (1",
+        "where_to_secure": "kopya) CHRMO"
+      },
+      {
+        "requirement": "4. Approved Travel Authority (1 kopya)",
+        "where_to_secure": "City Mayor o DILG"
+      }
+    ],
+    "steps": [
+      "1. Punan ang lahat ng mga kinakailangan sa pormularyo, at lahat ng mga nasa itaas ng “Human Resource Welfare & Assistance”",
+      "2. Tanggapin ang pirmadong clearance at pumirma sa pormularyo ng paghiling"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Request for Preparation of Legal Documents including Notarization",
+    "department": "CITY LEGAL SERVICES OFFICE",
+    "source_id": "1092",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_legal_services_office.pdf#page=11",
+    "classification": "Highly Technical",
+    "type_of_transaction": "G2G - Government to Government",
+    "who_may_avail": "Constituents",
+    "requirements": [
+      {
+        "requirement": "1. Certificate of Indigency",
+        "where_to_secure": "Barangay o City Social Services Office"
+      },
+      {
+        "requirement": "2. Any Valid IDs",
+        "where_to_secure": "Kliyente"
+      },
+      {
+        "requirement": "3. Personal Appearance ng Taong magpapanotaryo / Contracting Parties Affiant / Declarant",
+        "where_to_secure": "/ Kliyente"
+      },
+      {
+        "requirement": "4. At iba pang mga kinakailangang sa paggawa ng dokumento.",
+        "where_to_secure": ""
+      }
+    ],
+    "steps": [
+      "1. Personal na pagpunta sa opisina dala ang mga kinakailangan dokumento at iprisinta sa legal staff",
+      "2. Tanggapin ang dokumento at pumirma sa talaan ng notary"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Computer Repair (Pagkukumpuni ng mga Computer)",
+    "department": "CITY PLANNING AND DEVELOPMENT OFFICE",
+    "source_id": "1093",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/city_planning_and_development_office.pdf#page=23",
+    "classification": "Simple",
+    "type_of_transaction": "G2E – Government to Goverment",
+    "who_may_avail": "Empleyado ng Pamahalaang Lungsod",
+    "requirements": [
+      {
+        "requirement": "1. Computer Repair Form",
+        "where_to_secure": "ICT Division"
+      }
+    ],
+    "steps": [
+      "1. Tumawag para sa pagkumpuni ng sirang computer",
+      "2. Kuhanin ang nakumpuning Computer"
+    ]
+  },
+  {
+    "service": "Business and Trade",
+    "subservice": "Pagproseso at Pagbigay ng CLDF Loan (CLDF Livelihood Loan)",
+    "department": "COOPERATIVES AND LIVELIHOOD DEVELOPMENT DEPARTMENT",
+    "source_id": "1094",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/cooperatives_and_livelihood_development_department.pdf#page=17",
+    "classification": "Simple",
+    "type_of_transaction": "G2B – Government to Business",
+    "who_may_avail": "Cooperatives and Individual Entrepreneurs",
+    "requirements": [
+      {
+        "requirement": "1. Photocopy ng mga sumusunod:  Cedula  Barangay Clearance  Voter’s ID / Certification  Photo of Business  Business Permit or Farm Plan",
+        "where_to_secure": " Barangay Hall  Comelec  Aplikante  Business Permts & Tricycle Franchising Office"
+      },
+      {
+        "requirement": "2. Recent 2x2 ID Picture (2 pcs)",
+        "where_to_secure": "Aplikante 239"
+      },
+      {
+        "requirement": "3. Photocopy ng mga sumusunod (kung isang kooperatiba):  Application thru Project Proposal  Business Permit  Certificate of Compliance  Certificate of Tax Exemption for Cooperatives (BIR Form 1945)  GA Resolution",
+        "where_to_secure": " Aplikante  Business Permits & Tricycle Franchising Office  Cooperative Development Authority  BIR  Aplikante"
+      },
+      {
+        "requirement": "4. Eligible Co-Maker",
+        "where_to_secure": ""
+      }
+    ],
+    "steps": [
+      "1. Magtungo sa Tanggapan ng Cooperatives & Livelihood Devt. Department",
+      "2. Isumite ang mga kailangang dokumento",
+      "3. Lagdaan ang Kontrata",
+      "4. Tanggapin ang Tseke"
+    ]
+  },
+  {
+    "service": "Social Services",
+    "subservice": "Certificate of Disability and Certificate of Cancellation of PWD ID",
+    "department": "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+    "source_id": "1095",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/office_of_the_city_mayor.pdf#page=26",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayang may Kapansanan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "1. Accomplished Request Form for Records request",
+        "where_to_secure": "PDAO"
+      },
+      {
+        "requirement": "2.a. Original PWD ID Card or photocopy of PWD ID card (front & back)",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "2.b Original PWD ID Card (for Certificate of cancellation of PWD ID due to transfer of residency)",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Punan at isumite ang request form for Records request Note: Isulat kung saan lugar lilipat ng tirahan (for certificate of cancellation of PWD (due to transfer for residency)",
+      "2. Tanggapin ang Certification at lumagda sa logbook"
+    ]
+  },
+  {
+    "service": "Social Services",
+    "subservice": "Tulong Pinansiyal para sa Medical at Therapy ng PWD (Medical and Therapy Assistance for PWDs)",
+    "department": "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+    "source_id": "1096",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/office_of_the_city_mayor.pdf#page=27",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayang may Kapansanan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "1. Request Letter (addressed to Hon. Mayor Roseller Rizal thru: Luisito Apacionado, PDAO Head)",
+        "where_to_secure": "Kliyente"
+      },
+      {
+        "requirement": "2. Medical Certificate (original copy)",
+        "where_to_secure": ""
+      },
+      {
+        "requirement": "3. a. Medicine Prescription with quotation (original copy) - For Medical Assistance b. Therapy Price Quotation (original – For Therapy Assistance",
+        "where_to_secure": "price Medical Doctor copy)"
+      },
+      {
+        "requirement": "4. PWD ID Card (Photocopy – back front) - Beneficiary",
+        "where_to_secure": "& Kliyente"
+      },
+      {
+        "requirement": "5. Voter’s ID or Certification (Photocopy) for claimant",
+        "where_to_secure": "– Comelec"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang request letter ukol sa hiling na tulong pinansiyal na naka- addressed sa Punong Lungsod Hon. Roseller H. Rizal thru: Mr. Luisito Apacionado, PDAO Head kalakip ang mga kinakailangan dokumento"
+    ]
+  },
+  {
+    "service": "Social Services",
+    "subservice": "Pag-verify ng PhilHealth Benefit ng PWD (PWD PhilHealth Verification)",
+    "department": "PERSONS WITH DISABILITY AFFAIRS OFFICE",
+    "source_id": "1097",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/office_of_the_city_mayor.pdf#page=28",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayang may Kapansanan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "1. Accomplished request form for Records reques",
+        "where_to_secure": "PDAO"
+      },
+      {
+        "requirement": "2. PWD ID Card (Photocopy – back front)",
+        "where_to_secure": "& Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Punan at isumite ang request form for Records request at mga kailangan dokumento"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Request to View or Get a Copy of CCTV Footage",
+    "department": "PUBLIC ORDER AND SAFETY OFFICE",
+    "source_id": "1098",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/public_order_and_safety_office.pdf#page=11",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mamamayan",
+    "requirements": [
+      {
+        "requirement": "1. Request Form",
+        "where_to_secure": "POSO Command Operations Center"
+      },
+      {
+        "requirement": "2. Police Request (kung hihingi ng",
+        "where_to_secure": "kopya Calamba City Police Station"
+      },
+      {
+        "requirement": "3. Any Valid ID",
+        "where_to_secure": "Kliyente"
+      },
+      {
+        "requirement": "4. Flash Drive (kung hihingi ng kopya)",
+        "where_to_secure": ""
+      }
+    ],
+    "steps": [
+      "1. Punan ang Request Form at iprisinta ang Valid",
+      "2. Isagawa ang panonood ng hinihinging sipi (bawal irecord cctv footage) B. Kahilingan makahingi",
+      "1. Punan ang Request Form at iprisinta ang valid at isumite ang flash drive at police request",
+      "2. Tanggapin ang kopya ng CCTV footage at lumagda sa logbook"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "Pagtubos ng Lisensya (Redemption of Confiscated Driver's License)",
+    "department": "PUBLIC ORDER AND SAFETY OFFICE",
+    "source_id": "1099",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/public_order_and_safety_office.pdf#page=12",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Mga nahuling lumabag sa batas trapiko o ordinansa",
+    "requirements": [
+      {
+        "requirement": "1. Traffic / Ordinance Violation Ticket",
+        "where_to_secure": "Traffic Enforcer"
+      },
+      {
+        "requirement": "2. Valid ID",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Kumuha ng queue number",
+      "2. Magbayad ng kaukulang halaga ng multa",
+      "3. Tanggapin ang lisensya at lumagda sa logbook"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Request for Public Order Assistance at Events in Public Places",
+    "department": "PUBLIC ORDER AND SAFETY OFFICE",
+    "source_id": "1100",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/public_order_and_safety_office.pdf#page=18",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Sanggunian Barangay, Mamayan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "1. Sulat Kahilingan",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang sulat kahilingan na naglalaman ng mga detalye ng kaganapan"
+    ]
+  },
+  {
+    "service": "Registrations, Applications, Ordinances, and Others",
+    "subservice": "Request for Assistance in Clearing Road Obstructions",
+    "department": "PUBLIC ORDER AND SAFETY OFFICE",
+    "source_id": "1101",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/public_order_and_safety_office.pdf#page=19",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Sanggunian Barangay, Mamayan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "1. Sulat Kahilingan",
+        "where_to_secure": "Kliyente"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang sulat kahilingan"
+    ]
+  },
+  {
+    "service": "Certificates, Permits, and IDs",
+    "subservice": "CCTV Compliance Certification for Business Establishments",
+    "department": "PUBLIC ORDER AND SAFETY OFFICE",
+    "source_id": "1102",
+    "source_url": "https://www.calambacity.gov.ph/maincss/assets/citizencharter/public_order_and_safety_office.pdf#page=20",
+    "classification": "Simple",
+    "type_of_transaction": "G2C – Government to Citizen",
+    "who_may_avail": "Sanggunian Barangay, Mamayan ng Calamba",
+    "requirements": [
+      {
+        "requirement": "1. Business Permit Application",
+        "where_to_secure": "BPTFO"
+      },
+      {
+        "requirement": "2. Inspection Report",
+        "where_to_secure": "POSO"
+      }
+    ],
+    "steps": [
+      "1. Isumite ang Business Permit Application",
+      "2. Isumite ang Inspection Report Kung lumabag sa alituntunin: Magbayad ng kaukulang halaga Kung walang nilabag: Tanggapin ang Sertipikasyon lumagda sa logbook"
     ]
   }
 ]
