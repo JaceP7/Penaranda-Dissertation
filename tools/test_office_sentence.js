@@ -3,7 +3,7 @@
  * the sentence a citizen reads after "where is [office]?", written from the
  * live stamps, and the office the "Take me there" button routes to.
  *
- * Runs the real floor_presets.js, stamp_presets.js and service_locations.js in
+ * Runs the real floor_presets.js, spots.js, stamp_presets.js and service_locations.js in
  * one vm context, the way index.html loads them, and cross-checks chat.js and
  * index.html.
  *
@@ -25,6 +25,7 @@ const read = (p) => fs.readFileSync(path.resolve(ROOT, p), 'utf8');
 const sb = { console, localStorage: { getItem() { return null; }, setItem() {} }, window: {} };
 vm.createContext(sb);
 vm.runInContext(read('wayfinding-app/js/floor_presets.js'), sb);
+vm.runInContext(read('wayfinding-app/js/spots.js'), sb);
 vm.runInContext(read('wayfinding-app/js/stamp_presets.js') +
                 '\n;var STAMP_PLACEMENTS = STAMP_PLACEMENTS_BUNDLED.slice();', sb);
 vm.runInContext(read('wayfinding-app/js/service_locations.js') +

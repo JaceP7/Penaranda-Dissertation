@@ -103,6 +103,7 @@ const ENTRANCE = { floor: 1, row: 73, col: 37 };   // just inside the main south
     vm.createContext(ss);
     vm.runInContext(fs.readFileSync(path.resolve(ROOT, 'wayfinding-app/js/stamp_presets.js'), 'utf8') +
                     ';var STAMP_PLACEMENTS = STAMP_PLACEMENTS_BUNDLED;', ss);
+    vm.runInContext(fs.readFileSync(path.resolve(ROOT, 'wayfinding-app/js/spots.js'), 'utf8'), ss);
     vm.runInContext(fs.readFileSync(path.resolve(ROOT, 'wayfinding-app/js/service_locations.js'), 'utf8') +
                     ';this.DEPTS = DEPT_STAMP_NAMES;', ss);
     const missing = [];

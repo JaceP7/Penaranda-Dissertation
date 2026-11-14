@@ -12,7 +12,7 @@
 
 "use strict";
 
-const SERVICE_LOCATIONS_VERSION = 4;   // + COMELEC (LG 19); unmapped offices reported, not re-pointed; BUILDING_EXITS
+const SERVICE_LOCATIONS_VERSION = 5;   // + spots: a migrated map routes by SPOTS.placesFor; desks; otherKey for the help desk and COMELEC
 
 // ── Canonical RAG department  →  stamp placement name(s) ──────────────────
 // Keys are the canonical department strings the RAG answers resolve to.
@@ -123,16 +123,85 @@ function _svcTokenMatch(nd) {
   // Fallback fuzzy match on DISTINCTIVE tokens only. Requires >= 2 shared
   // distinctive tokens, so an unmapped dept falls back to the info desk
   // rather than being mis-routed to a superficially-similar office.
+  const best = _svcBestKey(nd, Object.keys(_DEPT_NORM));
+  return best ? _DEPT_NORM[best] : null;
+}
+
+/** The key in `keys` sharing the most distinctive tokens with nd (>= 2), or null. */
+function _svcBestKey(nd, keys) {
   const want = _svcDistinctive(nd);
   if (want.size === 0) return null;
   let best = null, bestScore = 0;
-  for (const key in _DEPT_NORM) {
-    const have = _svcDistinctive(key);
+  for (const key of keys) {
+    const have = _svcDistinctive(_svcNorm(key));
     let score = 0;
     want.forEach(w => { if (have.has(w)) score++; });
     if (score > bestScore) { bestScore = score; best = key; }
   }
-  return bestScore >= 2 ? _DEPT_NORM[best] : null;
+  return bestScore >= 2 ? best : null;
+}
+
+// ── Spots (a migrated map) ─────────────────────────────────────────────────
+// Once the editor has assigned what stands on each spot, placements carry
+// `kind` (spots.js) and the map itself says where an office is. Until then -
+// no placement carries `kind` - everything goes through DEPT_STAMP_NAMES,
+// exactly as before.
+function _spotsOn() {
+  return typeof SPOTS !== "undefined" && typeof STAMP_PLACEMENTS !== "undefined" &&
+         STAMP_PLACEMENTS.some(p => p.kind);
+}
+
+/** The map's own spelling of a department (exact, then fuzzy), or null. */
+function _spotDept(nd) {
+  const depts = [...new Set(STAMP_PLACEMENTS.filter(p => p.kind && p.dept).map(p => p.dept))];
+  return depts.find(d => _svcNorm(d) === nd) || _svcBestKey(nd, depts);
+}
+
+/**
+ * The spots a citizen can be sent to for a department (and service). The help
+ * desk and COMELEC are found by their fixed otherKey, so renaming the spot
+ * ("Help Desk") never loses them.
+ */
+function _spotPlaces(deptName, subservice) {
+  const nd = _svcNorm(deptName);
+  const fixed = Object.keys(SPOTS.FIXED_KEYS).find(k => _svcNorm(k) === nd);
+  if (fixed) {
+    const own = STAMP_PLACEMENTS.filter(p => p.otherKey === SPOTS.FIXED_KEYS[fixed]);
+    if (own.length) return own;
+  }
+  const dept = _spotDept(nd);
+  if (!dept) return [];
+  const places = SPOTS.placesFor(STAMP_PLACEMENTS, dept, subservice);
+  if (places.length) return places;
+  // No office spot, and its desks are ticked for other services only: the
+  // desks are still where the office is (e.g. "where is OSCA?").
+  return STAMP_PLACEMENTS.filter(p => p.dept === dept && p.kind === "desk" && !p.deskBehind);
+}
+
+function _spotCell(p) {
+  return { floor: p.floor, row: p.row, col: p.col, name: p.name, size: p.size || 1, spot: p };
+}
+
+/** "OSCA desk, in front of GF 14 CSWD": the desk and the nearest office spot. */
+function _deskPhrase(desk) {
+  const name  = String(desk.name || "").trim();
+  const short = name.replace(/\s+desk$/i, "");
+  const front = SPOTS.frontOf(STAMP_PLACEMENTS, desk);
+  if (!front) return name || "Desk";
+  return `${short || "Desk"} desk, in front of ${front.name}`;
+}
+
+/**
+ * The note for an office that also keeps its own desk in the corridor
+ * (deskBehind), or "" when it has none. Wording fixed by the plan.
+ */
+function ownDeskNote(deptName, officeName, lang) {
+  if (!_spotsOn()) return "";
+  const dept = _spotDept(_svcNorm(deptName));
+  if (!dept || !STAMP_PLACEMENTS.some(p => p.kind === "desk" && p.deskBehind && p.dept === dept)) return "";
+  return lang === "fil"
+    ? `May mesa rin ang ${officeName} sa pasilyo sa harap ng opisina. Baka doon ka muna papipilahin.`
+    : `${officeName} also has a desk in the corridor in front of the office. You may be asked to line up there first.`;
 }
 
 /**
@@ -143,8 +212,9 @@ function _svcTokenMatch(nd) {
  * @param {{floor:number,row:number,col:number}} [fromCell] - user's position
  * @returns {null | {
  *     floor:number, row:number, col:number, stampName:string,
- *     label:string, fallback?:boolean, separateCampus?:boolean
- *   }}
+ *     label:string, fallback?:boolean, separateCampus?:boolean,
+ *     spotId?:string, kind?:string, deskPhrase?:string
+ *   }}  spotId and kind (and deskPhrase, for a desk) only on a migrated map.
  */
 function resolveServiceLocation(deptName, subservice, fromCell) {
   const nd = _svcNorm(deptName);
@@ -161,13 +231,16 @@ function resolveServiceLocation(deptName, subservice, fromCell) {
     stampNames = [SERVICE_OVERRIDES[subservice]];
   }
 
-  // 3. Department → stamp names (exact then fuzzy)
-  if (!stampNames) stampNames = _DEPT_NORM[nd] || _svcTokenMatch(nd);
-
+  // 3. Department → its spots on a migrated map, else stamp names (exact then fuzzy)
   // 4. Gather candidate cells. None: say so; the caller offers the help desk
   //    and the nearest exit instead of routing somewhere else silently.
   let cells = [];
-  if (stampNames) stampNames.forEach(sn => { cells = cells.concat(_svcStampCells(sn)); });
+  if (!stampNames && _spotsOn()) {
+    cells = _spotPlaces(deptName, subservice).map(_spotCell);
+  } else {
+    if (!stampNames) stampNames = _DEPT_NORM[nd] || _svcTokenMatch(nd);
+    if (stampNames) stampNames.forEach(sn => { cells = cells.concat(_svcStampCells(sn)); });
+  }
   if (!cells.length) {
     return { unmapped: true, label: deptName, floor: null, row: null, col: null, stampName: null };
   }
@@ -185,16 +258,23 @@ function resolveServiceLocation(deptName, subservice, fromCell) {
     return da - db;
   });
   const pick = pool[0];
-  return {
+  const out = {
     floor: pick.floor, row: pick.row, col: pick.col,
     stampName: pick.name, label: deptName,
   };
+  if (pick.spot) {
+    out.spotId = pick.spot.id;
+    out.kind   = pick.spot.kind;
+    if (pick.spot.kind === "desk") out.deskPhrase = _deskPhrase(pick.spot);
+  }
+  return out;
 }
 
 /** 'mapped' (routable), 'outside' (own campus) or 'unmapped' (no stamp yet). */
 function serviceLocationStatus(deptName) {
   const nd = _svcNorm(deptName);
   if (_CAMPUS_NORM.has(nd)) return "outside";
+  if (_spotsOn()) return _spotPlaces(deptName).length ? "mapped" : "unmapped";
   const names = _DEPT_NORM[nd] || _svcTokenMatch(nd);
   const has = names && names.some(sn => _svcStampCells(sn).length);
   return has ? "mapped" : "unmapped";
@@ -255,10 +335,14 @@ function _officePosition(cell, fil) {
 
 /** Every placed cell for an office, nearest the main entrance first. */
 function _officeCells(dept) {
-  const nd = _svcNorm(dept);
-  const names = _DEPT_NORM[nd] || _svcTokenMatch(nd) || [];
   let cells = [];
-  names.forEach(sn => { cells = cells.concat(_svcStampCells(sn)); });
+  if (_spotsOn()) {
+    cells = _spotPlaces(dept).map(_spotCell);
+  } else {
+    const nd = _svcNorm(dept);
+    const names = _DEPT_NORM[nd] || _svcTokenMatch(nd) || [];
+    names.forEach(sn => { cells = cells.concat(_svcStampCells(sn)); });
+  }
   const e = SERVICE_DEFAULT_ENTRANCE;
   return cells.sort((a, b) =>
     (Math.abs(a.floor - e.floor) - Math.abs(b.floor - e.floor)) ||
@@ -300,26 +384,32 @@ function describeOfficeLocation(office, lang) {
   const near = cells[0];
   const floors = [...new Set(cells.map(c => c.floor))];
   const n = cells.length;
+  // Where the nearest place is. A desk is named by what it stands in front of
+  // ("OSCA desk, in front of GF 14 CSWD"), an office by its side of the floor.
+  const desk = (near.spot && near.spot.kind === "desk") ? _deskPhrase(near.spot) : null;
+  const where = fil
+    ? (desk ? `nasa ${desk}, ${_officeFloorPhrase(near.floor, true)}`
+            : `nasa ${_officeFloorPhrase(near.floor, true)}, ${_officePosition(near, true)}`)
+    : (desk ? `at the ${desk}, on ${_officeFloorPhrase(near.floor, false)}`
+            : `on ${_officeFloorPhrase(near.floor, false)}, ${_officePosition(near, false)}`);
   let text;
   if (fil) {
     const subj = `Ang ${who}`;
     if (floors.length === 1) {
-      text = `${subj} ay nasa ${_officeFloorPhrase(near.floor, true)}, ${_officePosition(near, true)}.`;
+      text = `${subj} ay ${where}.`;
       if (n > 1) text += ` May ${n} window ito; dadalhin kita sa pinakamalapit.`;
     } else {
       text = `${subj} ay may ${n} window, sa ${floors.map(f => _officeFloorName(f)).join(" at sa ")}. ` +
-             `Ang pinakamalapit sa main entrance ay nasa ${_officeFloorPhrase(near.floor, true)}, ` +
-             `${_officePosition(near, true)}. Dadalhin kita sa pinakamalapit.`;
+             `Ang pinakamalapit sa main entrance ay ${where}. Dadalhin kita sa pinakamalapit.`;
     }
   } else {
     const subj = office.abbr ? who : `The ${who}`;
     if (floors.length === 1) {
-      text = `${subj} is on ${_officeFloorPhrase(near.floor, false)}, ${_officePosition(near, false)}.`;
+      text = `${subj} is ${where}.`;
       if (n > 1) text += ` It has ${n} windows; I'll take you to the nearest one.`;
     } else {
       text = `${subj} has ${n} windows, on ${floors.map(f => "the " + _officeFloorName(f)).join(" and ")}. ` +
-             `The one nearest the main entrance is on ${_officeFloorPhrase(near.floor, false)}, ` +
-             `${_officePosition(near, false)}. I'll take you to the nearest one.`;
+             `The one nearest the main entrance is ${where}. I'll take you to the nearest one.`;
     }
   }
   return { text, navDept: office.dept, navLabel: office.name };

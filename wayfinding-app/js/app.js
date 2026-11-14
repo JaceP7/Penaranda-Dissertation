@@ -514,6 +514,8 @@ function _nearestOpenCell(row, col) {
 function _nearestReachableCell(targetRow, targetCol, startId) {
   const start = NODE_MAP[startId];
   if (!start || start.wall) return null;
+  // Desk cells are blocked in recompute(), so a route to a desk ends beside it.
+  const desks = new Set(SPOTS.deskCells(STAMP_PLACEMENTS, STATE.currentFloor));
   const seen  = new Set([startId]);
   const queue = [startId];
   const dirs  = [[0, 1], [0, -1], [1, 0], [-1, 0]];
@@ -530,7 +532,7 @@ function _nearestReachableCell(targetRow, targetCol, startId) {
       const nid = nodeId(nr, nc);
       if (seen.has(nid)) continue;
       const nb = NODE_MAP[nid];
-      if (!nb || nb.wall) continue;
+      if (!nb || nb.wall || desks.has(nid)) continue;
       seen.add(nid); queue.push(nid);
     }
   }
@@ -1002,6 +1004,15 @@ function navigateToDepartment(deptName, subservice, answerText, presetLoc) {
   }
   // Named on the arrival card and in the messages below.
   _navDestLabel = _officeTitle(loc.label || deptName);
+  // The spot the route goes to is outlined on the map (null: a pin, an exit,
+  // or an unmigrated map).
+  renderer.destSpotId = loc.spotId || null;
+  // Sent to an office that also keeps its own desk in the corridor: say so
+  // once, with the route's first message, since they may be asked to line up there.
+  const deskLang = (typeof CHAT !== 'undefined' && CHAT.lang === 'fil') ? 'fil' : 'en';
+  const deskNote = (loc.kind === 'office' && typeof ownDeskNote === 'function')
+    ? ownDeskNote(deptName, _navDestLabel, deskLang) : '';
+  const routeToast = (msg) => _showStairToast(deskNote ? `${msg} ${deskNote}` : msg);
 
   const crossFloor = loc.floor !== STATE.currentFloor;
 
@@ -1103,17 +1114,17 @@ function navigateToDepartment(deptName, subservice, answerText, presetLoc) {
   if (reachGap > 6) {
     // Couldn't get near the office — the floor map is probably missing a
     // doorway between regions. Guide as close as possible and say so.
-    _showStairToast(`The map can't reach ${_navDestLabel} exactly (a doorway may be missing), so this takes you as close as it can. Please ask nearby.`);
+    routeToast(`The map can't reach ${_navDestLabel} exactly (a doorway may be missing), so this takes you as close as it can. Please ask nearby.`);
   } else if (_crossFloorTrip && _crossFloorTrip.leg === 1) {
     const mpc = (typeof NAV !== 'undefined' && NAV.metresPerCell) ? NAV.metresPerCell : 1;
     const m   = Math.max(1, Math.round(_crossFloorTrip.stair.legOne * mpc));
-    _showStairToast(`${_cap(_navDestLabel)} is on ${_floorName(loc.floor)}. First walk about ${m} m ` +
-                    `to the stairs; the blue line shows the way.`);
+    routeToast(`${_cap(_navDestLabel)} is on ${_floorName(loc.floor)}. First walk about ${m} m ` +
+               `to the stairs; the blue line shows the way.`);
     if (DOM.navStairBtn) DOM.navStairBtn.hidden = false;
   } else if (crossFloor) {
-    _showStairToast(`${_cap(_navDestLabel)} is on ${_floorName(loc.floor)}. Take the stairs, then follow the blue line.`);
+    routeToast(`${_cap(_navDestLabel)} is on ${_floorName(loc.floor)}. Take the stairs, then follow the blue line.`);
   } else {
-    _showStairToast(`Follow the blue line to ${_navDestLabel}.`);
+    routeToast(`Follow the blue line to ${_navDestLabel}.`);
   }
 
   // Last, because "At the stairs" (just above) changes the step bar's height.
@@ -2218,7 +2229,11 @@ function recompute() {
     return;
   }
 
-  const adj    = buildAdjacency();
+  // Corridor desks take up floor space, so routes go around them. The start
+  // stays open: a dot that drifted onto a desk can still walk off it.
+  const blocked = new Set(SPOTS.deskCells(STAMP_PLACEMENTS, STATE.currentFloor));
+  blocked.delete(STATE.startId);
+  const adj    = buildAdjacency(blocked);
   const result = dijkstra(STATE.startId, STATE.endId, adj);
 
   if (result) {
@@ -3157,6 +3172,7 @@ function _clearFinishedRoute() {
   _hideNavStep();
   if (renderer) {
     renderer.navActive = false;
+    renderer.destSpotId = null;
     if (renderer.clearEnd)  renderer.clearEnd();
     if (renderer.clearPath) renderer.clearPath();
     renderer._draw();

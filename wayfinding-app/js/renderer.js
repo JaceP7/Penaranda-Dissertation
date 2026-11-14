@@ -165,6 +165,8 @@ class GridRenderer {
     this.exits = [];
     /** A pin the citizen dropped by tapping the map, or null. */
     this.pin = null;
+    /** The id of the spot a citizen route goes to (outlined), or null. */
+    this.destSpotId = null;
 
     /** Fixed selection rectangle { r1,c1,r2,c2 } or null. */
     this.selectionRect   = null;
@@ -724,6 +726,10 @@ class GridRenderer {
     // Each labelled stamp placement gets its name rendered at the centre of its
     // bounding box, with a semi-transparent dark pill behind so it stays legible
     // over walls, doors, stairs, and the floor watermark.
+    // On a migrated map (placements carry `kind`) each spot says what is on it
+    // (SPOTS.labelStyle): "No office yet" is an amber-striped box for admins
+    // only, a desk is a filled block in both views, the rest keep the pill.
+    // An unmigrated map keeps the stamp names, exactly as before.
     if (typeof STAMP_PLACEMENTS !== 'undefined' && STAMP_PLACEMENTS.length) {
       ctx.save();
       ctx.textAlign    = 'center';
@@ -731,12 +737,51 @@ class GridRenderer {
       const fontPx = Math.max(9, Math.min(15, Math.floor(cs * 0.55)));
       ctx.font = `600 ${fontPx}px system-ui, -apple-system, "Segoe UI", sans-serif`;
       const padX = 5, padY = 2;
+      const spotsOn = typeof SPOTS !== 'undefined' && STAMP_PLACEMENTS.some(p => p.kind);
       for (const p of STAMP_PLACEMENTS) {
-        if (!p.name) continue;
         if (p.floor !== this.currentFloor) continue;  // per-floor visibility
-        const cx = this._tx + (p.col + p.size / 2) * cs;
-        const cy = this._ty + (p.row + p.size / 2) * cs;
-        const m  = ctx.measureText(p.name);
+        const style = spotsOn ? SPOTS.labelStyle(p) : { text: p.name, look: 'stamp' };
+        if (style.look === 'empty' && this.citizenView) continue;
+        // Charter department names are long; offices and desks show the short code.
+        const text = ((style.look === 'office' || style.look === 'desk') && style.text &&
+                      typeof DEPT_CODE === 'function') ? DEPT_CODE(style.text) : style.text;
+        if (!text) continue;
+        const size = p.size || 1;
+        const x0 = this._tx + p.col * cs, y0 = this._ty + p.row * cs, w = size * cs;
+        if (style.look === 'empty') {
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(x0, y0, w, w);
+          ctx.clip();
+          ctx.fillStyle = 'rgba(245, 158, 11, 0.15)';     // amber-500, faint
+          ctx.fillRect(x0, y0, w, w);
+          ctx.strokeStyle = 'rgba(217, 119, 6, 0.6)';     // amber-600 stripes
+          ctx.lineWidth = Math.max(1, cs * 0.12);
+          const gap = Math.max(4, cs * 0.6);
+          for (let k = -w; k < w; k += gap) {
+            ctx.beginPath();
+            ctx.moveTo(x0 + k, y0 + w);
+            ctx.lineTo(x0 + k + w, y0);
+            ctx.stroke();
+          }
+          ctx.restore();
+          ctx.strokeStyle = '#D97706';
+          ctx.lineWidth = 1.5;
+          ctx.strokeRect(x0 + 0.75, y0 + 0.75, w - 1.5, w - 1.5);
+        } else if (style.look === 'desk') {
+          ctx.fillStyle = '#92400E';                       // amber-800: a solid block
+          ctx.fillRect(x0, y0, w, w);
+        }
+        // The spot the citizen's route goes to (renderer.destSpotId, set by
+        // navigateToDepartment) gets a 2 px outline in the route colour.
+        if (this.citizenView && this.navActive && this.destSpotId && p.id === this.destSpotId) {
+          ctx.strokeStyle = COLORS.pathLine;
+          ctx.lineWidth = 2;
+          ctx.strokeRect(x0 + 1, y0 + 1, w - 2, w - 2);
+        }
+        const cx = x0 + w / 2;
+        const cy = y0 + w / 2;
+        const m  = ctx.measureText(text);
         const bw = m.width + padX * 2;
         const bh = fontPx + padY * 2;
         // Pill background
@@ -750,7 +795,7 @@ class GridRenderer {
         }
         // Label text
         ctx.fillStyle = '#FFFFFF';
-        ctx.fillText(p.name, cx, cy);
+        ctx.fillText(text, cx, cy);
       }
       ctx.restore();
     }

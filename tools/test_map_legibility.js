@@ -79,6 +79,7 @@ console.log('\n--- #5 offices outside or not on the map ---');
 const sb = { console, localStorage: { getItem() { return null; }, setItem() {} }, window: {} };
 vm.createContext(sb);
 vm.runInContext(read('wayfinding-app/js/floor_presets.js'), sb);
+vm.runInContext(read('wayfinding-app/js/spots.js'), sb);
 vm.runInContext(read('wayfinding-app/js/stamp_presets.js') + '\n;var STAMP_PLACEMENTS = STAMP_PLACEMENTS_BUNDLED.slice();', sb);
 vm.runInContext(read('wayfinding-app/js/service_locations.js') +
   '\n;this.resolve = resolveServiceLocation; this.status = typeof serviceLocationStatus === "function" ? serviceLocationStatus : null;' +

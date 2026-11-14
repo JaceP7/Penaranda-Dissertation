@@ -46,7 +46,10 @@ function nodeId(row, col) {
 }
 
 // ── Build adjacency list (call after toggling walls) ──────────────────────────
-function buildAdjacency() {
+// extraBlocked: optional Set of node ids walked around like walls without being
+// walls - the corridor desks (SPOTS.deskCells), which are not painted cells.
+function buildAdjacency(extraBlocked) {
+  const blocked = (id) => !!extraBlocked && extraBlocked.has(id);
   const adj = {};
   const dirs = [
     [0, 1],
@@ -60,13 +63,13 @@ function buildAdjacency() {
   });
 
   NODES.forEach((n) => {
-    if (n.wall) return;
+    if (n.wall || blocked(n.id)) return;
     dirs.forEach(([dr, dc]) => {
       const nr = n.row + dr,
         nc = n.col + dc;
       if (nr < 0 || nr >= GRID_ROWS || nc < 0 || nc >= GRID_COLS) return;
       const nb = NODE_MAP[nodeId(nr, nc)];
-      if (!nb.wall) adj[n.id].push({ to: nb.id, weight: 1 });
+      if (!nb.wall && !blocked(nb.id)) adj[n.id].push({ to: nb.id, weight: 1 });
     });
   });
 
