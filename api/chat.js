@@ -24,7 +24,23 @@
 
 const { findOfficeQuestion } = require('../lib/office_finder');
 const { classifyScope, scopeReply, unclearReply } = require('../lib/scope_guard');
-const { findService, relatedServices, serviceAnswer } = require('../lib/service_lookup');
+const { servicesNamed, choiceLabel, alsoOfferedAt, relatedServices, serviceAnswer, SERVICES } = require('../lib/service_lookup');
+
+/**
+ * Name the other office(s) that offer the same kind of help, just above the
+ * closing "Go to:" line (which must stay last), and offer them as choices.
+ * Educational Assistance is at the Mayor's AND the Vice Mayor's; answering
+ * with one office alone sent half the askers to the "wrong" one (2026-11-11).
+ */
+function withAlsoOffered(answer, subservice, department, lang) {
+  const also = subservice && department ? alsoOfferedAt(subservice, department, SERVICES) : [];
+  if (!also.length) return { answer, options: [] };
+  const offices = also.map((x) => x.department).join('; ');
+  const line = lang === 'fil' ? `Mayroon din nito sa: ${offices}` : `Also offered by: ${offices}`;
+  const m = answer.match(/^\s*\**Go to:.*$/im);
+  const text = m ? answer.slice(0, m.index) + line + '\n\n' + answer.slice(m.index) : answer + '\n\n' + line;
+  return { answer: text, options: also.map((x) => choiceLabel(x)) };
+}
 
 // Below this top search score the match is treated as not understood rather
 // than answered. Calibrated on 2026-11-09: every genuine typed question that
@@ -43,6 +59,8 @@ const TOP_K       = 6;
 
 const UPSTASH_URL   = (process.env.UPSTASH_VECTOR_REST_URL || '').replace(/\/$/, '');
 const UPSTASH_TOKEN = process.env.UPSTASH_VECTOR_REST_TOKEN || '';
+// Optional namespace (tools/upstash_seed.py --namespace). Empty = the default one.
+const UPSTASH_NS    = (process.env.UPSTASH_VECTOR_NAMESPACE || '').replace(/^\/+|\/+$/g, '');
 
 // Optional Upstash Redis for live-site analytics logging. If these env vars
 // aren't set, logging is silently skipped (the chat still works).
@@ -75,7 +93,7 @@ function langTag(q) { return _FIL.test(q || '') ? 'fil' : 'en'; }
 
 // ── Upstash Vector retrieval (server-side embedding) ──────────────────────────
 async function upstashQuery(text, topK = TOP_K) {
-  const r = await fetch(`${UPSTASH_URL}/query-data`, {
+  const r = await fetch(`${UPSTASH_URL}/query-data${UPSTASH_NS ? '/' + UPSTASH_NS : ''}`, {
     method:  'POST',
     headers: { 'Authorization': `Bearer ${UPSTASH_TOKEN}`, 'Content-Type': 'application/json' },
     body:    JSON.stringify({ data: text, topK, includeMetadata: true }),
@@ -223,20 +241,36 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'query is required' });
   }
 
-  // 0a. A chip that names a service: answer from the Charter record itself.
-  if (source === 'chip') {
-    const svc = findService(query);
-    if (svc) {
-      const lang = langTag(query);
-      await logQuery({ ts: Date.now(), query, department: svc.department, subservice: svc.subservice,
-                       needsContext: false, latency_ms: Date.now() - t0, lang,
-                       kind: 'service', source, synthetic });
-      return res.status(200).json({
-        answer: serviceAnswer(svc, lang), department: svc.department, subservice: svc.subservice,
-        needsContext: false, options: [], rate_limited: false, kind: 'service', lang,
-        related: relatedServices(svc.department, svc.subservice),
-      });
-    }
+  // 0a. A chip, or a typed question, that IS a service's name: answer from
+  //     the Charter record itself, with no search or model to drift (typed
+  //     "Senior Citizens ID" was searched like any question until 2026-11-11).
+  const named = servicesNamed(query);
+  if (named.length === 1) {
+    const svc = named[0];
+    const lang = langTag(query);
+    const also = withAlsoOffered(serviceAnswer(svc, lang), svc.subservice, svc.department, lang);
+    await logQuery({ ts: Date.now(), query, department: svc.department, subservice: svc.subservice,
+                     needsContext: false, latency_ms: Date.now() - t0, lang,
+                     kind: 'service', source, synthetic });
+    return res.status(200).json({
+      answer: also.answer, department: svc.department, subservice: svc.subservice,
+      needsContext: false, options: also.options, rate_limited: false, kind: 'service', lang,
+      related: relatedServices(svc.department, svc.subservice),
+    });
+  }
+  if (named.length > 1) {
+    // The same name at two offices (Competency Assessment): ask which.
+    const lang = langTag(query);
+    await logQuery({ ts: Date.now(), query, department: null, subservice: named[0].subservice,
+                     needsContext: true, latency_ms: Date.now() - t0, lang,
+                     kind: 'service', source, synthetic });
+    return res.status(200).json({
+      answer: lang === 'fil'
+        ? `May ${named[0].subservice} sa ${named.length} office. Alin ang kailangan mo?`
+        : `${named[0].subservice} is offered by ${named.length} offices. Which one do you need?`,
+      department: null, subservice: null, needsContext: true, options: named.map((x) => choiceLabel(x)),
+      rate_limited: false, kind: 'service', lang,
+    });
   }
 
   // 0b. Out of scope: facilities, other agencies, officials, the exit, small
@@ -348,12 +382,15 @@ module.exports = async function handler(req, res) {
                    needsContext, latency_ms: Date.now() - t0, lang: langTag(query),
                    source, synthetic });
 
+  // The same help at another office: say so, and offer it as a choice.
+  const also = (dept && !needsContext) ? withAlsoOffered(answer, subservice, dept, langTag(query)) : { answer, options: [] };
+
   return res.status(200).json({
-    answer,
+    answer:       also.answer,
     department:   dept || null,
     subservice,
     needsContext,
-    options,
+    options:      needsContext ? options : also.options,
     rate_limited: false,
     // Other services at the same office, offered as chips after the answer.
     related: dept ? relatedServices(dept, subservice) : [],

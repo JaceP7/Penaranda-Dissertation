@@ -29,6 +29,17 @@ import urllib.error
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SERVICES = os.path.join(ROOT, "wayfinding-app", "data", "services.json")
+# Plain English / Filipino names and everyday words per service
+# (tools/make_service_glossary.js). Embedded with the title so an English
+# question finds a Filipino-titled service and the other way round.
+GLOSSARY = os.path.join(ROOT, "wayfinding-app", "data", "service_glossary.json")
+
+# --namespace NAME seeds a separate namespace (e.g. to evaluate a change
+# before the live chat uses it). api/chat.js reads UPSTASH_VECTOR_NAMESPACE.
+NAMESPACE = ""
+if "--namespace" in sys.argv:
+    NAMESPACE = sys.argv[sys.argv.index("--namespace") + 1].strip("/")
+NS = ("/" + NAMESPACE) if NAMESPACE else ""
 
 URL   = os.environ.get("UPSTASH_VECTOR_REST_URL", "").rstrip("/")
 TOKEN = os.environ.get("UPSTASH_VECTOR_REST_TOKEN", "")
@@ -52,25 +63,31 @@ def _post(path, payload):
         raise
 
 
-def concise_identity(s):
+def concise_identity(s, gloss=None):
     """Short, retrieval-friendly text — what the index embeds server-side."""
     who = (s.get("who_may_avail") or "")[:200]
-    return (f"{s.get('subservice','')}. "
+    text = (f"{s.get('subservice','')}. "
             f"Department: {s.get('department','')}. "
             f"Category: {s.get('service','')}. "
             f"Who may avail: {who}")
+    if gloss:
+        text += (f". In English: {gloss.get('en','')}. Sa Filipino: {gloss.get('fil','')}. "
+                 f"For: {gloss.get('for','')}. Also called: {', '.join(gloss.get('terms') or [])}")
+    return text
 
 
 def main():
     if "--reset" in sys.argv:
         print("Resetting index (deleting all vectors)…")
         try:
-            _post("/reset", {})
+            _post("/reset" + NS, {})
             print("  reset done.")
         except Exception:
             print("  reset failed (continuing).")
 
     services = json.load(open(SERVICES, encoding="utf-8"))
+    glossary = json.load(open(GLOSSARY, encoding="utf-8")) if os.path.exists(GLOSSARY) else {}
+    print(f"Glossary entries: {len(glossary)}; namespace: {NAMESPACE or '(default)'}")
     print(f"Loaded {len(services)} services from services.json")
 
     # Build records. Keep metadata compact — requirements as a list of
@@ -98,14 +115,15 @@ def main():
             "requirements":        reqs,
             "steps":               [str(x)[:400] for x in (s.get("steps") or [])[:15]],
         }
-        records.append({"id": sid, "data": concise_identity(s), "metadata": meta})
+        gloss = glossary.get(f"{s.get('subservice','')}|{s.get('department','')}")
+        records.append({"id": sid, "data": concise_identity(s, gloss), "metadata": meta})
 
     # Upsert in batches (Upstash accepts an array body).
     BATCH = 25
     ok = 0
     for i in range(0, len(records), BATCH):
         chunk = records[i:i + BATCH]
-        _post("/upsert-data", chunk)
+        _post("/upsert-data" + NS, chunk)
         ok += len(chunk)
         print(f"  upserted {ok}/{len(records)}")
         time.sleep(0.2)
