@@ -9728,8 +9728,8 @@
         "where_to_secure": " Information, Investment Promotions & Employment Services Office  Applicant"
       },
       {
-        "requirement": "4. Cockfighting (Derby and Pintakasi)  Request Letter na nagsasaad mga petsa ng request na pagdadaos ng Derby o Pintakasi, at aprubado ng City Mayor",
-        "where_to_secure": "ng  Applicant"
+        "requirement": "4. Cockfighting (Derby and Pintakasi): Request Letter na nagsasaad ng mga petsa ng pagdadaos ng Derby o Pintakasi, aprubado ng City Mayor",
+        "where_to_secure": "Applicant"
       },
       {
         "requirement": "5. Firecrackers Permit to sell  Public Order & Safety Office Clearance for slot at selling area  Updated PNP Clearance  Barangay Clearance  Court Clearance  Fireworks Safety Training Course (FSTC) Certificate  Dealer’s Permit",
@@ -9777,8 +9777,8 @@
         "where_to_secure": "Cost Kliyente"
       },
       {
-        "requirement": "5. Authorization / SPA /Secretary Certificate",
-        "where_to_secure": "with Ids Abogado, Naglalakad ng papel"
+        "requirement": "5. Authorization / SPA / Secretary Certificate with IDs",
+        "where_to_secure": "Abogado, Naglalakad ng papel"
       }
     ],
     "steps": [
@@ -9908,12 +9908,12 @@
     "who_may_avail": "Barangay Officials, DepEd",
     "requirements": [
       {
-        "requirement": "1. Liham ng kahilingan o Resolusyon Barangay na nagsasaad ng kailangang serbisyo",
-        "where_to_secure": "ng Kliyente"
+        "requirement": "1. Liham ng kahilingan o Resolusyon ng Barangay na nagsasaad ng kailangang serbisyo",
+        "where_to_secure": "Kliyente"
       },
       {
-        "requirement": "2. Liham ng kahilingan ng DepEd ang PPMP na nagsasaad ng budget sa kanilang serbisyo",
-        "where_to_secure": "kalakip para"
+        "requirement": "2. Liham ng kahilingan ng DepEd kalakip ang PPMP na nagsasaad ng budget para sa kanilang serbisyo",
+        "where_to_secure": "Kliyente"
       }
     ],
     "steps": [
@@ -10222,12 +10222,12 @@
     "who_may_avail": "Empleyado o Manggagawa ng Pamahalaang Lungsod",
     "requirements": [
       {
-        "requirement": "1. Pormularyo sa Pagpapalit ng ATM Kung Nawala ang ATM o Cash Card",
-        "where_to_secure": "o Cash Card CHRMO City Legal Services Office o kahit"
+        "requirement": "1. Pormularyo sa Pagpapalit ng ATM o Cash Card",
+        "where_to_secure": "CHRMO"
       },
       {
-        "requirement": "2. Notaryadong Affidavit of Loss (1 kopya)",
-        "where_to_secure": "anong Law Office"
+        "requirement": "2. Kung nawala ang ATM o Cash Card: Notaryadong Affidavit of Loss (1 kopya)",
+        "where_to_secure": "City Legal Services Office o kahit anong Law Office"
       }
     ],
     "steps": [
@@ -10280,15 +10280,15 @@
         "where_to_secure": "CHRMO"
       },
       {
-        "requirement": "2. Primadong CS Form No. 7 o Clearance Form (1 kopya) Kung gagamitin sa pagpunta ng abroad:",
+        "requirement": "2. Primadong CS Form No. 7 o Clearance Form (1 kopya)",
         "where_to_secure": "CHRMO o CSC Website"
       },
       {
-        "requirement": "3. Approved Application for Leave (1",
-        "where_to_secure": "kopya) CHRMO"
+        "requirement": "3. Kung gagamitin sa pagpunta ng abroad: Approved Application for Leave (1 kopya)",
+        "where_to_secure": "CHRMO"
       },
       {
-        "requirement": "4. Approved Travel Authority (1 kopya)",
+        "requirement": "4. Kung gagamitin sa pagpunta ng abroad: Approved Travel Authority (1 kopya)",
         "where_to_secure": "City Mayor o DILG"
       }
     ],
@@ -10427,19 +10427,19 @@
       },
       {
         "requirement": "2. Medical Certificate (original copy)",
-        "where_to_secure": ""
+        "where_to_secure": "Medical Doctor"
       },
       {
-        "requirement": "3. a. Medicine Prescription with quotation (original copy) - For Medical Assistance b. Therapy Price Quotation (original – For Therapy Assistance",
-        "where_to_secure": "price Medical Doctor copy)"
+        "requirement": "3. Para sa Medical Assistance: Medicine Prescription with price quotation (original copy). Para sa Therapy Assistance: Therapy Price Quotation (original copy)",
+        "where_to_secure": "Medical Doctor"
       },
       {
-        "requirement": "4. PWD ID Card (Photocopy – back front) - Beneficiary",
-        "where_to_secure": "& Kliyente"
+        "requirement": "4. PWD ID Card of the beneficiary (photocopy, back and front)",
+        "where_to_secure": "Kliyente"
       },
       {
-        "requirement": "5. Voter’s ID or Certification (Photocopy) for claimant",
-        "where_to_secure": "– Comelec"
+        "requirement": "5. Voter's ID or Certification of the claimant (photocopy)",
+        "where_to_secure": "Comelec"
       }
     ],
     "steps": [
@@ -10484,8 +10484,8 @@
         "where_to_secure": "POSO Command Operations Center"
       },
       {
-        "requirement": "2. Police Request (kung hihingi ng",
-        "where_to_secure": "kopya Calamba City Police Station"
+        "requirement": "2. Police Request (kung hihingi ng kopya)",
+        "where_to_secure": "Calamba City Police Station"
       },
       {
         "requirement": "3. Any Valid ID",
@@ -10493,7 +10493,7 @@
       },
       {
         "requirement": "4. Flash Drive (kung hihingi ng kopya)",
-        "where_to_secure": ""
+        "where_to_secure": "Kliyente"
       }
     ],
     "steps": [

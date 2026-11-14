@@ -140,6 +140,34 @@ for (const [stem, page, dept, title, category] of ADDITIONS) {
   report.added.push(`${dept} | ${title}`);
 }
 
+// ---- 2b. hand fixes where a line wrapped across the two PDF columns --------
+// Checked against the PDF page text, 2026-11-14. [title, index, requirement, where_to_secure]
+const HANDFIX = [
+  ['Request to View or Get a Copy of CCTV Footage', 1, '2. Police Request (kung hihingi ng kopya)', 'Calamba City Police Station'],
+  ['Request to View or Get a Copy of CCTV Footage', 3, '4. Flash Drive (kung hihingi ng kopya)', 'Kliyente'],
+  ['Paghahanda ng Programa sa Paggawa ng mga Proyektong Imprastraktura (Infrastructure Project Programming)', 0, '1. Liham ng kahilingan o Resolusyon ng Barangay na nagsasaad ng kailangang serbisyo', 'Kliyente'],
+  ['Paghahanda ng Programa sa Paggawa ng mga Proyektong Imprastraktura (Infrastructure Project Programming)', 1, '2. Liham ng kahilingan ng DepEd kalakip ang PPMP na nagsasaad ng budget para sa kanilang serbisyo', 'Kliyente'],
+  ['Pagpapalit ng Nawala o Nasirang ATM / Cash Card (ATM / Cash Card Replacement)', 0, '1. Pormularyo sa Pagpapalit ng ATM o Cash Card', 'CHRMO'],
+  ['Pagpapalit ng Nawala o Nasirang ATM / Cash Card (ATM / Cash Card Replacement)', 1, '2. Kung nawala ang ATM o Cash Card: Notaryadong Affidavit of Loss (1 kopya)', 'City Legal Services Office o kahit anong Law Office'],
+  ['Paghiling ng Human Resource Clearance (HR Clearance)', 1, '2. Primadong CS Form No. 7 o Clearance Form (1 kopya)', 'CHRMO o CSC Website'],
+  ['Paghiling ng Human Resource Clearance (HR Clearance)', 2, '3. Kung gagamitin sa pagpunta ng abroad: Approved Application for Leave (1 kopya)', 'CHRMO'],
+  ['Paghiling ng Human Resource Clearance (HR Clearance)', 3, '4. Kung gagamitin sa pagpunta ng abroad: Approved Travel Authority (1 kopya)', 'City Mayor o DILG'],
+  ['Tulong Pinansiyal para sa Medical at Therapy ng PWD (Medical and Therapy Assistance for PWDs)', 1, '2. Medical Certificate (original copy)', 'Medical Doctor'],
+  ['Tulong Pinansiyal para sa Medical at Therapy ng PWD (Medical and Therapy Assistance for PWDs)', 2, '3. Para sa Medical Assistance: Medicine Prescription with price quotation (original copy). Para sa Therapy Assistance: Therapy Price Quotation (original copy)', 'Medical Doctor'],
+  ['Tulong Pinansiyal para sa Medical at Therapy ng PWD (Medical and Therapy Assistance for PWDs)', 3, '4. PWD ID Card of the beneficiary (photocopy, back and front)', 'Kliyente'],
+  ['Tulong Pinansiyal para sa Medical at Therapy ng PWD (Medical and Therapy Assistance for PWDs)', 4, "5. Voter's ID or Certification of the claimant (photocopy)", 'Comelec'],
+  ["Special Permit (Special Mayor's Permit for Events and Activities)", 4, '4. Cockfighting (Derby and Pintakasi): Request Letter na nagsasaad ng mga petsa ng pagdadaos ng Derby o Pintakasi, aprubado ng City Mayor', 'Applicant'],
+  ['Issuance of New Tax Declaration for General Purposes (Reassessment, Revision or New Discovery of Real Property)', 4, '5. Authorization / SPA / Secretary Certificate with IDs', 'Abogado, Naglalakad ng papel'],
+];
+for (const [title, i, requirement, where] of HANDFIX) {
+  const s = live.find((x) => x.subservice === title);
+  if (!s || !s.requirements[i]) { console.error(`HANDFIX target missing: ${title} #${i}`); process.exit(1); }
+  if (s.requirements[i].requirement !== requirement || s.requirements[i].where_to_secure !== where) {
+    s.requirements[i] = { requirement, where_to_secure: where };
+    report.notes.push(`fixed wrapped line: ${title.slice(0, 40)} #${i + 1}`);
+  }
+}
+
 // ---- 3. announcement 1044: revised BP 220 form -----------------------------
 const bp = live.find((s) => s.department === 'HOUSING AND SETTLEMENTS DEPARTMENT' && /Building Permit \(BP220\)/.test(s.subservice));
 const NOTE = 'Revised BP 220 Building Permit Application Form (required from June 1, 2026; the old form is returned without processing)';
