@@ -516,6 +516,7 @@ const SPOT_EDITOR = (() => {
   }
 
   function showSheet(which) {   // 'add' | 'spot' | null
+    if (typeof DESK_EDITOR !== 'undefined') DESK_EDITOR.close();   // one sheet at a time
     show('spotSheet', !!which);
     show('ssAdd', which === 'add');
     show('ssSpot', which === 'spot');
@@ -544,15 +545,18 @@ const SPOT_EDITOR = (() => {
     openSheet(id);
   }
 
-  // Desks come in Task 7, which replaces this.
+  /** "Add desk here": the desk sheet (desk_editor.js) takes over. */
   function addDeskHere() {
-    setText('ssAddMsg', 'Desks can be added after the next update.');
-    show('ssAddMsg', true);
+    if (!addAt || typeof DESK_EDITOR === 'undefined') return;
+    const at = addAt;
+    closeSheet();
+    DESK_EDITOR.openNew(at.row, at.col, at.floor);
   }
 
   function openSheet(id) {
     const p = findSpot(id);
     if (!p || !hasDoc()) return;
+    if (p.kind === 'desk' && typeof DESK_EDITOR !== 'undefined') { DESK_EDITOR.open(id); return; }
     cancelMove();
     addAt = null;
     const removed = (typeof REMOVED_REQUIREMENTS !== 'undefined') ? REMOVED_REQUIREMENTS : {};
@@ -875,5 +879,6 @@ const SPOT_EDITOR = (() => {
     officeList, confirmDesk, removeDesk, servicesByDept, checkTheseNow, showOnMap,
     setMode, toggleMode, onTap, openSheet, closeSheet,
     applyAssignment, toggleRequirement, moveSpot, checkPick, spotName, serviceKeyFor, requirementLists,
+    addDesk: (row, col, opts) => DESK_EDITOR.addDesk(row, col, opts),
   };
 })();

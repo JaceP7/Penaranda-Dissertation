@@ -140,6 +140,68 @@ const SPOTS = (() => {
     return (reqs || []).filter((r) => !gone.includes(fold(r)));
   }
 
+  /**
+   * The office spots on `floor` that `desk` would cut off from `entrance`
+   * (a list of {row, col}): reachable with the floor's other desks in place,
+   * out of reach once this desk is added. Walking follows buildAdjacency in
+   * data.js: up, down, left, right over cells that are not walls or desks.
+   * An office drawn over wall cells counts as reached when a walkable cell of
+   * it, or beside it, is reached. `desk` replaces any placement with its id,
+   * so an edited desk is checked where it is now. Returns spot names.
+   */
+  function blocksWay(nodes, placements, floor, desk, entrance) {
+    const cells = new Map();
+    for (const n of nodes || []) cells.set(n.row + ',' + n.col, n);
+    const others = (placements || []).filter((p) => !desk || p.id !== desk.id);
+    const offices = others.filter((p) => p.kind === 'office' && p.floor === floor);
+    if (!desk || desk.floor !== floor || !offices.length) return [];
+    const DIRS = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+
+    function reach(blocked) {
+      const walk = (r, c) => {
+        const n = cells.get(r + ',' + c);
+        return !!n && !n.wall && !blocked.has(r + ',' + c);
+      };
+      const seen = new Set();
+      const queue = [];
+      const visit = (r, c) => {
+        const k = r + ',' + c;
+        if (!seen.has(k) && walk(r, c)) { seen.add(k); queue.push([r, c]); }
+      };
+      for (const e of entrance || []) {
+        const n = cells.get(e.row + ',' + e.col);
+        if (n && n.wall) for (const [dr, dc] of DIRS) visit(e.row + dr, e.col + dc);   // a door drawn as wall
+        else visit(e.row, e.col);
+      }
+      for (let i = 0; i < queue.length; i++) {
+        const [r, c] = queue[i];
+        for (const [dr, dc] of DIRS) visit(r + dr, c + dc);
+      }
+      return seen;
+    }
+
+    function reached(seen, p) {
+      const s = p.size || 1;
+      for (let r = p.row - 1; r <= p.row + s; r++) {
+        for (let c = p.col - 1; c <= p.col + s; c++) {
+          const inside = r >= p.row && r < p.row + s && c >= p.col && c < p.col + s;
+          const edge = (r >= p.row && r < p.row + s) || (c >= p.col && c < p.col + s);   // no corners
+          if ((inside || edge) && seen.has(r + ',' + c)) return true;
+        }
+      }
+      return false;
+    }
+
+    const before = reach(new Set(deskCells(others, floor)));
+    const after = reach(new Set(deskCells([...others, { ...desk, kind: 'desk' }], floor)));
+    const names = [];
+    for (const p of offices) {
+      const name = p.name || p.dept;
+      if (reached(before, p) && !reached(after, p) && !names.includes(name)) names.push(name);
+    }
+    return names;
+  }
+
   function labelStyle(spot) {
     if (spot.kind === 'office') return { text: spot.dept, look: 'office' };
     if (spot.kind === 'desk') return { text: spot.dept, look: 'desk' };
@@ -149,7 +211,7 @@ const SPOTS = (() => {
 
   return {
     FIXED_KEYS, isMigrated, migrateStamps, spotAt, placesFor, deskCells,
-    frontOf, unplacedOffices, staleDesks, requirementsFor, labelStyle,
+    frontOf, unplacedOffices, staleDesks, requirementsFor, labelStyle, blocksWay,
   };
 })();
 

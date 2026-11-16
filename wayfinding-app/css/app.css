@@ -2835,6 +2835,21 @@ body.view-user .zoom-ctrls { display: none !important; }
 .ss-source { margin: 12px 0 0; font-size: 0.78rem; color: #4B5563; }
 .ss-source a { color: #1D4ED8; text-decoration: underline; overflow-wrap: anywhere; }
 
+/* Desk sheet (desk_editor.js): same card as the spot sheet, plus service tick
+   rows and the size buttons. Each tick row is a 44 px tap target. */
+.ds-first { margin-top: 0; }
+.ds-tick {
+  display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 10px;
+  border: 1px solid #E2E8F0; border-radius: 10px; background: #F8FAFC; cursor: pointer;
+}
+.ds-tick-box { flex: 0 0 auto; width: 22px; height: 22px; margin: 0; accent-color: #0F766E; }
+.ds-tick-text { flex: 1 1 auto; font-size: 0.85rem; color: #1F2937; overflow-wrap: anywhere; }
+.ds-size-row { align-items: center; }
+.ds-size-text { flex: 1 1 0; text-align: center; font-size: 0.85rem; font-weight: 600; color: #1F2937; }
+.spot-sheet button:disabled { opacity: 0.45; cursor: default; }
+.ds-warn { margin-top: 12px; }
+.ds-warn-text { margin: 0 0 8px; font-weight: 600; }
+
 @media (max-width: 640px), (orientation: landscape) and (max-height: 500px) {
   body.view-admin .spot-sheet {
     top: auto; left: 0; right: 0; bottom: 0; width: auto; max-height: 62%;

@@ -196,7 +196,7 @@ ok('renderer.js reads destSpotId', /this\.destSpotId/.test(rend));
 ok('renderer.js labels spots with SPOTS.labelStyle', /SPOTS\.labelStyle\(/.test(rend));
 ok('navigateToDepartment shows the own-desk note', /ownDeskNote\(/.test(app));
 const at = (f) => html.indexOf('js/' + f + '?v=');
-ok('index.html loads spots.js?v=1', /<script src="js\/spots\.js\?v=1"><\/script>/.test(html));
+ok('index.html loads spots.js?v=2', /<script src="js\/spots\.js\?v=2"><\/script>/.test(html));
 ok('  after stamp_presets.js and before service_locations.js',
    at('spots.js') > at('stamp_presets.js') && at('spots.js') < at('service_locations.js'));
 

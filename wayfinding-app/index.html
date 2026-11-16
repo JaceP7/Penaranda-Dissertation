@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=70" />
+  <link rel="stylesheet" href="css/app.css?v=71" />
 </head>
 <body class="view-user">
 
@@ -367,6 +367,67 @@
           </div>
         </div>
       </section><!-- /spotSheet -->
+
+      <!-- Desk sheet (admin, Offices mode): a desk in the corridor, its office,
+           the services handled there and its size. desk_editor.js fills it;
+           office and service values come from the Citizen's Charter only. -->
+      <section id="deskSheet" class="spot-sheet desk-sheet" aria-labelledby="deskSheetTitle" hidden>
+        <div class="ss-head">
+          <div class="ss-head-text">
+            <h2 id="deskSheetTitle" class="ss-title">Desk</h2>
+            <p id="deskSheetSub" class="ss-sub"></p>
+          </div>
+          <button id="deskSheetClose" type="button" class="ss-btn ss-close">Close</button>
+        </div>
+        <div class="ss-scroll">
+          <h3 class="ss-sec-title ds-first">Whose desk is this?</h3>
+          <div class="ss-choice" role="group" aria-label="Whose desk is this?">
+            <button id="dsBehindBtn" type="button" class="ss-btn ss-tab" aria-pressed="true">The office behind it</button>
+            <button id="dsOtherBtn" type="button" class="ss-btn ss-tab" aria-pressed="false">Another office</button>
+          </div>
+          <p id="dsNoFront" class="ss-note" hidden>No office is in front of this desk yet.</p>
+
+          <div id="dsBehindStep" class="ss-step">
+            <p id="dsBehindText" class="ss-help"></p>
+            <h3 class="ss-sub-title">Services at this desk</h3>
+            <ul id="dsTicks" class="ss-chips ss-chips-col ds-ticks"></ul>
+          </div>
+
+          <div id="dsOtherStep" class="ss-step" hidden>
+            <p id="dsLoading" class="ss-help" hidden>Loading the Citizen's Charter...</p>
+            <label for="dsOfficeInput" class="ss-label">Office</label>
+            <input id="dsOfficeInput" class="ss-input" type="text" autocomplete="off" placeholder="Type an office name" />
+            <ul id="dsOfficeSuggest" class="ss-suggest"></ul>
+            <div id="dsOfficeMsg" class="ss-nomatch" role="status" hidden></div>
+            <h3 class="ss-sub-title">Services at this desk</h3>
+            <ul id="dsServiceChips" class="ss-chips"></ul>
+            <label for="dsServiceInput" class="ss-label">Add a service</label>
+            <input id="dsServiceInput" class="ss-input" type="text" autocomplete="off" placeholder="Type a service name" />
+            <ul id="dsServiceSuggest" class="ss-suggest"></ul>
+            <div id="dsServiceMsg" class="ss-nomatch" role="status" hidden></div>
+          </div>
+
+          <h3 class="ss-sub-title">Desk size</h3>
+          <div class="ss-row ds-size-row" role="group" aria-label="Desk size">
+            <button id="dsSmallerBtn" type="button" class="ss-btn">Smaller</button>
+            <span id="dsSizeText" class="ds-size-text" aria-live="polite">2 by 2 squares</span>
+            <button id="dsLargerBtn" type="button" class="ss-btn">Larger</button>
+          </div>
+
+          <div id="dsWarn" class="ss-note ds-warn" role="alert" hidden>
+            <p class="ds-warn-text">This desk blocks the way to <strong id="dsWarnNames"></strong>. Save anyway?</p>
+            <div class="ss-row">
+              <button id="dsWarnNo" type="button" class="ss-btn">Go back</button>
+              <button id="dsWarnYes" type="button" class="ss-btn ss-danger">Save anyway</button>
+            </div>
+          </div>
+          <p id="dsMsg" class="ss-msg" role="status" hidden></p>
+          <div class="ss-actions">
+            <button id="dsRemoveBtn" type="button" class="ss-btn ss-danger">Remove desk</button>
+            <button id="dsSaveBtn" type="button" class="ss-btn ss-primary">Save</button>
+          </div>
+        </div>
+      </section><!-- /deskSheet -->
     </div>
 
     <!-- Stair floor-change toast (simple confirmation) -->
@@ -574,7 +635,7 @@
   <script src="js/data.js?v=34"></script>
   <script src="js/floor_presets.js?v=35"></script>
   <script src="js/stamp_presets.js?v=2"></script>
-  <script src="js/spots.js?v=1"></script>
+  <script src="js/spots.js?v=2"></script>
   <script src="js/service_locations.js?v=13"></script>
   <script src="js/dijkstra.js?v=30"></script>
   <script src="js/renderer.js?v=42"></script>
@@ -582,7 +643,8 @@
   <script src="js/nav.js?v=42"></script>
   <script src="js/app.js?v=96"></script>
   <script src="js/charter_pick.js?v=1"></script>
-  <script src="js/spot_editor.js?v=2"></script>
+  <script src="js/spot_editor.js?v=3"></script>
+  <script src="js/desk_editor.js?v=1"></script>
   <script src="js/chat.js?v=46"></script>
 
 </body>
