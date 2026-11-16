@@ -23,6 +23,7 @@ const STATE = {
   wallMode:     false,
   stampMode:    false,   // clicking grid places stamp
   selectMode:   false,   // drag to select; toolbar shows CW/CCW/Move/Delete
+  spotMode:     false,   // Offices: a tap opens that spot's sheet (spot_editor.js)
   panelOpen:    false,   // tools panel visible
   navMode:      false,   // navigate mode: position tracks PDR/QR, path from ME → tapped cell
   captureMode:  false,   // fieldwork: tap a cell (or use PDR pos) to record an office coordinate
@@ -290,18 +291,19 @@ function _afterWallRestore() {
   saveGridState();
 }
 
-/** Which bottom-bar tool is on: 'paint' | 'select' | 'stamp' | 'move'. */
+/** Which bottom-bar tool is on: 'paint' | 'select' | 'stamp' | 'offices' | 'move'. */
 function _dockTool(state) {
   if (state.wallMode)   return 'paint';
   if (state.selectMode) return 'select';
   if (state.stampMode)  return 'stamp';
+  if (state.spotMode)   return 'offices';
   return 'move';
 }
 
 /** Keep the phone tool bar (#editorDock) in step with the editor state. */
 function _syncDock() {
   const tool = _dockTool(STATE);
-  for (const [id, t] of [['dockMove', 'move'], ['dockPaint', 'paint'], ['dockSelect', 'select'], ['dockStamp', 'stamp']]) {
+  for (const [id, t] of [['dockMove', 'move'], ['dockPaint', 'paint'], ['dockSelect', 'select'], ['dockStamp', 'stamp'], ['dockOffices', 'offices']]) {
     const b = document.getElementById(id);
     if (!b) continue;
     b.classList.toggle('active', tool === t);
@@ -1560,6 +1562,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Phone tool bar: the same tools as the header, within thumb reach.
   const _dock = (id, fn) => { const b = document.getElementById(id); if (b) b.addEventListener('click', fn); };
   _dock('dockMove', () => {
+    if (STATE.spotMode && typeof SPOT_EDITOR !== 'undefined') SPOT_EDITOR.setMode(false);
     if (STATE.wallMode)   setWallMode(false);
     if (STATE.selectMode) setSelectMode(false);
     if (STATE.panelOpen)  setToolsPanel(false);
@@ -1568,8 +1571,8 @@ document.addEventListener('DOMContentLoaded', () => {
   _dock('dockPaint',  () => setWallMode(!STATE.wallMode));
   _dock('dockSelect', () => setSelectMode(!STATE.selectMode));
   _dock('dockStamp',  () => setToolsPanel(!STATE.panelOpen));
-  _dock('dockOffices', () => { if (typeof SPOT_EDITOR !== 'undefined') SPOT_EDITOR.togglePanel(); });
-  _dock('officesBtn',  () => { if (typeof SPOT_EDITOR !== 'undefined') SPOT_EDITOR.togglePanel(); });
+  _dock('dockOffices', () => { if (typeof SPOT_EDITOR !== 'undefined') SPOT_EDITOR.toggleMode(); });
+  _dock('officesBtn',  () => { if (typeof SPOT_EDITOR !== 'undefined') SPOT_EDITOR.toggleMode(); });
   _dock('dockUndo',   undo);
   _dock('dockRedo',   redo);
 
@@ -2158,6 +2161,9 @@ function handleCellTap(row, col) {
     return;
   }
 
+  // Offices mode: a tap opens the spot there, or offers to add one (spot_editor.js).
+  if (STATE.spotMode && typeof SPOT_EDITOR !== 'undefined') { SPOT_EDITOR.onTap(row, col); return; }
+
   if (id === STATE.startId) return;
 
   // ── Drop floating selection ──────────────────────────────────────────────
@@ -2260,6 +2266,7 @@ function recompute() {
 
 // ── Wall controls ─────────────────────────────────────────────────────────────
 function setWallMode(active) {
+  if (active && STATE.spotMode)     SPOT_EDITOR.setMode(false);
   if (active && STATE.panelOpen)    setToolsPanel(false);
   if (active && STATE.selectMode)   setSelectMode(false);
   if (active && STATE.captureMode)  setCaptureMode(false);
@@ -2308,7 +2315,7 @@ function reset() {
 function setToolsPanel(open) {
   if (open && STATE.wallMode)    setWallMode(false);
   if (open && STATE.captureMode) setCaptureMode(false);
-  if (open && typeof SPOT_EDITOR !== 'undefined') SPOT_EDITOR.closePanel();   // one sheet at a time
+  if (open && STATE.spotMode) SPOT_EDITOR.setMode(false);   // one sheet at a time
   STATE.panelOpen    = open;
   STATE.stampMode    = open;
   renderer.stampMode = open;
@@ -2326,6 +2333,7 @@ function setToolsPanel(open) {
 // ── Navigate mode ─────────────────────────────────────────────────────────────
 function setNavMode(active) {
   if (active) {
+    if (STATE.spotMode)    SPOT_EDITOR.setMode(false);
     if (STATE.wallMode)    setWallMode(false);
     if (STATE.panelOpen)   setToolsPanel(false);
     if (STATE.selectMode)  setSelectMode(false);
@@ -2373,6 +2381,7 @@ function setNavMode(active) {
 // ── Capture mode (fieldwork coordinate capture) ───────────────────────────────
 function setCaptureMode(active) {
   if (active) {
+    if (STATE.spotMode)   SPOT_EDITOR.setMode(false);
     if (STATE.wallMode)   setWallMode(false);
     if (STATE.panelOpen)  setToolsPanel(false);
     if (STATE.selectMode) setSelectMode(false);
@@ -2714,6 +2723,7 @@ function loadCaptures() {
 // ── Select mode ───────────────────────────────────────────────────────────────
 function setSelectMode(active) {
   if (active) {
+    if (STATE.spotMode)    SPOT_EDITOR.setMode(false);
     if (STATE.wallMode)    setWallMode(false);
     if (STATE.panelOpen)   setToolsPanel(false);
     if (STATE.captureMode) setCaptureMode(false);
@@ -4579,6 +4589,7 @@ function _editorHint(mode, touch) {
     float:   '<strong>Tap</strong> the map to drop the selection. Two fingers move or zoom the map.',
     select:  '<strong>Drag one finger</strong> to select an area, then rotate, move or delete it. Two fingers move or zoom the map.',
     nav:     '<strong>Tap</strong> any cell to set a destination from your position, or <strong>Scan QR</strong> to jump to an anchor.',
+    offices: '<strong>Tap a spot</strong> to choose its office. Tap an empty place to add a spot.',
     move:    'Drag to move the map, pinch to zoom. Pick <strong>Paint</strong>, <strong>Select</strong> or <strong>Stamp</strong> below to edit.',
   };
   const M = {
@@ -4588,6 +4599,7 @@ function _editorHint(mode, touch) {
     float:   '<strong>Click</strong> on the grid to drop the selection. Press <strong>Escape</strong> to cancel.',
     select:  '<strong>Drag</strong> on the grid to select an area, then rotate, move, or delete it.',
     nav:     '<strong>Tap</strong> any cell to set destination from your position. Use <strong>arrow keys</strong> to move, or <strong>Scan QR</strong> to jump to an anchor.',
+    offices: '<strong>Click a spot</strong> to choose its office. Click an empty place to add a spot.',
     move:    'Tap any cell to route from <strong>(0,0)</strong> &rarr; that cell. Enable <strong>Wall Mode</strong> to place obstacles.',
   };
   return (touch ? T : M)[mode] || (touch ? T : M).move;
@@ -4603,6 +4615,7 @@ function updateCursorAndHint() {
   else if (STATE.wallMode)    DOM.canvas.style.cursor = 'cell';
   else if (STATE.captureMode) DOM.canvas.style.cursor = 'crosshair';
   else if (STATE.selectMode)  DOM.canvas.style.cursor = floatingData ? 'copy' : 'crosshair';
+  else if (STATE.spotMode)    DOM.canvas.style.cursor = 'pointer';
   else                        DOM.canvas.style.cursor = 'crosshair';
 
   const mode = STATE.stampMode ? 'stamp'
@@ -4610,7 +4623,8 @@ function updateCursorAndHint() {
              : STATE.wallMode ? 'wall'
              : (STATE.selectMode && floatingData) ? 'float'
              : STATE.selectMode ? 'select'
-             : STATE.navMode ? 'nav' : 'move';
+             : STATE.navMode ? 'nav'
+             : STATE.spotMode ? 'offices' : 'move';
   DOM.hintBar.innerHTML = _editorHint(mode, _isTouchUI());
 }
 

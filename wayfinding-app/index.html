@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=69" />
+  <link rel="stylesheet" href="css/app.css?v=70" />
 </head>
 <body class="view-user">
 
@@ -288,6 +288,85 @@
           </section>
         </div>
       </section><!-- /officesPanel -->
+
+      <!-- Spot sheet (admin, Offices mode): tap a spot to say what stands there,
+           which services it handles and their requirements. spot_editor.js
+           fills the lists; values come from the Citizen's Charter only. -->
+      <section id="spotSheet" class="spot-sheet" aria-labelledby="spotSheetTitle" hidden>
+        <div class="ss-head">
+          <div class="ss-head-text">
+            <h2 id="spotSheetTitle" class="ss-title">Spot</h2>
+            <p id="spotSheetSub" class="ss-sub"></p>
+          </div>
+          <button id="spotSheetClose" type="button" class="ss-btn ss-close">Close</button>
+        </div>
+        <div class="ss-scroll">
+          <div id="ssAdd" class="ss-add" hidden>
+            <p id="ssAddText" class="ss-help">Nothing is here yet.</p>
+            <div class="ss-row">
+              <button id="ssAddSpot" type="button" class="ss-btn ss-primary">Add a spot here</button>
+              <button id="ssAddDesk" type="button" class="ss-btn">Add desk here</button>
+            </div>
+            <p id="ssAddMsg" class="ss-msg" hidden></p>
+          </div>
+
+          <div id="ssSpot" hidden>
+            <p id="ssMoveNote" class="ss-move-note" role="status" hidden>Tap the new place for this spot.</p>
+            <div id="ssBody">
+              <div id="ssChoice" class="ss-choice" role="group" aria-label="What is on this spot">
+                <button id="ssAssignBtn" type="button" class="ss-btn ss-tab" aria-pressed="false">Assign an office</button>
+                <button id="ssOtherBtn" type="button" class="ss-btn ss-tab" aria-pressed="false">Other place</button>
+                <button id="ssNoneBtn" type="button" class="ss-btn ss-tab" aria-pressed="false">No office yet</button>
+              </div>
+              <p id="ssDeskNote" class="ss-help" hidden>This is a desk. Desks can be edited after the next update. You can move or remove it here.</p>
+              <p id="ssNoneNote" class="ss-help" hidden>This spot will show "No office yet" when you save.</p>
+
+              <div id="ssOfficeStep" class="ss-step">
+                <p id="ssLoading" class="ss-help" hidden>Loading the Citizen's Charter...</p>
+                <label for="ssOfficeInput" class="ss-label">Office</label>
+                <input id="ssOfficeInput" class="ss-input" type="text" autocomplete="off" placeholder="Type an office name" />
+                <ul id="ssOfficeSuggest" class="ss-suggest"></ul>
+                <div id="ssOfficeMsg" class="ss-nomatch" role="status" hidden></div>
+
+                <h3 class="ss-sec-title">Services</h3>
+                <p class="ss-help">Tap a service to see its requirements.</p>
+                <ul id="ssServiceChips" class="ss-chips"></ul>
+                <label for="ssServiceInput" class="ss-label">Add a service</label>
+                <input id="ssServiceInput" class="ss-input" type="text" autocomplete="off" placeholder="Type a service name" />
+                <ul id="ssServiceSuggest" class="ss-suggest"></ul>
+                <div id="ssServiceMsg" class="ss-nomatch" role="status" hidden></div>
+
+                <div id="ssReqStep" class="ss-req" hidden>
+                  <h3 id="ssReqTitle" class="ss-sec-title">Requirements</h3>
+                  <p class="ss-note">These requirements apply to this service everywhere this office offers it.</p>
+                  <ul id="ssReqChips" class="ss-chips ss-chips-col"></ul>
+                  <div id="ssReqGoneWrap" hidden>
+                    <h4 class="ss-sub-title">Removed</h4>
+                    <ul id="ssReqGone" class="ss-chips ss-chips-col"></ul>
+                  </div>
+                  <label for="ssReqInput" class="ss-label">Add a requirement</label>
+                  <input id="ssReqInput" class="ss-input" type="text" autocomplete="off" placeholder="Type a requirement" />
+                  <ul id="ssReqSuggest" class="ss-suggest"></ul>
+                  <div id="ssReqMsg" class="ss-nomatch" role="status" hidden></div>
+                  <p id="ssSource" class="ss-source">From the Citizen's Charter: <a id="ssSourceLink" href="#" target="_blank" rel="noopener noreferrer"></a></p>
+                </div>
+              </div>
+
+              <div id="ssOtherStep" class="ss-step" hidden>
+                <label for="ssOtherName" class="ss-label">Name of this place</label>
+                <input id="ssOtherName" class="ss-input" type="text" maxlength="60" autocomplete="off" placeholder="For example: Session Hall" />
+                <p class="ss-help">An other place is not a Charter office, so it has no services.</p>
+              </div>
+            </div>
+            <p id="ssMsg" class="ss-msg" role="status" hidden></p>
+            <div class="ss-actions">
+              <button id="ssMoveBtn" type="button" class="ss-btn" aria-pressed="false">Move</button>
+              <button id="ssRemoveBtn" type="button" class="ss-btn ss-danger">Remove</button>
+              <button id="ssSaveBtn" type="button" class="ss-btn ss-primary">Save</button>
+            </div>
+          </div>
+        </div>
+      </section><!-- /spotSheet -->
     </div>
 
     <!-- Stair floor-change toast (simple confirmation) -->
@@ -501,9 +580,9 @@
   <script src="js/renderer.js?v=42"></script>
   <script src="js/compass.js?v=31"></script>
   <script src="js/nav.js?v=42"></script>
-  <script src="js/app.js?v=95"></script>
+  <script src="js/app.js?v=96"></script>
   <script src="js/charter_pick.js?v=1"></script>
-  <script src="js/spot_editor.js?v=1"></script>
+  <script src="js/spot_editor.js?v=2"></script>
   <script src="js/chat.js?v=46"></script>
 
 </body>

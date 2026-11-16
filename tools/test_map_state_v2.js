@@ -250,8 +250,8 @@ ok('panel markup found (ends at <!-- /officesPanel -->)', panelMarkup.length > 0
 ok('banner markup found (ends at <!-- /spotMigrationBanner -->)', bannerMarkup.length > 0);
 ok('panel and banner markup have no emoji', !EMOJI.test(panelMarkup + bannerMarkup));
 const idx = (s) => html.indexOf(s);
-ok('charter_pick.js?v=1 loads before spot_editor.js?v=1, both after app.js',
-   idx('js/charter_pick.js?v=1') > idx('js/app.js?v=') && idx('js/spot_editor.js?v=1') > idx('js/charter_pick.js?v=1'));
+ok('charter_pick.js loads before spot_editor.js, both after app.js',
+   idx('js/charter_pick.js?v=') > idx('js/app.js?v=') && idx('js/spot_editor.js?v=') > idx('js/charter_pick.js?v='));
 ok('app.js version bumped past 93', (() => { const m = /js\/app\.js\?v=(\d+)/.exec(html); return m && +m[1] > 93; })());
 ok('app.css version bumped past 68', (() => { const m = /css\/app\.css\?v=(\d+)/.exec(html); return m && +m[1] > 68; })());
 
