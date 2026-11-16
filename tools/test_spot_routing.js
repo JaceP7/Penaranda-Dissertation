@@ -165,6 +165,94 @@ r = sb.resolve(sb.HELP);
 ok('the Public Assistance Center resolves to MOPAC', r && r.stampName === 'MOPAC', JSON.stringify(r));
 if (sb.ownDeskNote) ok('no own-desk note on an unmigrated map', !sb.ownDeskNote(CTMO, 'City Treasury', 'en'));
 
+console.log('\n--- C1: the editor cannot leave a partly migrated map ---');
+let c1Done = Promise.resolve();
+// The final review's simulation on the bundled map: assigning OSCA to GF 06, or
+// adding one desk, before "Move them" made CCRO, CTMO and MOPAC unmapped. Here
+// every editor path runs (on a small fake page) against the bundled map; none
+// may give a placement a kind, so citizens keep today's routes.
+{
+  class El {
+    constructor(tag, id) {
+      this.tagName = String(tag).toUpperCase(); this.id = id || ''; this.children = []; this.parentNode = null;
+      this.hidden = false; this.disabled = false; this.value = ''; this.checked = false; this._t = '';
+      this.attrs = {}; this.listeners = {}; this.style = {};
+      this.classList = { _s: new Set(), add(c) { this._s.add(c); }, remove(c) { this._s.delete(c); },
+        contains(c) { return this._s.has(c); }, toggle(c, on) { if (on === undefined ? !this._s.has(c) : on) this._s.add(c); else this._s.delete(c); } };
+    }
+    get textContent() { return this._t + this.children.map((c) => c.textContent).join(''); }
+    set textContent(v) { this.children = []; this._t = String(v); }
+    set innerHTML(v) { this.children = []; this._t = ''; }
+    appendChild(c) { c.parentNode = this; this.children.push(c); return c; }
+    setAttribute(k, v) { this.attrs[k] = String(v); }
+    getAttribute(k) { return k in this.attrs ? this.attrs[k] : null; }
+    addEventListener(t, fn) { (this.listeners[t] = this.listeners[t] || []).push(fn); }
+    dispatch(t, ev) { (this.listeners[t] || []).forEach((fn) => fn(Object.assign({ type: t, target: this, preventDefault() {} }, ev || {}))); }
+    click() { if (!this.disabled) this.dispatch('click'); }
+    scrollIntoView() {} focus() {}
+    getBoundingClientRect() { return { left: 0, top: 0, right: 0, bottom: 0 }; }
+  }
+  const els = {};
+  const store = () => ({ _d: {}, getItem(k) { return this._d[k] || null; }, setItem(k, v) { this._d[k] = String(v); }, removeItem(k) { delete this._d[k]; } });
+  Object.assign(sb, {
+    document: { readyState: 'complete', getElementById: (id) => (els[id] = els[id] || new El('div', id)),
+                createElement: (t) => new El(t), addEventListener() {} },
+    STATE: { currentFloor: 1, viewMode: 'admin', spotMode: false },
+    REMOVED_REQUIREMENTS: {},
+    sessionStorage: store(),
+    confirm: () => true, alert: () => {},
+    fetch: async (url) => ({ ok: true, json: async () => (/services\.json/.test(url)
+      ? [{ department: OSCA, subservice: 'Senior Citizens ID', requirements: [] },
+         { department: CTMO, subservice: 'Cedula', requirements: [] }] : {}) }),
+  });
+  vm.runInContext(read('wayfinding-app/js/charter_pick.js') + '\n' + read('wayfinding-app/js/spot_editor.js') + '\n' +
+    read('wayfinding-app/js/desk_editor.js') + '\n;this.SE = SPOT_EDITOR; this.DE = DESK_EDITOR;', sb);
+  const $ = (id) => sb.document.getElementById(id);
+  sb.setPlacements(sb.BUNDLED.map((p) => Object.assign({}, p)));
+  const depts = Object.keys(vm.runInContext('DEPT_STAMP_NAMES', sb));
+  const statusBefore = depts.map((d) => d + '=' + sb.status(d)).join('; ');
+  const snap = JSON.stringify(sb.placements());
+  const gf06 = sb.placements().find((p) => p.name === 'GF 06');
+  let empty = null;   // a walkable Ground Floor cell with no spot
+  for (let r = 60; r < 75 && !empty; r++) for (let c = 30; c < 45 && !empty; c++) {
+    const n = vm.runInContext(`NODE_MAP["${r},${c}"]`, sb);
+    if (n && !n.wall && !vm.runInContext(`SPOTS.spotAt(STAMP_PLACEMENTS, 1, ${r}, ${c})`, sb)) empty = { r, c };
+  }
+  c1Done = (async () => {
+    await sb.SE.loadCharter();
+    sb.SE.toggleMode();                     // the Offices button
+    ok('C1: the Offices button does not enter Offices mode on the bundled map', sb.STATE.spotMode === false);
+    sb.STATE.spotMode = true;               // and even if Offices mode were on anyway
+    sb.SE.onTap(gf06.row + 1, gf06.col + 1);
+    $('ssOfficeInput').value = 'Office for the Senior Citizens Affairs';
+    $('ssSaveBtn').click();
+    sb.SE.openSheet(gf06.id);
+    $('ssOfficeInput').value = 'Office for the Senior Citizens Affairs';
+    $('ssSaveBtn').click();
+    if (empty) {
+      sb.SE.onTap(empty.r, empty.c);
+      $('ssAddSpot').click();
+      sb.SE.onTap(empty.r, empty.c);
+      $('ssAddDesk').click();
+      $('dsSaveBtn').click();
+      sb.DE.openNew(empty.r, empty.c, 1);
+      $('dsOtherBtn').click();
+      $('dsOfficeInput').value = 'City Treasury Management Office';
+      $('dsSaveBtn').click();
+      $('dsWarnYes').click();
+    }
+    sb.SE.addDesk(empty ? empty.r : 70, empty ? empty.c : 37, { dept: CTMO, deskBehind: false, services: [] });
+    sb.DE.addDesk(empty ? empty.r : 70, empty ? empty.c : 37, { dept: CTMO, deskBehind: false, services: [] });
+    ok('C1: on the unmigrated bundled map every editor path leaves the placements as they were',
+       JSON.stringify(sb.placements()) === snap && !sb.placements().some((p) => p.kind),
+       sb.placements().filter((p) => p.kind).map((p) => p.name + ':' + p.kind).join(', '));
+    const statusAfter = depts.map((d) => d + '=' + sb.status(d)).join('; ');
+    ok('C1: ...so every office routes as before (CCRO, CTMO and MOPAC still mapped)',
+       statusAfter === statusBefore && sb.status(CCRO) === 'mapped' && sb.status(CTMO) === 'mapped' && sb.status(sb.HELP) === 'mapped',
+       statusAfter);
+  })().catch((e) => ok('C1 run', false, e.stack));
+}
+
 console.log('\n--- desks block the walkway ---');
 let adj = sb.buildAdjacency(new Set(['10,10']));
 ok('a blocked node has no edges', adj['10,10'].length === 0, JSON.stringify(adj['10,10']));
@@ -195,10 +283,49 @@ ok('app.js sets destSpotId', /destSpotId/.test(app));
 ok('renderer.js reads destSpotId', /this\.destSpotId/.test(rend));
 ok('renderer.js labels spots with SPOTS.labelStyle', /SPOTS\.labelStyle\(/.test(rend));
 ok('navigateToDepartment shows the own-desk note', /ownDeskNote\(/.test(app));
+// I1 (final review): a citizen routed by service to a desk reads the desk
+// wording on the route messages and the arrival card, not just the office.
+{
+  const liftApp = (name) => {
+    const i = app.indexOf(`function ${name}(`);
+    if (i < 0) return `function ${name}() { return null; }`;
+    let k = app.indexOf('{', i), depth = 0;
+    for (; k < app.length; k++) {
+      if (app[k] === '{') depth++;
+      else if (app[k] === '}') { depth--; if (depth === 0) break; }
+    }
+    return app.slice(i, k + 1);
+  };
+  const ctx = {}; vm.createContext(ctx);
+  vm.runInContext(liftApp('_officeTitle') + '\n' + liftApp('_navDestName') + ';this.f = _navDestName;', ctx);
+  const saved = sb.placements().map((p) => Object.assign({}, p));
+  sb.setPlacements(migrated());
+  const deskLoc = sb.resolve(OSCA, 'Senior Citizens ID');
+  const officeLoc = sb.resolve(CCRO, 'Birth Certificate');
+  // I3 (final review): a service added to another office's spot is routed to.
+  sb.placements().find((p) => p.id === 's-ctmo').services.push('Birth Certificate');
+  const nearCtmo = sb.resolve(CCRO, 'Birth Certificate', { floor: 1, row: 40, col: 63 });
+  const nearCcro = sb.resolve(CCRO, 'Birth Certificate', { floor: 1, row: 50, col: 23 });
+  sb.setPlacements(saved);   // the C1 run above uses the bundled map
+  ok('I3: Birth Certificate added to the CTMO spot routes there for a citizen standing by it',
+     nearCtmo && nearCtmo.spotId === 's-ctmo', JSON.stringify(nearCtmo));
+  ok('I3: ...and to the CCRO spot for a citizen standing by that one', nearCcro && nearCcro.spotId === 's-ccro', JSON.stringify(nearCcro));
+  ok('I1: a desk destination is named by its desk wording',
+     ctx.f(deskLoc, OSCA) === 'OSCA desk, in front of City Social Services Office', ctx.f(deskLoc, OSCA));
+  ok('I1: an office destination is still the office title',
+     ctx.f(officeLoc, CCRO) === 'City Civil Registry Office', ctx.f(officeLoc, CCRO));
+  const nav = liftApp('navigateToDepartment');
+  ok('I1: navigateToDepartment names the route (and so the arrival card) with _navDestName',
+     /_navDestLabel = _navDestName\(loc, deptName\)/.test(nav), nav.slice(0, 0));
+  ok('I1: the second leg of a cross-floor trip says the same name',
+     /label:\s*_navDestLabel/.test(nav));
+}
 const at = (f) => html.indexOf('js/' + f + '?v=');
-ok('index.html loads spots.js?v=2', /<script src="js\/spots\.js\?v=2"><\/script>/.test(html));
+ok('index.html loads spots.js?v=3 (bumped by the final review fixes)', /<script src="js\/spots\.js\?v=3"><\/script>/.test(html));
 ok('  after stamp_presets.js and before service_locations.js',
    at('spots.js') > at('stamp_presets.js') && at('spots.js') < at('service_locations.js'));
 
-console.log(`\n${pass} passed, ${fail} failed`);
-process.exit(fail ? 1 : 0);
+c1Done.then(() => {
+  console.log(`\n${pass} passed, ${fail} failed`);
+  process.exit(fail ? 1 : 0);
+});

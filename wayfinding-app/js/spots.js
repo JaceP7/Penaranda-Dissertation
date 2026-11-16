@@ -65,20 +65,27 @@ const SPOTS = (() => {
     return null;
   }
 
+  /**
+   * Where a citizen can go for `subservice` of `dept`. The office's own places
+   * come first: its desks behind the office ticked for the service (they stand
+   * in for the office), else its office spots that list the service, then its
+   * other desks. After them, office spots of other offices that list the
+   * service (the spot sheet lets an admin add another office's service). Only
+   * when no such desk or spot lists it is every office spot of `dept` a place.
+   * resolveServiceLocation still picks the nearest of the places returned.
+   */
   function placesFor(placements, dept, subservice) {
-    const mine = (placements || []).filter((p) => p.dept === dept);
+    const list = placements || [];
+    const mine = list.filter((p) => p.dept === dept);
     const has = (p) => (p.services || []).includes(subservice);
     const behind = mine.filter((p) => p.kind === 'desk' && p.deskBehind && has(p));
     const offices = mine.filter((p) => p.kind === 'office');
-    let main;
-    if (behind.length) main = behind;
-    else {
-      const named = offices.filter(has);
-      main = named.length ? named : offices;
-    }
+    const own = behind.length ? behind : offices.filter(has);
+    const elsewhere = list.filter((p) => p.kind === 'office' && p.dept !== dept && has(p));
+    const main = (own.length || elsewhere.length) ? own : offices;
     const others = mine.filter((p) => p.kind === 'desk' && !p.deskBehind &&
       ((p.services || []).length === 0 || has(p)));
-    return [...main, ...others];
+    return [...main, ...others, ...elsewhere];
   }
 
   function deskCells(placements, floor) {

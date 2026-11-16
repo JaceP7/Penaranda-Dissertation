@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=71" />
+  <link rel="stylesheet" href="css/app.css?v=72" />
 </head>
 <body class="view-user">
 
@@ -185,7 +185,8 @@
 
       <!-- Editor zoom: one tap is about a third closer; Fit shows the whole floor. -->
       <!-- Admin only, while the loaded map still uses the old office stamps.
-           spot_editor.js shows it; "Not now" hides it for this session. -->
+           spot_editor.js shows it; "Not now" hides it for this session, and
+           the Offices button shows it again (Offices mode waits for the move). -->
       <div id="spotMigrationBanner" class="spot-migration-banner" role="region" aria-label="Move the old office markers" hidden>
         <p class="smb-text">This map still uses the old office markers. Move them to office spots now? Nothing changes for citizens until you publish.</p>
         <div class="smb-btns">
@@ -318,7 +319,6 @@
                 <button id="ssOtherBtn" type="button" class="ss-btn ss-tab" aria-pressed="false">Other place</button>
                 <button id="ssNoneBtn" type="button" class="ss-btn ss-tab" aria-pressed="false">No office yet</button>
               </div>
-              <p id="ssDeskNote" class="ss-help" hidden>This is a desk. Desks can be edited after the next update. You can move or remove it here.</p>
               <p id="ssNoneNote" class="ss-help" hidden>This spot will show "No office yet" when you save.</p>
 
               <div id="ssOfficeStep" class="ss-step">
@@ -635,16 +635,16 @@
   <script src="js/data.js?v=34"></script>
   <script src="js/floor_presets.js?v=35"></script>
   <script src="js/stamp_presets.js?v=2"></script>
-  <script src="js/spots.js?v=2"></script>
+  <script src="js/spots.js?v=3"></script>
   <script src="js/service_locations.js?v=13"></script>
   <script src="js/dijkstra.js?v=30"></script>
   <script src="js/renderer.js?v=43"></script>
   <script src="js/compass.js?v=31"></script>
   <script src="js/nav.js?v=42"></script>
-  <script src="js/app.js?v=96"></script>
+  <script src="js/app.js?v=97"></script>
   <script src="js/charter_pick.js?v=1"></script>
-  <script src="js/spot_editor.js?v=4"></script>
-  <script src="js/desk_editor.js?v=2"></script>
+  <script src="js/spot_editor.js?v=5"></script>
+  <script src="js/desk_editor.js?v=3"></script>
   <script src="js/chat.js?v=46"></script>
 
 </body>

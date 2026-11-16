@@ -34,6 +34,7 @@ const SPOT_EDITOR = (() => {
   const sources = {};            // "<subservice>|<dept>" -> its Charter page
   let offices = null;            // office names for "Not on the map yet", once loaded
   let officesLoading = null;
+  let officesFailed = false;     // the last load failed: show "Try again"
   let isOpen = false;
 
   const placements = () => (typeof STAMP_PLACEMENTS !== 'undefined' ? STAMP_PLACEMENTS : []);
@@ -75,13 +76,17 @@ const SPOT_EDITOR = (() => {
     return out;
   }
 
-  /** Charter offices that belong inside City Hall (departments.json minus separate campuses). */
+  /**
+   * Charter offices that belong inside City Hall (departments.json minus
+   * separate campuses). Rejects when the list cannot be loaded: an empty list
+   * would read as "Every office is on the map." Fetched here, not through
+   * app.js _loadDepartments, which keeps an empty result after a failure.
+   */
   async function officeList() {
-    let depts = {};
-    try {
-      if (typeof _loadDepartments === 'function') depts = await _loadDepartments();
-      else depts = await (await fetch('data/departments.json')).json();
-    } catch (_) { depts = {}; }
+    const r = await fetch('data/departments.json');
+    if (r && r.ok === false) throw new Error('departments.json: ' + r.status);
+    const depts = await r.json();
+    if (!depts || typeof depts !== 'object' || !Object.keys(depts).length) throw new Error('departments.json: empty');
     const norm = (s) => String(s || '').toUpperCase().replace(/[^A-Z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
     const away = new Set([...(typeof SEPARATE_CAMPUS !== 'undefined' ? SEPARATE_CAMPUS : [])].map(norm));
     return Object.keys(depts || {}).filter((d) => !away.has(norm(d)));
@@ -172,9 +177,21 @@ const SPOT_EDITOR = (() => {
   // ── Banner ─────────────────────────────────────────────────────────────────
 
   const isAdmin = () => typeof STATE !== 'undefined' && STATE.viewMode === 'admin';
+  // The same test routing uses (service_locations.js _spotsOn): one placement
+  // with a kind and every office is looked up by its spot. So nothing in
+  // Offices mode may run before "Move them", or one edit would leave every
+  // other office "not on this map" for citizens.
   const migrated = () => placements().some((p) => p.kind);
   function laterThisSession() {
     try { return sessionStorage.getItem(LATER_SS_KEY) === '1'; } catch (_) { return false; }
+  }
+
+  /** Offices mode asked for before the move: show the banner (Move them, Not now) instead. */
+  function askToMove() {
+    try { sessionStorage.removeItem(LATER_SS_KEY); } catch (_) {}
+    refreshBanner();
+    const b = el('spotMigrationBanner');
+    if (b && !b.hidden && b.scrollIntoView) b.scrollIntoView({ block: 'nearest' });
   }
 
   function refreshBanner() {
@@ -225,6 +242,12 @@ const SPOT_EDITOR = (() => {
     return 'Floor ' + f;
   }
 
+  /** "A", "A and B", "A, B and C". */
+  function listNames(names) {
+    if (names.length < 2) return names.join('');
+    return names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
+  }
+
   function renderCheckThese() {
     const list = el('checkTheseList');
     if (!list) return;
@@ -257,9 +280,19 @@ const SPOT_EDITOR = (() => {
     }
     if (!offices) {
       setCount('unplacedCount', 0);
+      if (officesFailed) {   // nothing cached: "Try again" fetches it afresh
+        const li = make('li', 'offices-item offices-text', "Couldn't load the office list. Try again.");
+        const again = make('button', 'offices-btn offices-retry', 'Try again');
+        again.type = 'button';
+        again.addEventListener('click', () => { officesFailed = false; refreshPanel(); });
+        li.appendChild(again);
+        list.appendChild(li);
+        return;
+      }
       empty(list, 'Loading...');
       if (!officesLoading) {
-        officesLoading = officeList().then((l) => { offices = l; officesLoading = null; refreshPanel(); });
+        officesLoading = officeList().then((l) => { offices = l; }, () => { officesFailed = true; })
+          .then(() => { officesLoading = null; refreshPanel(); });
       }
       return;
     }
@@ -303,6 +336,8 @@ const SPOT_EDITOR = (() => {
   /** Redraw the banner and, when open, the panel's three lists. */
   function refreshPanel() {
     if (!hasDoc()) return;
+    // A map without spots was applied while Offices mode was on: leave it.
+    if (typeof STATE !== 'undefined' && STATE.spotMode && !migrated()) { setMode(false); return; }
     refreshBanner();
     const panel = el('officesPanel');
     if (!panel) return;
@@ -320,6 +355,7 @@ const SPOT_EDITOR = (() => {
   }
 
   function openPanel() {
+    if (!migrated()) { askToMove(); return; }
     // The panel belongs to Offices mode; entering it closes the stamp tools.
     if (typeof STATE !== 'undefined' && !STATE.spotMode) setMode(true);
     isOpen = true;
@@ -341,6 +377,7 @@ const SPOT_EDITOR = (() => {
   function setMode(on) {
     if (typeof STATE === 'undefined') return;
     on = !!on;
+    if (on && !migrated()) { askToMove(); return; }
     if (on) {   // one tool at a time, like the other dock tools
       if (STATE.wallMode && typeof setWallMode === 'function') setWallMode(false);
       if (STATE.selectMode && typeof setSelectMode === 'function') setSelectMode(false);
@@ -377,9 +414,22 @@ const SPOT_EDITOR = (() => {
     return (deptCode(dept) + ' ' + n).trim();
   }
 
+  // The chat finds the help desk and COMELEC by a fixed otherKey (spots.js
+  // FIXED_KEYS). An Other place typed with one of these names (any case) gets it.
+  const FIXED_TITLES = {
+    'public assistance center': "MAYOR'S OFFICE PUBLIC ASSISTANCE CENTER",
+    'commission on elections': 'COMMISSION ON ELECTIONS',
+  };
+  function fixedKeyFor(name) {
+    const n = String(name || '').toLowerCase().replace(/[‘’ʼ`´]/g, "'").replace(/\s+/g, ' ').trim();
+    const keys = (typeof SPOTS !== 'undefined' && SPOTS.FIXED_KEYS) || {};
+    const full = Object.keys(keys).find((k) => k.toLowerCase() === n) || FIXED_TITLES[n];
+    return (full && keys[full]) || null;
+  }
+
   /**
    * A copy of `list` with spot `spotId` assigned: a.kind 'office' (dept, services),
-   * 'other' (name; otherKey kept unless given), anything else clears it to
+   * 'other' (name; otherKey kept unless given, or set from a fixed-key name), anything else clears it to
    * "No office yet". Other spots, this office's other spots too, are untouched.
    */
   function applyAssignment(list, spotId, a) {
@@ -395,7 +445,7 @@ const SPOT_EDITOR = (() => {
         q.kind = 'other';
         if (name) q.name = name;
         q.otherKey = ('otherKey' in a) ? (a.otherKey == null ? null : a.otherKey)
-          : (p.kind === 'other' && p.otherKey ? p.otherKey : null);
+          : ((p.kind === 'other' && p.otherKey) || fixedKeyFor(q.name) || null);
       }
       return q;
     });
@@ -510,6 +560,12 @@ const SPOT_EDITOR = (() => {
   /** A map tap in Offices mode. */
   function onTap(row, col) {
     if (!hasDoc()) return;
+    if (!migrated()) {   // before "Move them": no sheet, the banner instead
+      closeSheet();
+      if (typeof STATE !== 'undefined' && STATE.spotMode) setMode(false);
+      askToMove();
+      return;
+    }
     if (moving) { finishMove(row, col); return; }
     // A tap on the desk being edited keeps its sheet (and its unsaved changes).
     if (typeof DESK_EDITOR !== 'undefined' && DESK_EDITOR.owns(floorNow(), row, col)) return;
@@ -539,7 +595,7 @@ const SPOT_EDITOR = (() => {
   }
 
   function addSpotHere() {
-    if (!addAt) return;
+    if (!addAt || !migrated()) return;
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
     const p = { id, name: '', row: addAt.row, col: addAt.col, size: NEW_SPOT_SIZE, floor: addAt.floor, source: 'local' };
     replacePlacements([...placements(), ...moveSpot([p], id, p.row, p.col)]);
@@ -549,7 +605,7 @@ const SPOT_EDITOR = (() => {
 
   /** "Add desk here": the desk sheet (desk_editor.js) takes over. */
   function addDeskHere() {
-    if (!addAt || typeof DESK_EDITOR === 'undefined') return;
+    if (!addAt || typeof DESK_EDITOR === 'undefined' || !migrated()) return;
     const at = addAt;
     closeSheet();
     DESK_EDITOR.openNew(at.row, at.col, at.floor);
@@ -557,14 +613,14 @@ const SPOT_EDITOR = (() => {
 
   function openSheet(id) {
     const p = findSpot(id);
-    if (!p || !hasDoc()) return;
-    if (p.kind === 'desk' && typeof DESK_EDITOR !== 'undefined') { DESK_EDITOR.open(id); return; }
+    if (!p || !hasDoc() || !migrated()) return;
+    if (p.kind === 'desk') { if (typeof DESK_EDITOR !== 'undefined') DESK_EDITOR.open(id); return; }
     cancelMove();
     addAt = null;
     const removed = (typeof REMOVED_REQUIREMENTS !== 'undefined') ? REMOVED_REQUIREMENTS : {};
     sheet = {
       id,
-      mode: p.kind === 'other' ? 'other' : p.kind === 'desk' ? 'desk' : 'office',
+      mode: p.kind === 'other' ? 'other' : 'office',
       dept: p.kind === 'office' ? p.dept : '',
       services: [...(p.services || [])],
       svc: null,
@@ -595,7 +651,7 @@ const SPOT_EDITOR = (() => {
   }
 
   function setSheetMode(mode) {
-    if (!sheet || sheet.mode === 'desk') return;
+    if (!sheet) return;
     sheet.mode = mode;
     say('');
     render();
@@ -617,11 +673,9 @@ const SPOT_EDITOR = (() => {
       b.setAttribute('aria-pressed', String(m === mode));
       b.classList.toggle('active', m === mode);
     }
-    show('ssChoice', m !== 'desk');
     show('ssOfficeStep', m === 'office');
     show('ssOtherStep', m === 'other');
     show('ssNoneNote', m === 'none');
-    show('ssDeskNote', m === 'desk');
     show('ssLoading', m === 'office' && !charter);
     for (const k of Object.keys(PICKS)) { const n = el(PICKS[k].input); if (n) n.disabled = !charter; }
     renderServices();
@@ -812,9 +866,8 @@ const SPOT_EDITOR = (() => {
   function save() {
     if (!sheet) return;
     const p = findSpot(sheet.id);
-    if (!p) { closeSheet(); return; }
+    if (!p || !migrated()) { closeSheet(); return; }   // gone, or a map without spots was applied
     let a = {};
-    if (sheet.mode === 'desk') { closeSheet(); return; }   // desks: Task 7
     if (sheet.mode === 'office') {
       const text = valueOf('ssOfficeInput').trim();
       if (pickers.office && !pickers.office.settle(sheet.dept)) return;
@@ -825,7 +878,17 @@ const SPOT_EDITOR = (() => {
       if (!name) { say('Type the name of this place first.'); return; }
       a = { kind: 'other', name };
     }
-    replacePlacements(applyAssignment(placements(), p.id, a));
+    let next = applyAssignment(placements(), p.id, a);
+    // Moving an office: newly assigned here while it has other spots. OK keeps
+    // them (an office may have several windows); Cancel returns them to "No office yet".
+    if (a.kind === 'office' && !(p.kind === 'office' && p.dept === a.dept)) {
+      const also = placements().filter((q) => q.id !== p.id && q.kind === 'office' && q.dept === a.dept);
+      const names = listNames(also.map((q) => q.name || floorLabel(q.floor)));
+      if (also.length && !confirm(`${title(a.dept)} is also at ${names}. Keep it there too?`)) {
+        for (const q of also) next = applyAssignment(next, q.id, {});
+      }
+    }
+    replacePlacements(next);
     if (typeof REMOVED_REQUIREMENTS !== 'undefined') {   // same object: app.js publishes it
       for (const k of Object.keys(REMOVED_REQUIREMENTS)) delete REMOVED_REQUIREMENTS[k];
       Object.assign(REMOVED_REQUIREMENTS, sheet.removed);
@@ -914,7 +977,7 @@ const SPOT_EDITOR = (() => {
   return {
     openPanel, closePanel, togglePanel, refreshPanel, loadCharter, runMigration,
     officeList, confirmDesk, removeDesk, servicesByDept, checkTheseNow, showOnMap,
-    setMode, toggleMode, onTap, openSheet, closeSheet,
+    setMode, toggleMode, onTap, openSheet, closeSheet, migrated,
     applyAssignment, toggleRequirement, moveSpot, checkPick, spotName, serviceKeyFor, requirementLists,
     addDesk: (row, col, opts) => DESK_EDITOR.addDesk(row, col, opts),
     // Shared with the desk sheet (desk_editor.js).

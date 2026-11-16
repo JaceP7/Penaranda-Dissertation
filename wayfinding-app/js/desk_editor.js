@@ -54,17 +54,20 @@ const DESK_EDITOR = (() => {
 
   /**
    * Put a desk on the map at (row, col) on the current floor and save it.
-   * opts: { dept, deskBehind, services, size } (size 1-4, default 2).
+   * opts: { dept, deskBehind, services, size, floor } (size 1-4, default 2;
+   * floor defaults to the floor on screen). Returns null, adding nothing,
+   * on a map whose old markers have not been moved to spots yet.
    * confirmedAt is now: a new desk is known to be there.
    */
   function addDesk(row, col, opts) {
     opts = opts || {};
+    if (!SPOT_EDITOR.migrated()) return null;   // before "Move them": see spot_editor.js migrated()
     const size = clampSize(opts.size == null ? DEFAULT_SIZE : opts.size);
     const at = fitOnGrid(row, col, size);
     const desk = {
       id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5),
       name: deskName(opts.dept),
-      row: at.row, col: at.col, size, floor: floorNow(), source: 'local',
+      row: at.row, col: at.col, size, floor: typeof opts.floor === 'number' ? opts.floor : floorNow(), source: 'local',
       kind: 'desk',
       dept: opts.dept || '',
       deskBehind: !!opts.deskBehind,
@@ -136,7 +139,7 @@ const DESK_EDITOR = (() => {
 
   /** Open the sheet for a desk that is not on the map yet, at (row, col). */
   function openNew(row, col, floor) {
-    if (!hasDoc()) return;
+    if (!hasDoc() || !SPOT_EDITOR.migrated()) return;
     close();
     const at = fitOnGrid(row, col, DEFAULT_SIZE);
     start({
@@ -349,7 +352,7 @@ const DESK_EDITOR = (() => {
     }
     const s = sheet;
     close();
-    if (s.isNew) { addDesk(d.row, d.col, { ...a, size: d.size }); return; }   // sets confirmedAt
+    if (s.isNew) { addDesk(d.row, d.col, { ...a, size: d.size, floor: d.floor }); return; }   // sets confirmedAt
     // An edit keeps the desk's current confirmedAt: only "Still here?" Confirm changes it.
     const next = { ...saved, row: d.row, col: d.col, size: d.size, ...a, name: deskName(a.dept) };
     const list = placements();

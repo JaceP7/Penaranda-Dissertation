@@ -107,7 +107,8 @@ console.log('\n--- addDesk (no document) ---');
 const pureBox = {
   console, Promise, Date, JSON, Math,
   STATE: { currentFloor: 1 },
-  STAMP_PLACEMENTS: [],
+  // C1: desks are only added to a map whose markers have been moved to spots.
+  STAMP_PLACEMENTS: [{ id: 'cs', name: 'CSSO LG 10a', row: 30, col: 30, size: 3, floor: 0, kind: 'office', dept: CSSO, services: [] }],
 };
 vm.createContext(pureBox);
 try {
@@ -129,7 +130,26 @@ if (DE && typeof DE.addDesk === 'function') {
   ok('addDesk puts the desk on the map', pureBox.STAMP_PLACEMENTS.includes(d));
   const e = pureBox.SPOT_EDITOR.addDesk(1, 1, { dept: CSSO, deskBehind: false, services: [], size: 9 });
   ok('SPOT_EDITOR.addDesk makes a desk the same way (size kept between 1 and 4)',
-     e && e.kind === 'desk' && e.size === 4 && e.deskBehind === false && pureBox.STAMP_PLACEMENTS.length === 2, JSON.stringify(e));
+     e && e.kind === 'desk' && e.size === 4 && e.deskBehind === false && pureBox.STAMP_PLACEMENTS.length === 3, JSON.stringify(e));
+  // M2 (final review): the desk goes on the floor it was drawn on, not the floor on screen at Save.
+  const f0 = DE.addDesk(2, 2, { dept: CSSO, deskBehind: false, services: [], floor: 0 });
+  ok('M2: addDesk puts the desk on opts.floor when given', f0 && f0.floor === 0, JSON.stringify(f0));
+}
+
+// C1 (final review): on a map still using the old markers, addDesk adds nothing.
+{
+  const oldBox = { console, Promise, Date, JSON, Math, STATE: { currentFloor: 1 },
+    STAMP_PLACEMENTS: [{ id: 'g', name: 'GF 02a CCRO', row: 10, col: 10, size: 3, floor: 1 }] };
+  vm.createContext(oldBox);
+  try {
+    vm.runInContext(spotsSrc + '\n' + charterSrc + '\n' + edSrc + '\n' + deskSrc +
+      '\n;this.SPOT_EDITOR = SPOT_EDITOR; this.DESK_EDITOR = DESK_EDITOR;', oldBox);
+    const before = JSON.stringify(oldBox.STAMP_PLACEMENTS);
+    const r1 = oldBox.DESK_EDITOR.addDesk(5, 5, { dept: OSCA, deskBehind: false, services: [] });
+    const r2 = oldBox.SPOT_EDITOR.addDesk(5, 5, { dept: OSCA, deskBehind: false, services: [] });
+    ok('C1: addDesk on an unmigrated map returns null and changes nothing',
+       r1 === null && r2 === null && JSON.stringify(oldBox.STAMP_PLACEMENTS) === before, JSON.stringify(oldBox.STAMP_PLACEMENTS));
+  } catch (e) { ok('C1: addDesk on an unmigrated map', false, e.message); }
 }
 
 // ── 3. markup, CSS, script tags ──────────────────────────────────────────────
@@ -166,7 +186,7 @@ ok('#deskSheet uses the spot sheet look (class spot-sheet: 44 px buttons)', /<se
   ok('CSS gives each service tick row (.ds-tick) a min-height of at least 44px', minH >= 44, String(minH));
 }
 const ver = (file) => { const m = new RegExp(file.replace('.', '\\.') + '\\?v=(\\d+)').exec(html); return m ? +m[1] : 0; };
-ok('index.html loads desk_editor.js (bumped to v=2 by the review fixes)', /<script src="js\/desk_editor\.js\?v=2"><\/script>/.test(html));
+ok('index.html loads desk_editor.js (bumped to v=3 by the final review fixes)', /<script src="js\/desk_editor\.js\?v=3"><\/script>/.test(html));
 ok('  after spot_editor.js', html.indexOf('js/desk_editor.js?v=') > html.indexOf('js/spot_editor.js?v='));
 ok('spots.js version bumped past 1', ver('spots.js') > 1);
 ok('spot_editor.js version bumped past 3', ver('spot_editor.js') > 3);
@@ -429,6 +449,16 @@ const tickByName = (name) => ticks().find((n) => n.parentNode && n.parentNode.te
   ok('Save with nothing ticked saves an OSCA desk behind it with no services',
      !!d70 && d70.dept === OSCA && d70.deskBehind === true && Array.isArray(d70.services) && d70.services.length === 0 && !visible('deskSheet'),
      JSON.stringify(d70));
+
+  // M2 (final review): a new desk is saved on the floor it was drawn on.
+  S.onTap(72, 38);
+  $('ssAddDesk').click();
+  domBox.STATE.currentFloor = 2;   // the admin switched floors with the sheet open
+  $('dsSaveBtn').click();
+  domBox.STATE.currentFloor = 1;
+  const d72 = deskAt(72, 38);
+  ok('M2: a new desk drawn on the Ground Floor is saved there after a floor switch', !!d72 && d72.floor === 1, JSON.stringify(d72));
+  if (d72) domBox.STAMP_PLACEMENTS.splice(domBox.STAMP_PLACEMENTS.indexOf(d72), 1);
 
   // No office in front (2nd floor has none): falls back to "Another office".
   domBox.STATE.currentFloor = 2;

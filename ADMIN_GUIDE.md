@@ -125,6 +125,7 @@ When you open the editor on a map that still uses the old office markers, a bann
 
 - Tap **Move them**. Each old marker becomes an office spot.
 - Tap **Not now** to hide the banner for this session. It comes back next time.
+- Offices mode opens only after the move. Tapping **Offices** before then shows this banner again instead.
 - Open the **Offices** panel afterwards. **Check these** lists markers that could not be matched to one office. Tap one to see it on the map, then fix it with the spot sheet below.
 
 ### Open Offices mode
@@ -141,6 +142,8 @@ Tap **Offices** (in the bar along the bottom on a phone, or in the header on a c
 2. Choose **Assign an office** and start typing in **Office**. Tap the office in the list that appears.
 3. Under **Services**, tap **Add a service** and pick from the list. Tap a service chip to see its requirements.
 4. Tap **Save**.
+
+If that office already has other spots, Save asks *"... is also at ... Keep it there too?"*: tap **OK** to keep it there too (an office with several windows), or **Cancel** to move it, which returns those other spots to **No office yet**.
 
 If you type something and nothing appears, the message says *"Not in the Charter. Only items in the Citizen's Charter can be added. If the office now asks for this, the Charter has to be updated first."* Offices, services and requirements cannot be invented here.
 

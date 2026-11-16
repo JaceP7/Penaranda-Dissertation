@@ -2762,6 +2762,7 @@ body.view-user .zoom-ctrls { display: none !important; }
 }
 .offices-confirm { border: 1px solid #0F766E; background: #0F766E; color: #FFFFFF; }
 .offices-remove  { border: 1px solid #B91C1C; background: #FFFFFF; color: #B91C1C; }
+.offices-retry   { display: block; margin-top: 8px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #1E293B; }
 
 @media (max-width: 640px), (orientation: landscape) and (max-height: 500px) {
   body.view-admin .offices-panel {

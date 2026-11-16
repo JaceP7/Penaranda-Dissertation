@@ -100,6 +100,21 @@ if (typeof E.applyAssignment === 'function') {
   const com = [{ id: 'k', name: 'COMELEC', row: 1, col: 1, size: 3, floor: 1, kind: 'other', otherKey: 'comelec' }];
   ok('Other place: renaming keeps its fixed key',
      E.applyAssignment(com, 'k', { kind: 'other', name: 'Comelec Office' })[0].otherKey === 'comelec');
+  // M1 (final review): the help desk and COMELEC keep, or get back, their fixed key.
+  const pac = [{ id: 'h', name: 'MOPAC', row: 1, col: 1, size: 3, floor: 1, kind: 'other', otherKey: 'public-assistance' }];
+  ok('M1: re-saving the Public Assistance Center as an Other place keeps otherKey',
+     E.applyAssignment(pac, 'h', { kind: 'other', name: 'Help Desk' })[0].otherKey === 'public-assistance');
+  const fresh = (name) => E.applyAssignment(migratedSet, 'b', { kind: 'other', name })[0 + migratedSet.findIndex((p) => p.id === 'b')];
+  ok('M1: a new Other place named "Public Assistance Center" gets otherKey public-assistance',
+     fresh('Public Assistance Center').otherKey === 'public-assistance', JSON.stringify(fresh('Public Assistance Center')));
+  ok('M1: ...case does not matter', fresh('public assistance center').otherKey === 'public-assistance');
+  ok('M1: a new Other place named "Commission on Elections" gets otherKey comelec',
+     fresh('COMMISSION ON ELECTIONS').otherKey === 'comelec', JSON.stringify(fresh('COMMISSION ON ELECTIONS')));
+  ok('M1: the full Charter name of the help desk counts too',
+     fresh("Mayor's Office Public Assistance Center").otherKey === 'public-assistance');
+  ok('M1: any other name still gets otherKey null', fresh('Public Assistance Centre Annex').otherKey === null);
+  ok('M1: an Other place that loses its office and comes back by name gets its key again',
+     E.applyAssignment(E.applyAssignment(pac, 'h', {}), 'h', { kind: 'other', name: 'Public Assistance Center' })[0].otherKey === 'public-assistance');
 }
 
 if (typeof E.toggleRequirement === 'function') {
@@ -170,6 +185,12 @@ ok('spot_editor.js version bumped past 1', ver('spot_editor.js') > 1);
 ok('app.js version bumped past 95', ver('app.js') > 95);
 ok('app.css version bumped past 69', ver('app.css') > 69);
 ok('spot_editor.js has no emoji', !EMOJI.test(edSrc));
+// M4 (final review): desks are edited in the desk sheet (desk_editor.js); the
+// spot sheet's old desk note and desk branches are gone.
+ok('M4: index.html has no ssDeskNote and no "Desks can be edited after the next update"',
+   !/ssDeskNote/.test(html) && !/Desks can be edited after the next update/.test(html));
+ok("M4: spot_editor.js has no desk mode in the spot sheet (no ssDeskNote, no mode 'desk')",
+   !/ssDeskNote/.test(edSrc) && !/mode === 'desk'/.test(edSrc) && !/'desk' : 'office'/.test(edSrc) && !/desks: Task 7/.test(edSrc));
 
 // ── 3. app.js wiring ─────────────────────────────────────────────────────────
 console.log('\n--- app.js ---');
@@ -237,6 +258,7 @@ const placementsArr = [
 ];
 const removedReqs = {};
 let confirmAnswer = false, confirmAsked = '';
+let deptsFail = true;   // M3: departments.json cannot be loaded at first
 const calls = { saves: 0, removedSaves: 0, recompute: 0, draw: 0, catalogue: 0 };
 const domBox = {
   console, document, Promise, setTimeout, clearTimeout,
@@ -246,7 +268,13 @@ const domBox = {
   NODE_MAP: { '5,5': { wall: true }, '30,30': { wall: false } },
   nodeId: (r, c) => r + ',' + c,
   GRID_ROWS: 75, GRID_COLS: 75,
-  fetch: async (url) => ({ ok: true, json: async () => (/services\.json/.test(url) ? SERVICES : /glossary/.test(url) ? {} : {}) }),
+  fetch: async (url) => {
+    if (/departments\.json/.test(url)) {
+      if (deptsFail) throw new Error('offline');
+      return { ok: true, json: async () => ({ [OSCA]: {}, [CSSO]: {} }) };
+    }
+    return { ok: true, json: async () => (/services\.json/.test(url) ? SERVICES : /glossary/.test(url) ? {} : {}) };
+  },
   localStorage: { _d: {}, getItem(k) { return this._d[k] || null; }, setItem(k, v) { this._d[k] = String(v); }, removeItem(k) { delete this._d[k]; } },
   sessionStorage: { _d: {}, getItem(k) { return this._d[k] || null; }, setItem(k, v) { this._d[k] = String(v); }, removeItem(k) { delete this._d[k]; } },
   confirm: (msg) => { confirmAsked = msg; return confirmAnswer; },
@@ -269,6 +297,68 @@ const spot = (id) => domBox.STAMP_PLACEMENTS.find((p) => p.id === id);
 (async () => {
   if (typeof D.onTap !== 'function') throw new Error('SPOT_EDITOR.onTap missing');
   await D.loadCharter();
+
+  // C1 (final review): before "Move them", nothing in Offices mode may change
+  // the map. One kind on an unmigrated map turns spot routing on and leaves
+  // every other office "not on this map" for citizens.
+  {
+    const snap = JSON.stringify(domBox.STAMP_PLACEMENTS);
+    domBox.sessionStorage.setItem('wf-spot-migration-later', '1');   // "Not now" was tapped earlier
+    D.refreshPanel();
+    ok('C1: after "Not now" the banner is hidden', !visible('spotMigrationBanner'));
+    D.toggleMode();
+    ok('C1: the Offices button on an unmigrated map does not enter Offices mode', domBox.STATE.spotMode === false);
+    ok('C1: ...it shows the migration banner (Move them, Not now) instead of the editor',
+       visible('spotMigrationBanner') && visible('spotMigrateBtn') && visible('spotMigrateLater') && !visible('officesPanel'));
+    D.setMode(true);
+    ok('C1: setMode(true) is refused before the move', domBox.STATE.spotMode === false);
+    D.openPanel();
+    ok('C1: openPanel is refused before the move', domBox.STATE.spotMode === false && !visible('officesPanel'));
+    domBox.STATE.spotMode = true;   // even if something forced Offices mode on
+    D.onTap(11, 12);
+    ok('C1: a tap on a spot opens no sheet', !visible('spotSheet'));
+    D.onTap(30, 30);
+    ok('C1: a tap on an empty cell offers nothing', !visible('spotSheet'));
+    $('ssAddSpot').click();
+    $('ssAddDesk').click();
+    D.openSheet('g6');
+    $('ssOfficeInput').value = 'Office for the Senior Citizens Affairs';
+    $('ssSaveBtn').click();
+    ok('C1: Offices-mode taps, Add a spot, Add desk and Save change nothing in STAMP_PLACEMENTS',
+       JSON.stringify(domBox.STAMP_PLACEMENTS) === snap, JSON.stringify(domBox.STAMP_PLACEMENTS));
+    ok('C1: no placement got a kind', !domBox.STAMP_PLACEMENTS.some((p) => p.kind));
+    domBox.STATE.spotMode = false;
+    $('spotMigrateLater').click();
+    ok('C1: "Not now" hides the banner again', !visible('spotMigrationBanner'));
+    D.toggleMode();
+    ok('C1: the banner stays reachable: the Offices button shows it again', visible('spotMigrationBanner') && domBox.STATE.spotMode === false);
+    // As after "Move them": the map now has spots, so the editor opens.
+    domBox.STAMP_PLACEMENTS.push({ id: 'hall', name: 'Session Hall', row: 20, col: 20, size: 3, floor: 3, source: 'local', kind: 'other', otherKey: null });
+    D.toggleMode();
+    ok('C1: once moved, the Offices button enters Offices mode and hides the banner',
+       domBox.STATE.spotMode === true && visible('officesPanel') && !visible('spotMigrationBanner'));
+    D.setMode(false);
+  }
+
+  // M3 (final review): a failed office list load is not "Every office is on the map."
+  {
+    const settle = () => new Promise((r) => setTimeout(r, 0));
+    D.openPanel();
+    await settle(); await settle();
+    const txt = $('unplacedList').textContent;
+    ok('M3: a failed load says "Couldn\'t load the office list. Try again."',
+       txt.includes("Couldn't load the office list. Try again.") && !txt.includes('Every office is on the map.'), txt);
+    const retry = buttonIn('unplacedList', 'Try again');
+    ok('M3: ...with a "Try again" button (44 px offices-btn, styled offices-retry)',
+       !!retry && /\boffices-btn\b/.test(retry.className) && /\.offices-retry\s*\{[^}]*border:/.test(css));
+    deptsFail = false;
+    if (retry) retry.click();
+    await settle(); await settle();
+    const txt2 = $('unplacedList').textContent;
+    ok('M3: "Try again" loads the list (the failure was not kept)',
+       /Senior Citizens Affairs/.test(txt2) && /Social Services/.test(txt2) && $('unplacedCount').textContent === '2', txt2);
+    D.setMode(false);
+  }
 
   // Tapping an existing spot opens it.
   D.onTap(11, 12);
@@ -413,6 +503,46 @@ const spot = (id) => domBox.STAMP_PLACEMENTS.find((p) => p.id === id);
   confirmAnswer = true;
   $('ssRemoveBtn').click();
   ok('saying yes removes it', !spot('g6') && !visible('spotSheet'));
+
+  // I2 (final review): assigning an office that already has spots asks whether
+  // to keep it there too. OK keeps them (several windows); Cancel clears them.
+  {
+    domBox.STAMP_PLACEMENTS.push(
+      { id: 'w1', name: 'OSCA GF 50', row: 50, col: 50, size: 3, floor: 1, source: 'local', kind: 'office', dept: OSCA, services: ['Senior Citizens ID'] },
+      { id: 'w2', name: 'GF 55', row: 55, col: 55, size: 3, floor: 1, source: 'local' },
+      { id: 'w3', name: 'GF 60', row: 60, col: 60, size: 3, floor: 1, source: 'local' });
+    const assignOsca = (r, c) => {
+      D.onTap(r, c);
+      $('ssAssignBtn').click();
+      $('ssOfficeInput').value = 'Office for the Senior Citizens Affairs';
+      confirmAsked = '';
+      $('ssSaveBtn').click();
+    };
+    confirmAnswer = true;
+    assignOsca(56, 56);
+    ok('I2: Save asks "<office> is also at <spots>. Keep it there too?"',
+       confirmAsked === 'Office for the Senior Citizens Affairs is also at OSCA GF 50. Keep it there too?', confirmAsked);
+    ok('I2: OK keeps the other spot (several windows) and assigns this one',
+       spot('w1').kind === 'office' && spot('w1').dept === OSCA && spot('w2').kind === 'office' && spot('w2').dept === OSCA,
+       JSON.stringify([spot('w1'), spot('w2')]));
+    confirmAnswer = false;
+    assignOsca(61, 61);
+    ok('I2: the question names every other spot',
+       confirmAsked === 'Office for the Senior Citizens Affairs is also at OSCA GF 50 and OSCA GF 55. Keep it there too?', confirmAsked);
+    ok('I2: Cancel returns the other spots to "No office yet" (kind, dept and services cleared)',
+       ['w1', 'w2'].every((id) => spot(id).kind === undefined && spot(id).dept === undefined && spot(id).services === undefined),
+       JSON.stringify([spot('w1'), spot('w2')]));
+    ok('I2: ...and this spot has the office', spot('w3').kind === 'office' && spot('w3').dept === OSCA, JSON.stringify(spot('w3')));
+    confirmAsked = '';
+    D.onTap(61, 61);
+    $('ssSaveBtn').click();
+    ok('I2: re-saving a spot that already has the office asks nothing', confirmAsked === '' && spot('w3').dept === OSCA, confirmAsked);
+    D.onTap(61, 61);
+    $('ssNoneBtn').click();
+    $('ssSaveBtn').click();
+    assignOsca(51, 51);
+    ok('I2: no question when the office has no other spot', confirmAsked === '' && spot('w1').dept === OSCA, confirmAsked);
+  }
 
   // Offices mode.
   D.setMode(true);

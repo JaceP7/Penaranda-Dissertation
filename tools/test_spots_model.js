@@ -68,6 +68,28 @@ ok('OSCA desk is a place', ids(SPOTS.placesFor(all, OSCA, 'Anything')) === '3');
 ok('Cedula -> only the desk behind', ids(SPOTS.placesFor(all, CTMO, 'Cedula')) === '4');
 ok('other CTMO service -> desk is not a place', ids(SPOTS.placesFor(all, CTMO, 'Permit')) === '5');
 
+// I3 (final review): a service added to another office's spot is a place for it too.
+{
+  const cashier = { id: 6, kind: 'office', dept: CTMO, services: ['Birth Certificate'], row: 50, col: 50, size: 2, floor: 1 };
+  const order = (a) => a.map((p) => p.id).join(',');
+  ok('I3: the asked office\'s spots listing the service come first, then other offices\' spots listing it',
+     order(SPOTS.placesFor([...all, cashier], CCRO, 'Birth Certificate')) === '2,6',
+     order(SPOTS.placesFor([...all, cashier], CCRO, 'Birth Certificate')));
+  const onlyThere = { ...cashier, services: ['Marriage License'] };
+  ok('I3: listed only by another office -> that office\'s spot, not every CCRO spot',
+     order(SPOTS.placesFor([o1, o2, onlyThere], CCRO, 'Marriage License')) === '6',
+     order(SPOTS.placesFor([o1, o2, onlyThere], CCRO, 'Marriage License')));
+  ok('I3: listed by nobody -> all of the asked office\'s spots, as before',
+     ids(SPOTS.placesFor([...all, cashier], CCRO, 'Death Certificate')) === '1,2');
+  const ccroCedula = { id: 7, kind: 'office', dept: CCRO, services: ['Cedula'], row: 60, col: 60, size: 2, floor: 1 };
+  ok('I3: an own desk ticked for the service still stands in for the own office, other offices follow',
+     order(SPOTS.placesFor([...all, ccroCedula], CTMO, 'Cedula')) === '4,7',
+     order(SPOTS.placesFor([...all, ccroCedula], CTMO, 'Cedula')));
+  ok('I3: the asked office\'s own desks come before other offices\' spots',
+     order(SPOTS.placesFor([...all, { ...cashier, dept: CCRO, id: 8, services: ['Anything'] }], OSCA, 'Anything')) === '3,8',
+     order(SPOTS.placesFor([...all, { ...cashier, dept: CCRO, id: 8, services: ['Anything'] }], OSCA, 'Anything')));
+}
+
 // ---- desks
 ok('deskCells', SPOTS.deskCells(all, 1).sort().join('|') === '5,5|6,6');
 ok('deskCells other floor', SPOTS.deskCells(all, 2).length === 0);

@@ -969,6 +969,16 @@ window.addEventListener('pagehide', () => {
 });
 
 /**
+ * What the route calls its destination (route messages, arrival card): a desk
+ * by its desk wording ("OSCA desk, in front of City Social Services Office"),
+ * anything else by its office title.
+ */
+function _navDestName(loc, deptName) {
+  if (loc && loc.kind === 'desk' && loc.deskPhrase) return loc.deskPhrase;
+  return _officeTitle((loc && loc.label) || deptName);
+}
+
+/**
  * Route the user to a department/service resolved by the RAG answer.
  * Uses service_locations.js to map the department → a stamp cell, picks the
  * nearest window to the user, switches floor if needed (routing from the
@@ -1006,7 +1016,7 @@ function navigateToDepartment(deptName, subservice, answerText, presetLoc) {
     return;
   }
   // Named on the arrival card and in the messages below.
-  _navDestLabel = _officeTitle(loc.label || deptName);
+  _navDestLabel = _navDestName(loc, deptName);
   // The spot the route goes to is outlined on the map (null: a pin, an exit,
   // or an unmigrated map).
   renderer.destSpotId = loc.spotId || null;
@@ -1034,7 +1044,7 @@ function navigateToDepartment(deptName, subservice, answerText, presetLoc) {
         leg: 1, stair,
         destFloor: loc.floor,
         destCell:  { row: loc.row, col: loc.col },
-        label:     loc.label || deptName,
+        label:     _navDestLabel,
         dept: deptName, subservice, answerText,
       };
     } else {
