@@ -511,6 +511,8 @@ const SPOT_EDITOR = (() => {
   function onTap(row, col) {
     if (!hasDoc()) return;
     if (moving) { finishMove(row, col); return; }
+    // A tap on the desk being edited keeps its sheet (and its unsaved changes).
+    if (typeof DESK_EDITOR !== 'undefined' && DESK_EDITOR.owns(floorNow(), row, col)) return;
     const p = SPOTS.spotAt(placements(), floorNow(), row, col);
     if (p) openSheet(p.id); else openAdd(row, col);
   }
@@ -687,7 +689,82 @@ const SPOT_EDITOR = (() => {
     show('ssSource', !!url);
   }
 
-  // ── Type-aheads (office, service, requirement) ──────────────────────────────
+  // ── Type-aheads: one picker per input, Charter values only ─────────────────
+  // makePicker is shared with the desk sheet (desk_editor.js), so the
+  // Charter-only gate (suggest, Enter check, the check at Save) lives here alone.
+
+  /**
+   * Wire a type-ahead and return { clear, suggest, typed, settle }.
+   * cfg: { kind: 'office'|'service'|'requirement', input, list, msg (element ids),
+   *        index() -> the Charter index, or null while nothing is open,
+   *        opts() -> CHARTER_PICK opts, onPick(value), limit, filter(hits) }.
+   * Typing suggests; Enter takes the typed text only if the Charter has it,
+   * otherwise it shows NO_MATCH and the closest Charter items.
+   */
+  function makePicker(cfg) {
+    const opts = () => (cfg.opts ? cfg.opts() : {});
+    function clear() {
+      const l = el(cfg.list);
+      if (l) l.textContent = '';
+      setText(cfg.msg, '');
+      show(cfg.msg, false);
+    }
+    function item(value) {
+      const li = make('li', 'ss-suggest-item');
+      li.appendChild(button('ss-suggest-btn', cfg.kind === 'office' ? title(value) : value, () => cfg.onPick(value)));
+      return li;
+    }
+    function suggest() {
+      const index = cfg.index();
+      if (!index) return;
+      clear();
+      let hits = CHARTER_PICK.suggest(index, cfg.kind, valueOf(cfg.input), opts(), cfg.limit || 6);
+      if (cfg.filter) hits = cfg.filter(hits);
+      const list = el(cfg.list);
+      if (list) for (const h of hits) list.appendChild(item(h.value));
+    }
+    /** Enter: take the typed text only if the Charter has it. */
+    function typed() {
+      const index = cfg.index();
+      if (!index) return;
+      const text = valueOf(cfg.input);
+      if (!text.trim()) return;
+      const r = checkPick(index, cfg.kind, text, opts());
+      if (r.ok) { cfg.onPick(r.value); return; }
+      clear();
+      const m = el(cfg.msg);
+      if (!m) return;
+      m.appendChild(make('span', 'ss-nomatch-text', r.message));
+      if (r.closest.length) {
+        m.appendChild(make('span', 'ss-closest-lbl', 'Closest in the Charter:'));
+        const ul = make('ul', 'ss-suggest');
+        for (const x of r.closest) ul.appendChild(item(x.value));
+        m.appendChild(ul);
+      }
+      m.hidden = false;
+    }
+    /**
+     * At Save: text typed over the picked value `current` must be a Charter
+     * item, which is then picked. False (and NO_MATCH shown) when it is not.
+     */
+    function settle(current) {
+      const index = cfg.index();
+      const text = valueOf(cfg.input).trim();
+      if (!text || !index || CHARTER_PICK.fold(text) === CHARTER_PICK.fold(current)) return true;
+      const r = checkPick(index, cfg.kind, text, opts());   // typed, not picked from the list
+      if (!r.ok) { typed(); return false; }
+      cfg.onPick(r.value);
+      return true;
+    }
+    const n = el(cfg.input);
+    if (n) {
+      n.addEventListener('input', suggest);
+      n.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); typed(); } });
+    }
+    return { clear, suggest, typed, settle };
+  }
+
+  const pickers = {};   // kind -> picker, made in init()
 
   function pickOpts(kind) {
     if (kind === 'service') return { dept: sheet.dept };
@@ -696,47 +773,7 @@ const SPOT_EDITOR = (() => {
   }
 
   function clearPick(kind) {
-    const c = PICKS[kind];
-    const l = el(c.list);
-    if (l) l.textContent = '';
-    setText(c.msg, '');
-    show(c.msg, false);
-  }
-
-  function choiceItem(kind, value) {
-    const li = make('li', 'ss-suggest-item');
-    li.appendChild(button('ss-suggest-btn', kind === 'office' ? title(value) : value, () => choose(kind, value)));
-    return li;
-  }
-
-  function suggestFor(kind) {
-    if (!sheet || !charter) return;
-    clearPick(kind);
-    let hits = CHARTER_PICK.suggest(charter, kind, valueOf(PICKS[kind].input), pickOpts(kind), kind === 'requirement' ? 40 : 6);
-    if (kind === 'requirement') hits = hits.filter((h) => h.own).slice(0, 6);
-    const list = el(PICKS[kind].list);
-    if (list) for (const h of hits) list.appendChild(choiceItem(kind, h.value));
-  }
-
-  /** Enter in a type-ahead: take the typed text only if the Charter has it. */
-  function typedPick(kind) {
-    if (!sheet || !charter) return;
-    const c = PICKS[kind];
-    const text = valueOf(c.input);
-    if (!text.trim()) return;
-    const r = checkPick(charter, kind, text, pickOpts(kind));
-    if (r.ok) { choose(kind, r.value); return; }
-    clearPick(kind);
-    const m = el(c.msg);
-    if (!m) return;
-    m.appendChild(make('span', 'ss-nomatch-text', r.message));
-    if (r.closest.length) {
-      m.appendChild(make('span', 'ss-closest-lbl', 'Closest in the Charter:'));
-      const ul = make('ul', 'ss-suggest');
-      for (const x of r.closest) ul.appendChild(choiceItem(kind, x.value));
-      m.appendChild(ul);
-    }
-    m.hidden = false;
+    if (pickers[kind]) pickers[kind].clear();
   }
 
   function choose(kind, value) {
@@ -760,10 +797,14 @@ const SPOT_EDITOR = (() => {
   }
 
   function wirePick(kind) {
-    const n = el(PICKS[kind].input);
-    if (!n) return;
-    n.addEventListener('input', () => suggestFor(kind));
-    n.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); typedPick(kind); } });
+    pickers[kind] = makePicker({
+      kind, ...PICKS[kind],
+      index: () => (sheet && charter ? charter : null),
+      opts: () => pickOpts(kind),
+      onPick: (v) => choose(kind, v),
+      limit: kind === 'requirement' ? 40 : 6,
+      filter: kind === 'requirement' ? (hits) => hits.filter((h) => h.own).slice(0, 6) : null,
+    });
   }
 
   // ── Save, Move, Remove ─────────────────────────────────────────────────────
@@ -776,11 +817,7 @@ const SPOT_EDITOR = (() => {
     if (sheet.mode === 'desk') { closeSheet(); return; }   // desks: Task 7
     if (sheet.mode === 'office') {
       const text = valueOf('ssOfficeInput').trim();
-      if (text && charter && CHARTER_PICK.fold(text) !== CHARTER_PICK.fold(sheet.dept)) {
-        const r = checkPick(charter, 'office', text);   // typed, not picked from the list
-        if (!r.ok) { typedPick('office'); return; }
-        choose('office', r.value);
-      }
+      if (pickers.office && !pickers.office.settle(sheet.dept)) return;
       if (!text || !sheet.dept) { say("Pick an office from the Citizen's Charter, or choose No office yet."); return; }
       a = { kind: 'office', dept: sheet.dept, services: sheet.services };
     } else if (sheet.mode === 'other') {
@@ -880,5 +917,8 @@ const SPOT_EDITOR = (() => {
     setMode, toggleMode, onTap, openSheet, closeSheet,
     applyAssignment, toggleRequirement, moveSpot, checkPick, spotName, serviceKeyFor, requirementLists,
     addDesk: (row, col, opts) => DESK_EDITOR.addDesk(row, col, opts),
+    // Shared with the desk sheet (desk_editor.js).
+    makePicker, afterEdit,
+    dom: { el, make, button, show, setText, valueOf, setValue, floorLabel, title },
   };
 })();

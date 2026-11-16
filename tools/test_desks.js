@@ -166,10 +166,15 @@ ok('#deskSheet uses the spot sheet look (class spot-sheet: 44 px buttons)', /<se
   ok('CSS gives each service tick row (.ds-tick) a min-height of at least 44px', minH >= 44, String(minH));
 }
 const ver = (file) => { const m = new RegExp(file.replace('.', '\\.') + '\\?v=(\\d+)').exec(html); return m ? +m[1] : 0; };
-ok('index.html loads desk_editor.js?v=1', /<script src="js\/desk_editor\.js\?v=1"><\/script>/.test(html));
+ok('index.html loads desk_editor.js (bumped to v=2 by the review fixes)', /<script src="js\/desk_editor\.js\?v=2"><\/script>/.test(html));
 ok('  after spot_editor.js', html.indexOf('js/desk_editor.js?v=') > html.indexOf('js/spot_editor.js?v='));
 ok('spots.js version bumped past 1', ver('spots.js') > 1);
-ok('spot_editor.js version bumped past 2', ver('spot_editor.js') > 2);
+ok('spot_editor.js version bumped past 3', ver('spot_editor.js') > 3);
+ok('renderer.js version bumped past 42', ver('renderer.js') > 42);
+ok('renderer.js draws the desk sheet\'s draft through DESK_EDITOR.previewList',
+   /DESK_EDITOR\.previewList\(STAMP_PLACEMENTS\)/.test(read('wayfinding-app/js/renderer.js')));
+ok('desk_editor.js uses the shared picker, not its own copy',
+   /SPOT_EDITOR\.makePicker\(/.test(deskSrc) && !/CHARTER_PICK\.suggest\(/.test(deskSrc) && !/checkPick\(/.test(deskSrc));
 ok('app.css version bumped past 70', ver('app.css') > 70);
 ok('desk_editor.js has no emoji', deskSrc.length > 0 && !EMOJI.test(deskSrc));
 
@@ -224,7 +229,7 @@ const placementsArr = [
     kind: 'office', dept: OSCA, services: ['Senior Citizens ID', 'Discount complaints'] },
 ];
 let confirmAnswer = false, confirmAsked = '';
-const calls = { saves: 0, recompute: 0, draw: 0, catalogue: 0 };
+const calls = { saves: 0, recompute: 0, draw: 0, catalogue: 0, lastSaved: null };
 const domBox = {
   console, document, Promise, setTimeout, clearTimeout, Date, JSON, Math,
   STATE: { currentFloor: 1, viewMode: 'admin', spotMode: true },
@@ -239,7 +244,8 @@ const domBox = {
   sessionStorage: { _d: {}, getItem(k) { return this._d[k] || null; }, setItem(k, v) { this._d[k] = String(v); }, removeItem(k) { delete this._d[k]; } },
   confirm: (msg) => { confirmAsked = msg; return confirmAnswer; },
   alert: () => {},
-  saveStampPlacements: () => { calls.saves++; },
+  saveStampPlacements: () => { calls.saves++; calls.lastSaved = JSON.stringify(domBox.STAMP_PLACEMENTS); },
+  FLOOR_WALLS: {}, STAMP_PRESETS: [], _floorNames: {},
   saveRemovedRequirements: () => {},
   recompute: () => { calls.recompute++; },
   renderCatalogue: () => { calls.catalogue++; },
@@ -249,12 +255,14 @@ const domBox = {
 };
 vm.createContext(domBox);
 try {
-  vm.runInContext(lift('DEPT_CODE') + '\n' + lift('_officeTitle') + '\n' + spotsSrc + '\n' + charterSrc + '\n' + edSrc + '\n' + deskSrc +
-    '\n;this.SPOT_EDITOR = SPOT_EDITOR; this.DESK_EDITOR = DESK_EDITOR; this.SPOTS = SPOTS;', domBox);
+  vm.runInContext(lift('DEPT_CODE') + '\n' + lift('_officeTitle') + '\n' + lift('_buildStatePayload') + '\n' + spotsSrc + '\n' + charterSrc + '\n' + edSrc + '\n' + deskSrc +
+    '\n;this.SPOT_EDITOR = SPOT_EDITOR; this.DESK_EDITOR = DESK_EDITOR; this.SPOTS = SPOTS; this._buildStatePayload = _buildStatePayload;', domBox);
 } catch (e) { ok('desk_editor.js loads with a document', false, e.message); }
 const S = domBox.SPOT_EDITOR;
 const desks = () => domBox.STAMP_PLACEMENTS.filter((p) => p.kind === 'desk');
 const deskAt = (r, c) => domBox.STAMP_PLACEMENTS.find((p) => p.kind === 'desk' && p.row === r && p.col === c);
+// What the map draws while a sheet is open (the draft in place of the saved desk).
+const drawnAt = (r, c) => domBox.DESK_EDITOR.previewList(domBox.STAMP_PLACEMENTS).find((p) => p.kind === 'desk' && p.row === r && p.col === c);
 const tickByName = (name) => ticks().find((n) => n.parentNode && n.parentNode.textContent.includes(name));
 
 (async () => {
@@ -272,10 +280,8 @@ const tickByName = (name) => ticks().find((n) => n.parentNode && n.parentNode.te
   ok('its services are tick boxes', ticks().length === 2 && ticks().every((t) => t.type === 'checkbox'),
      $('dsTicks').textContent);
   const savesBefore = calls.saves;
-  $('dsSaveBtn').click();
-  ok('Save with nothing ticked asks for a service', visible('dsMsg') && /Tick at least one service/.test($('dsMsg').textContent),
-     $('dsMsg').textContent);
-  ok('...and saves nothing', calls.saves === savesBefore);
+  ok('the new desk is drawn as a preview but is not in STAMP_PLACEMENTS',
+     !!drawnAt(55, 38) && !deskAt(55, 38) && !domBox.STAMP_PLACEMENTS.some((p) => /^new-/.test(p.id)));
   const t1 = tickByName('Senior Citizens ID');
   if (t1) { t1.checked = true; t1.dispatch('change'); }
   $('dsSaveBtn').click();
@@ -296,18 +302,60 @@ const tickByName = (name) => ticks().find((n) => n.parentNode && n.parentNode.te
   ok('its ticked service is ticked', tickByName('Senior Citizens ID').checked && !tickByName('Discount complaints').checked);
   const draws = calls.draw;
   for (let i = 0; i < 4; i++) $('dsLargerBtn').click();
-  ok('Larger grows the desk to 4 and stops', deskAt(55, 38).size === 4 && $('dsLargerBtn').disabled, String(deskAt(55, 38).size));
+  ok('Larger grows the desk to 4 and stops', drawnAt(55, 38).size === 4 && $('dsLargerBtn').disabled, String(drawnAt(55, 38).size));
   ok('...and redraws the map', calls.draw > draws);
+  ok('...but the saved desk is unchanged until Save', deskAt(55, 38).size === 2);
   for (let i = 0; i < 5; i++) $('dsSmallerBtn').click();
-  ok('Smaller shrinks it to 1 and stops', deskAt(55, 38).size === 1 && $('dsSmallerBtn').disabled);
-  ok('the desk keeps its top-left cell', !!deskAt(55, 38));
+  ok('Smaller shrinks it to 1 and stops', drawnAt(55, 38).size === 1 && $('dsSmallerBtn').disabled);
+  ok('the desk keeps its top-left cell', !!drawnAt(55, 38));
+  // Review fix 1: tapping the open desk again keeps the sheet and its unsaved size.
+  $('dsLargerBtn').click();
+  S.onTap(55, 38);
+  ok('tapping the open desk again keeps the sheet and its unsaved size', visible('deskSheet') && drawnAt(55, 38).size === 2 &&
+     $('dsSizeText').textContent === '2 by 2 squares', $('dsSizeText').textContent);
+  $('dsLargerBtn').click();
+  domBox.DESK_EDITOR.open(d1.id);
+  ok('opening the open desk again keeps the draft (size 3) as a draft', drawnAt(55, 38).size === 3 && deskAt(55, 38).size === 2);
+  // Review fix 2: the draft never reaches STAMP_PLACEMENTS, a publish or a save.
+  ok('with the sheet open, the publish payload has the saved desk, not the draft',
+     domBox._buildStatePayload().stampPlacements.find((p) => p.id === d1.id).size === 2);
   $('deskSheetClose').click();
-  ok('closing without Save puts the size back', deskAt(55, 38).size === 2 && !visible('deskSheet'));
+  ok('closing without Save leaves the saved size (the draft was never the original)',
+     deskAt(55, 38).size === 2 && drawnAt(55, 38).size === 2 && !visible('deskSheet'));
   S.onTap(55, 38);
   $('dsLargerBtn').click();
   $('dsSaveBtn').click();
   ok('Save keeps the new size', deskAt(55, 38).size === 3);
   ok('editing a desk does not change confirmedAt', deskAt(55, 38).confirmedAt === '2026-01-01T00:00:00.000Z', deskAt(55, 38).confirmedAt);
+
+  // Review fix 1, new desk: tapping its draft keeps the sheet and the work.
+  S.onTap(60, 38);
+  $('ssAddDesk').click();
+  $('dsLargerBtn').click();
+  S.onTap(61, 39);
+  ok('tapping a new desk\'s draft keeps its sheet', visible('deskSheet') && !visible('spotSheet') && drawnAt(60, 38).size === 3);
+  // Review fix 2: a publish or a "Still here?" Confirm while it is open does not take the draft along.
+  ok('the publish payload has no draft desk',
+     !domBox._buildStatePayload().stampPlacements.some((p) => /^new-/.test(p.id) || (p.row === 60 && p.col === 38)));
+  S.confirmDesk(d1.id);
+  ok('a "Still here?" Confirm while the sheet is open saves no draft',
+     !!calls.lastSaved && !/"new-/.test(calls.lastSaved) && !JSON.parse(calls.lastSaved).some((p) => p.row === 60 && p.col === 38));
+  ok('...and the sheet is still open with its work', visible('deskSheet') && drawnAt(60, 38).size === 3);
+  $('dsSaveBtn').click();
+  ok('Save then adds the new desk with its size', !!deskAt(60, 38) && deskAt(60, 38).size === 3 && !visible('deskSheet'));
+  const d60 = deskAt(60, 38);
+  // Review fix 2: a map applied while the sheet is open is not overwritten on close.
+  S.onTap(60, 38);
+  $('dsLargerBtn').click();
+  const applied = domBox.STAMP_PLACEMENTS.map((p) => (p.id === d60.id ? { ...p, size: 1 } : { ...p }));
+  domBox.STAMP_PLACEMENTS.length = 0;
+  domBox.STAMP_PLACEMENTS.push(...applied);   // what _applyStatePayload does
+  $('deskSheetClose').click();
+  ok('closing after a map was applied keeps the applied map', deskAt(60, 38).size === 1);
+  S.onTap(60, 38);
+  domBox.STAMP_PLACEMENTS.splice(domBox.STAMP_PLACEMENTS.findIndex((p) => p.id === d60.id), 1);   // removed meanwhile
+  $('dsSaveBtn').click();
+  ok('saving a desk that was removed meanwhile does not bring it back', !deskAt(60, 38) && !visible('deskSheet'));
 
   // A desk that blocks the corridor: the walkway check.
   S.onTap(45, 37);
@@ -371,6 +419,16 @@ const tickByName = (name) => ticks().find((n) => n.parentNode && n.parentNode.te
   ok('Save makes a CSSO desk that is not the office behind it',
      d3 && d3.dept === CSSO && d3.deskBehind === false && JSON.stringify(d3.services) === '["Burial Assistance"]' && d3.name === 'CSSO desk',
      JSON.stringify(d3));
+
+  // Review fix 4: "The office behind it" with nothing ticked is the line-up-here desk.
+  S.onTap(70, 38);
+  $('ssAddDesk').click();
+  ok('nothing is ticked on a new desk', ticks().length === 2 && ticks().every((t) => !t.checked));
+  $('dsSaveBtn').click();
+  const d70 = deskAt(70, 38);
+  ok('Save with nothing ticked saves an OSCA desk behind it with no services',
+     !!d70 && d70.dept === OSCA && d70.deskBehind === true && Array.isArray(d70.services) && d70.services.length === 0 && !visible('deskSheet'),
+     JSON.stringify(d70));
 
   // No office in front (2nd floor has none): falls back to "Another office".
   domBox.STATE.currentFloor = 2;

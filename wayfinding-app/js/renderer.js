@@ -730,15 +730,19 @@ class GridRenderer {
     // (SPOTS.labelStyle): "No office yet" is an amber-striped box for admins
     // only, a desk is a filled block in both views, the rest keep the pill.
     // An unmigrated map keeps the stamp names, exactly as before.
-    if (typeof STAMP_PLACEMENTS !== 'undefined' && STAMP_PLACEMENTS.length) {
+    // While the desk sheet is open, its unsaved desk is drawn in place of the
+    // saved one (DESK_EDITOR.previewList); STAMP_PLACEMENTS itself never holds it.
+    const placed = typeof STAMP_PLACEMENTS === 'undefined' ? []
+      : (typeof DESK_EDITOR !== 'undefined' ? DESK_EDITOR.previewList(STAMP_PLACEMENTS) : STAMP_PLACEMENTS);
+    if (placed.length) {
       ctx.save();
       ctx.textAlign    = 'center';
       ctx.textBaseline = 'middle';
       const fontPx = Math.max(9, Math.min(15, Math.floor(cs * 0.55)));
       ctx.font = `600 ${fontPx}px system-ui, -apple-system, "Segoe UI", sans-serif`;
       const padX = 5, padY = 2;
-      const spotsOn = typeof SPOTS !== 'undefined' && STAMP_PLACEMENTS.some(p => p.kind);
-      for (const p of STAMP_PLACEMENTS) {
+      const spotsOn = typeof SPOTS !== 'undefined' && placed.some(p => p.kind);
+      for (const p of placed) {
         if (p.floor !== this.currentFloor) continue;  // per-floor visibility
         const style = spotsOn ? SPOTS.labelStyle(p) : { text: p.name, look: 'stamp' };
         if (style.look === 'empty' && this.citizenView) continue;
