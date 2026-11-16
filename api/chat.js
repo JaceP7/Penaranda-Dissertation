@@ -67,6 +67,7 @@ const UPSTASH_NS    = (process.env.UPSTASH_VECTOR_NAMESPACE || '').replace(/^\/+
 const REDIS_URL   = (process.env.UPSTASH_REDIS_REST_URL || '').replace(/\/$/, '');
 const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || '';
 const { key, previewUnisolated } = require('../lib/keys');
+const { getPublishedMap, visibleRequirements } = require('../lib/published_map');
 // Keep the most recent N entries. Raised from 5,000 so an evaluation period
 // cannot silently lose its earliest queries — at ~200 bytes an entry this is
 // roughly 10 MB, well inside the Upstash free tier. api/analytics.js pages
@@ -106,9 +107,9 @@ async function upstashQuery(text, topK = TOP_K) {
     .filter(m => m.subservice);
 }
 
-function buildContext(results) {
+function buildContext(results, removed) {
   return results.map(m => {
-    const reqs = (m.requirements || [])
+    const reqs = visibleRequirements(removed, m.subservice, m.department, m.requirements || [])
       .map(rq => `  - ${rq.requirement} (secure at: ${rq.where_to_secure || 'N/A'})`)
       .join('\n');
     const steps = (m.steps || []).map((s, i) => `  ${i + 1}. ${s}`).join('\n');
@@ -249,7 +250,9 @@ module.exports = async function handler(req, res) {
   if (named.length === 1) {
     const svc = named[0];
     const lang = langTag(query);
-    const also = withAlsoOffered(serviceAnswer(svc, lang), svc.subservice, svc.department, lang);
+    const pub = await getPublishedMap();   // null = unreadable: show the full Charter list
+    const shown = pub ? Object.assign({}, svc, { requirements: visibleRequirements(pub.removedRequirements, svc.subservice, svc.department, svc.requirements) }) : svc;
+    const also = withAlsoOffered(serviceAnswer(shown, lang), svc.subservice, svc.department, lang);
     await logQuery({ ts: Date.now(), query, department: svc.department, subservice: svc.subservice,
                      needsContext: false, latency_ms: Date.now() - t0, lang,
                      kind: 'service', source, synthetic });
@@ -344,7 +347,7 @@ module.exports = async function handler(req, res) {
   const messages = [
     { role: 'system', content: SYSTEM_PROMPT },
     ...history.slice(-6),
-    { role: 'user', content: `Context:\n${buildContext(results)}\n\nUser question: ${query}` },
+    { role: 'user', content: `Context:\n${buildContext(results, ((await getPublishedMap()) || {}).removedRequirements)}\n\nUser question: ${query}` },
   ];
 
   let groqRes;
