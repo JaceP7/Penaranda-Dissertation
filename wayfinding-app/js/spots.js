@@ -66,13 +66,15 @@ const SPOTS = (() => {
   }
 
   /**
-   * Where a citizen can go for `subservice` of `dept`. The office's own places
-   * come first: its desks behind the office ticked for the service (they stand
-   * in for the office), else its office spots that list the service, then its
-   * other desks. After them, office spots of other offices that list the
-   * service (the spot sheet lets an admin add another office's service). Only
-   * when no such desk or spot lists it is every office spot of `dept` a place.
-   * resolveServiceLocation still picks the nearest of the places returned.
+   * Where a citizen can go for `subservice` of `dept`. When the office lists
+   * the service itself - its desks behind the office ticked for it (they stand
+   * in for the office), else its office spots listing it - those are the
+   * places, then its other desks. Only when it lists the service nowhere are
+   * other offices' office spots that list it places (the spot sheet lets an
+   * admin add another office's service), after the office's other desks. When
+   * nobody lists it, every office spot of `dept` is a place, as before.
+   * resolveServiceLocation picks the nearest of the places returned, so another
+   * office must not be among them when the asked office lists the service.
    */
   function placesFor(placements, dept, subservice) {
     const list = placements || [];
@@ -82,10 +84,11 @@ const SPOTS = (() => {
     const offices = mine.filter((p) => p.kind === 'office');
     const own = behind.length ? behind : offices.filter(has);
     const elsewhere = list.filter((p) => p.kind === 'office' && p.dept !== dept && has(p));
-    const main = (own.length || elsewhere.length) ? own : offices;
     const others = mine.filter((p) => p.kind === 'desk' && !p.deskBehind &&
       ((p.services || []).length === 0 || has(p)));
-    return [...main, ...others, ...elsewhere];
+    if (own.length) return [...own, ...others];
+    if (elsewhere.length) return [...others, ...elsewhere];
+    return [...offices, ...others];
   }
 
   function deskCells(placements, floor) {

@@ -12,7 +12,7 @@
 
 "use strict";
 
-const SERVICE_LOCATIONS_VERSION = 5;   // + spots: a migrated map routes by SPOTS.placesFor; desks; otherKey for the help desk and COMELEC
+const SERVICE_LOCATIONS_VERSION = 6;   // + a spot of another office is named by that office (label, dept)
 
 // ── Canonical RAG department  →  stamp placement name(s) ──────────────────
 // Keys are the canonical department strings the RAG answers resolve to.
@@ -235,8 +235,10 @@ function ownDeskNote(deptName, officeName, lang) {
  * @returns {null | {
  *     floor:number, row:number, col:number, stampName:string,
  *     label:string, fallback?:boolean, separateCampus?:boolean,
- *     spotId?:string, kind?:string, deskPhrase?:string
- *   }}  spotId and kind (and deskPhrase, for a desk) only on a migrated map.
+ *     spotId?:string, kind?:string, dept?:string, deskPhrase?:string
+ *   }}  spotId and kind (dept, the spot's office; deskPhrase, for a desk) only
+ *   on a migrated map. label is deptName, except when the spot belongs to
+ *   another office: then that office's title.
  */
 function resolveServiceLocation(deptName, subservice, fromCell) {
   const nd = _svcNorm(deptName);
@@ -287,7 +289,11 @@ function resolveServiceLocation(deptName, subservice, fromCell) {
   if (pick.spot) {
     out.spotId = pick.spot.id;
     out.kind   = pick.spot.kind;
+    if (pick.spot.dept) out.dept = pick.spot.dept;
     if (pick.spot.kind === "desk") out.deskPhrase = _deskPhrase(pick.spot);
+    // Another office lists the service and the asked one does not (SPOTS.placesFor):
+    // the citizen is sent to that office, so it is the one named.
+    if (pick.spot.dept && pick.spot.dept !== _spotDept(nd)) out.label = _svcOfficeTitle(pick.spot.dept);
   }
   return out;
 }

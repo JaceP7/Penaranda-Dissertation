@@ -302,14 +302,26 @@ ok('navigateToDepartment shows the own-desk note', /ownDeskNote\(/.test(app));
   sb.setPlacements(migrated());
   const deskLoc = sb.resolve(OSCA, 'Senior Citizens ID');
   const officeLoc = sb.resolve(CCRO, 'Birth Certificate');
-  // I3 (final review): a service added to another office's spot is routed to.
+  // I3 (final review): a service added to another office's spot is routed to,
+  // but only when the asked office lists it nowhere (I3 residual, 2026-11-17).
   sb.placements().find((p) => p.id === 's-ctmo').services.push('Birth Certificate');
   const nearCtmo = sb.resolve(CCRO, 'Birth Certificate', { floor: 1, row: 40, col: 63 });
   const nearCcro = sb.resolve(CCRO, 'Birth Certificate', { floor: 1, row: 50, col: 23 });
+  sb.placements().find((p) => p.id === 's-ccro').services = [];
+  sb.placements().find((p) => p.id === 's-ctmo').services.push('Marriage License');
+  const onlyCtmo = sb.resolve(CCRO, 'Marriage License', { floor: 1, row: 50, col: 23 });
   sb.setPlacements(saved);   // the C1 run above uses the bundled map
-  ok('I3: Birth Certificate added to the CTMO spot routes there for a citizen standing by it',
-     nearCtmo && nearCtmo.spotId === 's-ctmo', JSON.stringify(nearCtmo));
+  ok('I3: Birth Certificate, listed by CCRO and added to the CTMO spot, routes to CCRO even for a citizen standing by CTMO',
+     nearCtmo && nearCtmo.spotId === 's-ccro', JSON.stringify(nearCtmo));
   ok('I3: ...and to the CCRO spot for a citizen standing by that one', nearCcro && nearCcro.spotId === 's-ccro', JSON.stringify(nearCcro));
+  ok('I3: ...named by CCRO, the asked office', nearCtmo && nearCtmo.label === CCRO && ctx.f(nearCtmo, CCRO) === 'City Civil Registry Office',
+     nearCtmo && ctx.f(nearCtmo, CCRO));
+  ok('I3: a service only the CTMO spot lists routes there, for a citizen standing by CCRO',
+     onlyCtmo && onlyCtmo.spotId === 's-ctmo', JSON.stringify(onlyCtmo));
+  ok('I3: ...and loc.label and the arrival card name CTMO, not the asked CCRO',
+     onlyCtmo && onlyCtmo.label === 'City Treasury Management Office' &&
+     ctx.f(onlyCtmo, CCRO) === 'City Treasury Management Office', onlyCtmo && (onlyCtmo.label + ' / ' + ctx.f(onlyCtmo, CCRO)));
+  ok('I3: ...and carries the spot\'s office, for the own-desk note', onlyCtmo && onlyCtmo.dept === CTMO, JSON.stringify(onlyCtmo));
   ok('I1: a desk destination is named by its desk wording',
      ctx.f(deskLoc, OSCA) === 'OSCA desk, in front of City Social Services Office', ctx.f(deskLoc, OSCA));
   ok('I1: an office destination is still the office title',
@@ -319,9 +331,44 @@ ok('navigateToDepartment shows the own-desk note', /ownDeskNote\(/.test(app));
      /_navDestLabel = _navDestName\(loc, deptName\)/.test(nav), nav.slice(0, 0));
   ok('I1: the second leg of a cross-floor trip says the same name',
      /label:\s*_navDestLabel/.test(nav));
+  ok('I3: the own-desk note is for the office routed to (loc.dept), not always the asked one',
+     /ownDeskNote\(loc\.dept \|\| deptName,/.test(nav));
+
+  // I3 residual: the real bundled map, migrated with the real services.json the
+  // way runMigration does. Every spot then lists all its office's Charter
+  // services, and "Competency Assessment" is both CSSO's and CAO's.
+  {
+    const CAO = 'CITY ASSESSMENT OFFICE';
+    const keep = sb.placements().map((p) => Object.assign({}, p));
+    const byDept = {};
+    for (const row of JSON.parse(read('wayfinding-app/data/services.json'))) {
+      if (!row.department || !row.subservice) continue;
+      const list = (byDept[row.department] = byDept[row.department] || []);
+      if (!list.includes(row.subservice)) list.push(row.subservice);
+    }
+    const stampMap = vm.runInContext('DEPT_STAMP_NAMES', sb);
+    const real = vm.runInContext('SPOTS', sb).migrateStamps(sb.BUNDLED.map((p) => Object.assign({}, p)), stampMap, byDept);
+    sb.setPlacements(real.placements);
+    const deptOf = (loc) => { const s = loc && real.placements.find((p) => p.id === loc.spotId); return s ? s.dept : null; };
+    const csso = sb.resolve(CSWD, 'Competency Assessment');          // from SERVICE_DEFAULT_ENTRANCE
+    const cao = sb.resolve(CAO, 'Competency Assessment');
+    const caoOnly = byDept[CAO].find((s) => !(byDept[CSWD] || []).includes(s));
+    const cross = sb.resolve(CSWD, caoOnly);
+    sb.setPlacements(keep);
+    ok('I3 real map: CSSO + "Competency Assessment" from the GF entrance routes to a CSSO spot',
+       deptOf(csso) === CSWD && csso.kind === 'office', JSON.stringify(csso));
+    ok('I3 real map: ...named City Social Services Office', ctx.f(csso, CSWD) === 'City Social Services Office', ctx.f(csso, CSWD));
+    ok('I3 real map: CAO + "Competency Assessment" routes to a CAO spot', deptOf(cao) === CAO, JSON.stringify(cao));
+    ok('I3 real map: ...named City Assessment Office', ctx.f(cao, CAO) === 'City Assessment Office', ctx.f(cao, CAO));
+    ok('I3 real map: CSSO asked for a service only CAO lists (' + caoOnly + ') routes to a CAO spot',
+       deptOf(cross) === CAO, JSON.stringify(cross));
+    ok('I3 real map: ...and is named City Assessment Office (label and arrival card)',
+       cross && cross.label === 'City Assessment Office' && ctx.f(cross, CSWD) === 'City Assessment Office',
+       cross && (cross.label + ' / ' + ctx.f(cross, CSWD)));
+  }
 }
 const at = (f) => html.indexOf('js/' + f + '?v=');
-ok('index.html loads spots.js?v=3 (bumped by the final review fixes)', /<script src="js\/spots\.js\?v=3"><\/script>/.test(html));
+ok('index.html loads spots.js?v=4 (bumped by the I3 residual fix)', /<script src="js\/spots\.js\?v=4"><\/script>/.test(html));
 ok('  after stamp_presets.js and before service_locations.js',
    at('spots.js') > at('stamp_presets.js') && at('spots.js') < at('service_locations.js'));
 

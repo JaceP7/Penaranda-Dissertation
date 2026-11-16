@@ -1022,9 +1022,11 @@ function navigateToDepartment(deptName, subservice, answerText, presetLoc) {
   renderer.destSpotId = loc.spotId || null;
   // Sent to an office that also keeps its own desk in the corridor: say so
   // once, with the route's first message, since they may be asked to line up there.
+  // loc.dept is the office routed to, which can be another office than the one
+  // asked when only that office lists the service.
   const deskLang = (typeof CHAT !== 'undefined' && CHAT.lang === 'fil') ? 'fil' : 'en';
   const deskNote = (loc.kind === 'office' && typeof ownDeskNote === 'function')
-    ? ownDeskNote(deptName, _navDestLabel, deskLang) : '';
+    ? ownDeskNote(loc.dept || deptName, _navDestLabel, deskLang) : '';
   const routeToast = (msg) => _showStairToast(deskNote ? `${msg} ${deskNote}` : msg);
 
   const crossFloor = loc.floor !== STATE.currentFloor;

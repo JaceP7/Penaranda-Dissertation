@@ -68,13 +68,20 @@ ok('OSCA desk is a place', ids(SPOTS.placesFor(all, OSCA, 'Anything')) === '3');
 ok('Cedula -> only the desk behind', ids(SPOTS.placesFor(all, CTMO, 'Cedula')) === '4');
 ok('other CTMO service -> desk is not a place', ids(SPOTS.placesFor(all, CTMO, 'Permit')) === '5');
 
-// I3 (final review): a service added to another office's spot is a place for it too.
+// I3 (final review): a service added to another office's spot is a place for it
+// too, but only when the asked office has no spot (or own desk) listing it
+// (I3 residual, 2026-11-17: the resolver picks the nearest, so order alone
+// would let another office win).
 {
   const cashier = { id: 6, kind: 'office', dept: CTMO, services: ['Birth Certificate'], row: 50, col: 50, size: 2, floor: 1 };
   const order = (a) => a.map((p) => p.id).join(',');
-  ok('I3: the asked office\'s spots listing the service come first, then other offices\' spots listing it',
-     order(SPOTS.placesFor([...all, cashier], CCRO, 'Birth Certificate')) === '2,6',
+  ok('I3: the asked office\'s spots listing the service are the places; other offices\' spots listing it are not',
+     order(SPOTS.placesFor([...all, cashier], CCRO, 'Birth Certificate')) === '2',
      order(SPOTS.placesFor([...all, cashier], CCRO, 'Birth Certificate')));
+  const ccroDesk = { id: 9, kind: 'desk', dept: CCRO, services: [], deskBehind: false, row: 70, col: 70, size: 1, floor: 1 };
+  ok('I3: ...with the asked office\'s own desks after them, still no other office',
+     order(SPOTS.placesFor([...all, cashier, ccroDesk], CCRO, 'Birth Certificate')) === '2,9',
+     order(SPOTS.placesFor([...all, cashier, ccroDesk], CCRO, 'Birth Certificate')));
   const onlyThere = { ...cashier, services: ['Marriage License'] };
   ok('I3: listed only by another office -> that office\'s spot, not every CCRO spot',
      order(SPOTS.placesFor([o1, o2, onlyThere], CCRO, 'Marriage License')) === '6',
@@ -82,8 +89,8 @@ ok('other CTMO service -> desk is not a place', ids(SPOTS.placesFor(all, CTMO, '
   ok('I3: listed by nobody -> all of the asked office\'s spots, as before',
      ids(SPOTS.placesFor([...all, cashier], CCRO, 'Death Certificate')) === '1,2');
   const ccroCedula = { id: 7, kind: 'office', dept: CCRO, services: ['Cedula'], row: 60, col: 60, size: 2, floor: 1 };
-  ok('I3: an own desk ticked for the service still stands in for the own office, other offices follow',
-     order(SPOTS.placesFor([...all, ccroCedula], CTMO, 'Cedula')) === '4,7',
+  ok('I3: an own desk ticked for the service still stands in for the own office; other offices\' spots are not places',
+     order(SPOTS.placesFor([...all, ccroCedula], CTMO, 'Cedula')) === '4',
      order(SPOTS.placesFor([...all, ccroCedula], CTMO, 'Cedula')));
   ok('I3: the asked office\'s own desks come before other offices\' spots',
      order(SPOTS.placesFor([...all, { ...cashier, dept: CCRO, id: 8, services: ['Anything'] }], OSCA, 'Anything')) === '3,8',
