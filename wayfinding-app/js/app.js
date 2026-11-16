@@ -99,6 +99,7 @@ function setViewMode(mode) {
     document.body.classList.remove('route-active');   // admin sees the full map
     if (typeof _hideNavStep === 'function') _hideNavStep();
     if (typeof _refreshDraftBadge === 'function') _refreshDraftBadge();
+    if (typeof SPOT_EDITOR !== 'undefined') SPOT_EDITOR.refreshPanel();   // migration banner
   } else if (!_previewingAsCitizen) {
     // Leaving admin for real: drop the cached publish token so a shared or kiosk
     // device cannot publish after the admin walks away.
@@ -1567,6 +1568,8 @@ document.addEventListener('DOMContentLoaded', () => {
   _dock('dockPaint',  () => setWallMode(!STATE.wallMode));
   _dock('dockSelect', () => setSelectMode(!STATE.selectMode));
   _dock('dockStamp',  () => setToolsPanel(!STATE.panelOpen));
+  _dock('dockOffices', () => { if (typeof SPOT_EDITOR !== 'undefined') SPOT_EDITOR.togglePanel(); });
+  _dock('officesBtn',  () => { if (typeof SPOT_EDITOR !== 'undefined') SPOT_EDITOR.togglePanel(); });
   _dock('dockUndo',   undo);
   _dock('dockRedo',   redo);
 
@@ -2305,6 +2308,7 @@ function reset() {
 function setToolsPanel(open) {
   if (open && STATE.wallMode)    setWallMode(false);
   if (open && STATE.captureMode) setCaptureMode(false);
+  if (open && typeof SPOT_EDITOR !== 'undefined') SPOT_EDITOR.closePanel();   // one sheet at a time
   STATE.panelOpen    = open;
   STATE.stampMode    = open;
   renderer.stampMode = open;
@@ -3195,15 +3199,34 @@ function _arrivalGoHome() {
 
 // ── Grid persistence (localStorage + server sync) ─────────────────────────────
 
+// Requirement texts an admin removed, per "<subservice>|<dept>". Storing what
+// was removed (not what is kept) means new or reworded Charter items still show.
+// Published with the map; Task 6's requirements step reads and writes it.
+let REMOVED_REQUIREMENTS = (() => {
+  try {
+    const v = JSON.parse(localStorage.getItem('wf-removed-requirements') || '{}');
+    return (v && typeof v === 'object' && !Array.isArray(v)) ? v : {};
+  } catch (_) { return {}; }
+})();
+
+function saveRemovedRequirements() {
+  try { localStorage.setItem('wf-removed-requirements', JSON.stringify(REMOVED_REQUIREMENTS)); } catch (_) {}
+}
+
 function _buildStatePayload() {
   const allFloors = Object.assign({}, FLOOR_WALLS);
   allFloors[STATE.currentFloor] = NODES.map(n => n.cellType || 'open');
-  return {
+  const payload = {
     grid: { floorWalls: allFloors, currentFloor: STATE.currentFloor },
     stampPlacements: STAMP_PLACEMENTS,
     stampPresets:    STAMP_PRESETS,
     floorNames:      _floorNames,
   };
+  // Schema 2 = office spots. Only once a placement carries `kind`, so an old
+  // map published from this build still reads as the old stamp model.
+  if (STAMP_PLACEMENTS.some(p => p.kind)) payload.schema = 2;
+  payload.removedRequirements = REMOVED_REQUIREMENTS;   // last: see _mapFingerprint
+  return payload;
 }
 
 function _applyStatePayload(data) {
@@ -3229,6 +3252,11 @@ function _applyStatePayload(data) {
     STAMP_PLACEMENTS.length = 0;
     STAMP_PLACEMENTS.push(...data.stampPlacements);
     localStorage.setItem('gridPathfinder_stampPlacements', JSON.stringify(STAMP_PLACEMENTS));
+  }
+  // Removed requirements (schema 2)
+  if (data.removedRequirements && typeof data.removedRequirements === 'object' && !Array.isArray(data.removedRequirements)) {
+    REMOVED_REQUIREMENTS = JSON.parse(JSON.stringify(data.removedRequirements));
+    try { localStorage.setItem('wf-removed-requirements', JSON.stringify(REMOVED_REQUIREMENTS)); } catch (_) {}
   }
   // Stamp presets
   if (Array.isArray(data.stampPresets)) {
@@ -3727,6 +3755,14 @@ const ADMIN_NAME_LS_KEY    = 'wf-admin-name';       // who is editing, for the a
 
 /** FNV-1a over the serialised payload. Cheap, and we only need change detection. */
 function _mapFingerprint(payload) {
+  // An empty removedRequirements hashes as if absent: every device fingerprinted
+  // its map before the field existed, and would otherwise read as having
+  // unpublished edits (and then refuse newer published maps).
+  const rr = payload && payload.removedRequirements;
+  if (rr && typeof rr === 'object' && Object.keys(rr).length === 0) {
+    payload = Object.assign({}, payload);
+    delete payload.removedRequirements;
+  }
   const s = JSON.stringify(payload);
   let h = 0x811c9dc5;
   for (let i = 0; i < s.length; i++) {
@@ -3795,7 +3831,10 @@ function _refreshDraftBadge() {
 
 /** Count what differs between the working map and the published one. */
 function _diffMapStates(mine, live) {
-  const out = { cells: 0, floors: [], stampsAdded: 0, stampsRemoved: 0, stampsMoved: 0, namesChanged: 0 };
+  const out = { cells: 0, floors: [], stampsAdded: 0, stampsRemoved: 0, stampsMoved: 0, namesChanged: 0,
+                officesAssigned: 0, desksAdded: 0, desksRemoved: 0, requirementsChanged: 0,
+                requirementsRestored: 0, spotsChanged: 0,
+                assigned: [], deskAdds: [], deskRemovals: [], requirements: [] };
   if (!live) return out;
 
   const a = (mine.grid && mine.grid.floorWalls) || {};
@@ -3810,18 +3849,60 @@ function _diffMapStates(mine, live) {
 
   const mapById = (arr) => Object.fromEntries((arr || []).map((p) => [p.id, p]));
   const am = mapById(mine.stampPlacements), bm = mapById(live.stampPlacements);
+  const isDesk = (p) => !!p && p.kind === 'desk';
+  const front = (list, desk) => (typeof SPOTS !== 'undefined' ? SPOTS.frontOf(list || [], desk) : null);
+  // What a spot holds, apart from where it is.
+  const holds = (p) => JSON.stringify([p.kind || null, p.dept || null, p.services || null,
+    p.otherKey || null, !!p.deskBehind, p.confirmedAt || null]);
   for (const id of Object.keys(am)) {
-    if (!bm[id]) { out.stampsAdded++; continue; }
     const p = am[id], q = bm[id];
-    if (p.row !== q.row || p.col !== q.col || p.floor !== q.floor || p.name !== q.name) out.stampsMoved++;
+    if (isDesk(p) && !isDesk(q)) {               // a desk is not a room
+      out.desksAdded++;
+      out.deskAdds.push({ dept: p.dept, floor: p.floor, name: p.name, front: front(mine.stampPlacements, p) });
+      continue;
+    }
+    if (!q) out.stampsAdded++;
+    else if (p.row !== q.row || p.col !== q.col || p.floor !== q.floor || p.name !== q.name) out.stampsMoved++;
+    if (p.kind === 'office' && p.dept && !(q && q.kind === 'office' && q.dept === p.dept)) {
+      out.officesAssigned++;
+      out.assigned.push({ dept: p.dept, floor: p.floor, name: p.name });
+    } else if (q && holds(p) !== holds(q)) {
+      out.spotsChanged++;
+    }
   }
-  for (const id of Object.keys(bm)) if (!am[id]) out.stampsRemoved++;
+  for (const id of Object.keys(bm)) {
+    const q = bm[id], p = am[id];
+    if (isDesk(q) && !isDesk(p)) {
+      out.desksRemoved++;
+      out.deskRemovals.push({ dept: q.dept, floor: q.floor, name: q.name, front: front(live.stampPlacements, q) });
+      continue;
+    }
+    if (!p) out.stampsRemoved++;
+  }
+
+  // Removed requirements, per "<subservice>|<dept>".
+  const ar = mine.removedRequirements || {}, br = live.removedRequirements || {};
+  for (const key of new Set([...Object.keys(ar), ...Object.keys(br)])) {
+    const x = ar[key] || [], y = br[key] || [];
+    const removed = x.filter((t) => !y.includes(t)).length;
+    const restored = y.filter((t) => !x.includes(t)).length;
+    if (!removed && !restored) continue;
+    const cut = key.lastIndexOf('|');
+    out.requirementsChanged += removed;
+    out.requirementsRestored += restored;
+    out.requirements.push({ service: cut < 0 ? key : key.slice(0, cut), removed, restored });
+  }
 
   const an = mine.floorNames || {}, bn = live.floorNames || {};
   for (const k of new Set([...Object.keys(an), ...Object.keys(bn)])) {
     if ((an[k] || '') !== (bn[k] || '')) out.namesChanged++;
   }
   return out;
+}
+
+/** Short floor code used in spot names: "LG", "GF", "2F", "3F". */
+function _floorShort(f) {
+  return ({ 0: 'LG', 1: 'GF', 2: '2F', 3: '3F' })[f] || ('F' + f);
 }
 
 /** Plain-language summary of a diff, for the publish confirmation. */
@@ -3838,6 +3919,28 @@ function _describeDiff(d) {
   if (d.stampsRemoved) bits.push(`${d.stampsRemoved} room${d.stampsRemoved === 1 ? '' : 's'} removed`);
   if (d.stampsMoved)   bits.push(`${d.stampsMoved} room${d.stampsMoved === 1 ? '' : 's'} moved or renamed`);
   if (d.namesChanged)  bits.push(`${d.namesChanged} floor name${d.namesChanged === 1 ? '' : 's'} changed`);
+
+  // Office spots, desks and requirements (schema 2). A first migration assigns
+  // dozens of spots at once, so each list stops after a few lines.
+  const MAX = 10;
+  const list = (lines, what) => {
+    lines.slice(0, MAX).forEach((l) => bits.push(l));
+    if (lines.length > MAX) bits.push(`and ${lines.length - MAX} more ${what}`);
+  };
+  const code = (x) => (x.dept ? DEPT_CODE(x.dept) : x.name);
+  const frontName = (f) => (f.kind === 'office' && f.dept ? _officeTitle(f.dept) : f.name);
+  const deskWhere = (x) => (x.front ? `in front of ${frontName(x.front)}` : `on ${_floorShort(x.floor)}`);
+  list((d.assigned || []).map((a) => `${DEPT_CODE(a.dept)} assigned to ${_floorShort(a.floor)} spot ${a.name}`),
+       'office assignments');
+  list((d.deskAdds || []).map((x) => `Desk added ${deskWhere(x)} (${code(x)})`), 'desks added');
+  list((d.deskRemovals || []).map((x) => `Desk removed ${deskWhere(x)} (${code(x)})`), 'desks removed');
+  const reqLines = [];
+  for (const r of d.requirements || []) {
+    if (r.removed)  reqLines.push(`${r.service}: ${r.removed} requirement${r.removed === 1 ? '' : 's'} removed`);
+    if (r.restored) reqLines.push(`${r.service}: ${r.restored} requirement${r.restored === 1 ? '' : 's'} put back`);
+  }
+  list(reqLines, 'requirement changes');
+  if (d.spotsChanged) bits.push(`${d.spotsChanged} other spot change${d.spotsChanged === 1 ? '' : 's'} (services, places or desks)`);
   return bits.length ? bits.map((b) => '  • ' + b).join('\n') : '  • no differences detected';
 }
 
@@ -3866,6 +3969,10 @@ function _applyCloudState(state) {
     STAMP_PLACEMENTS.length = 0;
     STAMP_PLACEMENTS.push(...state.stampPlacements);
     try { localStorage.setItem('gridPathfinder_stampPlacements', JSON.stringify(STAMP_PLACEMENTS)); } catch (_) {}
+  }
+  if (state.removedRequirements && typeof state.removedRequirements === 'object' && !Array.isArray(state.removedRequirements)) {
+    REMOVED_REQUIREMENTS = JSON.parse(JSON.stringify(state.removedRequirements));
+    try { localStorage.setItem('wf-removed-requirements', JSON.stringify(REMOVED_REQUIREMENTS)); } catch (_) {}
   }
   if (state.floorNames && typeof state.floorNames === 'object') {
     Object.assign(_floorNames, state.floorNames);
@@ -4064,7 +4171,9 @@ async function publishMapToCloud(force) {
 
   const diff = _diffMapStates(mine, live && live.state);
   if (!force && live && live.state && diff.cells === 0 && !diff.stampsAdded &&
-      !diff.stampsRemoved && !diff.stampsMoved && !diff.namesChanged) {
+      !diff.stampsRemoved && !diff.stampsMoved && !diff.namesChanged &&
+      !diff.officesAssigned && !diff.desksAdded && !diff.desksRemoved &&
+      !diff.requirementsChanged && !diff.requirementsRestored && !diff.spotsChanged) {
     alert('Nothing to publish — this device already matches the live map.');
     _rememberPublished(live.version, _mapFingerprint(mine));
     return;
@@ -4318,6 +4427,7 @@ function goToStamp(id) {
 
 function renderCatalogue() {
   _scheduleDraftBadge();   // room add/move/rename also diverges from the live map
+  if (typeof SPOT_EDITOR !== 'undefined') SPOT_EDITOR.refreshPanel();   // Offices panel + banner
   const list = DOM.catalogueList;
 
   if (STAMP_PLACEMENTS.length === 0) {

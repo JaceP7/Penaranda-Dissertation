@@ -2553,7 +2553,8 @@ body.view-user .zoom-ctrls { display: none !important; }
 #dockPaint.active               { background: #F59E0B; color: #1C1917; }
 #dockSelect.active              { background: #2563EB; color: #FFFFFF; }
 #dockStamp.active               { background: #7C3AED; color: #FFFFFF; }
-.dock-hist { flex: 0 0 58px; }
+#dockOffices.active             { background: #0F766E; color: #FFFFFF; }
+.dock-hist { flex: 0 0 48px; }   /* five tools still get 44 px on a 360 px phone */
 .dock-sep { flex: 0 0 1px; background: rgba(255, 255, 255, 0.16); margin: 8px 2px; }
 
 /* ── Map editor on a phone ──────────────────────────────────────────
@@ -2692,4 +2693,84 @@ body.view-user .zoom-ctrls { display: none !important; }
   body.view-admin .editor-dock { padding-top: 4px; padding-bottom: calc(4px + env(safe-area-inset-bottom, 0px)); }
   body.view-admin .dock-btn { flex-direction: row; gap: 6px; min-height: 48px; }
   body.view-admin .hint-bar { display: none; }
+}
+
+/* ── Offices panel and the migration banner (spot_editor.js) ─────────
+   Editor only. Laptop: a card over the left of the map. Phone: a sheet from
+   the bottom, like the stamp tools. Every button is at least 44 px tall. */
+.spot-migration-banner {
+  position: absolute; left: 12px; right: 68px; bottom: 12px; z-index: 44;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  padding: 12px 14px; border-radius: 12px;
+  background: #FEF3C7; border: 1px solid #FCD34D; color: #78350F;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.18);
+}
+.spot-migration-banner[hidden], body.view-user .spot-migration-banner { display: none !important; }
+.smb-text { flex: 1 1 260px; margin: 0; font-size: 0.86rem; line-height: 1.4; font-weight: 600; }
+.smb-btns { display: flex; gap: 8px; flex: 0 0 auto; }
+.smb-btn {
+  min-height: 44px; padding: 0 16px; border-radius: 10px; cursor: pointer;
+  font: inherit; font-size: 0.86rem; font-weight: 700;
+  border: 1px solid #B45309; background: #FFFFFF; color: #92400E;
+}
+.smb-btn.smb-primary { background: #B45309; color: #FFFFFF; }
+.smb-btn:disabled { opacity: 0.6; cursor: progress; }
+
+.offices-panel {
+  position: absolute; top: 12px; left: 12px; z-index: 46;
+  width: min(360px, calc(100% - 92px)); max-height: calc(100% - 24px);
+  display: flex; flex-direction: column;
+  background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.22); overflow: hidden;
+}
+.offices-panel[hidden], body.view-user .offices-panel { display: none !important; }
+.offices-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 8px 8px 8px 16px; border-bottom: 1px solid #E5E7EB;
+}
+.offices-title { margin: 0; font-size: 1rem; font-weight: 700; color: #111827; }
+.offices-close {
+  min-height: 44px; min-width: 64px; padding: 0 12px; border-radius: 10px; cursor: pointer;
+  border: 1px solid #CBD5E1; background: #FFFFFF; color: #1E293B; font: inherit; font-size: 0.85rem; font-weight: 600;
+}
+.offices-body { overflow-y: auto; overscroll-behavior: contain; padding: 4px 16px 16px; }
+.offices-sec { padding: 10px 0; border-bottom: 1px solid #F1F5F9; }
+.offices-sec:last-child { border-bottom: none; }
+.offices-sec-title { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 0.92rem; font-weight: 700; color: #111827; }
+.offices-count {
+  min-width: 24px; padding: 1px 8px; border-radius: 999px; text-align: center;
+  background: #E2E8F0; color: #1E293B; font-size: 0.78rem; font-weight: 700;
+}
+.offices-help { margin: 4px 0 8px; font-size: 0.78rem; line-height: 1.4; color: #4B5563; }
+.offices-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.offices-item { margin: 0; }
+.offices-text { padding: 6px 0; font-size: 0.85rem; color: #1F2937; }
+.offices-empty { padding: 4px 0; font-size: 0.82rem; color: #6B7280; }
+.offices-go {
+  width: 100%; min-height: 44px; padding: 8px 10px; border-radius: 10px; cursor: pointer;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left;
+  border: 1px solid #E2E8F0; background: #F8FAFC; color: #1F2937; font: inherit;
+}
+.offices-go strong { font-size: 0.86rem; }
+.offices-go span { font-size: 0.78rem; color: #4B5563; }
+.offices-desk { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.offices-desk .offices-go { flex: 1 1 180px; width: auto; }
+.offices-desk-btns { display: flex; gap: 6px; }
+.offices-btn {
+  min-height: 44px; min-width: 76px; padding: 0 12px; border-radius: 10px; cursor: pointer;
+  font: inherit; font-size: 0.85rem; font-weight: 700;
+}
+.offices-confirm { border: 1px solid #0F766E; background: #0F766E; color: #FFFFFF; }
+.offices-remove  { border: 1px solid #B91C1C; background: #FFFFFF; color: #B91C1C; }
+
+@media (max-width: 640px), (orientation: landscape) and (max-height: 500px) {
+  body.view-admin .offices-panel {
+    top: auto; left: 0; right: 0; bottom: 0; width: auto; max-height: 58%;
+    border-radius: 16px 16px 0 0; border-left: none; border-right: none; border-bottom: none;
+    box-shadow: 0 -6px 24px rgba(15, 23, 42, 0.18);
+  }
+  body.view-admin .spot-migration-banner { left: 8px; right: 8px; bottom: 8px; }
+  body.view-admin .smb-btns { flex: 1 1 100%; }
+  body.view-admin .smb-btn { flex: 1 1 0; }
+  body.view-admin .canvas-wrap:has(.offices-panel:not([hidden])) .zoom-ctrls { display: none; }
 }

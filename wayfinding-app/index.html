@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Calamba City Hall — Wayfinding System</title>
-  <link rel="stylesheet" href="css/app.css?v=68" />
+  <link rel="stylesheet" href="css/app.css?v=69" />
 </head>
 <body class="view-user">
 
@@ -50,6 +50,7 @@
         <button id="wallModeBtn"   class="btn btn-wall"     aria-pressed="false">🧱 Wall Mode</button>
         <button id="selectModeBtn" class="btn btn-select"   aria-pressed="false">⬚ Select</button>
         <button id="stampModeBtn"  class="btn btn-stamp"    aria-pressed="false">🔲 Stamp &amp; Places</button>
+        <button id="officesBtn"    class="btn btn-ghost btn-offices" title="Offices that need checking, offices not on the map yet, and desks to confirm">Offices</button>
         <button id="clearWallsBtn" class="btn btn-ghost">Clear Walls</button>
         <button id="resetBtn"      class="btn btn-ghost">Reset</button>
         <button id="newMapBtn"     class="btn btn-ghost btn-new-map" title="Erase all floors and start fresh">🗑 New Map</button>
@@ -183,6 +184,16 @@
       </canvas>
 
       <!-- Editor zoom: one tap is about a third closer; Fit shows the whole floor. -->
+      <!-- Admin only, while the loaded map still uses the old office stamps.
+           spot_editor.js shows it; "Not now" hides it for this session. -->
+      <div id="spotMigrationBanner" class="spot-migration-banner" role="region" aria-label="Move the old office markers" hidden>
+        <p class="smb-text">This map still uses the old office markers. Move them to office spots now? Nothing changes for citizens until you publish.</p>
+        <div class="smb-btns">
+          <button id="spotMigrateBtn" type="button" class="smb-btn smb-primary">Move them</button>
+          <button id="spotMigrateLater" type="button" class="smb-btn">Not now</button>
+        </div>
+      </div><!-- /spotMigrationBanner -->
+
       <div class="zoom-ctrls" role="group" aria-label="Zoom the map">
         <button id="zoomInBtn"  class="zoom-btn" aria-label="Zoom in" title="Zoom in"><span data-icon="plus"></span></button>
         <button id="zoomOutBtn" class="zoom-btn" aria-label="Zoom out" title="Zoom out"><span data-icon="minus"></span></button>
@@ -251,6 +262,32 @@
         </div>
 
       </div><!-- /toolsPanel -->
+
+      <!-- Offices panel (admin): what still needs a person's eye after the move
+           to office spots. Edits here are map edits; they go live on Publish. -->
+      <section id="officesPanel" class="offices-panel" aria-labelledby="officesPanelTitle" hidden>
+        <div class="offices-head">
+          <h2 id="officesPanelTitle" class="offices-title">Offices</h2>
+          <button id="officesPanelClose" type="button" class="offices-close">Close</button>
+        </div>
+        <div class="offices-body">
+          <section id="checkTheseSection" class="offices-sec" aria-labelledby="checkTheseTitle">
+            <h3 id="checkTheseTitle" class="offices-sec-title">Check these <span id="checkTheseCount" class="offices-count">0</span></h3>
+            <p class="offices-help">Markers that could not be matched to one office. Tap one to see it on the map.</p>
+            <ul id="checkTheseList" class="offices-list"></ul>
+          </section>
+          <section class="offices-sec" aria-labelledby="unplacedTitle">
+            <h3 id="unplacedTitle" class="offices-sec-title">Not on the map yet <span id="unplacedCount" class="offices-count">0</span></h3>
+            <p class="offices-help">Offices in the Citizen's Charter with no spot or desk of their own.</p>
+            <ul id="unplacedList" class="offices-list"></ul>
+          </section>
+          <section class="offices-sec" aria-labelledby="staleTitle">
+            <h3 id="staleTitle" class="offices-sec-title">Still here? <span id="staleCount" class="offices-count">0</span></h3>
+            <p class="offices-help">Desks nobody has confirmed for 30 days. Confirm the desk is still there, or remove it.</p>
+            <ul id="staleList" class="offices-list"></ul>
+          </section>
+        </div>
+      </section><!-- /officesPanel -->
     </div>
 
     <!-- Stair floor-change toast (simple confirmation) -->
@@ -343,6 +380,7 @@
     <button id="dockPaint"  class="dock-btn" aria-pressed="false"><span class="dock-ico" data-icon="brush"></span><span class="dock-lbl">Paint</span></button>
     <button id="dockSelect" class="dock-btn" aria-pressed="false"><span class="dock-ico" data-icon="select"></span><span class="dock-lbl">Select</span></button>
     <button id="dockStamp"  class="dock-btn" aria-pressed="false"><span class="dock-ico" data-icon="stamp"></span><span class="dock-lbl">Stamp</span></button>
+    <button id="dockOffices" class="dock-btn" aria-pressed="false"><span class="dock-ico" data-icon="map-pin"></span><span class="dock-lbl">Offices</span></button>
     <span class="dock-sep" aria-hidden="true"></span>
     <button id="dockUndo"   class="dock-btn dock-hist" disabled aria-label="Undo"><span class="dock-ico" data-icon="undo"></span><span class="dock-lbl">Undo</span></button>
     <button id="dockRedo"   class="dock-btn dock-hist" disabled aria-label="Redo"><span class="dock-ico" data-icon="redo"></span><span class="dock-lbl">Redo</span></button>
@@ -463,7 +501,9 @@
   <script src="js/renderer.js?v=42"></script>
   <script src="js/compass.js?v=31"></script>
   <script src="js/nav.js?v=42"></script>
-  <script src="js/app.js?v=93"></script>
+  <script src="js/app.js?v=94"></script>
+  <script src="js/charter_pick.js?v=1"></script>
+  <script src="js/spot_editor.js?v=1"></script>
   <script src="js/chat.js?v=46"></script>
 
 </body>

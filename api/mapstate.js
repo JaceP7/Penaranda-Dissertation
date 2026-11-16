@@ -24,6 +24,11 @@
  * Rollback is forward-only: restoring version 3 writes a NEW version carrying v3's
  * state. Nothing is ever destroyed, so a mistaken rollback is itself reversible.
  *
+ * The state is stored exactly as sent, with no field whitelist. Schema 2 maps
+ * (office spots) carry `schema: 2`, spot fields on each placement (`kind`,
+ * `dept`, `services`, ...) and `removedRequirements`; publish and rollback keep
+ * them all. Do not add a whitelist here without listing those fields.
+ *
  * Env:
  *   UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN  (storage)
  *   MAP_ADMIN_TOKEN                                    (publish password)
