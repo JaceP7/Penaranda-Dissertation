@@ -182,13 +182,35 @@ function _spotCell(p) {
   return { floor: p.floor, row: p.row, col: p.col, name: p.name, size: p.size || 1, spot: p };
 }
 
-/** "OSCA desk, in front of GF 14 CSWD": the desk and the nearest office spot. */
+/**
+ * "CITY SOCIAL SERVICES OFFICE" -> "City Social Services Office": the same rule
+ * as app.js _officeTitle (which loads after this file), so citizens read the
+ * office, not the Charter's capitals. Mixed-case names are left as they are.
+ */
+function _svcOfficeTitle(name) {
+  const s = String(name || "");
+  if (/[a-z]/.test(s)) return s;
+  const SMALL = ["and", "of", "the", "for", "with", "a", "an", "in", "on", "to", "at", "ng", "sa"];
+  const KEEP = ["MO", "PWD", "SP", "BPLO", "PESO", "POSO", "OSCA"];
+  return s.split(" ").map((w, i) => {
+    if (KEEP.includes(w)) return w;
+    const lower = w.toLowerCase();
+    if (i > 0 && SMALL.includes(lower)) return lower;
+    return lower.replace(/(^|[-'’])([a-z])/g, (m, p, c) => (p === "'" || p === "’" ? m : p + c.toUpperCase()));
+  }).join(" ");
+}
+
+/**
+ * "OSCA desk, in front of City Social Services Office": the desk and the
+ * nearest spot with an office, named by its office (never a stamp code).
+ */
 function _deskPhrase(desk) {
   const name  = String(desk.name || "").trim();
   const short = name.replace(/\s+desk$/i, "");
   const front = SPOTS.frontOf(STAMP_PLACEMENTS, desk);
   if (!front) return name || "Desk";
-  return `${short || "Desk"} desk, in front of ${front.name}`;
+  const frontName = (front.kind === "office" && front.dept) ? _svcOfficeTitle(front.dept) : front.name;
+  return `${short || "Desk"} desk, in front of ${frontName}`;
 }
 
 /**

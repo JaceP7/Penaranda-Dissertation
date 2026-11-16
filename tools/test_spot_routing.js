@@ -34,6 +34,7 @@ vm.runInContext(read('wayfinding-app/js/service_locations.js') +
   '\n;this.resolve = resolveServiceLocation; this.status = serviceLocationStatus;' +
   'this.describe = describeOfficeLocation; this.HELP = OFFICE_HELP_DEPT;' +
   'this.ownDeskNote = typeof ownDeskNote === "function" ? ownDeskNote : null;' +
+  'this.officeTitle = typeof _svcOfficeTitle === "function" ? _svcOfficeTitle : null;' +
   'this.buildAdjacency = buildAdjacency; this.BUNDLED = STAMP_PLACEMENTS_BUNDLED;' +
   // data.js owns STAMP_PLACEMENTS (a const array), so the test refills it in place.
   'this.setPlacements = (a) => { STAMP_PLACEMENTS.length = 0; STAMP_PLACEMENTS.push(...a); };' +
@@ -72,8 +73,25 @@ let r = sb.resolve(OSCA, 'Senior Citizens ID');
 ok('"Senior Citizens ID" for OSCA resolves to the OSCA desk cell',
    r && r.floor === 1 && r.row === 34 && r.col === 11, JSON.stringify(r));
 ok('  as the desk spot, kind desk', r && r.spotId === 'd-osca' && r.kind === 'desk', JSON.stringify(r));
-ok('  with a deskPhrase "in front of" the nearest office spot',
-   r && r.deskPhrase === 'OSCA desk, in front of GF 14 CSWD', r && r.deskPhrase);
+// Citizens read the office the desk stands in front of, in title case, never
+// the stamp code (spec section 3; coordinator ruling, fix round 1).
+ok('  with a deskPhrase "in front of" the nearest office, by its office name',
+   r && r.deskPhrase === 'OSCA desk, in front of City Social Services Office', r && r.deskPhrase);
+ok('  and no stamp code in it', r && !/GF 14|CSWD/.test(r.deskPhrase), r && r.deskPhrase);
+{
+  // The office title follows app.js _officeTitle exactly (app.js loads later,
+  // so service_locations.js keeps its own copy).
+  const src = read('wayfinding-app/js/app.js');
+  const i = src.indexOf('function _officeTitle(');
+  const ctx = {}; vm.createContext(ctx);
+  const end = i < 0 ? -1 : src.slice(i).search(/\r?\n\}\r?\n/);
+  vm.runInContext((i < 0 || end < 0 ? 'function _officeTitle(n) { return null; }' :
+                   src.slice(i, i + end) + '\n}') + ';this.f = _officeTitle;', ctx);
+  const names = [CSWD, OSCA, BPLO, 'PERSONS WITH DISABILITY AFFAIRS OFFICE', "MAYOR'S OFFICE PUBLIC ASSISTANCE CENTER",
+                 'CITY DISASTER RISK REDUCTION AND MANAGEMENT DIVISION - MO', 'Already Mixed Case'];
+  const diff = names.filter((n) => !sb.officeTitle || sb.officeTitle(n) !== ctx.f(n));
+  ok('the front office is titled by the same rule as app.js _officeTitle', diff.length === 0, diff.join('; '));
+}
 ok('  and keeps today\'s shape (label, stampName)', r && r.label === OSCA && r.stampName === 'OSCA desk',
    JSON.stringify(r));
 ok('serviceLocationStatus(OSCA) is mapped', sb.status(OSCA) === 'mapped', sb.status(OSCA));
@@ -121,11 +139,12 @@ ok('  and is mapped', sb.status(COMELEC) === 'mapped');
 console.log('\n--- office sentences use the desk wording ---');
 d = sb.describe({ dept: OSCA, name: 'Office for the Senior Citizens Affairs', abbr: 'OSCA' }, 'en');
 ok('OSCA in English names the desk and what it is in front of',
-   /OSCA desk, in front of GF 14 CSWD/.test(d.text) && /Ground Floor/.test(d.text), d.text);
+   /OSCA desk, in front of City Social Services Office/.test(d.text) && /Ground Floor/.test(d.text) &&
+   !/GF 14/.test(d.text), d.text);
 ok('  and routes to OSCA', d.navDept === OSCA, d.navDept);
 d = sb.describe({ dept: OSCA, name: 'Office for the Senior Citizens Affairs', abbr: 'OSCA' }, 'fil');
 ok('OSCA in Filipino keeps the sentence and inserts the desk',
-   d.text.startsWith('Ang OSCA') && /ay nasa OSCA desk, in front of GF 14 CSWD/.test(d.text) &&
+   d.text.startsWith('Ang OSCA') && /ay nasa OSCA desk, in front of City Social Services Office/.test(d.text) &&
    /Ground Floor/.test(d.text), d.text);
 d = sb.describe({ dept: CCRO, name: 'City Civil Registry Office', abbr: 'CCRO' }, 'en');
 ok('an office spot keeps the position sentence',
@@ -161,12 +180,14 @@ const rend = read('wayfinding-app/js/renderer.js');
 const html = read('wayfinding-app/index.html');
 {
   const i = app.indexOf('function recompute()');
-  const body = i < 0 ? '' : app.slice(i, app.indexOf('\n}\n', i));
+  // app.js has CRLF line ends: a function ends at the first "}" alone on a line.
+  const fnEnd = (k) => { const e = app.slice(k).search(/\r?\n\}\r?\n/); return e < 0 ? k : k + e; };
+  const body = i < 0 ? '' : app.slice(i, fnEnd(i));
   ok('recompute() passes the desk cells to buildAdjacency',
      /const blocked = new Set\(SPOTS\.deskCells\(STAMP_PLACEMENTS, STATE\.currentFloor\)\)/.test(body) &&
      /buildAdjacency\(blocked\)/.test(body));
   const j = app.indexOf('function _nearestReachableCell(');
-  const reach = j < 0 ? '' : app.slice(j, app.indexOf('\n}\n', j));
+  const reach = j < 0 ? '' : app.slice(j, fnEnd(j));
   ok('  and the end snaps beside a desk, not onto it',
      /SPOTS\.deskCells\(STAMP_PLACEMENTS, STATE\.currentFloor\)/.test(reach) && /desks\.has\(nid\)/.test(reach));
 }
