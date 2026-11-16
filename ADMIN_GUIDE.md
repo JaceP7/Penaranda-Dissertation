@@ -115,7 +115,76 @@ Admin → **📍 Navigate** → **🏷 Gen QR** → enter floor/row/col → **Sa
 
 ---
 
-## 7. For the developer
+## 7. Offices, desks and services
+
+Offices, their services and their requirements are placed on the map as **office spots** and **desks**. Everything you pick comes from the Citizen's Charter, so the chat and the map always agree. Like every other map edit, nothing here reaches citizens until you publish (section 3).
+
+### Move the old markers (one time)
+
+When you open the editor on a map that still uses the old office markers, a banner says: *"This map still uses the old office markers. Move them to office spots now? Nothing changes for citizens until you publish."*
+
+- Tap **Move them**. Each old marker becomes an office spot.
+- Tap **Not now** to hide the banner for this session. It comes back next time.
+- Open the **Offices** panel afterwards. **Check these** lists markers that could not be matched to one office. Tap one to see it on the map, then fix it with the spot sheet below.
+
+### Open Offices mode
+
+Tap **Offices** (in the bar along the bottom on a phone, or in the header on a computer). Tap it again to leave. The **Offices** panel shows three lists:
+
+- **Check these**: markers that need a person to decide.
+- **Not on the map yet**: Charter offices that have no spot or desk.
+- **Still here?**: desks nobody has confirmed for 30 days.
+
+### Assign an office to a spot
+
+1. In Offices mode, tap a spot on the map. To make a new one, tap an empty square and choose **Add a spot here**.
+2. Choose **Assign an office** and start typing in **Office**. Tap the office in the list that appears.
+3. Under **Services**, tap **Add a service** and pick from the list. Tap a service chip to see its requirements.
+4. Tap **Save**.
+
+If you type something and nothing appears, the message says *"Not in the Charter. Only items in the Citizen's Charter can be added. If the office now asks for this, the Charter has to be updated first."* Offices, services and requirements cannot be invented here.
+
+To change the position, tap **Move**, then tap the new place. **Remove** deletes the spot after you confirm.
+
+### Other place
+
+For somewhere that is not a Charter office (for example a session hall), choose **Other place** and type its name. An other place has no services. Choose **No office yet** if you want the spot to show that wording until it is decided.
+
+### Services and requirements
+
+- Pick a service chip to open its **Requirements**. Tap the **x** on a requirement to remove it. It moves to **Removed**, where **Put back** restores it. Use **Add a requirement** to add one from the Charter.
+- A note on the sheet says: *"These requirements apply to this service everywhere this office offers it."* So a change made at one spot or desk applies to that service at the office's other spots and desks too.
+- **From the Citizen's Charter:** links to the page the requirements come from.
+- Requirements you remove are hidden from citizens in the chat too, once you publish.
+
+### Desks
+
+A desk is a table in a corridor that serves one office, such as OSCA in front of CSWD.
+
+1. In Offices mode, tap an empty corridor square and choose **Add desk here**.
+2. Under **Whose desk is this?** choose **The office behind it** (the office the desk stands in front of) or **Another office** (then type and pick the office).
+3. Tick the **Services at this desk**.
+4. Use **Smaller** or **Larger** to set the desk size.
+5. Tap **Save**.
+
+If the desk would block the way to an office, a warning says *"This desk blocks the way to ... Save anyway?"* Tap **Go back** to change the size or position, or **Save anyway** if the walkway is still fine. **Remove desk** takes it off the map after you confirm.
+
+### Still here?
+
+Desks are not permanent, so a desk that has not been confirmed for 30 days appears under **Still here?** in the Offices panel. For each one:
+
+- **Confirm**: the desk is still there. The 30 days start again.
+- **Remove**: the desk is gone. It is taken off the map.
+
+Tap the desk's name to see it on the map first.
+
+### Publishing
+
+All of the above are map edits, so the amber **Unpublished changes** badge appears. Use **Floors & publish**, then **Publish to all devices**, as in section 3. To try it safely first, use **Preview as citizen**.
+
+---
+
+## 8. For the developer
 
 Regression tests for the publishing logic (conflict detection, rollback, auth) run against a fake Redis, so they never touch live data:
 
