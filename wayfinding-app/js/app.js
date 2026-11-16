@@ -3970,8 +3970,13 @@ function _applyCloudState(state) {
     STAMP_PLACEMENTS.push(...state.stampPlacements);
     try { localStorage.setItem('gridPathfinder_stampPlacements', JSON.stringify(STAMP_PLACEMENTS)); } catch (_) {}
   }
-  if (state.removedRequirements && typeof state.removedRequirements === 'object' && !Array.isArray(state.removedRequirements)) {
-    REMOVED_REQUIREMENTS = JSON.parse(JSON.stringify(state.removedRequirements));
+  // The published map owns removedRequirements: a version without the field
+  // (published before schema 2) means none removed. Keeping the local value
+  // would let devices on the same version disagree and the next publish carry
+  // stale removals back. {} fingerprints the same as absent.
+  {
+    const rr = state.removedRequirements;
+    REMOVED_REQUIREMENTS = (rr && typeof rr === 'object' && !Array.isArray(rr)) ? JSON.parse(JSON.stringify(rr)) : {};
     try { localStorage.setItem('wf-removed-requirements', JSON.stringify(REMOVED_REQUIREMENTS)); } catch (_) {}
   }
   if (state.floorNames && typeof state.floorNames === 'object') {

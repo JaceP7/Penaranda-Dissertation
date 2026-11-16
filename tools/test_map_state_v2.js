@@ -204,8 +204,21 @@ function applyBox() {
      box.ls['wf-removed-requirements'] === JSON.stringify(removedReqs));
   const box2 = applyBox();
   box2.API._applyCloudState({ stampPlacements: [] });
-  ok('_applyCloudState leaves it alone when the state has none',
-     JSON.stringify(box2.REMOVED_REQUIREMENTS) === JSON.stringify({ stale: ['x'] }));
+  ok('_applyCloudState resets it to {} when the state has none (a pre-schema-2 version)',
+     JSON.stringify(box2.REMOVED_REQUIREMENTS) === '{}', JSON.stringify(box2.REMOVED_REQUIREMENTS));
+  ok('_applyCloudState persists the reset', box2.ls['wf-removed-requirements'] === '{}');
+  // An unmigrated device that applies an old published map still fingerprints
+  // like a pre-schema-2 build, so it does not read as having unpublished edits.
+  const box4 = applyBox();
+  vm.runInContext(lift('_buildStatePayload') + '\n' + lift('_mapFingerprint') +
+    '\n;this.API2 = { _buildStatePayload, _mapFingerprint };', box4);
+  const legacyState = { grid: { floorWalls: { 0: [] }, currentFloor: 0 },
+    stampPlacements: [{ id: 'x', name: 'GF 01', row: 1, col: 1, size: 2, floor: 1 }], stampPresets: [], floorNames: {} };
+  box4.API._applyCloudState(legacyState);
+  const after = box4.API2._buildStatePayload();
+  const preV2 = { grid: after.grid, stampPlacements: after.stampPlacements, stampPresets: after.stampPresets, floorNames: after.floorNames };
+  ok('an unmigrated device stays clean after applying an old version',
+     !('schema' in after) && box4.API2._mapFingerprint(after) === box4.API2._mapFingerprint(preV2));
   const box3 = applyBox();
   box3.API._applyStatePayload({ stampPlacements: migrated, removedRequirements: removedReqs });
   ok('_applyStatePayload restores removedRequirements',
