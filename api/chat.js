@@ -56,6 +56,10 @@ const MAX_TOKENS  = 1600;                         // itemised requirements + the
                                                   // (raised from 900: reasoning models need headroom)
 const MAX_RETRIES = 2;
 const TOP_K       = 6;
+// The index search is approximate: asked for only 6 it can skip the best match
+// ("Saan kukuha ng cedula?" missed the Cedula entry on 2026-11-17). Ask wide,
+// keep the best TOP_K.
+const SEARCH_K    = 20;
 
 const UPSTASH_URL   = (process.env.UPSTASH_VECTOR_REST_URL || '').replace(/\/$/, '');
 const UPSTASH_TOKEN = process.env.UPSTASH_VECTOR_REST_TOKEN || '';
@@ -96,13 +100,15 @@ async function upstashQuery(text, topK = TOP_K) {
   const r = await fetch(`${UPSTASH_URL}/query-data${UPSTASH_NS ? '/' + UPSTASH_NS : ''}`, {
     method:  'POST',
     headers: { 'Authorization': `Bearer ${UPSTASH_TOKEN}`, 'Content-Type': 'application/json' },
-    body:    JSON.stringify({ data: text, topK, includeMetadata: true }),
+    body:    JSON.stringify({ data: text, topK: Math.max(topK, SEARCH_K), includeMetadata: true }),
   });
   if (!r.ok) throw new Error(`Upstash query ${r.status}: ${(await r.text()).slice(0, 200)}`);
   const d = await r.json();
   // _score rides along on the metadata so the handler can refuse a weak match.
   return (d.result || []).map(x => Object.assign({}, x.metadata || {}, { _score: x.score }))
-    .filter(m => m.subservice);
+    .filter(m => m.subservice)
+    .sort((a, b) => (b._score || 0) - (a._score || 0))
+    .slice(0, topK);
 }
 
 function buildContext(results) {
